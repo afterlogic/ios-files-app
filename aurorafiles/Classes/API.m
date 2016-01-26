@@ -10,6 +10,30 @@
 #import "Settings.h"
 @import UIKit;
 
+@implementation NSString (NSString_Extended)
+
+- (NSString *)urlencode {
+    NSMutableString *output = [NSMutableString string];
+    const unsigned char *source = (const unsigned char *)[self UTF8String];
+    int sourceLen = strlen((const char *)source);
+    for (int i = 0; i < sourceLen; ++i) {
+        const unsigned char thisChar = source[i];
+        if (thisChar == ' '){
+            [output appendString:@"+"];
+        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
+                   (thisChar >= 'a' && thisChar <= 'z') ||
+                   (thisChar >= 'A' && thisChar <= 'Z') ||
+                   (thisChar >= '0' && thisChar <= '9')) {
+            [output appendFormat:@"%c", thisChar];
+        } else {
+            [output appendFormat:@"%%%02X", thisChar];
+        }
+    }
+    return output;
+}
+
+@end;
+
 @implementation API
 
 static NSString *appDataAction		= @"SystemGetAppData";
@@ -61,6 +85,7 @@ static NSString *deleteFiles        = @"FilesDelete";
     {
         [query appendString:[NSString stringWithFormat:@"%@=%@&",obj,[newDict valueForKey:obj]]];
     }
+    
     NSData *requestData = [query dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:requestData];
     request.HTTPMethod = @"POST";
@@ -222,23 +247,16 @@ static NSString *deleteFiles        = @"FilesDelete";
 - (void)deleteFiles:(NSDictionary *)files isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/?/Ajax/Action=%@&",[Settings domain],deleteFiles]]];
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
-    
-    NSMutableString *query = [[NSMutableString alloc] init];
-    for (id obj in newDict)
-    {
-        [query appendString:[NSString stringWithFormat:@"%@=%@&",obj,[newDict valueForKey:obj]]];
-    }
-    [query appendString:[NSString stringWithFormat:@"Items=[{\"Path\":\"%@\",\"Name\":\"%@\"}]",[files objectForKey:@"Path"],[files objectForKey:@"Name"]]];
-    [query appendString:[NSString stringWithFormat:@"&Type=%@",corporate ? @"corporate" : @"personal"]];
-    [query appendString:@"&Path=\"\""];
-    NSData *requestData = [query dataUsingEncoding:NSUTF8StringEncoding];
-    [request setHTTPBody:requestData];
-    request.HTTPMethod = @"POST";
-    request.timeoutInterval = 20.0f;
+    [newDict setObject:deleteFiles forKey:@"Action"];
+    NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",[files objectForKey:@"Path"], [files objectForKey:@"Name"]];
+    [newDict setObject:items forKey:@"Items"];
+    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
+    [newDict setObject:@"" forKey:@"Path"];
+    NSURLRequest * request = [self requestWithDictionary:newDict];
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
