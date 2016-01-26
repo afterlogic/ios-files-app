@@ -88,8 +88,10 @@
     {
         NSDictionary * object = [self.items objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         NSString * viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object objectForKey:@"Hash"],[Settings authToken]];
+        NSLog(@"%@",object);
         FileDetailViewController * vc = [segue destinationViewController];
         vc.viewLink = viewLink;
+        vc.object = object;
 
     }
 }

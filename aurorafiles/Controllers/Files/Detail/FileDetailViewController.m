@@ -10,7 +10,10 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 
-@interface FileDetailViewController () <UIWebViewDelegate>
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
 
 @end
 
@@ -20,7 +23,64 @@
 {
     self.viewLink = nil;
     self.webView.delegate = nil;
+    self.object = nil;
+    self.scrollView.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+- (BOOL)isImageContentType:(NSString *)type
+{
+    NSArray * mimeTypes = @[@"image/jpeg",@"image/pjpeg",@"image/png",@"image/tiff"];
+    if ([mimeTypes containsObject:type]) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.webView.alpha = 0;
+    self.scrollView.alpha = 0;
+    if (![self isImageContentType:[self.object objectForKey:@"ContentType"]])
+    {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        
+        NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+        self.webView.delegate = self;
+        [self.webView loadRequest:request];
+
+    }
+    else
+    {
+        self.scrollView.alpha = 1.0f;
+        self.scrollView.backgroundColor = [UIColor blackColor];
+        [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
+        [[UINavigationBar appearance] setTranslucent:YES];
+        self.scrollView.delegate = self;
+        UIActivityIndicatorView * activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activity.center = self.view.center;
+
+        [self.imageView addSubview:activity];
+        [activity startAnimating];
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imageView.frame = self.scrollView.bounds;
+        self.scrollView.zoomScale = self.scrollView.minimumZoomScale;
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.viewLink] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL){
+            [activity stopAnimating];
+            [activity removeFromSuperview];
+            [self setBarsHidden:YES animated:YES];
+        }];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -29,23 +89,27 @@
     [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification  object:nil];
 }
 
-- (void)viewDidLoad
+
+- (void)viewDidDisappear:(BOOL)animated
 {
-    [super viewDidLoad];
-    self.webView.alpha = 0;
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-
-    NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-    self.webView.delegate = self;
-    [self.webView loadRequest:request];
+    [super viewDidDisappear:animated];
+    [self setBarsHidden:NO animated:YES];
 }
 
 - (void)orientationChanged:(NSNotification*)notification
 {
     [self.webView reload];
 }
+
+#pragma mark Toolbars behavior
+
+- (void)setBarsHidden:(BOOL) hidden animated:(BOOL)animated
+{
+//    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+//    [self.toolBar setHidden:hidden];
+}
+
+#pragma mark WebView
 
 - (void)webViewDidFinishLoad:(nonnull UIWebView *)webView
 {
@@ -76,10 +140,12 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+
+#pragma mark scrollview
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.imageView;
 }
-
-
 @end

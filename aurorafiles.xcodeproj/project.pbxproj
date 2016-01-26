@@ -17,6 +17,7 @@
 		DA42D4A51B4DA00600CB63CE /* aurorafilesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DA42D4A41B4DA00600CB63CE /* aurorafilesTests.m */; };
 		DA42D4B21B4DA18900CB63CE /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = DA42D4B11B4DA18900CB63CE /* API.m */; };
 		DA42D4B61B4DA20300CB63CE /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DA42D4B51B4DA20300CB63CE /* Settings.m */; };
+		DA608D741C57DDA100D2E9E5 /* ViewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA608D731C57DDA100D2E9E5 /* ViewImageController.m */; };
 		DAF56F9F1B67E0AD0050354E /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF56F9E1B67E0AD0050354E /* SignInViewController.m */; };
 		DAF56FA31B67E1F60050354E /* SessionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF56FA21B67E1F60050354E /* SessionProvider.m */; };
 		DAF56FA81B67E27E0050354E /* FilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAF56FA71B67E27E0050354E /* FilesViewController.m */; };
@@ -54,6 +55,8 @@
 		DA42D4B11B4DA18900CB63CE /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = API.m; path = Classes/API.m; sourceTree = "<group>"; };
 		DA42D4B41B4DA20300CB63CE /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Settings.h; path = Classes/Settings.h; sourceTree = "<group>"; };
 		DA42D4B51B4DA20300CB63CE /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Settings.m; path = Classes/Settings.m; sourceTree = "<group>"; };
+		DA608D721C57DDA100D2E9E5 /* ViewImageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewImageController.h; path = Controllers/Files/ViewImage/ViewImageController.h; sourceTree = "<group>"; };
+		DA608D731C57DDA100D2E9E5 /* ViewImageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewImageController.m; path = Controllers/Files/ViewImage/ViewImageController.m; sourceTree = "<group>"; };
 		DAF56F9D1B67E0AD0050354E /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SignInViewController.h; path = Controllers/SignInViewController/SignInViewController.h; sourceTree = "<group>"; };
 		DAF56F9E1B67E0AD0050354E /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SignInViewController.m; path = Controllers/SignInViewController/SignInViewController.m; sourceTree = "<group>"; };
 		DAF56FA11B67E1F60050354E /* SessionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionProvider.h; path = Classes/SessionProvider.h; sourceTree = "<group>"; };
@@ -192,6 +195,15 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		DA608D711C57DD6200D2E9E5 /* ViewImage */ = {
+			isa = PBXGroup;
+			children = (
+				DA608D721C57DDA100D2E9E5 /* ViewImageController.h */,
+				DA608D731C57DDA100D2E9E5 /* ViewImageController.m */,
+			);
+			name = ViewImage;
+			sourceTree = "<group>";
+		};
 		DAF56F9C1B653EA40050354E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -222,6 +234,7 @@
 		DAF56FA51B67E2630050354E /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				DA608D711C57DD6200D2E9E5 /* ViewImage */,
 				DAF918E11B68009D00C8638A /* Detail */,
 				DAF56FA91B67EDA20050354E /* Cell */,
 				DAF56FA61B67E27E0050354E /* FilesViewController.h */,
@@ -260,6 +273,7 @@
 				DA42D47F1B4DA00500CB63CE /* Frameworks */,
 				DA42D4801B4DA00500CB63CE /* Resources */,
 				D9043F78F0F89B78181B206B /* Copy Pods Resources */,
+				739B592AB8A0BE4DB8F24D68 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -367,6 +381,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		739B592AB8A0BE4DB8F24D68 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D9043F78F0F89B78181B206B /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -398,6 +427,7 @@
 				DAF56FA31B67E1F60050354E /* SessionProvider.m in Sources */,
 				DA42D4B61B4DA20300CB63CE /* Settings.m in Sources */,
 				DA42D4881B4DA00500CB63CE /* main.m in Sources */,
+				DA608D741C57DDA100D2E9E5 /* ViewImageController.m in Sources */,
 				DA42D4B21B4DA18900CB63CE /* API.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

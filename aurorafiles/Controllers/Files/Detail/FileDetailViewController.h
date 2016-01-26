@@ -11,5 +11,6 @@
 @interface FileDetailViewController : UIViewController
 @property (strong, nonatomic) NSString * viewLink;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) NSDictionary * object;
 
 @end
