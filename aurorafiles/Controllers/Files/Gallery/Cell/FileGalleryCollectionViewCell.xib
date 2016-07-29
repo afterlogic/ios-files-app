@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="FileGalleryCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                <subviews>
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dOz-T6-Wqc">
+                        <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Axp-cZ-7Ex">
+                                <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Axp-cZ-7Ex" firstAttribute="centerY" secondItem="dOz-T6-Wqc" secondAttribute="centerY" id="EAe-O1-JqJ"/>
+                            <constraint firstItem="Axp-cZ-7Ex" firstAttribute="centerX" secondItem="dOz-T6-Wqc" secondAttribute="centerX" id="FgS-6M-IXA"/>
+                            <constraint firstAttribute="bottom" secondItem="Axp-cZ-7Ex" secondAttribute="bottom" id="Li4-nf-bT0"/>
+                            <constraint firstItem="Axp-cZ-7Ex" firstAttribute="top" secondItem="dOz-T6-Wqc" secondAttribute="top" id="TMN-8X-6dv"/>
+                            <constraint firstAttribute="trailing" secondItem="Axp-cZ-7Ex" secondAttribute="trailing" id="xip-1W-NnH"/>
+                            <constraint firstItem="Axp-cZ-7Ex" firstAttribute="leading" secondItem="dOz-T6-Wqc" secondAttribute="leading" id="xn1-1F-0Ga"/>
+                        </constraints>
+                    </scrollView>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="yhR-0g-az0">
+                        <rect key="frame" x="165" y="267" width="37" height="37"/>
+                    </activityIndicatorView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <constraints>
+                <constraint firstItem="dOz-T6-Wqc" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="9gB-LC-Jjj"/>
+                <constraint firstItem="dOz-T6-Wqc" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="BTD-YN-DTQ"/>
+                <constraint firstAttribute="trailing" secondItem="dOz-T6-Wqc" secondAttribute="trailing" id="Kbt-Ap-ics"/>
+                <constraint firstItem="yhR-0g-az0" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="US5-4d-OEV"/>
+                <constraint firstItem="yhR-0g-az0" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="ave-r7-186"/>
+                <constraint firstAttribute="bottom" secondItem="dOz-T6-Wqc" secondAttribute="bottom" id="owa-cR-xNk"/>
+            </constraints>
+            <size key="customSize" width="367" height="570"/>
+            <connections>
+                <outlet property="activityView" destination="yhR-0g-az0" id="NHZ-h7-4AK"/>
+                <outlet property="imageView" destination="Axp-cZ-7Ex" id="7hY-5U-Ldx"/>
+                <outlet property="scrollView" destination="dOz-T6-Wqc" id="elc-v1-dJA"/>
+            </connections>
+            <point key="canvasLocation" x="406.5" y="410"/>
+        </collectionViewCell>
+    </objects>
+</document>

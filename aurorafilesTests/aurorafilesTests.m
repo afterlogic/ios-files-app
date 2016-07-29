@@ -2,11 +2,10 @@
 //  aurorafilesTests.m
 //  aurorafilesTests
 //
-//  Created by Michael Akopyants on 08/07/15.
-//  Copyright (c) 2015 Michael Akopyants. All rights reserved.
+//  Created by Michael Akopyants on 07/06/16.
+//  Copyright © 2016 afterlogic. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 @interface aurorafilesTests : XCTestCase
@@ -27,7 +26,7 @@
 
 - (void)testExample {
     // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
 }
 
 - (void)testPerformanceExample {

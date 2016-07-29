@@ -8,9 +8,19 @@
 
 #import "API.h"
 #import "Settings.h"
+#import "Folder.h"
+
 @import UIKit;
 
 @implementation NSString (NSString_Extended)
+
+-(NSString *)urlEncodeUsingEncoding:(NSStringEncoding)encoding {
+    return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                                 (CFStringRef)self,
+                                                                                 NULL,
+                                                                                 (CFStringRef)@"!*'\"();:@&=+$,?%#[]% ",
+                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding)));
+}
 
 - (NSString *)urlencode {
     NSMutableString *output = [NSMutableString string];
@@ -41,6 +51,9 @@ static NSString *signInAction		= @"SystemLogin";
 static NSString *isAuhtCheck		= @"SystemIsAuth";
 static NSString *filesAction        = @"Files";
 static NSString *deleteFiles        = @"FilesDelete";
+static NSString *createFolder       = @"FilesFolderCreate";
+static NSString *renameFolder       = @"FilesRename";
+static NSString *folderInfo         = @"FileInfo";
 
 + (NSDictionary*)requestParams
 {
@@ -76,7 +89,13 @@ static NSString *deleteFiles        = @"FilesDelete";
 
 - (NSURLRequest*)requestWithDictionary:(NSDictionary*) dict
 {
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/?/Ajax/",[Settings domain]]]];
+    BOOL hasPrefix = [[Settings domain] containsString:@"https://"];
+    if (!hasPrefix) {
+        hasPrefix = [[Settings domain] containsString:@"http://"];
+    }
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"https://",[Settings domain]]]];
     NSMutableDictionary * newDict = [dict mutableCopy];
     [newDict addEntriesFromDictionary:[API requestParams]];
     
@@ -85,7 +104,7 @@ static NSString *deleteFiles        = @"FilesDelete";
     {
         [query appendString:[NSString stringWithFormat:@"%@=%@&",obj,[newDict valueForKey:obj]]];
     }
-    
+
     NSData *requestData = [query dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:requestData];
     request.HTTPMethod = @"POST";
@@ -94,6 +113,14 @@ static NSString *deleteFiles        = @"FilesDelete";
     return request;
 }
 
+- (NSMutableURLRequest*) requestWithUploadUrl:(NSString*)url
+{
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[Settings authToken] forHTTPHeaderField:@"Auth-Token"];
+
+    return request;
+}
 
 
 - (void)getAppDataCompletionHandler:(void (^)(NSDictionary * data, NSError * error)) handler
@@ -107,7 +134,10 @@ static NSString *deleteFiles        = @"FilesDelete";
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            
+            if (error) {
+                handler(@{},error);
+                return ;
+            }
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
@@ -137,10 +167,11 @@ static NSString *deleteFiles        = @"FilesDelete";
     [task resume];
 }
 
-- (void)getFilesForFolder:(NSString *)folderName isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
+- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *))handler
 {
+
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": corporate ? @"corporate" : @"personal"}];
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": type }];
     
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
 
@@ -149,19 +180,27 @@ static NSString *deleteFiles        = @"FilesDelete";
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             
             NSError * error = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            
-            if (![json isKindOfClass:[NSDictionary class]])
+            if (data)
             {
-                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                
+                if (![json isKindOfClass:[NSDictionary class]])
+                {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
+                if (error)
+                {
+                    NSLog(@"%@",[error localizedDescription]);
+                    handler(nil);
+                    return ;
+                }
+                
+                handler(json);
             }
-            if (error)
+            else
             {
-                NSLog(@"%@",[error localizedDescription]);
                 handler(nil);
-                return ;
             }
-            handler(json);
         });
     }];
     [task resume];
@@ -205,7 +244,7 @@ static NSString *deleteFiles        = @"FilesDelete";
                 }
                 else
                 {
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The username or password you entered is incorrect", @"")}];
                 }
             }
             handler(json,error);
@@ -225,7 +264,16 @@ static NSString *deleteFiles        = @"FilesDelete";
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error){
         dispatch_async(dispatch_get_main_queue(), ^() {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
+            if (error.code == -1009)
+            {
+                handler(@{@"Result":@{}},nil);
+                return ;
+            }
+            if (error)
+            {
+                handler(@{}, error);
+                return ;
+            }
             NSError * error = nil;
             
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -239,6 +287,133 @@ static NSString *deleteFiles        = @"FilesDelete";
             
             handler (json, nil);
         
+        });
+    }];
+    [task resume];
+}
+
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
+{
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict setObject:deleteFiles forKey:@"Action"];
+    NSString * name = folder.name;
+    if (folder.isLink.boolValue)
+    {
+        name = [name stringByAppendingString:@".url"];
+    }
+    NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",folder.parentPath ? folder.parentPath : @"", name];
+    [newDict setObject:items forKey:@"Items"];
+    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
+    [newDict setObject:@"" forKey:@"Path"];
+    
+    
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    NSLog(@"%@",newDict);
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            NSError * error = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+            handler(json);
+        });
+    }];
+    [task resume];
+
+}
+
+- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))handler
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict setObject:renameFolder forKey:@"Action"];
+    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
+    [newDict setObject:path forKey:@"Path"];
+    if (isLink)
+    {
+        [newDict setObject:[name stringByAppendingString:@".url"] forKey:@"Name"];
+    }
+    else
+    {
+        [newDict setObject:name forKey:@"Name"];
+    }
+    [newDict setObject:newName forKey:@"NewName"];
+    [newDict setObject:[NSNumber numberWithBool:isLink] forKey:@"IsLink"];
+    
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            NSError * error = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+            handler(json);
+        });
+    }];
+    [task resume];
+
+}
+
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(NSDictionary *))handler
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict setObject:createFolder forKey:@"Action"];
+    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
+    [newDict setObject:path forKey:@"Path"];
+    [newDict setObject:name forKey:@"FolderName"];
+    NSLog(@"%@",newDict);
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            NSError * error = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+            handler(json);
         });
     }];
     [task resume];
@@ -278,9 +453,82 @@ static NSString *deleteFiles        = @"FilesDelete";
         });
     }];
     [task resume];
-
-
 }
 
+- (void)getFolderInfoForName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(NSDictionary *))handler
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict setObject:folderInfo forKey:@"Action"];
+    
+    [newDict setObject:type forKey:@"Type"];
+    [newDict setObject:path forKey:@"Path"];
+    [newDict setObject:name forKey:@"Name"];
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            NSError * error = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+            handler(json);
+        });
+    }];
+    [task resume];
+}
+
+- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name completion:(void (^)(NSDictionary *))handler
+{
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    NSString * urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
+    NSLog(@"%@",urlString);
+    NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
+    [request setHTTPBody:file];
+    [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
+    [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
+            NSError * error = nil;
+            
+            id json = nil;
+            if (data)
+            {
+                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            }
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+            handler(json);
+        });
+    }];
+    [task resume];
+
+}
 
 @end

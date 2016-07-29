@@ -8,12 +8,18 @@
 
 #import "FileDetailViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-
+#import "API.h"
+#import "Folder.h"
+#import "UIImage+Aurora.h"
 
 @interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
+@property (weak, nonatomic) UITextField * folderName;
+@property (weak, nonatomic) UIBarButtonItem * moreItem;
+@property (weak, nonatomic) UITapGestureRecognizer * zoomOnDoubleTap;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *shareItem;
 
 @end
 
@@ -28,55 +34,136 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-
-- (BOOL)isImageContentType:(NSString *)type
+- (IBAction)shareFileAction:(id)sender
 {
-    NSArray * mimeTypes = @[@"image/jpeg",@"image/pjpeg",@"image/png",@"image/tiff"];
-    if ([mimeTypes containsObject:type]) {
-        return YES;
-    }
+
+    NSURL *myWebsite = [NSURL URLWithString:self.viewLink];
     
-    return NO;
+    NSArray *objectsToShare = @[myWebsite];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+    
+    [self presentViewController:activityVC animated:YES completion:nil];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.webView.alpha = 0;
+    UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
+    zoomOn.numberOfTapsRequired = 2;
+    zoomOn.numberOfTouchesRequired = 1;
+    self.zoomOnDoubleTap = zoomOn;
     self.scrollView.alpha = 0;
-    if (![self isImageContentType:[self.object objectForKey:@"ContentType"]])
-    {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-        
-        NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-        self.webView.delegate = self;
-        [self.webView loadRequest:request];
 
-    }
-    else
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    if (self.object.isLink.boolValue)
     {
-        self.scrollView.alpha = 1.0f;
-        self.scrollView.backgroundColor = [UIColor blackColor];
-        [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];
-        [[UINavigationBar appearance] setTranslucent:YES];
-        self.scrollView.delegate = self;
-        UIActivityIndicatorView * activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        activity.center = self.view.center;
-
-        [self.imageView addSubview:activity];
-        [activity startAnimating];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-        self.imageView.frame = self.scrollView.bounds;
-        self.scrollView.zoomScale = self.scrollView.minimumZoomScale;
-        [self.imageView sd_setImageWithURL:[NSURL URLWithString:self.viewLink] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL){
-            [activity stopAnimating];
-            [activity removeFromSuperview];
-            [self setBarsHidden:YES animated:YES];
-        }];
+        self.viewLink = self.object.linkUrl;
+        if (self.object.urlScheme && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://",self.object.urlScheme]]])
+        {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",self.object.urlScheme,self.object.linkUrl]]];
+            
+            return;
+        }
     }
+    
+    NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+    self.webView.delegate = self;
+    [self.webView loadRequest:request];
+
+    self.title = self.object.name;
+    
+    UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
+    self.moreItem = moreItem;
+    self.navigationItem.rightBarButtonItems = @[self.shareItem, self.moreItem];
 }
+
+- (IBAction)moreItemAction:(id)sender
+{
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel
+                                                          handler:^(UIAlertAction * action) {
+                                                              
+                                                          }];
+    
+    
+    [alert addAction:[self renameCurrentFileAction]];
+    [alert addAction:[self deleteFolderAction]];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (UIAlertAction*)renameCurrentFileAction
+{
+    UIAlertAction* renameFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Rename File", @"") style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action) {
+                                                             UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                                                             [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
+                                                                 Folder * file = self.object;
+                                                                 
+                                                                 
+                                                                 textField.placeholder = NSLocalizedString(@"Folder Name", @"");
+                                                                 textField.text = [file.name stringByDeletingPathExtension];
+                                                                 self.folderName = textField;
+                                                             }];
+                                                             
+                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 Folder * file = self.object;
+                                                                 if (!file)
+                                                                 {
+                                                                     return ;
+                                                                 }
+                                                                 NSString * oldName = file.name;
+                                                                 NSString * ex = [oldName pathExtension];
+                                                                 if ([ex length])
+                                                                 {
+                                                                     file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                     file.name = self.folderName.text;
+                                                                 }
+                                                                 NSLog(@"%@",file.name);
+                                                                 [[API sharedInstance] renameFolderFromName:oldName toName:file.name isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.object.parentPath ? self.object.parentPath : @"" isLink:self.object.isLink.boolValue completion:^(NSDictionary* handler) {
+                                                                     self.title = file.name;
+                                                                     self.object = file;
+                                                                     [file.managedObjectContext save:nil];
+                                                                 }];
+                                                                 
+                                                             }];
+                                                             
+                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+                                                                 
+                                                             }];
+                                                             [createFolder addAction:defaultAction];
+                                                             [createFolder addAction:cancelAction];
+                                                             [self presentViewController:createFolder animated:YES completion:nil];
+                                                         }];
+    return renameFolder;
+    
+}
+
+
+- (UIAlertAction*)deleteFolderAction
+{
+    UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
+        Folder * object = self.object;
+        BOOL isCorporate = [object.type isEqualToString:@"corporate"];
+        object.wasDeleted = @YES;
+        
+        [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+            [self.object.managedObjectContext save:nil];
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+    }];
+    
+    return deleteFolder;
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -136,13 +223,46 @@
 
 - (void)webView:(nonnull UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
 {
-    NSLog(@"%@",error);
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    self.scrollView.alpha = 1.0f;
+    self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
 }
 
 
 
 #pragma mark scrollview
+
+
+- (CGRect)zoomRectForScale:(float)scale withCenter:(CGPoint)center {
+    
+    CGRect zoomRect;
+    
+    zoomRect.size.height = [[self viewForZoomingInScrollView:self.scrollView] frame].size.height / scale;
+    zoomRect.size.width  = [[self viewForZoomingInScrollView:self.scrollView] frame].size.width  / scale;
+    
+    center = [[self viewForZoomingInScrollView:self.scrollView] convertPoint:center fromView:self.view];
+    
+    zoomRect.origin.x    = center.x - ((zoomRect.size.width / 2.0));
+    zoomRect.origin.y    = center.y - ((zoomRect.size.height / 2.0));
+    
+    return zoomRect;
+}
+
+- (void)zoomImageIn:(UITapGestureRecognizer*)recognizer{
+    
+    float newScale = self.scrollView.zoomScale * 4.0;
+    
+    if (self.scrollView.zoomScale > self.scrollView.minimumZoomScale)
+    {
+        [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
+    }
+    else
+    {
+        CGRect zoomRect = [self zoomRectForScale:newScale
+                                      withCenter:[recognizer locationInView:recognizer.view]];
+        [self.scrollView zoomToRect:zoomRect animated:YES];
+    }
+}
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {

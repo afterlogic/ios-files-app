@@ -9,46 +9,68 @@
 #import "SessionProvider.h"
 #import "API.h"
 #import "Settings.h"
+#import "KeychainWrapper.h"
+
 @implementation SessionProvider
 
 + (void)checkAuthorizeWithCompletion:(void (^)(BOOL))handler
 {
-	if (![Settings authToken].length || ![Settings token].length)
-	{
-		handler (NO);
-		return;
-	}
-	
-	[[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
+    [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
+        
+        if (!error)
+        {
+            if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+            {
+                handler (YES);
+            }
+            else
+            {
+                handler(NO);
+            }
+            return ;
+        }
+        else
+        {
+            NSString * email = [Settings login];
+            NSString * password = [Settings password];
+            if (email.length && password.length)
+            {
+                [SessionProvider authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
+                    handler(isAuthorised);
+                }];
+                return;
+            }
+            else
+            {
+                handler (NO);
+                return;
+            }
+        }
+    }];
+    
 
-		if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
-		{
-			handler (YES);
-		}
-		else
-		{
-			handler(NO);
-		}
-	}];
+
+	
+	
 }
 
 
-+ (void) authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL))handler
++ (void) authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
 {
 	[[API sharedInstance] getAppDataCompletionHandler:^(NSDictionary *result, NSError *error) {
 		if (error)
 		{
-			handler (NO);
+			handler (NO,error);
 			return ;
 		}
 		
 		[[API sharedInstance] signInWithEmail:email andPassword:password completion:^(NSDictionary *result, NSError *error) {
             if (error)
 			{
-				handler(NO);
+				handler(NO,error);
 				return;
 			}
-			handler(YES);
+			handler(YES,error);
 			}];
 	}];
 

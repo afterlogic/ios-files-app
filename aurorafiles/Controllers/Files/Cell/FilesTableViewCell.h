@@ -8,6 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol FilesTableViewCellDelegate <NSObject>
+@required
+- (void)tableViewCellDownloadAction:(UITableViewCell*)cell;
+- (void)tableViewCellMoreAction:(UITableViewCell*)cell;
+@end
+
 @interface FilesTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *downloadActivity;
+@property (weak, nonatomic) IBOutlet UIButton *disclosureButton;
+@property (weak, nonatomic) IBOutlet UIImageView *fileImageView;
+@property (weak, nonatomic) IBOutlet UILabel *titileLabel;
+
+@property (nonatomic, assign) id <FilesTableViewCellDelegate> delegate;
+
+- (IBAction)downloadAction:(id)sender;
+- (IBAction)moreAction:(id)sender;
++ (CGFloat)cellHeight;
 + (NSString*)cellId;
 @end

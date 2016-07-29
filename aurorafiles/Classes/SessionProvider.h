@@ -12,7 +12,7 @@
 
 + (void) checkAuthorizeWithCompletion:(void (^)(BOOL auhtorized)) handler;
 
-+ (void) authroizeEmail:(NSString*)email withPassword:(NSString*)password completion:(void (^)(BOOL authorized)) handler;
++ (void) authroizeEmail:(NSString*)email withPassword:(NSString*)password completion:(void (^)(BOOL authorized, NSError* error)) handler;
 
 + (void) deathorizeWithCompletion:(void (^)(BOOL success)) handler;
 

@@ -7,16 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface FilesViewController : UIViewController
+@class Folder;
+@interface FilesViewController : UITableViewController
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *signOutButton;
-@property (weak, nonatomic) NSString *folderPath;
-@property (weak, nonatomic) NSString *folderName;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+
+@property (strong, nonatomic) Folder * folder;
 @property (nonatomic, assign) BOOL isCorporate;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *fileTypeSegmentControl;
-- (IBAction)valueChangedSegment:(id)sender;
+
+
+- (IBAction)editAction:(id)sender;
 - (IBAction)signOut:(id)sender;
 
 @end

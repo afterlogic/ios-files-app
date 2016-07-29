@@ -23,6 +23,12 @@
 + (NSNumber*)currentAccount;
 + (void)setCurrentAccount:(NSNumber*)currentAccount;
 
++ (void)setLogin:(NSString*)login;
++ (NSString*)login;
+
++ (void)setPassword:(NSString*)password;
++ (NSString*)password;
+
 
 
 @end

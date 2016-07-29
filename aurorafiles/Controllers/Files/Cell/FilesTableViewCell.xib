@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilesTableViewCellId" rowHeight="62" id="rxa-tF-cnd" customClass="FilesTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="62"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rxa-tF-cnd" id="r6U-hu-xyM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="61"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pdf" translatesAutoresizingMaskIntoConstraints="NO" id="bKL-kh-8PS">
+                        <rect key="frame" x="8" y="2" width="57" height="57"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="bKL-kh-8PS" secondAttribute="height" multiplier="1:1" id="Ap0-CP-ng2"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Fs-FB-24I">
+                        <rect key="frame" x="73" y="10" width="208" height="41"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ej-nI-gGr">
+                        <rect key="frame" x="0.0" y="59" width="320" height="2"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="2" id="Igq-aZ-GmO"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZZJ-ha-57p">
+                        <rect key="frame" x="281" y="10" width="39" height="39"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AnI-EA-Enk">
+                                <rect key="frame" x="0.0" y="0.0" width="39" height="39"/>
+                                <state key="normal" image="download"/>
+                                <connections>
+                                    <action selector="downloadAction:" destination="rxa-tF-cnd" eventType="touchUpInside" id="DQa-YR-9UA"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCa-hf-4CO">
+                                <rect key="frame" x="9" y="10" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AnI-EA-Enk" firstAttribute="top" secondItem="ZZJ-ha-57p" secondAttribute="top" id="Qla-xC-oog"/>
+                            <constraint firstItem="sCa-hf-4CO" firstAttribute="centerY" secondItem="ZZJ-ha-57p" secondAttribute="centerY" id="WyY-fF-LVm"/>
+                            <constraint firstAttribute="trailing" secondItem="AnI-EA-Enk" secondAttribute="trailing" id="bah-lQ-yCD"/>
+                            <constraint firstItem="sCa-hf-4CO" firstAttribute="centerX" secondItem="ZZJ-ha-57p" secondAttribute="centerX" id="gWX-sf-vlU"/>
+                            <constraint firstAttribute="bottom" secondItem="AnI-EA-Enk" secondAttribute="bottom" id="jeo-sS-pG3"/>
+                            <constraint firstItem="AnI-EA-Enk" firstAttribute="leading" secondItem="ZZJ-ha-57p" secondAttribute="leading" id="pJN-zi-a3c"/>
+                            <constraint firstAttribute="width" constant="39" id="rVe-Fo-iL5"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="bKL-kh-8PS" secondAttribute="bottom" constant="2" id="A0u-nt-vkF"/>
+                    <constraint firstItem="7Fs-FB-24I" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="10" id="I7o-Ws-h5y"/>
+                    <constraint firstItem="5Ej-nI-gGr" firstAttribute="top" secondItem="ZZJ-ha-57p" secondAttribute="bottom" constant="10" id="IpS-qj-X9U"/>
+                    <constraint firstItem="5Ej-nI-gGr" firstAttribute="leading" secondItem="r6U-hu-xyM" secondAttribute="leading" id="N0u-Ge-wQO"/>
+                    <constraint firstItem="bKL-kh-8PS" firstAttribute="leading" secondItem="r6U-hu-xyM" secondAttribute="leading" constant="8" id="RXE-SU-IJh"/>
+                    <constraint firstAttribute="trailing" secondItem="5Ej-nI-gGr" secondAttribute="trailing" id="ZJA-eP-sfW"/>
+                    <constraint firstAttribute="bottom" secondItem="7Fs-FB-24I" secondAttribute="bottom" constant="10" id="afw-Vy-3pC"/>
+                    <constraint firstItem="ZZJ-ha-57p" firstAttribute="leading" secondItem="7Fs-FB-24I" secondAttribute="trailing" id="ayy-mR-deZ"/>
+                    <constraint firstAttribute="trailing" secondItem="ZZJ-ha-57p" secondAttribute="trailing" id="cZK-rS-5Nv"/>
+                    <constraint firstItem="ZZJ-ha-57p" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="10" id="kkY-4J-Cw9"/>
+                    <constraint firstItem="7Fs-FB-24I" firstAttribute="leading" secondItem="bKL-kh-8PS" secondAttribute="trailing" constant="8" id="rvX-9o-Yuq"/>
+                    <constraint firstItem="bKL-kh-8PS" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="2" id="vpw-9U-JWN"/>
+                    <constraint firstAttribute="bottom" secondItem="5Ej-nI-gGr" secondAttribute="bottom" id="zLz-Bg-J3o"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="disclosureButton" destination="AnI-EA-Enk" id="xVC-96-AuY"/>
+                <outlet property="downloadActivity" destination="sCa-hf-4CO" id="k8E-of-9yD"/>
+                <outlet property="fileImageView" destination="bKL-kh-8PS" id="2Eh-ee-hX0"/>
+                <outlet property="separatorHeight" destination="Igq-aZ-GmO" id="wmZ-lV-NGc"/>
+                <outlet property="separatorView" destination="5Ej-nI-gGr" id="MuI-P7-foI"/>
+                <outlet property="titileLabel" destination="7Fs-FB-24I" id="8Ge-nf-8la"/>
+            </connections>
+            <point key="canvasLocation" x="487" y="-32"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="download" width="24" height="24"/>
+        <image name="pdf" width="57" height="57"/>
+    </resources>
+</document>

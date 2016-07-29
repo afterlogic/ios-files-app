@@ -7,13 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UITextFieldCustomEdges.h"
+@protocol SignControllerDelegate <NSObject>
+@required
+- (void)userWasSignedIn;
+@end
 
 @interface SignInViewController : UIViewController <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UITextField *domainField;
-@property (weak, nonatomic) IBOutlet UITextField *emailField;
-@property (weak, nonatomic) IBOutlet UITextField *passwordField;
+@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *domainField;
+@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *emailField;
+@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *passwordField;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentHeight;
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;
+@property (weak, nonatomic) id <SignControllerDelegate> delegate;
 - (IBAction)auth:(id)sender;
 @end

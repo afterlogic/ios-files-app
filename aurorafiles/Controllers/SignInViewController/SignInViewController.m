@@ -10,6 +10,9 @@
 #import "Settings.h"
 #import "Api.h"
 #import "SessionProvider.h"
+#import "KeychainWrapper.h"
+#import <MBProgressHUD/MBProgressHUD.h>
+
 //#import "StorageProvider.h"
 
 @interface SignInViewController ()
@@ -25,6 +28,18 @@
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
 	self.domainField.text = [Settings domain];
+    self.emailField.text = [Settings login];
+    UIColor *borderColor = [UIColor colorWithWhite:243/255.0f alpha:1.0f];
+    
+    self.domainField.layer.borderWidth = 0.5f;
+    self.domainField.layer.borderColor = borderColor.CGColor;
+    
+    self.emailField.layer.borderWidth = 0.5f;
+    self.emailField.layer.borderColor = borderColor.CGColor;
+    
+    self.passwordField.layer.borderWidth = 0.5f;
+    self.passwordField.layer.borderColor = borderColor.CGColor;
+    
 	self.domainField.delegate = self;
 	self.emailField.delegate = self;
 	self.passwordField.delegate = self;
@@ -58,17 +73,29 @@
 
 - (IBAction)auth:(UIButton*)sender
 {
+    [activeField resignFirstResponder];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 	[Settings setDomain:self.domainField.text];
-	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized) {
-
+	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
 		if (authorized)
 		{
+            [Settings setLogin:self.emailField.text];
+            [Settings setPassword:self.passwordField.text];
 			[self dismissViewControllerAnimated:YES completion:^(){
+                [self.delegate userWasSignedIn];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
 			}];
 		}
 		else
 		{
-			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:NSLocalizedString(@"The username or password you entered is incorrect", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+            NSLog(@"%@",error);
+            NSString * text = NSLocalizedString(@"The username or password you entered is incorrect", @"");
+            if ([error localizedDescription])
+            {
+                text = [error localizedDescription];
+            }
+			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
 			[a show];
 		}
 	}];

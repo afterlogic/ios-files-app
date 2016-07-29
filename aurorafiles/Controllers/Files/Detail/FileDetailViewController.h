@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class Folder;
 @interface FileDetailViewController : UIViewController
+
 @property (strong, nonatomic) NSString * viewLink;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (strong, nonatomic) NSDictionary * object;
+@property (strong, nonatomic) Folder * object;
 
 @end

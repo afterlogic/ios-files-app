@@ -10,48 +10,75 @@
 
 @implementation Settings
 
++ (NSUserDefaults*)sharedDefaults
+{
+    return [[NSUserDefaults alloc] initWithSuiteName:@"group.afterlogic.aurorafiles"];
+}
+
 + (NSString*)domain
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"mail_domain"];
+    return [[Settings sharedDefaults] valueForKey:@"mail_domain"];
 }
 
 + (void)setDomain:(NSString *)domain
 {
-    [[NSUserDefaults standardUserDefaults] setValue:domain forKey:@"mail_domain"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[Settings sharedDefaults] setValue:domain forKey:@"mail_domain"];
+    [[Settings sharedDefaults] synchronize];
 }
 
 + (void)setAuthToken:(NSString *)authToken
 {
-    [[NSUserDefaults standardUserDefaults] setValue:authToken forKey:@"auth_token"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[Settings sharedDefaults] setValue:authToken forKey:@"auth_token"];
+    [[Settings sharedDefaults] synchronize];
 }
 
 + (NSString*)authToken
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"auth_token"];
+    return [[Settings sharedDefaults] valueForKey:@"auth_token"];
+}
+
++ (void)setLogin:(NSString*)login
+{
+    [[Settings sharedDefaults] setValue:login forKey:@"auth_login"];
+    [[Settings sharedDefaults] synchronize];
+}
+
++ (NSString*)login
+{
+    return [[Settings sharedDefaults] valueForKey:@"auth_login"];
+}
+
++ (void)setPassword:(NSString*)password
+{
+    [[Settings sharedDefaults] setValue:password forKey:@"auth_password"];
+    [[Settings sharedDefaults] synchronize];
+}
+
++ (NSString*)password
+{
+    return [[Settings sharedDefaults] valueForKey:@"auth_password"];
 }
 
 + (void)setToken:(NSString *)token
 {
-    [[NSUserDefaults standardUserDefaults] setValue:token forKey:@"token"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[Settings sharedDefaults] setValue:token forKey:@"token"];
+    [[Settings sharedDefaults] synchronize];
 }
 
 + (NSString*)token
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"token"];
+    return [[Settings sharedDefaults] valueForKey:@"token"];
 }
 
 + (void)setCurrentAccount:(NSNumber *)currentAccount
 {
-    [[NSUserDefaults standardUserDefaults] setValue:currentAccount forKey:@"current_account"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[Settings sharedDefaults] setValue:currentAccount forKey:@"current_account"];
+    [[Settings sharedDefaults] synchronize];
 }
 
 + (NSNumber*)currentAccount
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"current_account"];
+    return [[Settings sharedDefaults] valueForKey:@"current_account"];
 }
 
 
