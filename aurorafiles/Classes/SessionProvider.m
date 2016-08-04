@@ -13,7 +13,7 @@
 
 @implementation SessionProvider
 
-+ (void)checkAuthorizeWithCompletion:(void (^)(BOOL))handler
++ (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline ))handler
 {
     [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
         
@@ -21,11 +21,14 @@
         {
             if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
             {
-                handler (YES);
+                if (data[@"Result"][@"offlineMod"]) {
+                    handler (YES,YES);
+                }
+                handler (YES,NO);
             }
             else
             {
-                handler(NO);
+                handler(NO,NO);
             }
             return ;
         }
@@ -36,13 +39,13 @@
             if (email.length && password.length)
             {
                 [SessionProvider authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                    handler(isAuthorised);
+                    handler(isAuthorised,NO);
                 }];
                 return;
             }
             else
             {
-                handler (NO);
+                handler (NO,NO);
                 return;
             }
         }

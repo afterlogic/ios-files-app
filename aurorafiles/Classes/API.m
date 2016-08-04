@@ -266,7 +266,7 @@ static NSString *folderInfo         = @"FileInfo";
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             if (error.code == -1009)
             {
-                handler(@{@"Result":@{}},nil);
+                handler(@{@"Result":@{@"offlineMod":@YES}},nil);
                 return ;
             }
             if (error)

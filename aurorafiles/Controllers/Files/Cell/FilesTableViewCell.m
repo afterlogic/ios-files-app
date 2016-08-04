@@ -46,8 +46,13 @@
 
 - (IBAction)downloadAction:(id)sender
 {
-    [self.downloadActivity startAnimating];
-    [self.delegate tableViewCellDownloadAction:self];
+    if (!self.fileDownloaded) {
+        [self.downloadActivity startAnimating];
+        [self.delegate tableViewCellDownloadAction:self];
+
+    }else{
+        [self.delegate tableViewCellRemoveAction:self];
+    }
 }
 
 + (NSString*)cellId

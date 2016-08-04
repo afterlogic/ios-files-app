@@ -11,6 +11,7 @@
 @protocol SignControllerDelegate <NSObject>
 @required
 - (void)userWasSignedIn;
+- (void)userWasSigneInOffline;
 @end
 
 @interface SignInViewController : UIViewController <UITextFieldDelegate>

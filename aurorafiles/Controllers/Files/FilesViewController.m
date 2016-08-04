@@ -132,12 +132,31 @@
     }];
 }
 
+-(void)userWasSigneInOffline
+{
+    [self lockOnlineButtons];
+}
+
+-(void)lockOnlineButtons
+{
+    [self.tabBarController setSelectedIndex:2];
+    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
+        NSLog(@"vc class is -> %@",[vc class] );
+        [vc setEnabled:NO];
+    };
+//    NSLog(@"buttons locked" );
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorized){
-        if (!authorized)
+    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
+        if(authorised && offline){
+            [self userWasSigneInOffline];
+            return;
+        }
+        if (!authorised)
         {
             SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
             signIn.delegate = self;
@@ -344,9 +363,13 @@
             [cell.downloadActivity stopAnimating];
             cell.disclosureButton.hidden = NO;
         }
-        [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-        [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
+//        [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+//        [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
+//        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
+        
+        [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
+        cell.fileDownloaded = object.isDownloaded.boolValue;
+        
         cell.fileImageView.image =placeholder;
         cell.disclosureButton.alpha = 1.0f;
         
@@ -370,12 +393,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
 
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        object.wasDeleted = @YES;
-        [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            NSLog(@"%@",handler);
-            [self.managedObjectContext save:nil];
-        }];
+        [self removeFileFromCloud:indexPath];
     }
 }
 
@@ -386,7 +404,7 @@
     [Settings setToken:nil];
     [Settings setPassword:nil];
 
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised){
+    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
         if (!authorised)
         {
             
@@ -437,6 +455,10 @@
     [folder.managedObjectContext save:&error];
     [downloadTask resume];
     
+}
+
+-(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
+    [self removeFileFromDevice:[self.tableView indexPathForCell:cell]];
 }
 
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
@@ -549,6 +571,36 @@
     
     NSLog(@"%s",__PRETTY_FUNCTION__);
 }
+
+#pragma mark - Help Methods
+
+-(void)removeFileFromDevice:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSFileManager * manager = [NSFileManager defaultManager];
+    NSError * error;
+    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
+    object.isDownloaded = @NO;
+    
+    if (error)
+    {
+        NSLog(@"%@",[error userInfo]);
+    }
+    
+    [self.managedObjectContext save:nil];
+    
+}
+
+-(void)removeFileFromCloud:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    object.wasDeleted = @YES;
+    [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        NSLog(@"%@",handler);
+        [self.managedObjectContext save:nil];
+    }];
+
+}
+
 
 #pragma mark NSFetchedResultsController
 

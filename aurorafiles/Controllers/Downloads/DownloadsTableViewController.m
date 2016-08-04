@@ -13,7 +13,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImage+Aurora.h"
 #import "FileDetailViewController.h"
-@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate>
+@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate>
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @end
@@ -54,6 +54,7 @@
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
+    cell.delegate = self;
     cell.imageView.image = nil;
     
         
@@ -73,9 +74,13 @@
             [cell.downloadActivity stopAnimating];
             cell.disclosureButton.hidden = NO;
         }
-        [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-        [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
+        [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
+    
+//        [cell.disclosureButton setImage:[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateDisabled];
+//        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
+    
+        cell.fileDownloaded = object.isDownloaded.boolValue;
+    
         cell.fileImageView.image =placeholder;
         cell.disclosureButton.alpha = 1.0f;
         
@@ -102,20 +107,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
-        NSFileManager * manager = [NSFileManager defaultManager];
-        NSError * error;
-        [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
-        object.isDownloaded = @NO;
-        
-        if (error)
-        {
-            NSLog(@"%@",[error userInfo]);
-        }
-        
-        [self.managedObjectContext save:nil];
+        [self removeFileFromDevice:indexPath];
     }
 }
 
@@ -165,6 +157,35 @@
     return [FilesTableViewCell cellHeight];
 }
 
+#pragma mark - Cell Delegate
+
+-(void)tableViewCellDownloadAction:(UITableViewCell *)cell{
+    
+}
+
+-(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
+    [self removeFileFromDevice:[self.tableView indexPathForCell:cell]];
+}
+
+
+#pragma mark - Help Methods
+
+-(void)removeFileFromDevice:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSFileManager * manager = [NSFileManager defaultManager];
+    NSError * error;
+    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
+    object.isDownloaded = @NO;
+    
+    if (error)
+    {
+        NSLog(@"%@",[error userInfo]);
+    }
+    
+    [self.managedObjectContext save:nil];
+
+}
 
 #pragma mark - Navigation
 

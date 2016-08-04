@@ -12,6 +12,8 @@
 @required
 - (void)tableViewCellDownloadAction:(UITableViewCell*)cell;
 - (void)tableViewCellMoreAction:(UITableViewCell*)cell;
+@optional
+- (void)tableViewCellRemoveAction:(UITableViewCell*)cell;
 @end
 
 @interface FilesTableViewCell : UITableViewCell
@@ -20,6 +22,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *disclosureButton;
 @property (weak, nonatomic) IBOutlet UIImageView *fileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titileLabel;
+
+@property BOOL fileDownloaded;
 
 @property (nonatomic, assign) id <FilesTableViewCellDelegate> delegate;
 

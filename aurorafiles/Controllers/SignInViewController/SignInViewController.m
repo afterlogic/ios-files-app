@@ -14,8 +14,7 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 
 //#import "StorageProvider.h"
-
-@interface SignInViewController ()
+@interface SignInViewController () <UIAlertViewDelegate>
 {
 	UITextField *activeField;
 }
@@ -93,12 +92,27 @@
             NSString * text = NSLocalizedString(@"The username or password you entered is incorrect", @"");
             if ([error localizedDescription])
             {
-                text = [error localizedDescription];
+                text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
             }
 			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+//            a ca
+            a.delegate = self;
 			[a show];
 		}
 	}];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == [alertView cancelButtonIndex]) {
+        [self offlineAuth];
+    }
+}
+
+-(void)offlineAuth{
+    [self dismissViewControllerAnimated:YES completion:^(){
+        [self.delegate userWasSigneInOffline];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignInOffline" object:self];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

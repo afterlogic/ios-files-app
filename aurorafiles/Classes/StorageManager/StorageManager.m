@@ -191,7 +191,7 @@
     NSManagedObjectContext* context = self.managedObjectContext;
     
     [context performBlockAndWait:^ {
-        [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised){
+        [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
             if (authorised)
             {
                 NSString * path = folderPath;
