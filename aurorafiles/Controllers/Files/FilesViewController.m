@@ -19,6 +19,8 @@
 #import "STZPullToRefresh.h"
 #import "StorageManager.h"
 #import <MBProgressHUD.h>
+#import "ConnectionProvider.h"
+#import "Constants.h"
 
 @interface FilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
@@ -48,10 +50,16 @@
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
+    
     self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
     [self.view addSubview:refreshView];
     
+    
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userWasSigneInOffline) name:kReachabilityChangedNotification object:nil]
 //
 //    // Setup PullToRefresh
     self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
@@ -141,10 +149,17 @@
 {
     [self.tabBarController setSelectedIndex:2];
     for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-        NSLog(@"vc class is -> %@",[vc class] );
+//        NSLog(@"vc class is -> %@",[vc class] );
         [vc setEnabled:NO];
     };
-//    NSLog(@"buttons locked" );
+}
+
+-(void)unlockOnlineButtons{
+//    [self.tabBarController setSelectedIndex:1];
+    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
+//        NSLog(@"vc class is -> %@",[vc class] );
+        [vc setEnabled:YES];
+    };
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -164,6 +179,7 @@
             
             }];
         }
+        [[ConnectionProvider sharedInstance]startNotification];
     }];
 }
 

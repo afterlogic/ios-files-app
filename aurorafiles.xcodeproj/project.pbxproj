@@ -46,6 +46,8 @@
 		DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */; };
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
+		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
+		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +167,10 @@
 		DAC1CADE1D062BEB00238EB5 /* aurorafiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafiles.entitlements; sourceTree = "<group>"; };
 		DAC1CADF1D062BF400238EB5 /* aurorafilesaction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafilesaction.entitlements; sourceTree = "<group>"; };
 		DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
+		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
+		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
+		FF8A21E31D53F1F7006EBE36 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */,
 				231184308D0834E67342208D /* libPods-aurorafiles.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +228,7 @@
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */,
 				B0F1B41B1DE75AD14F8DFC9F /* libPods-aurorafiles.a */,
 				AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */,
 				63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */,
@@ -287,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				DAC1CA381D061D7500238EB5 /* main.m */,
+				FF8A21E31D53F1F7006EBE36 /* Constants.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -318,6 +327,8 @@
 				DAC1CA7D1D061F1200238EB5 /* Keychain */,
 				DAC1CA801D061F1200238EB5 /* SessionProvider.h */,
 				DAC1CA811D061F1200238EB5 /* SessionProvider.m */,
+				FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */,
+				FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */,
 				DAC1CA821D061F1200238EB5 /* Settings.h */,
 				DAC1CA831D061F1200238EB5 /* Settings.m */,
 				DAC1CA841D061F1200238EB5 /* StorageManager */,
@@ -883,6 +894,7 @@
 			files = (
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
+				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
 				DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */,

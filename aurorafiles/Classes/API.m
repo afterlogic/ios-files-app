@@ -93,6 +93,8 @@ static NSString *folderInfo         = @"FileInfo";
     if (!hasPrefix) {
         hasPrefix = [[Settings domain] containsString:@"http://"];
     }
+    
+    
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"https://",[Settings domain]]]];

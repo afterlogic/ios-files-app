@@ -10,6 +10,7 @@ target 'aurorafiles' do
     pod 'SDWebImage', '3.7.3'
     pod 'FastEasyMapping', '~> 1.0'
     pod 'MBProgressHUD', '~> 0.9.2'
+    pod 'Reachability', '~> 3.2'
     
     pod 'Fabric'
     pod 'Crashlytics'
