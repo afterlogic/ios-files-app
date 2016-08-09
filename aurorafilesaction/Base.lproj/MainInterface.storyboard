@@ -20,12 +20,20 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9ga-4F-77Z">
                                 <rect key="frame" x="0.0" y="64" width="320" height="464"/>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fPb-qk-Zg5" userLabel="video View">
+                                <rect key="frame" x="0.0" y="64" width="320" height="464"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="fPb-qk-Zg5" firstAttribute="leading" secondItem="9ga-4F-77Z" secondAttribute="leading" id="4b8-eq-Hoz"/>
+                            <constraint firstItem="fPb-qk-Zg5" firstAttribute="bottom" secondItem="n38-gi-rB5" secondAttribute="top" id="9hs-uZ-2aY"/>
                             <constraint firstAttribute="trailing" secondItem="9ga-4F-77Z" secondAttribute="trailing" id="Ozw-Hg-0yh"/>
                             <constraint firstItem="9ga-4F-77Z" firstAttribute="top" secondItem="qkL-Od-lgU" secondAttribute="bottom" id="PKG-t9-8Lj"/>
+                            <constraint firstItem="fPb-qk-Zg5" firstAttribute="trailing" secondItem="9ga-4F-77Z" secondAttribute="trailing" id="WeA-sk-tsW"/>
                             <constraint firstItem="9ga-4F-77Z" firstAttribute="leading" secondItem="zMn-AG-sqS" secondAttribute="leading" id="XH5-ld-ONA"/>
+                            <constraint firstItem="fPb-qk-Zg5" firstAttribute="top" secondItem="9ga-4F-77Z" secondAttribute="top" id="ZD0-qU-Klk"/>
                             <constraint firstItem="n38-gi-rB5" firstAttribute="top" secondItem="9ga-4F-77Z" secondAttribute="bottom" id="eQg-nn-Zy4"/>
                         </constraints>
                     </view>
@@ -46,12 +54,13 @@
                     <connections>
                         <outlet property="imageView" destination="9ga-4F-77Z" id="5y6-5w-9QO"/>
                         <outlet property="uploadButton" destination="DKm-NJ-ntF" id="Ar4-mh-wJK"/>
+                        <outlet property="videoAudioView" destination="fPb-qk-Zg5" id="dK9-4v-Ug8"/>
                         <outlet property="view" destination="zMn-AG-sqS" id="Qma-de-2ek"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="784" y="-124"/>
+            <point key="canvasLocation" x="244" y="-138"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Of9-0d-cHT">
@@ -69,7 +78,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N9N-Dq-lmA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="252" y="-124"/>
+            <point key="canvasLocation" x="-186" y="-124"/>
         </scene>
     </scenes>
 </document>
