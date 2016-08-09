@@ -13,6 +13,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImage+Aurora.h"
 #import "FileDetailViewController.h"
+#import "FileGalleryCollectionViewController.h"
 @interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate>
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
@@ -114,7 +115,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-    [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+    if ([object isImageContentType] && ![[object isLink] boolValue])
+    {
+        [self performSegueWithIdentifier:@"OpenDownloadFileGallerySegue" sender:self];
+    }else{
+        [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+    }
 }
 
 
@@ -185,8 +191,16 @@
     
     [self.managedObjectContext save:nil];
     
-   
+}
 
+- (UIImage *)snapshot:(UIView *)view
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 #pragma mark - Navigation
@@ -205,6 +219,16 @@
         }
         vc.viewLink = viewLink;
         vc.object = object;        
+    }
+    if ([segue.identifier isEqualToString:@"OpenDownloadFileGallerySegue"])
+    {
+        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        FileGalleryCollectionViewController * vc = [segue destinationViewController];
+//        vc.folder = self.folder;
+        UIImage * snap = [self snapshot:self.navigationController.view];
+        vc.snapshot= snap;
+        
+        vc.currentItem = object;
     }
 }
 
