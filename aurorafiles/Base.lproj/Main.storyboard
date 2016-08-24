@@ -502,9 +502,9 @@
         <image name="sigh_out" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="BA2-JJ-iY6"/>
         <segue reference="ZvP-hf-ajL"/>
         <segue reference="OUC-3c-s72"/>
-        <segue reference="Nyo-HC-dr7"/>
+        <segue reference="N9E-Z9-Qjn"/>
+        <segue reference="BLH-nD-lUS"/>
     </inferredMetricsTieBreakers>
 </document>

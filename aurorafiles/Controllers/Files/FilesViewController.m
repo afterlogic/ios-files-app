@@ -337,10 +337,13 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    if (!object.canEdit)
-        return NO;
-    return YES;
+//    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    if (!object.canEdit) return NO;
+//    
+//    
+//    return YES;
+    
+    return NO;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
