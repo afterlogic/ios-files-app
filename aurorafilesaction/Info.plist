@@ -25,21 +25,21 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>29</string>
+	<string>30</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
 			<dict>
+				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
+				<integer>1</integer>
 				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
 				<integer>1</integer>
 				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
 				<integer>1</integer>
-				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
-				<string>1</string>
 				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-				<string>1</string>
+				<integer>1</integer>
 			</dict>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
