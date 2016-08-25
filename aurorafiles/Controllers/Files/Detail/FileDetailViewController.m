@@ -60,12 +60,15 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-        if (self.object.urlScheme && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://",self.object.urlScheme]]])
-        {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",self.object.urlScheme,self.object.linkUrl]]];
-            
-            return;
-        }
+//        if (self.object.urlScheme && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://",self.object.urlScheme]]])
+//        {
+//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",self.object.urlScheme,self.object.linkUrl]]];
+//            
+//            return;
+//        }
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
+        return;
+        
     }
     
     NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];

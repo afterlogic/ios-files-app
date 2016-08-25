@@ -118,7 +118,12 @@
     if ([object isImageContentType] && ![[object isLink] boolValue])
     {
         [self performSegueWithIdentifier:@"OpenDownloadFileGallerySegue" sender:self];
-    }else{
+    }
+    else if([[object isLink] boolValue]){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+            //            return;
+    }
+    else{
         [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
     }
 }

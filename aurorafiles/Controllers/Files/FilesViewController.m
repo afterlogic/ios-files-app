@@ -316,6 +316,10 @@
         {
             [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
         }
+        else if([[object isLink] boolValue]){
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+//            return;
+        }
         else
         {
             [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
