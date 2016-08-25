@@ -17,6 +17,7 @@
 @interface ActionViewController ()<NSURLSessionTaskDelegate> {
     BOOL imageFound ;
     BOOL videoFound ;
+    BOOL shortcutFound ;
     NSString *fileExtension;
     NSURL *mediaData;
     NSString * urlString;
@@ -51,8 +52,8 @@
     
     // For example, look for an image and place it into an image view.
     // Replace this with something appropriate for the type[s] your extension supports.
-     imageFound = NO;
-     videoFound = NO;
+     imageFound = videoFound = shortcutFound = NO;
+    
     self.playerViewController = [[AVPlayerViewController alloc]init];
     _playerViewController.view.frame = self.videoAudioView.bounds;
     _playerViewController.showsPlaybackControls = YES;
@@ -93,7 +94,6 @@
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie options:nil completionHandler:^(id videoItem, NSError *error) {
                     if(videoItem) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                            [imageView setImage:image];
                             if ([videoItem isKindOfClass:[NSURL class]]) {
                                 fileExtension = [[[(NSURL *)videoItem absoluteString] componentsSeparatedByString:@"."]lastObject];
                                 mediaData = videoItem;
@@ -107,11 +107,28 @@
                 videoFound = YES;
                 break;
             }
+            
+//internet shortcut
+            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
+                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeURL options:nil completionHandler:^(id fileURLItem, NSError *error) {
+                    if(fileURLItem) {
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            if ([fileURLItem isKindOfClass:[NSURL class]]) {
+                                fileExtension = @"url";
+                                NSString *tmpFileName = [NSString stringWithFormat:@"InternetShortcut_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+                                mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
+                            }
+                        }];
+                    }
+                }];
+               
+                shortcutFound = YES;
+                break;
+            }
 
         }
         
-        if (videoFound) {
-            // We only handle one image, so stop looking for more.
+        if (videoFound || imageFound || shortcutFound) {
             break;
         }
     }
@@ -136,55 +153,32 @@
 
 - (IBAction)done
 {
-    // Return any edited content to the host app.
-    // This template doesn't do anything, so we just echo the passed in items.
     [self.extensionContext completeRequestReturningItems:self.extensionContext.inputItems completionHandler:nil];
 }
 
 - (IBAction)uploadAction:(id)sender
 {
-//    NSData * data = [NSData new];
     urlString = @"";
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
+    NSString *uploadfileName = @"";
     if (imageFound) {
-//        UIImage * image = self.imageView.image;
-        NSString *fileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",fileName];
+        uploadfileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
+        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
     }else if (videoFound){
-        NSString *fileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
+        uploadfileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
         AVAsset *currentAsset = self.playerViewController.player.currentItem.asset;
         self.movieURL = [(AVURLAsset *)currentAsset URL];
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",fileName];
+        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
+    }else if (shortcutFound){
+        uploadfileName = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
+        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
     }
-    
-    
-//    [self generateChunks:mediaData];
     NSMutableURLRequest *request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:mediaData];
     [self uploadFileWithRequest:request data:mediaData];
     
 }
 
--(void)generateChunks:(NSURL *)dataURL{
-
-    NSData* myBlob = [NSData dataWithContentsOfURL:dataURL];
-    NSUInteger length = [myBlob length];
-    NSUInteger chunkSize = 100 * 1024;
-    NSUInteger offset = 0;
-    do {
-        NSUInteger thisChunkSize = length - offset > chunkSize ? chunkSize : length - offset;
-        NSData* chunk = [NSData dataWithBytesNoCopy:(char *)[myBlob bytes] + offset
-                                             length:thisChunkSize
-                                       freeWhenDone:NO];
-        offset += thisChunkSize;
-        // do something with chunk
-//        [self uploadFileWithRequest:[self generateRequestWithUrl:[NSURL URLWithString:urlString] data:chunk]];
-    } while (offset < length);
-    
-    
-}
-
 -(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url data:(NSURL *)data
-//-(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url
 {
     
     fileName = [[[data absoluteString] componentsSeparatedByString:@"/"]lastObject];
@@ -195,10 +189,7 @@
     [request setHTTPMethod:@"PUT"];
     NSString *authToken = [defaults valueForKey:@"auth_token"];
     [request setValue:authToken forHTTPHeaderField:@"Auth-Token"];
-    
-//    [request setHTTPBody:data];
-    
-    //second part
+
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithURL:data]];
     
     [request setValue:@"personal" forHTTPHeaderField:@"Type"];
@@ -209,23 +200,15 @@
     return request;
 }
 
-//-(void)uploadFileWithRequest:(NSMutableURLRequest *) request
+
 -(void)uploadFileWithRequest:(NSMutableURLRequest *) request data:(NSURL *)data
 {
-//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-    
-//    [self presentViewController:alertController animated:YES completion:^(){
-//        
-//    }];
-    
     
     allertPopUp = [[PopupViewController alloc]initProgressAllertWithTitle:@"" message:NSLocalizedString(@"Uploading..", @"")  fileName:fileName fileSize:[NSString stringWithFormat:@"%llu",fileSize] disagreeText:NSLocalizedString(@"Cancel", @"") disagreeBlock:^{
         [self done];
     } parrentView:self];
     [allertPopUp showPopup];
-    
-//    NSURLSessionUploadTask *task = [session uploadTaskWithRequest:request fromFile:data completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
     
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
@@ -246,13 +229,6 @@
             
             if (error)
             {
-//                [alertController dismissViewControllerAnimated:YES completion:^(){
-//                    alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") preferredStyle:UIAlertControllerStyleAlert];
-//                    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
-//                        [self done];
-//                    }]];
-//                    [self presentViewController:alertController animated:YES completion:nil];
-//                }];
                 [allertPopUp closeViewWithComplition:^{
                     PopupViewController* errorPopUp = [[PopupViewController alloc] initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
                         [self done];
@@ -261,9 +237,6 @@
                 }];
                 return ;
             }
-//            [alertController dismissViewControllerAnimated:YES completion:^(){
-//                [self done];
-//            }];
             [allertPopUp closeViewWithComplition:^{
                 PopupViewController* congratPopUp = [[PopupViewController alloc]initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Great!", @"") message:NSLocalizedString(@"File succesfully uploaded!", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
                       [self done];
@@ -274,25 +247,15 @@
         });
     }];
     [task resume];
-    
-    //    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-    //        NSLog(@"%@",response);
-    //    }];
-
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
-//    NSLog(@"%lli",bytesSent);
-//    NSLog(@"%lli",totalBytesSent);
 
     dispatch_async(dispatch_get_main_queue(), ^(){
-//    float progress = (float)totalBytesSent / (float)totalBytesExpectedToSend;
-//        NSLog(@"pr - %f",progress);
-//        [pv setProgress:progress];
-    [allertPopUp setProgressWihtCurrentBytes:totalBytesSent totalBytesExpectedToSend:fileSize];
+        [allertPopUp setProgressWihtCurrentBytes:totalBytesSent totalBytesExpectedToSend:fileSize];
     });
 
     
@@ -305,6 +268,22 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     NSLog(@"URL: %@", request.URL.absoluteString);
     NSLog(@"Body: %@", [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
     NSLog(@"Head: %@",request.allHTTPHeaderFields);
+}
+
+-(NSURL *)createInternetShortcutFile:(NSString *)name ext:(NSString *)extension link:(NSURL *)link{
+    NSError *error;
+    NSArray *stringParams = [NSArray new];
+    stringParams = @[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]];
+   
+    NSString *stringToWrite = [stringParams componentsJoinedByString:@"\n"];
+
+    NSString *shortcutName = [NSString stringWithFormat:@"%@.%@",name,extension];
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutName];
+    [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    
+    NSURL *resultPath = [NSURL fileURLWithPath:filePath];
+    NSLog(@"%@", resultPath);
+    return resultPath;
 }
 
 @end
