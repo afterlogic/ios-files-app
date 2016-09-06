@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, kPopUpStyle){
 @property (weak, nonatomic) IBOutlet UILabel *neededToUploadBytes;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 
+@property (assign, readonly, nonatomic) BOOL isShown;
 //init
 -(id)initPopUpWithoutButonsWithTitle:(NSString *)title message:(NSString *)message parrentView:(id)parent;
 -(id)initPopUpWithOneButtonWithTitle:(NSString *)title message:(NSString *)message agreeText:(NSString *)agree  agreeBlock:(AgreeBlock)agreeBlock parrentView:(id)parent;
@@ -39,5 +40,6 @@ typedef NS_ENUM(NSInteger, kPopUpStyle){
 
 //upload progress
 -(void)setProgressWihtCurrentBytes:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
+-(void)setCurrentFileName:(NSString  * _Nullable )fileName;
 
 @end

@@ -9,6 +9,7 @@
 //#import <AVFoundation/AVFoundation.h>
 #import "ActionViewController.h"
 #import "PopUp/PopupViewController.h"
+#import "Model/UploadedFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <AVFoundation/AVFoundation.h>
@@ -23,7 +24,7 @@
     NSString * urlString;
     
     NSString *fileName;
-    unsigned long long fileSize;
+    unsigned long long uploadSize;
     
     UIAlertController * alertController;
     UIProgressView *pv;
@@ -31,6 +32,12 @@
     
     PopupViewController *allertPopUp;
     
+    
+    NSMutableArray <UploadedFile *> *filesForUpload;
+    NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
+    
+    
+    int64_t totalBytesForAllFilesSend;
 }
 
 
@@ -62,9 +69,13 @@
     self.playerViewController.view.alpha = 0.0f;
     self.videoAudioView.alpha = 0.0f;
     
+    totalBytesForAllFilesSend = 0;
+    
 //    [self createAlertView];
 
-    
+    filesForUpload = [NSMutableArray new];
+    NSArray *imputItems = self.extensionContext.inputItems;
+    NSLog(@"input items is -> %@",imputItems);
     for (NSExtensionItem *item in self.extensionContext.inputItems) {
         for (NSItemProvider *itemProvider in item.attachments) {
 //image
@@ -79,13 +90,21 @@
                                 mediaData = image;
                                 [imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:image]]];
                                 imageView.alpha = 1.0f;
+                                
+                                UploadedFile *file = [UploadedFile new];
+                                file.path = mediaData;
+                                file.extension = fileExtension;
+                                file.type = (NSString *)kUTTypeImage;
+                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+                                
+                                [filesForUpload addObject:file];
                             }
                         }];
                     }
                 }];
                 
-                imageFound = YES;
-                break;
+//                imageFound = YES;
+//                break;
             }
             
 //video
@@ -99,13 +118,21 @@
                                 mediaData = videoItem;
                                 player.player  = [AVPlayer playerWithURL:(NSURL *)videoItem];
                                 player.view.alpha = 1.0f;
+                                
+                                UploadedFile *file = [UploadedFile new];
+                                file.path = mediaData;
+                                file.extension = fileExtension;
+                                file.type = (NSString *)kUTTypeMovie;
+                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+                                
+                                [filesForUpload addObject:file];
                             }
                         }];
                     }
                 }];
                 
-                videoFound = YES;
-                break;
+//                videoFound = YES;
+//                break;
             }
             
 //internet shortcut
@@ -117,20 +144,30 @@
                                 fileExtension = @"url";
                                 NSString *tmpFileName = [NSString stringWithFormat:@"InternetShortcut_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
                                 mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
+                                
+                                UploadedFile *file = [UploadedFile new];
+                                file.path = mediaData;
+                                file.extension = fileExtension;
+                                file.type = (NSString *)kUTTypeURL;
+                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+                                
+                                [filesForUpload addObject:file];
                             }
                         }];
                     }
                 }];
                
-                shortcutFound = YES;
-                break;
+//                shortcutFound = YES;
+//                break;
             }
 
         }
         
-        if (videoFound || imageFound || shortcutFound) {
-            break;
-        }
+//        if (videoFound || imageFound || shortcutFound) {
+//            break;
+//        }
+        
+        
     }
 }
 
@@ -158,35 +195,71 @@
 
 - (IBAction)uploadAction:(id)sender
 {
+    
     urlString = @"";
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
-    NSString *uploadfileName = @"";
-    if (imageFound) {
-        uploadfileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-    }else if (videoFound){
-        uploadfileName = [NSString stringWithFormat:@"File_%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
-        AVAsset *currentAsset = self.playerViewController.player.currentItem.asset;
-        self.movieURL = [(AVURLAsset *)currentAsset URL];
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-    }else if (shortcutFound){
-        uploadfileName = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-    }
-    NSMutableURLRequest *request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:mediaData];
-    [self uploadFileWithRequest:request data:mediaData];
+    requestsForUpload = [NSMutableArray new];
     
+    for (UploadedFile *file in filesForUpload){
+        if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
+            
+            file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
+        }else{
+            file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
+        }
+        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",file.name];
+        file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
+        
+        uploadSize += file.size;
+    }
+    
+    allertPopUp = [[PopupViewController alloc]initProgressAllertWithTitle:@"" message:NSLocalizedString(@"Uploading..", @"")  fileName:fileName fileSize:[NSString stringWithFormat:@"%llu",uploadSize] disagreeText:NSLocalizedString(@"Cancel", @"") disagreeBlock:^{
+        [self done];
+    } parrentView:self];
+    
+    [self startUploadingForFiles:filesForUpload];
+    
+    
+//single upload variant
+    
+//    if (imageFound) {
+//        uploadfileName = [[[mediaData absoluteString] componentsSeparatedByString:@"/"]lastObject];
+//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
+//    }else if (videoFound){
+//        uploadfileName = [[[mediaData absoluteString] componentsSeparatedByString:@"/"]lastObject];
+//        AVAsset *currentAsset = self.playerViewController.player.currentItem.asset;
+//        self.movieURL = [(AVURLAsset *)currentAsset URL];
+//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
+//    }else if (shortcutFound){
+//        uploadfileName = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
+//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
+//    }
+//    
+//    
+//    NSMutableURLRequest *request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:mediaData];
+//    [self uploadFileWithRequest:request data:mediaData];
+    
+}
+
+-(void)startUploadingForFiles:(NSArray *)files{
+    
+    UploadedFile *currentFile = files.firstObject;
+    if (allertPopUp.isShown) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [allertPopUp setCurrentFileName:currentFile.name];
+        });
+    }
+    [self uploadFile:currentFile];
 }
 
 -(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url data:(NSURL *)data
 {
     
-    fileName = [[[data absoluteString] componentsSeparatedByString:@"/"]lastObject];
-    fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:[data path] error:nil] fileSize];
-    
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
+    
     [request setHTTPMethod:@"PUT"];
+    
     NSString *authToken = [defaults valueForKey:@"auth_token"];
     [request setValue:authToken forHTTPHeaderField:@"Auth-Token"];
 
@@ -195,23 +268,20 @@
     [request setValue:@"personal" forHTTPHeaderField:@"Type"];
     [request setValue:@"{\"Type\":\"personal\"}" forHTTPHeaderField:@"AdditionalData"];
     
-    [self requestLog:request];
-    
+   
     return request;
 }
 
 
--(void)uploadFileWithRequest:(NSMutableURLRequest *) request data:(NSURL *)data
-{
+-(void)uploadFile:(UploadedFile *) file{
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
     
-    allertPopUp = [[PopupViewController alloc]initProgressAllertWithTitle:@"" message:NSLocalizedString(@"Uploading..", @"")  fileName:fileName fileSize:[NSString stringWithFormat:@"%llu",fileSize] disagreeText:NSLocalizedString(@"Cancel", @"") disagreeBlock:^{
-        [self done];
-    } parrentView:self];
-    [allertPopUp showPopup];
-    
-    
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    if (!allertPopUp.isShown) {
+        [allertPopUp showPopup];
+    }
+
+    [self requestLog:file.request];
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:file.request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             
             NSError * error = nil;
@@ -229,20 +299,31 @@
             
             if (error)
             {
-                [allertPopUp closeViewWithComplition:^{
-                    PopupViewController* errorPopUp = [[PopupViewController alloc] initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
-                        [self done];
-                    } parrentView:self];
-                    [errorPopUp showPopup];
-                }];
-                return ;
+                if (filesForUpload.count == 0) {
+                    [allertPopUp closeViewWithComplition:^{
+                        PopupViewController* errorPopUp = [[PopupViewController alloc] initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
+                            [self done];
+                        } parrentView:self];
+                        [errorPopUp showPopup];
+                    }];
+                    return ;
+                }else{
+                    
+                }
+
             }
-            [allertPopUp closeViewWithComplition:^{
-                PopupViewController* congratPopUp = [[PopupViewController alloc]initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Great!", @"") message:NSLocalizedString(@"File succesfully uploaded!", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
-                      [self done];
-                } parrentView:self];
-                [congratPopUp showPopup];
-            }];
+            
+            if (filesForUpload.count == 1) {
+                [allertPopUp closeViewWithComplition:^{
+                    PopupViewController* congratPopUp = [[PopupViewController alloc]initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Great!", @"") message:NSLocalizedString(@"File succesfully uploaded!", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
+                          [self done];
+                    } parrentView:self];
+                    [congratPopUp showPopup];
+                }];
+            }else{
+                [filesForUpload removeObject:file];
+                [self startUploadingForFiles:filesForUpload];
+            }
             
         });
     }];
@@ -255,7 +336,8 @@
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 
     dispatch_async(dispatch_get_main_queue(), ^(){
-        [allertPopUp setProgressWihtCurrentBytes:totalBytesSent totalBytesExpectedToSend:fileSize];
+        totalBytesForAllFilesSend +=bytesSent;
+        [allertPopUp setProgressWihtCurrentBytes:totalBytesForAllFilesSend totalBytesExpectedToSend:uploadSize];
     });
 
     

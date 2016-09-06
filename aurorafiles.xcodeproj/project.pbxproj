@@ -48,6 +48,7 @@
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
 		FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF16B9391D689E7F003F982C /* PopupViewController.m */; };
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
+		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
 		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
 /* End PBXBuildFile section */
@@ -172,6 +173,8 @@
 		FF16B9381D689E7F003F982C /* PopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupViewController.h; sourceTree = "<group>"; };
 		FF16B9391D689E7F003F982C /* PopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupViewController.m; sourceTree = "<group>"; };
 		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
+		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
+		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
 		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
 		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
@@ -506,6 +509,7 @@
 				DAC1CAD11D06216400238EB5 /* ActionViewController.m */,
 				DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */,
 				FF16B9371D689E7F003F982C /* PopUp */,
+				FF4255F31D7EDBC9009B2E56 /* Model */,
 				DAC1CAD61D06216400238EB5 /* Info.plist */,
 			);
 			path = aurorafilesaction;
@@ -519,6 +523,15 @@
 				FF16B93A1D689E7F003F982C /* PopupViewController.xib */,
 			);
 			path = PopUp;
+			sourceTree = "<group>";
+		};
+		FF4255F31D7EDBC9009B2E56 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */,
+				FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -958,6 +971,7 @@
 			files = (
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
 				FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */,
+				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

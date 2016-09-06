@@ -15,11 +15,10 @@ const CGFloat defaultDelay  = 3.0f;
     DisagreeBlock _disagree;
     UIViewController *parentView;
 }
+
 @property (weak, nonatomic) IBOutlet UIView *uploadView;
-
 @property (weak, nonatomic) IBOutlet UILabel *filenameLabel;
-
-
+@property (assign,readwrite, nonatomic) BOOL isShown;
 
 
 @end
@@ -36,6 +35,7 @@ const CGFloat defaultDelay  = 3.0f;
         [self.agreeButton setAlpha:0.0f];
         [self setMainTitle:message];
         [self setHeaderTitle:title];
+        self.isShown = NO;
         if ([parent isKindOfClass:[UIViewController class]]) {
             parentView = (UIViewController *)parent;
         }
@@ -56,6 +56,7 @@ const CGFloat defaultDelay  = 3.0f;
         [self setHeaderTitle:title];
         [self.agreeButton addTarget:self action:@selector(onAgree) forControlEvents:UIControlEventTouchUpInside];
         _agree = agreeBlock;
+        self.isShown = NO;
         if ([parent isKindOfClass:[UIViewController class]]) {
             parentView = (UIViewController *)parent;
         }
@@ -79,6 +80,7 @@ const CGFloat defaultDelay  = 3.0f;
         if ([parent isKindOfClass:[UIViewController class]]) {
             parentView = (UIViewController *)parent;
         }
+        self.isShown = NO;
     }
     return self;
 }
@@ -94,12 +96,13 @@ const CGFloat defaultDelay  = 3.0f;
         _disagree = disagreeBlock;
         [self setMainTitle:message];
         [self setHeaderTitle:title];
-        self.filenameLabel.text = fileName;
+        [self setCurrentFileName:fileName];
         self.currentUploadedBytes.text = @"currentBytes";
         self.neededToUploadBytes.text = size;
         if ([parent isKindOfClass:[UIViewController class]]) {
             parentView = (UIViewController *)parent;
         }
+        self.isShown = NO;
     }
     return self;
 }
@@ -140,6 +143,10 @@ const CGFloat defaultDelay  = 3.0f;
     [self.headerText setText:headerText];
 }
 
+-(void)setCurrentFileName:(NSString *)fileName{
+    self.filenameLabel.text = fileName;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -176,16 +183,19 @@ const CGFloat defaultDelay  = 3.0f;
 
 -(void)showPopup{
     if (parentView) {
+        self.isShown = YES;
         self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [parentView.navigationController presentViewController:self animated:YES completion:nil];
     }
 }
 
 -(void)closeView{
+    self.isShown = NO;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)closeViewWithComplition:(void (^ __nullable)(void)) handler{
+    self.isShown = NO;
     [self dismissViewControllerAnimated:YES completion:^{
         handler();
     }];
