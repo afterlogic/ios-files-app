@@ -499,7 +499,7 @@ static NSString *folderInfo         = @"FileInfo";
     NSString * urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
-    [request setHTTPBody:file];
+    [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
     [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
     [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];

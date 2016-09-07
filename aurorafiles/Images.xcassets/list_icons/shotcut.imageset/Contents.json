@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "shortcut-icon1.png",
+      "filename" : "shotcut.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shortcut-icon1-1.png",
+      "filename" : "shotcut@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "shortcut-icon1-2.png",
+      "filename" : "shotcut@3x.png",
       "scale" : "3x"
     }
   ],

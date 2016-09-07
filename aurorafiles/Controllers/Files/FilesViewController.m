@@ -21,6 +21,7 @@
 #import <MBProgressHUD.h>
 #import "ConnectionProvider.h"
 #import "Constants.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface FilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
@@ -693,7 +694,8 @@
                                                            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
                                                            picker.delegate = self;
                                                            picker.allowsEditing = YES;
-                                                           picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
                                                            
                                                            [self presentViewController:picker animated:YES completion:NULL];
                                                        }];

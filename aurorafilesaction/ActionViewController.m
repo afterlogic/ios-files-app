@@ -14,11 +14,9 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
+#import "Settings.h"
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate> {
-    BOOL imageFound ;
-    BOOL videoFound ;
-    BOOL shortcutFound ;
     NSString *fileExtension;
     NSURL *mediaData;
     NSString * urlString;
@@ -46,6 +44,8 @@
 @property (strong, nonatomic) IBOutlet UIView *videoAudioView;
 @property(strong,nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
+@property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
+
 - (IBAction)uploadAction:(id)sender;
 
 @end
@@ -55,12 +55,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Get the item[s] we're handling from the extension context.
-    
-    // For example, look for an image and place it into an image view.
-    // Replace this with something appropriate for the type[s] your extension supports.
-     imageFound = videoFound = shortcutFound = NO;
-    
+    if (![Settings token]) {
+        self.uploadButton.enabled = NO;
+        [self.uploadButton setTitle:@""];
+        [self.userLoggedOutView setHidden:NO];
+        
+    }else{
+        [self setupForUpload];
+    }
+}
+
+-(void)setupForUpload{
     self.playerViewController = [[AVPlayerViewController alloc]init];
     _playerViewController.view.frame = self.videoAudioView.bounds;
     _playerViewController.showsPlaybackControls = YES;
@@ -71,16 +76,13 @@
     
     totalBytesForAllFilesSend = 0;
     
-//    [self createAlertView];
-
     filesForUpload = [NSMutableArray new];
     NSArray *imputItems = self.extensionContext.inputItems;
     NSLog(@"input items is -> %@",imputItems);
     for (NSExtensionItem *item in self.extensionContext.inputItems) {
         for (NSItemProvider *itemProvider in item.attachments) {
-//image
+            //image
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-                // This is an image. We'll load it, then place it in our image view.
                 __weak UIImageView *imageView = self.imageView;
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage options:nil completionHandler:^(id image, NSError *error) {
                     if(image) {
@@ -102,12 +104,9 @@
                         }];
                     }
                 }];
-                
-//                imageFound = YES;
-//                break;
             }
             
-//video
+            //video
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
                 __weak AVPlayerViewController *player = self.playerViewController;
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie options:nil completionHandler:^(id videoItem, NSError *error) {
@@ -130,12 +129,9 @@
                         }];
                     }
                 }];
-                
-//                videoFound = YES;
-//                break;
             }
             
-//internet shortcut
+            //internet shortcut
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeURL options:nil completionHandler:^(id fileURLItem, NSError *error) {
                     if(fileURLItem) {
@@ -156,31 +152,11 @@
                         }];
                     }
                 }];
-               
-//                shortcutFound = YES;
-//                break;
             }
-
+            
         }
         
-//        if (videoFound || imageFound || shortcutFound) {
-//            break;
-//        }
-        
-        
     }
-}
-
-
--(void)createAlertView{
-    alertController = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"Uploading..", @"") preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
-        [self done];
-    }]];
-    pv = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
-    pv.frame = CGRectMake(20, 20, 200, 15);
-    pv.progress = 0.0;
-    [alertController.view addSubview:pv];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -218,27 +194,6 @@
     } parrentView:self];
     
     [self startUploadingForFiles:filesForUpload];
-    
-    
-//single upload variant
-    
-//    if (imageFound) {
-//        uploadfileName = [[[mediaData absoluteString] componentsSeparatedByString:@"/"]lastObject];
-//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-//    }else if (videoFound){
-//        uploadfileName = [[[mediaData absoluteString] componentsSeparatedByString:@"/"]lastObject];
-//        AVAsset *currentAsset = self.playerViewController.player.currentItem.asset;
-//        self.movieURL = [(AVURLAsset *)currentAsset URL];
-//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-//    }else if (shortcutFound){
-//        uploadfileName = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],fileExtension];
-//        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",uploadfileName];
-//    }
-//    
-//    
-//    NSMutableURLRequest *request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:mediaData];
-//    [self uploadFileWithRequest:request data:mediaData];
-    
 }
 
 -(void)startUploadingForFiles:(NSArray *)files{
@@ -354,10 +309,10 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 
 -(NSURL *)createInternetShortcutFile:(NSString *)name ext:(NSString *)extension link:(NSURL *)link{
     NSError *error;
-    NSArray *stringParams = [NSArray new];
-    stringParams = @[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]];
+//    NSArray *stringParams = [NSArray new];
+//    stringParams = @[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]];
    
-    NSString *stringToWrite = [stringParams componentsJoinedByString:@"\n"];
+    NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]] componentsJoinedByString:@"\n"];
 
     NSString *shortcutName = [NSString stringWithFormat:@"%@.%@",name,extension];
     NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutName];

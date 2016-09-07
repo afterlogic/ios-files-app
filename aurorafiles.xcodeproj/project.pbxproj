@@ -49,6 +49,7 @@
 		FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF16B9391D689E7F003F982C /* PopupViewController.m */; };
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
+		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
 		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
 /* End PBXBuildFile section */
@@ -971,6 +972,7 @@
 			files = (
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
 				FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */,
+				FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */,
 				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
