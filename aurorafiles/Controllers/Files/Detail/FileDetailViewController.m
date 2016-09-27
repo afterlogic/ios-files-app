@@ -224,14 +224,11 @@
     }];
 }
 
-- (void)webView:(nonnull UIWebView *)webView didFailLoadWithError:(nullable NSError *)error
-{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     self.scrollView.alpha = 1.0f;
     self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
 }
-
-
 
 #pragma mark scrollview
 

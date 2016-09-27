@@ -8,6 +8,8 @@
 
 //#import <AVFoundation/AVFoundation.h>
 #import "ActionViewController.h"
+#import "EXFileGalleryCollectionViewController.h"
+#import "EXPreviewFileGalleryCollectionViewController.h"
 #import "PopUp/PopupViewController.h"
 #import "Model/UploadedFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -15,8 +17,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import "Settings.h"
+#import "EXConstants.h"
 
-@interface ActionViewController ()<NSURLSessionTaskDelegate> {
+@interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate> {
     NSString *fileExtension;
     NSURL *mediaData;
     NSString * urlString;
@@ -36,6 +39,8 @@
     
     
     int64_t totalBytesForAllFilesSend;
+    
+    CGFloat previewLocalHeight;
 }
 
 
@@ -45,11 +50,16 @@
 @property(strong,nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
 @property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
+@property (weak, nonatomic) EXFileGalleryCollectionViewController *galleryController;
+@property (weak, nonatomic) EXPreviewFileGalleryCollectionViewController *previewController;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewHeight;
+
 
 - (IBAction)uploadAction:(id)sender;
 
 @end
-#import <AVKit/AVKit.h>
+//#import <AVKit/AVKit.h>
+
 @implementation ActionViewController
 
 - (void)viewDidLoad {
@@ -70,12 +80,18 @@
     _playerViewController.view.frame = self.videoAudioView.bounds;
     _playerViewController.showsPlaybackControls = YES;
     [self.view addSubview:_playerViewController.view];
+    
     self.imageView.alpha = 0.0f;
     self.playerViewController.view.alpha = 0.0f;
     self.videoAudioView.alpha = 0.0f;
     
     totalBytesForAllFilesSend = 0;
     
+    [self searchFilesForUpload];
+    
+}
+
+-(void)searchFilesForUpload{
     filesForUpload = [NSMutableArray new];
     NSArray *imputItems = self.extensionContext.inputItems;
     NSLog(@"input items is -> %@",imputItems);
@@ -91,7 +107,7 @@
                                 fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
                                 mediaData = image;
                                 [imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:image]]];
-                                imageView.alpha = 1.0f;
+                                imageView.alpha = 0.0f;
                                 
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
@@ -116,7 +132,7 @@
                                 fileExtension = [[[(NSURL *)videoItem absoluteString] componentsSeparatedByString:@"."]lastObject];
                                 mediaData = videoItem;
                                 player.player  = [AVPlayer playerWithURL:(NSURL *)videoItem];
-                                player.view.alpha = 1.0f;
+                                player.view.alpha = 0.0f;
                                 
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
@@ -156,6 +172,60 @@
             
         }
         
+    }
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    self.galleryController.items = filesForUpload.copy;
+    self.previewController.items = filesForUpload.copy;
+    self.galleryController.delegate = self;
+    if([NSObject orientation] == InterfaceOrientationTypePortrait){
+        [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypePortrait];
+    }else{
+         [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypeLandscape];
+    }
+    
+}
+
+-(void)setPreviewGalleryHeightForOrientation:(NSInteger) orientation{
+    previewLocalHeight = previewHeightConst;
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        
+        CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
+        CGFloat height = 0;
+        if([NSObject orientation] == InterfaceOrientationTypePortrait){
+            height = iOSDeviceScreenSize.height;
+        }else{
+            height = iOSDeviceScreenSize.width;
+        }
+        
+        if(height > 568)
+        {
+            previewLocalHeight = previewHeightConst;
+        }
+        
+        if (height <= 568){
+            previewLocalHeight = previewHeightConst * scaleFactor1Devider;
+        }
+        
+        if (filesForUpload.count > 5) {
+            previewLocalHeight = previewLocalHeight * 2 + previewLineHeight;
+        }else{
+            previewLocalHeight += previewLineHeight;
+        }
+
+    }
+    [_previewHeight setConstant:previewLocalHeight];
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
+        [self setPreviewGalleryHeightForOrientation:toInterfaceOrientation];
+    }else{
+        [self setPreviewGalleryHeightForOrientation:toInterfaceOrientation];
     }
 }
 
@@ -322,5 +392,20 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     NSLog(@"%@", resultPath);
     return resultPath;
 }
+
+- (void)selectGalleryItemAtIndex:(int)idx{
+    //self.previewController
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"gallery_embed"]) {
+        self.galleryController = (EXFileGalleryCollectionViewController *)[segue destinationViewController];
+    }
+    if ([segue.identifier isEqualToString:@"preview_embed"]){
+        self.previewController = (EXPreviewFileGalleryCollectionViewController *)[segue destinationViewController];
+    }
+}
+
+
 
 @end

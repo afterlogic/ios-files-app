@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="EXPreviewFileGalleryCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dhA-RM-R7E"/>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Mf9-wW-DQM"/>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="dhA-RM-R7E" secondAttribute="bottom" id="3BC-ii-ytR"/>
+                <constraint firstItem="dhA-RM-R7E" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="CYl-u8-VvN"/>
+                <constraint firstItem="dhA-RM-R7E" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="EnR-JO-J5m"/>
+                <constraint firstItem="Mf9-wW-DQM" firstAttribute="centerY" secondItem="dhA-RM-R7E" secondAttribute="centerY" id="IJy-Ye-Zzp"/>
+                <constraint firstItem="Mf9-wW-DQM" firstAttribute="centerX" secondItem="dhA-RM-R7E" secondAttribute="centerX" id="c8W-fI-8cR"/>
+                <constraint firstAttribute="trailing" secondItem="dhA-RM-R7E" secondAttribute="trailing" id="v6l-qh-8E9"/>
+            </constraints>
+            <connections>
+                <outlet property="activityView" destination="Mf9-wW-DQM" id="vrb-wF-vMH"/>
+                <outlet property="imageView" destination="dhA-RM-R7E" id="fbB-CO-vuJ"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

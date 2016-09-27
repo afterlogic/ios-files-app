@@ -52,6 +52,14 @@
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
 		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
+		FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */; };
+		FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */; };
+		FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
+		FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
+		FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */; };
+		FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5E31D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m */; };
+		FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5E41D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib */; };
+		FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5E81D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +188,21 @@
 		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
 		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
 		FF8A21E31D53F1F7006EBE36 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		FF9053021D9ADA4400A09A44 /* UIImage+ImageCompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageCompress.h"; path = "Gallery/UIImage+ImageCompress.h"; sourceTree = "<group>"; };
+		FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageCompress.m"; path = "Gallery/UIImage+ImageCompress.m"; sourceTree = "<group>"; };
+		FF9053051D9B0D4800A09A44 /* EXConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EXConstants.h; sourceTree = "<group>"; };
+		FF9053071D9B1E9D00A09A44 /* NSObject+ScreenOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ScreenOrientation.h"; sourceTree = "<group>"; };
+		FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ScreenOrientation.m"; sourceTree = "<group>"; };
+		FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
+		FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXFileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
+		FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXFileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
+		FFFFA5DD1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewController.h; sourceTree = "<group>"; };
+		FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXFileGalleryCollectionViewController.m; sourceTree = "<group>"; };
+		FFFFA5E21D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPreviewFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
+		FFFFA5E31D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPreviewFileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
+		FFFFA5E41D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXPreviewFileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
+		FFFFA5E71D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXPreviewFileGalleryCollectionViewController.h; sourceTree = "<group>"; };
+		FFFFA5E81D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXPreviewFileGalleryCollectionViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -509,8 +532,10 @@
 				DAC1CAD01D06216400238EB5 /* ActionViewController.h */,
 				DAC1CAD11D06216400238EB5 /* ActionViewController.m */,
 				DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */,
+				FF9053061D9B0E4D00A09A44 /* Supporting Files */,
 				FF16B9371D689E7F003F982C /* PopUp */,
 				FF4255F31D7EDBC9009B2E56 /* Model */,
+				FFFFA5D81D9A5395006BA9FB /* Gallery */,
 				DAC1CAD61D06216400238EB5 /* Info.plist */,
 			);
 			path = aurorafilesaction;
@@ -533,6 +558,43 @@
 				FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		FF9053061D9B0E4D00A09A44 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FF9053021D9ADA4400A09A44 /* UIImage+ImageCompress.h */,
+				FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */,
+				FF9053051D9B0D4800A09A44 /* EXConstants.h */,
+				FF9053071D9B1E9D00A09A44 /* NSObject+ScreenOrientation.h */,
+				FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FFFFA5D81D9A5395006BA9FB /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				FFFFA5D91D9A5395006BA9FB /* Cell */,
+				FFFFA5DD1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.h */,
+				FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */,
+				FFFFA5E71D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.h */,
+				FFFFA5E81D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m */,
+			);
+			path = Gallery;
+			sourceTree = "<group>";
+		};
+		FFFFA5D91D9A5395006BA9FB /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */,
+				FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */,
+				FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */,
+				FFFFA5E21D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.h */,
+				FFFFA5E31D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m */,
+				FFFFA5E41D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -719,6 +781,8 @@
 				DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */,
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
 				FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */,
+				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
+				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -970,10 +1034,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */,
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
+				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
+				FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */,
+				FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
 				FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */,
 				FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */,
 				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,
+				FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */,
+				FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
