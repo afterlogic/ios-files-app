@@ -10,6 +10,7 @@
 #import "ActionViewController.h"
 #import "EXFileGalleryCollectionViewController.h"
 #import "EXPreviewFileGalleryCollectionViewController.h"
+#import "CurrentFilePathViewController.h"
 #import "PopUp/PopupViewController.h"
 #import "Model/UploadedFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -52,6 +53,7 @@
 @property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
 @property (weak, nonatomic) EXFileGalleryCollectionViewController *galleryController;
 @property (weak, nonatomic) EXPreviewFileGalleryCollectionViewController *previewController;
+@property (weak, nonatomic) CurrentFilePathViewController *currentUploadPathView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewHeight;
 
 
@@ -180,6 +182,7 @@
     self.galleryController.items = filesForUpload.copy;
     self.previewController.items = filesForUpload.copy;
     self.galleryController.delegate = self;
+    [self.currentUploadPathView.openFileButton addTarget:self action:@selector(showUploadFolders) forControlEvents:UIControlEventTouchUpInside];
     if([NSObject orientation] == InterfaceOrientationTypePortrait){
         [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypePortrait];
     }else{
@@ -232,6 +235,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)showUploadFolders{
+    [self performSegueWithIdentifier:@"push_files" sender:self];
+    //UIStoryboard *mystoryboard = [UIStoryboard storyboardWithName:@"MainInterface" bundle:nil];
+    //[self.navigationController pushViewController:[mystoryboard instantiateViewControllerWithIdentifier:@"push_files"] animated:YES];
 }
 
 - (IBAction)done
@@ -404,6 +413,14 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     if ([segue.identifier isEqualToString:@"preview_embed"]){
         self.previewController = (EXPreviewFileGalleryCollectionViewController *)[segue destinationViewController];
     }
+    
+    if ([segue.identifier isEqualToString:@"filePath_embed"]){
+        self.currentUploadPathView = (CurrentFilePathViewController *)[segue destinationViewController];
+    }
+    
+    //if ([segue.identifier isEqualToString:@"folders_embed"]){
+    //    self.currentUploadPathView = (CurrentFilePathViewController *)[segue destinationViewController];
+    //}
 }
 
 

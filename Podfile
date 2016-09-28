@@ -17,7 +17,9 @@ target 'aurorafiles' do
 end
 
 target 'aurorafilesaction' do
-    
+    pod 'FastEasyMapping', '~> 1.0'
+    pod 'SDWebImage', '3.7.3'
+    pod 'Reachability', '~> 3.2'
 end
 
 target 'aurorafilesTests' do

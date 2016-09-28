@@ -127,7 +127,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)getAppDataCompletionHandler:(void (^)(NSDictionary * data, NSError * error)) handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
 
@@ -135,7 +135,7 @@ static NSString *folderInfo         = @"FileInfo";
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             if (error) {
                 handler(@{},error);
                 return ;
@@ -172,14 +172,14 @@ static NSString *folderInfo         = @"FileInfo";
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *))handler
 {
 
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": type }];
     
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
 
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             if (data)
@@ -212,14 +212,14 @@ static NSString *folderInfo         = @"FileInfo";
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler
 {
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":signInAction,@"Email":email, @"IncPassword":password}];
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^() {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -258,14 +258,14 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *, NSError *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":isAuhtCheck}];
     NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
 
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error){
         dispatch_async(dispatch_get_main_queue(), ^() {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             if (error.code == -1009)
             {
                 handler(@{@"Result":@{@"offlineMod":@YES}},nil);
@@ -297,7 +297,7 @@ static NSString *folderInfo         = @"FileInfo";
 - (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
 {
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
     [newDict setObject:deleteFiles forKey:@"Action"];
@@ -317,7 +317,7 @@ static NSString *folderInfo         = @"FileInfo";
     NSLog(@"%@",newDict);
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -341,7 +341,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
     [newDict setObject:renameFolder forKey:@"Action"];
@@ -363,7 +363,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -387,7 +387,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(NSDictionary *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
     [newDict setObject:createFolder forKey:@"Action"];
@@ -400,7 +400,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -423,7 +423,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)deleteFiles:(NSDictionary *)files isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
     [newDict setObject:deleteFiles forKey:@"Action"];
@@ -436,7 +436,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -459,7 +459,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)getFolderInfoForName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(NSDictionary *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[API requestParams]];
     [newDict setObject:folderInfo forKey:@"Action"];
@@ -472,7 +472,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -495,7 +495,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name completion:(void (^)(NSDictionary *))handler
 {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     NSString * urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
@@ -506,7 +506,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            
             
             NSError * error = nil;
             

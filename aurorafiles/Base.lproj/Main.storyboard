@@ -184,6 +184,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="FvA-dM-Hhg">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
                     <userDefinedRuntimeAttributes>
@@ -392,6 +393,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="xYw-LL-eKg">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
                     <userDefinedRuntimeAttributes>
@@ -502,9 +504,9 @@
         <image name="sigh_out" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cc4-dE-0vf"/>
         <segue reference="ZvP-hf-ajL"/>
         <segue reference="OUC-3c-s72"/>
         <segue reference="BLH-nD-lUS"/>
+        <segue reference="N9E-Z9-Qjn"/>
     </inferredMetricsTieBreakers>
 </document>
