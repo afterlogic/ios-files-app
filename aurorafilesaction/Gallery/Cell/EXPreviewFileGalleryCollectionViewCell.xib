@@ -17,6 +17,16 @@
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dhA-RM-R7E"/>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Mf9-wW-DQM"/>
+                    <visualEffectView opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z5L-zz-X0s">
+                        <frame key="frameInset"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" id="6z7-LR-72e">
+                            <frame key="frameInset"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                        <blurEffect style="light"/>
+                    </visualEffectView>
                 </subviews>
             </view>
             <constraints>
@@ -30,6 +40,7 @@
             <connections>
                 <outlet property="activityView" destination="Mf9-wW-DQM" id="vrb-wF-vMH"/>
                 <outlet property="imageView" destination="dhA-RM-R7E" id="fbB-CO-vuJ"/>
+                <outlet property="selectedView" destination="z5L-zz-X0s" id="7aR-IG-QJl"/>
             </connections>
         </collectionViewCell>
     </objects>

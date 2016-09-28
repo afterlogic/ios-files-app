@@ -11,5 +11,6 @@
 @interface EXPreviewFileGalleryCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UploadedFile * file;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *selectedView;
 + (NSString*)cellId;
 @end

@@ -393,8 +393,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     return resultPath;
 }
 
-- (void)selectGalleryItemAtIndex:(int)idx{
-    //self.previewController
+- (void)selectGalleryItem:(UploadedFile *)item{
+    [self.previewController highlightItem:item];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

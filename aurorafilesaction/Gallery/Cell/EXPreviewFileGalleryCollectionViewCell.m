@@ -51,6 +51,15 @@
         self.imageView.alpha = 1.0f;
         [self.activityView stopAnimating];
         self.activityView.alpha = 0.0f;
+        self.selectedView.hidden = NO;
+    }
+}
+
+-(void)setSelected:(BOOL)selected{
+    if (selected) {
+        self.selectedView.hidden = NO;
+    }else{
+        self.selectedView.hidden = YES;
     }
 }
 

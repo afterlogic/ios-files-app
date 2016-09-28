@@ -14,6 +14,7 @@
 
 @interface EXPreviewFileGalleryCollectionViewController (){
     NSInteger currentInterfaceOrientation;
+    NSIndexPath * lastSelectedItem;
 }
 
 @end
@@ -34,6 +35,7 @@
     
     // Register cell classes
     [self.collectionView registerNib:[UINib nibWithNibName:@"EXPreviewFileGalleryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:[EXPreviewFileGalleryCollectionViewCell cellId]];
+    self.collectionView.userInteractionEnabled = NO;
     
     // Do any additional setup after loading the view.
 }
@@ -152,12 +154,38 @@
     cell.layer.masksToBounds = YES;
     cell.layer.cornerRadius = 6;
     
+    if ([self.items indexOfObject:item] == 0) {
+        lastSelectedItem = indexPath;
+        cell.selectedView.hidden = NO;
+        [self highlightItem:item];
+    }else{
+        cell.selectedView.hidden = YES;
+    }
+    
     return cell;
 }
 
-- (void)highlightItemAtIndex:(int)idx{
-    
-    //[self.collectionView selectItemAtIndexPath:[self.items] animated:<#(BOOL)#> scrollPosition:<#(UICollectionViewScrollPosition)#>]
+-(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
+    //NSLog(@"did select item at index -> %li",(long)indexPath.row);
+    //EXPreviewFileGalleryCollectionViewCell *cell = (EXPreviewFileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
+    //cell.selectedView.hidden = YES;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    //NSLog(@"did select item at index -> %li",(long)indexPath.row);
+    //[self collectionView:collectionView didSelectItemAtIndexPath:lastSelectedItem];
+    //EXPreviewFileGalleryCollectionViewCell *cell = (EXPreviewFileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
+    //cell.selectedView.hidden = NO;
+    //lastSelectedItem = indexPath;
+}
+
+- (void)highlightItem:(UploadedFile *)item{
+    for (EXPreviewFileGalleryCollectionViewCell *cell in self.collectionView.visibleCells){
+        cell.selectedView.hidden = YES;
+        if ([cell.file isEqual:item]) {
+            [self.collectionView selectItemAtIndexPath:[self.collectionView indexPathForCell:cell] animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+        }
+    }
 }
 
 

@@ -14,4 +14,6 @@
 @property (strong, nonatomic) UploadedFile * folder;
 @property (strong, nonatomic) UploadedFile * currentItem;
 @property (strong, nonatomic) NSArray * items;
+
+- (void)highlightItem:(UploadedFile *)item;
 @end

@@ -262,7 +262,6 @@
     
     [UIView animateWithDuration:duration animations:^{
         [self.self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
-        [[self.self.collectionView collectionViewLayout] invalidateLayout];
     }];
 }
 
@@ -364,7 +363,7 @@
     CGFloat pageWidth = self.collectionView.frame.size.width;
     int pageNum = self.collectionView.contentOffset.x/ pageWidth;
     NSLog(@"curent media num -> %i",pageNum);
-    [self.delegate selectGalleryItemAtIndex:pageNum];
+    [self.delegate selectGalleryItem:[_items objectAtIndex:pageNum]];
 }
 
 #pragma mark - Setters

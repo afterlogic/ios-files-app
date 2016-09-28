@@ -10,7 +10,7 @@
 #import "UploadedFile.h"
 @protocol GalleryDelegate
 @required
--(void)selectGalleryItemAtIndex:(int)idx;
+-(void)selectGalleryItem:(UploadedFile *)item;
 @end
 
 @interface EXFileGalleryCollectionViewController : UICollectionViewController
