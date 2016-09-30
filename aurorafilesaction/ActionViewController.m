@@ -31,30 +31,29 @@
     UIAlertController * alertController;
     UIProgressView *pv;
     
-    
     PopupViewController *allertPopUp;
-    
     
     NSMutableArray <UploadedFile *> *filesForUpload;
     NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
     
     
     int64_t totalBytesForAllFilesSend;
-    
     CGFloat previewLocalHeight;
 }
 
 
 @property (strong, nonatomic) NSURL *movieURL;
 @property (nonatomic, retain) AVPlayerViewController *playerViewController;
-@property (strong, nonatomic) IBOutlet UIView *videoAudioView;
-@property(strong,nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
 @property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
 @property (weak, nonatomic) EXFileGalleryCollectionViewController *galleryController;
 @property (weak, nonatomic) EXPreviewFileGalleryCollectionViewController *previewController;
 @property (weak, nonatomic) CurrentFilePathViewController *currentUploadPathView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewHeight;
+@property (weak, nonatomic) IBOutlet UIView *galleryContainer;
+@property (weak, nonatomic) IBOutlet UIView *previewContainer;
+@property (weak, nonatomic) IBOutlet UIView *uploadPathContainer;
+
 
 
 - (IBAction)uploadAction:(id)sender;
@@ -71,21 +70,28 @@
         self.uploadButton.enabled = NO;
         [self.uploadButton setTitle:@""];
         [self.userLoggedOutView setHidden:NO];
-        
+        [self hideContainers:YES];
     }else{
+        [self hideContainers:NO];
         [self setupForUpload];
     }
 }
 
+-(void)hideContainers:(BOOL) hide{
+    self.galleryContainer.hidden = hide;
+    self.previewContainer.hidden = hide;
+    self.uploadPathContainer.hidden = hide;
+}
+
 -(void)setupForUpload{
-    self.playerViewController = [[AVPlayerViewController alloc]init];
-    _playerViewController.view.frame = self.videoAudioView.bounds;
-    _playerViewController.showsPlaybackControls = YES;
-    [self.view addSubview:_playerViewController.view];
+//    self.playerViewController = [[AVPlayerViewController alloc]init];
+//    _playerViewController.view.frame = self.videoAudioView.bounds;
+//    _playerViewController.showsPlaybackControls = YES;
+//    [self.view addSubview:_playerViewController.view];
     
-    self.imageView.alpha = 0.0f;
-    self.playerViewController.view.alpha = 0.0f;
-    self.videoAudioView.alpha = 0.0f;
+//    self.imageView.alpha = 0.0f;
+//    self.playerViewController.view.alpha = 0.0f;
+//    self.videoAudioView.alpha = 0.0f;
     
     totalBytesForAllFilesSend = 0;
     
@@ -101,15 +107,15 @@
         for (NSItemProvider *itemProvider in item.attachments) {
             //image
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-                __weak UIImageView *imageView = self.imageView;
+//                __weak UIImageView *imageView = self.imageView;
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage options:nil completionHandler:^(id image, NSError *error) {
                     if(image) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             if([image isKindOfClass:[NSURL class]]) {
                                 fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
                                 mediaData = image;
-                                [imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:image]]];
-                                imageView.alpha = 0.0f;
+//                                [imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:image]]];
+//                                imageView.alpha = 0.0f;
                                 
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,51 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u6Q-UF-4QB" userLabel="login error view">
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Rfj-ID-T0e">
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="211" id="eJA-pC-W0o"/>
-                                            <constraint firstAttribute="width" constant="240" id="jGF-OC-aLS"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in Aurora.Files" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6v-eV-8q6">
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="26" id="Phh-pF-DoQ"/>
-                                            <constraint firstAttribute="width" constant="240" id="VWv-5R-TID"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="26" id="ZnM-1X-NYD"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To continue, click Aurora.Files app and sign in" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yz6-my-ir0">
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="240" id="Ioi-a5-8mq"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="126" id="K9f-Ao-P5a"/>
-                                            <constraint firstAttribute="height" constant="126" id="phr-Iy-r0q"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="Yz6-my-ir0" firstAttribute="top" secondItem="s6v-eV-8q6" secondAttribute="bottom" constant="8" symbolic="YES" id="5Ve-QO-1aQ"/>
-                                    <constraint firstAttribute="bottom" secondItem="Yz6-my-ir0" secondAttribute="bottom" constant="34" id="Dxr-IF-ybA"/>
-                                    <constraint firstItem="s6v-eV-8q6" firstAttribute="top" secondItem="Rfj-ID-T0e" secondAttribute="bottom" constant="8" symbolic="YES" id="FIH-vj-y4b"/>
-                                    <constraint firstItem="s6v-eV-8q6" firstAttribute="leading" secondItem="Yz6-my-ir0" secondAttribute="leading" id="I5s-6n-Nyc"/>
-                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="top" secondItem="u6Q-UF-4QB" secondAttribute="top" constant="51" id="Me8-sE-sFQ"/>
-                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="Ocx-Og-Fgh"/>
-                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="leading" secondItem="u6Q-UF-4QB" secondAttribute="leading" constant="40" id="QCu-Tp-kF6"/>
-                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="trailing" secondItem="s6v-eV-8q6" secondAttribute="trailing" id="cw2-Fo-BX0"/>
-                                    <constraint firstItem="s6v-eV-8q6" firstAttribute="trailing" secondItem="Yz6-my-ir0" secondAttribute="trailing" id="oOu-JY-pLf"/>
-                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="leading" secondItem="s6v-eV-8q6" secondAttribute="leading" id="pCD-SW-1OL"/>
-                                </constraints>
-                            </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9ga-4F-77Z"/>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fPb-qk-Zg5" userLabel="video View">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -88,6 +44,45 @@
                                     <segue destination="w6q-nk-snD" kind="embed" identifier="filePath_embed" id="D10-91-jZp"/>
                                 </connections>
                             </containerView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u6Q-UF-4QB" userLabel="login error view">
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Rfj-ID-T0e">
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Rfj-ID-T0e" secondAttribute="height" multiplier="1:1" id="Ppo-gK-e5n"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in Aurora.Files" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s6v-eV-8q6">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="Ya8-zI-drK"/>
+                                            <constraint firstAttribute="width" constant="239" id="l5C-7i-I3Q"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To continue, click Aurora.Files app and sign in" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yz6-my-ir0">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="Vxf-Ff-c4n"/>
+                                            <constraint firstAttribute="width" constant="207" id="i1X-3Z-1vg"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Yz6-my-ir0" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="2br-NH-KRC"/>
+                                    <constraint firstItem="Yz6-my-ir0" firstAttribute="top" secondItem="s6v-eV-8q6" secondAttribute="bottom" constant="8" id="9lb-Vt-iwF"/>
+                                    <constraint firstItem="s6v-eV-8q6" firstAttribute="top" relation="lessThanOrEqual" secondItem="Rfj-ID-T0e" secondAttribute="bottom" constant="114" id="G7g-bY-jrh"/>
+                                    <constraint firstAttribute="bottom" secondItem="Yz6-my-ir0" secondAttribute="bottom" constant="27" id="ak1-vy-5QC"/>
+                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="h5f-2x-uHg"/>
+                                    <constraint firstItem="Rfj-ID-T0e" firstAttribute="centerY" secondItem="u6Q-UF-4QB" secondAttribute="centerY" constant="-0.5" id="kFD-Ll-arP"/>
+                                    <constraint firstItem="s6v-eV-8q6" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="lR9-rx-OUX"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -128,24 +123,25 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="imageView" destination="9ga-4F-77Z" id="5y6-5w-9QO"/>
+                        <outlet property="galleryContainer" destination="32w-4m-AXY" id="lId-px-GaE"/>
+                        <outlet property="previewContainer" destination="QSi-Cv-w76" id="ENu-ZQ-XuU"/>
                         <outlet property="previewHeight" destination="yYU-Oe-5H7" id="4wt-jY-cYf"/>
                         <outlet property="uploadButton" destination="DKm-NJ-ntF" id="Ar4-mh-wJK"/>
+                        <outlet property="uploadPathContainer" destination="q90-uI-jU3" id="iS2-6u-zoY"/>
                         <outlet property="userLoggedOutView" destination="u6Q-UF-4QB" id="VAf-vc-zsA"/>
-                        <outlet property="videoAudioView" destination="fPb-qk-Zg5" id="dK9-4v-Ug8"/>
                         <outlet property="view" destination="zMn-AG-sqS" id="Qma-de-2ek"/>
                         <segue destination="eDf-Pd-3Vg" kind="push" identifier="push_files" id="3nW-Qh-q1J"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="282" y="-111"/>
+            <point key="canvasLocation" x="397" y="-104"/>
         </scene>
         <!--File Gallery Collection View Controller-->
         <scene sceneID="PeW-Qs-9RT">
             <objects>
                 <collectionViewController id="Fna-8H-1o2" customClass="EXFileGalleryCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="3ud-gB-9eA">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="3ud-gB-9eA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="447"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -187,7 +183,7 @@
         <scene sceneID="dT4-v5-DG1">
             <objects>
                 <collectionViewController id="Jgo-jQ-OdS" customClass="EXPreviewFileGalleryCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" dataMode="prototypes" id="WZ6-Xd-eBU">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" dataMode="prototypes" id="WZ6-Xd-eBU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -258,6 +254,10 @@
         <scene sceneID="M1i-dt-dtY">
             <objects>
                 <viewController id="w6q-nk-snD" customClass="CurrentFilePathViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1Qt-BQ-NDH"/>
+                        <viewControllerLayoutGuide type="bottom" id="Sf9-NQ-SX3"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="be4-3u-BTd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="35"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -362,7 +362,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" id="ay3-OO-7rw">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="0.0" width="336" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <scopeButtonTitles>
@@ -439,7 +439,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" id="zyA-19-EXD">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="0.0" width="336" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits"/>
                             <scopeButtonTitles>

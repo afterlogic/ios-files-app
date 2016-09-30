@@ -52,7 +52,9 @@
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
 
     [self.collectionView setCollectionViewLayout:layout];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    if(self.currentItem){
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    }
     [self.navigationController setToolbarHidden:YES animated:YES];
 }
 
@@ -101,7 +103,9 @@
      }
                                  completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
      {
-         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+         if(self.currentItem){
+             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+         }
          self.collectionView.alpha = 1.0f;
      }];
 }
