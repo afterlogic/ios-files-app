@@ -10,5 +10,5 @@
 
 @interface CurrentFilePathViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *openFileButton;
-
+- (void)setUploadPath:(NSString *)path;
 @end

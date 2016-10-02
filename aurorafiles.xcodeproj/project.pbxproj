@@ -50,6 +50,8 @@
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
+		FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
+		FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
 		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
 		FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */; };
@@ -197,6 +199,8 @@
 		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
+		FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
+		FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
 		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
@@ -393,6 +397,8 @@
 			children = (
 				DAC1CA7B1D061F1200238EB5 /* UIImage+Aurora.h */,
 				DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */,
+				FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */,
+				FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1025,6 +1031,7 @@
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
+				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
 				DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */,
 				DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */,
@@ -1073,6 +1080,7 @@
 				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
 				FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */,
 				FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
+				FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				FF9053701D9BFC9900A09A44 /* FilesTableViewCell.m in Sources */,
 				FF9053731D9C012D00A09A44 /* API.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,

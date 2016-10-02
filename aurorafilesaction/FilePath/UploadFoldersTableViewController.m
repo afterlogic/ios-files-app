@@ -21,7 +21,7 @@
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
 @property (strong, nonatomic) NSURLSession * session;
-@property (strong, nonatomic) NSString * type;
+
 //@property (strong, nonatomic) IBOutlet UIView *activityView;
 //@property (strong, nonatomic) STZPullToRefresh * pullToRefresh;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) Folder * folderToOperate;
+@property (weak, nonatomic) IBOutlet UIRefreshControl *refreshController;
 
 
 @end
@@ -50,35 +51,19 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
     
     self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
-    //STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
-    //[self.view addSubview:refreshView];
-    
-    
-    //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userWasSigneInOffline) name:kReachabilityChangedNotification object:nil]
-    //
-    //    // Setup PullToRefresh
-    //self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
-                                                        // refreshView:refreshView
-                                                   //tableViewDelegate:nil];
-    //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
         
         return [url absoluteString];
     }];
-    //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    //self.cancelButton.tintColor = refreshView.progressColor;
-    //self.doneButton.tintColor = refreshView.progressColor;
-    [self.refreshControl addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
+    [self.refreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
-    //[self.pullToRefresh startRefresh];
-    //[self updateFiles:^() {
-    //    [self.pullToRefresh finishRefresh];
-    //}];
-    // Do any additional setu
+    [self.tableView setContentInset:UIEdgeInsetsMake(self.tableView.contentInset.top, self.tableView.contentInset.left, 50, self.tableView.contentInset.right)];
+    [self updateFiles:^{
+        [self.refreshController endRefreshing];
+    }];
 }
 
 - (void)setFolder:(Folder *)folder
@@ -87,13 +72,14 @@
     if (folder)
     {
         self.title = folder.name;
+        [self.delegate currentFolder:self.folder root:self.type];
     }
 }
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
     [self updateFiles:^(){
-        [self.refreshControl endRefreshing];
+        [self.refreshController endRefreshing];
     }];
 }
 
@@ -108,14 +94,16 @@
         titleLabel.text = self.folder.name;
         
         self.navigationItem.title = self.folder.name;
-        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-        self.navigationItem.rightBarButtonItems = @[self.doneButton];
+        self.navigationItem.leftBarButtonItem = self.backButton;
+        self.navigationItem.rightBarButtonItems = @[self.doneButton, self.EditButton];
+        
+        [self.delegate currentFolder:self.folder root:self.type];
         
     }
     else
     {
         self.navigationItem.title = [self.type capitalizedString];
-        self.navigationItem.rightBarButtonItems = @[self.doneButton];
+        self.navigationItem.rightBarButtonItems = @[self.doneButton,self.EditButton];
         
     }
     NSError * error = nil;
@@ -136,24 +124,24 @@
 
 -(void)userWasSigneInOffline
 {
-    [self lockOnlineButtons];
+//    [self lockOnlineButtons];
 }
 
 -(void)lockOnlineButtons
 {
-    [self.tabBarController setSelectedIndex:2];
-    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-        //        NSLog(@"vc class is -> %@",[vc class] );
-        [vc setEnabled:NO];
-    };
+//    [self.tabBarController setSelectedIndex:2];
+//    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
+//        //        NSLog(@"vc class is -> %@",[vc class] );
+//        [vc setEnabled:NO];
+//    };
 }
 
 -(void)unlockOnlineButtons{
     //    [self.tabBarController setSelectedIndex:1];
-    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-        //        NSLog(@"vc class is -> %@",[vc class] );
-        [vc setEnabled:YES];
-    };
+//    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
+//        //        NSLog(@"vc class is -> %@",[vc class] );
+//        [vc setEnabled:YES];
+//    };
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -174,11 +162,18 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 - (void)pullToRefreshDidStart
 {
-    //[self updateFiles:^(){
-    //    [self.pullToRefresh finishRefresh];
-    //}];
+//    [self updateFiles:^(){
+//        [self.pullToRefresh finishRefresh];
+//    }];
+}
+
+-(void)setDelegate:(id<FolderDelegate>)delegate{
+    if (delegate) {
+        _delegate = delegate;
+    }
 }
 
 #pragma mark - Search Bar
@@ -248,8 +243,10 @@
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
         UploadFoldersTableViewController * vc = [segue destinationViewController];
+        vc.delegate = self.delegate;
         vc.folder = object;
         vc.isCorporate = self.isCorporate;
+        vc.doneButton = self.doneButton;
     }
 }
 
@@ -332,9 +329,9 @@
             [cell.downloadActivity stopAnimating];
             cell.disclosureButton.hidden = NO;
         }
-        //        [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-        //        [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-        //        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
+            [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+            [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
+                cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
         
         [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
         cell.fileDownloaded = object.isDownloaded.boolValue;
@@ -374,6 +371,7 @@
         if (handler)
         {
             handler();
+            
         }
     }];
 }
@@ -411,7 +409,6 @@
 }
 
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
-    
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
         NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
@@ -586,9 +583,48 @@
 }
 #pragma mark More Actions
 
+-(void)backAction:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 
 #pragma mark Edit Menu Actions
+
+- (IBAction)editAction:(id)sender
+{
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel
+                                                          handler:^(UIAlertAction * action) {
+                                                              
+                                                          }];
+    
+    self.folderToOperate = self.folder;
+    [alert addAction:[self createFolderAction]];
+    [alert addAction:[self uploadFileAction]];
+    
+    if (self.folder)
+    {
+        [alert addAction:[self renameCurrentFolderAction]];
+    }
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (UIAlertAction*)uploadFileAction
+{
+    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action) {
+                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                                                           picker.delegate = self;
+                                                           picker.allowsEditing = YES;
+                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
+                                                           
+                                                           [self presentViewController:picker animated:YES completion:NULL];
+                                                       }];
+    
+    return uploadFile;
+}
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
@@ -604,11 +640,11 @@
     {
         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
     }
-    
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
         NSLog(@"%@",response);
         [self updateFiles:^(){
-            
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
         }];
     }];
 }
@@ -631,10 +667,91 @@
     return deleteFolder;
 }
 
-
-- (IBAction)cancelAction:(id)sender {
+- (UIAlertAction*)renameCurrentFolderAction
+{
+    NSString * text = [self.folderToOperate isEqual:self.folder] ? NSLocalizedString(@"Rename Current Folder", @"") : NSLocalizedString(@"Rename", @"");
+    UIAlertAction* renameFolder = [UIAlertAction actionWithTitle:text style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action) {
+                                                             UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                                                             [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                                                                 textField.placeholder = NSLocalizedString(@"Folder Name", @"");
+                                                                 textField.text = self.folderToOperate.name;
+                                                                 self.folderName = textField;
+                                                             }];
+                                                             
+                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 if (!self.folderToOperate)
+                                                                 {
+                                                                     return ;
+                                                                 }
+                                                                 _fetchedResultsController.delegate = nil;
+                                                                 _fetchedResultsController = nil;
+                                                                 
+//                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 [[StorageManager sharedManager] renameFolder:self.folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                                     self.folderToOperate = folder;
+                                                                     self.folder = folder;
+                                                                     self.title = folder.name;
+                                                                     NSError * error = nil;
+                                                                     [self.fetchedResultsController performFetch:&error];
+                                                                     if (error)
+                                                                     {
+                                                                         NSLog(@"%@",[error userInfo]);
+                                                                     }
+                                                                     [self updateFiles:^(){
+//                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         
+                                                                         [self.tableView reloadData];
+                                                                     }];
+                                                                     
+                                                                 }];
+                                                                 
+                                                                 
+                                                             }];
+                                                             
+                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+                                                                 
+                                                             }];
+                                                             [createFolder addAction:defaultAction];
+                                                             [createFolder addAction:cancelAction];
+                                                             [self presentViewController:createFolder animated:YES completion:nil];
+                                                         }];
+    return renameFolder;
+    
 }
 
-- (IBAction)doneAction:(id)sender {
+- (UIAlertAction*)createFolderAction
+{
+    
+    UIAlertAction* createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Folder", @"") style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * action) {
+                                                             UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                                                             [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                                                                 textField.placeholder = NSLocalizedString(@"Folder Name", @"");
+                                                                 
+                                                                 self.folderName = textField;
+                                                             }];
+                                                             
+                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
+                                                                     NSLog(@"%@",result);
+//                                                                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                     [self updateFiles:^(){
+//                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         
+                                                                         [self.tableView reloadData];
+                                                                     }];
+                                                                 }];;
+                                                                 
+                                                             }];
+                                                             
+                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+                                                                 
+                                                             }];
+                                                             [createFolder addAction:defaultAction];
+                                                             [createFolder addAction:cancelAction];
+                                                             [self presentViewController:createFolder animated:YES completion:nil];
+                                                         }];
+    return createFolder;
 }
 @end

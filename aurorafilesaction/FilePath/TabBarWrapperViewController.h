@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "Folder.h"
+@protocol UploadFolderDelegate
+@required
+-(void)setCurrentUploadFolder:(NSString *)folderPath root:(NSString *)root;
+@end
 @interface TabBarWrapperViewController : UIViewController
-
+@property (nonatomic, strong) id <UploadFolderDelegate> delegate;
 @end

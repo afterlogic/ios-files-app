@@ -11,6 +11,7 @@
 #import "EXFileGalleryCollectionViewController.h"
 #import "EXPreviewFileGalleryCollectionViewController.h"
 #import "CurrentFilePathViewController.h"
+#import "TabBarWrapperViewController.h"
 #import "PopUp/PopupViewController.h"
 #import "Model/UploadedFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -19,13 +20,18 @@
 #import <AVKit/AVKit.h>
 #import "Settings.h"
 #import "EXConstants.h"
+#import "NSString+URLEncode.h"
 
-@interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate> {
+@interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
     NSString *fileExtension;
     NSURL *mediaData;
     NSString * urlString;
     
     NSString *fileName;
+    
+    NSString *uploadFolderPath;
+    NSString *uploadRootPath;
+    
     unsigned long long uploadSize;
     
     UIAlertController * alertController;
@@ -39,6 +45,7 @@
     
     int64_t totalBytesForAllFilesSend;
     CGFloat previewLocalHeight;
+    UIViewController *currentModalView;
 }
 
 
@@ -49,6 +56,7 @@
 @property (weak, nonatomic) EXFileGalleryCollectionViewController *galleryController;
 @property (weak, nonatomic) EXPreviewFileGalleryCollectionViewController *previewController;
 @property (weak, nonatomic) CurrentFilePathViewController *currentUploadPathView;
+@property (weak, nonatomic) TabBarWrapperViewController *tabbarWrapController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewHeight;
 @property (weak, nonatomic) IBOutlet UIView *galleryContainer;
 @property (weak, nonatomic) IBOutlet UIView *previewContainer;
@@ -74,7 +82,10 @@
     }else{
         [self hideContainers:NO];
         [self setupForUpload];
+        [self setCurrentUploadFolder:@"" root:@"personal"];
     }
+    
+    
 }
 
 -(void)hideContainers:(BOOL) hide{
@@ -84,17 +95,8 @@
 }
 
 -(void)setupForUpload{
-//    self.playerViewController = [[AVPlayerViewController alloc]init];
-//    _playerViewController.view.frame = self.videoAudioView.bounds;
-//    _playerViewController.showsPlaybackControls = YES;
-//    [self.view addSubview:_playerViewController.view];
-    
-//    self.imageView.alpha = 0.0f;
-//    self.playerViewController.view.alpha = 0.0f;
-//    self.videoAudioView.alpha = 0.0f;
     
     totalBytesForAllFilesSend = 0;
-    
     [self searchFilesForUpload];
     
 }
@@ -189,6 +191,7 @@
     self.previewController.items = filesForUpload.copy;
     self.galleryController.delegate = self;
     [self.currentUploadPathView.openFileButton addTarget:self action:@selector(showUploadFolders) forControlEvents:UIControlEventTouchUpInside];
+    [self.currentUploadPathView setUploadPath:uploadFolderPath];
     if([NSObject orientation] == InterfaceOrientationTypePortrait){
         [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypePortrait];
     }else{
@@ -196,6 +199,14 @@
     }
     
 }
+
+- (void)setCurrentUploadFolder:(NSString *)folderPath root:(NSString *)root{
+    uploadFolderPath = folderPath;
+    uploadRootPath = root;
+    [self.currentUploadPathView setUploadPath:[NSString stringWithFormat:@"%@%@",root,folderPath]];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 
 -(void)setPreviewGalleryHeightForOrientation:(NSInteger) orientation{
     previewLocalHeight = previewHeightConst;
@@ -245,8 +256,6 @@
 
 -(void)showUploadFolders{
     [self performSegueWithIdentifier:@"push_files" sender:self];
-    //UIStoryboard *mystoryboard = [UIStoryboard storyboardWithName:@"MainInterface" bundle:nil];
-    //[self.navigationController pushViewController:[mystoryboard instantiateViewControllerWithIdentifier:@"push_files"] animated:YES];
 }
 
 - (IBAction)done
@@ -268,7 +277,7 @@
         }else{
             file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
         }
-        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],@"personal",file.name];
+        urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
         file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
         
         uploadSize += file.size;
@@ -305,8 +314,8 @@
 
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithURL:data]];
     
-    [request setValue:@"personal" forHTTPHeaderField:@"Type"];
-    [request setValue:@"{\"Type\":\"personal\"}" forHTTPHeaderField:@"AdditionalData"];
+    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
+    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
     
    
     return request;
@@ -424,9 +433,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
         self.currentUploadPathView = (CurrentFilePathViewController *)[segue destinationViewController];
     }
     
-    //if ([segue.identifier isEqualToString:@"folders_embed"]){
-    //    self.currentUploadPathView = (CurrentFilePathViewController *)[segue destinationViewController];
-    //}
+    if ([segue.identifier isEqualToString:@"push_files"]){
+       TabBarWrapperViewController *vc = (TabBarWrapperViewController *)[segue destinationViewController];
+        vc.delegate = self;
+        self.tabbarWrapController = vc;
+    }
 }
 
 

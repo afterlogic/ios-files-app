@@ -26,6 +26,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setUploadPath:(NSString *)path{
+    self.pathLabel.text = path;
+}
+
 /*
 #pragma mark - Navigation
 

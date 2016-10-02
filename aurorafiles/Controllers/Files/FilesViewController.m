@@ -59,9 +59,6 @@
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
     [self.view addSubview:refreshView];
     
-    
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userWasSigneInOffline) name:kReachabilityChangedNotification object:nil]
-//
 //    // Setup PullToRefresh
     self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
                                                          refreshView:refreshView
@@ -80,6 +77,7 @@
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
+    
     [self.pullToRefresh startRefresh];
     [self updateFiles:^() {
         [self.pullToRefresh finishRefresh];
@@ -342,12 +340,6 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//    if (!object.canEdit) return NO;
-//    
-//    
-//    return YES;
-    
     return NO;
 }
 
@@ -387,9 +379,6 @@
             [cell.downloadActivity stopAnimating];
             cell.disclosureButton.hidden = NO;
         }
-//        [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-//        [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-//        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
         
         [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
         cell.fileDownloaded = object.isDownloaded.boolValue;

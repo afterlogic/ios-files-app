@@ -7,16 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
-@class Folder;
+#import "Folder.h"
+
+@protocol FolderDelegate
+@required
+-(void)currentFolder:(Folder *)folder root:(NSString *)root;
+@end
 
 @interface UploadFoldersTableViewController : UITableViewController
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (strong, nonatomic) IBOutlet UIView *activityView;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *EditButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 @property (strong, nonatomic) Folder * folder;
 @property (nonatomic, assign) BOOL isCorporate;
+@property (strong, nonatomic) NSString * type;
+@property (nonatomic, strong) id <FolderDelegate> delegate;
 
-- (IBAction)doneAction:(id)sender;
-
+- (IBAction)editAction:(id)sender;
+- (IBAction)backAction:(id)sender;
 
 @end

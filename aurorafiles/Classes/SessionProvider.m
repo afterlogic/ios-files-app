@@ -16,7 +16,6 @@
 + (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline ))handler
 {
     [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
-        
         if (!error)
         {
             if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
