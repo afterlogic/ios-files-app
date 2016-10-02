@@ -30,7 +30,7 @@
     self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
     self.currentFolderController.delegate = self;
     self.selectedFolderPath = @"";
-    self.selectedRootPath = @"";
+    self.selectedRootPath = self.currentFolderController.type;
     // Do any additional setup after loading the view.
 }
 
@@ -73,7 +73,8 @@
 
 -(void)currentFolder:(Folder *)folder root:(NSString *)root{
     NSLog(@"current root -> %@ | folder -> %@",root, folder.fullpath);
-    self.selectedFolderPath = [NSString stringWithFormat:@"%@%@",root,folder.fullpath];
+    self.selectedFolderPath = folder.fullpath;
+    self.selectedRootPath = root;
 }
 
 #pragma mark - Navigation

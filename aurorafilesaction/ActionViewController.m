@@ -83,6 +83,7 @@
         [self hideContainers:NO];
         [self setupForUpload];
         [self setCurrentUploadFolder:@"" root:@"personal"];
+        [self showUploadFolders];
     }
     
     
@@ -191,7 +192,8 @@
     self.previewController.items = filesForUpload.copy;
     self.galleryController.delegate = self;
     [self.currentUploadPathView.openFileButton addTarget:self action:@selector(showUploadFolders) forControlEvents:UIControlEventTouchUpInside];
-    [self.currentUploadPathView setUploadPath:uploadFolderPath];
+//    [self.currentUploadPathView setUploadPath:uploadFolderPath];
+    [self generatePath:uploadFolderPath root:uploadRootPath];
     if([NSObject orientation] == InterfaceOrientationTypePortrait){
         [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypePortrait];
     }else{
@@ -201,44 +203,18 @@
 }
 
 - (void)setCurrentUploadFolder:(NSString *)folderPath root:(NSString *)root{
-    uploadFolderPath = folderPath;
-    uploadRootPath = root;
-    [self.currentUploadPathView setUploadPath:[NSString stringWithFormat:@"%@%@",root,folderPath]];
+    [self generatePath:folderPath root:root];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-
--(void)setPreviewGalleryHeightForOrientation:(NSInteger) orientation{
-    previewLocalHeight = previewHeightConst;
-    
-    if(UIInterfaceOrientationIsPortrait(orientation)){
-        
-        CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
-        CGFloat height = 0;
-        if([NSObject orientation] == InterfaceOrientationTypePortrait){
-            height = iOSDeviceScreenSize.height;
-        }else{
-            height = iOSDeviceScreenSize.width;
-        }
-        
-        if(height > 568)
-        {
-            previewLocalHeight = previewHeightConst;
-        }
-        
-        if (height <= 568){
-            previewLocalHeight = previewHeightConst * scaleFactor1Devider;
-        }
-        
-        if (filesForUpload.count > 5) {
-            previewLocalHeight = previewLocalHeight * 2 + previewLineHeight;
-        }else{
-            previewLocalHeight += previewLineHeight;
-        }
-
-    }
-    [_previewHeight setConstant:previewLocalHeight];
+-(void)generatePath:(NSString *)folderPath root:(NSString *)root{
+    uploadFolderPath = folderPath;
+    uploadRootPath = root;
+    NSString *targetPath = [folderPath componentsSeparatedByString:@"/"].lastObject;
+    [self.currentUploadPathView setUploadPath:[NSString stringWithFormat:@"%@ : %@",root,targetPath]];
 }
+
+
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
@@ -262,6 +238,8 @@
 {
     [self.extensionContext completeRequestReturningItems:self.extensionContext.inputItems completionHandler:nil];
 }
+
+#pragma mark - Upload
 
 - (IBAction)uploadAction:(id)sender
 {
@@ -417,10 +395,47 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     return resultPath;
 }
 
+#pragma mark - Preview
+
+-(void)setPreviewGalleryHeightForOrientation:(NSInteger) orientation{
+    previewLocalHeight = previewHeightConst;
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        
+        CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
+        CGFloat height = 0;
+        if([NSObject orientation] == InterfaceOrientationTypePortrait){
+            height = iOSDeviceScreenSize.height;
+        }else{
+            height = iOSDeviceScreenSize.width;
+        }
+        
+        if(height > 568)
+        {
+            previewLocalHeight = previewHeightConst;
+        }
+        
+        if (height <= 568){
+            previewLocalHeight = previewHeightConst * scaleFactor1Devider;
+        }
+        
+        if (filesForUpload.count > 5) {
+            previewLocalHeight = previewLocalHeight * 2 + previewLineHeight;
+        }else{
+            previewLocalHeight += previewLineHeight;
+        }
+        
+    }
+    [_previewHeight setConstant:previewLocalHeight];
+}
+
 - (void)selectGalleryItem:(UploadedFile *)item{
     [self.previewController highlightItem:item];
 }
 
+
+
+#pragma mark - Navigation
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"gallery_embed"]) {
         self.galleryController = (EXFileGalleryCollectionViewController *)[segue destinationViewController];
@@ -434,12 +449,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     }
     
     if ([segue.identifier isEqualToString:@"push_files"]){
-       TabBarWrapperViewController *vc = (TabBarWrapperViewController *)[segue destinationViewController];
+        TabBarWrapperViewController *vc = (TabBarWrapperViewController *)[segue destinationViewController];
         vc.delegate = self;
         self.tabbarWrapController = vc;
     }
 }
-
 
 
 @end

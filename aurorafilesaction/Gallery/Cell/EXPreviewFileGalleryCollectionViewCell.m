@@ -44,10 +44,24 @@
         UIImage * image = nil;
         
         //NSData *imageData = [NSData dataWithContentsOfURL:[file path]];
-        NSString *path = file.path.absoluteString;
-        image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
-        self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
-        image = nil;
+        if ([file.type isEqualToString:@"public.image"]) {
+            NSString *path = file.path.absoluteString;
+            image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
+            self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
+            image = nil;
+        }
+        if ([file.type isEqualToString:@"public.url"]) {
+            image = [UIImage imageNamed:@"shotcut"];
+            self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
+            image = nil;
+        }
+        
+        if ([file.type isEqualToString:@"public.movie"]) {
+            image = [UIImage imageNamed:@"video"];
+            self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
+            image = nil;
+        }
+        
         self.imageView.alpha = 1.0f;
         [self.activityView stopAnimating];
         self.activityView.alpha = 0.0f;
