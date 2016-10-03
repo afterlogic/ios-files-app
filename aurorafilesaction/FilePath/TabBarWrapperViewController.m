@@ -66,6 +66,8 @@
         NSLog(@"current folder controller is -> %@", self.currentFolderController);
         self.currentFolderController.delegate = self;
         self.currentFolderController.doneButton = self.navRightButton;
+        self.selectedRootPath = self.currentFolderController.type;
+        self.selectedFolderPath = @"";
     }
 }
 
