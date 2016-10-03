@@ -55,7 +55,11 @@
 }
 
 -(void)donePressed{
-    [self.delegate setCurrentUploadFolder:self.selectedFolderPath root:self.selectedRootPath];
+    NSString *folderPath = @"";
+    if (self.selectedFolderPath) {
+        folderPath = self.selectedFolderPath;
+    }
+    [self.delegate setCurrentUploadFolder:folderPath root:self.selectedRootPath];
 //    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
