@@ -39,7 +39,7 @@
     
     PopupViewController *allertPopUp;
     
-    NSMutableArray <UploadedFile *> *filesForUpload;
+//    NSMutableArray <UploadedFile *> *filesForUpload;
     NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
     
     
@@ -50,6 +50,7 @@
 
 
 @property (strong, nonatomic) NSURL *movieURL;
+@property (strong, nonatomic) NSMutableArray <UploadedFile *> *filesForUpload;
 @property (nonatomic, retain) AVPlayerViewController *playerViewController;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
 @property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
@@ -103,7 +104,7 @@
 }
 
 -(void)searchFilesForUpload{
-    filesForUpload = [NSMutableArray new];
+    self.filesForUpload = [NSMutableArray new];
     NSArray *imputItems = self.extensionContext.inputItems;
     NSLog(@"input items is -> %@",imputItems);
     for (NSExtensionItem *item in self.extensionContext.inputItems) {
@@ -126,7 +127,7 @@
                                 file.type = (NSString *)kUTTypeImage;
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 
-                                [filesForUpload addObject:file];
+                                [self.filesForUpload addObject:file];
                             }
                         }];
                     }
@@ -151,7 +152,7 @@
                                 file.type = (NSString *)kUTTypeMovie;
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 
-                                [filesForUpload addObject:file];
+                                [self.filesForUpload addObject:file];
                             }
                         }];
                     }
@@ -174,7 +175,7 @@
                                 file.type = (NSString *)kUTTypeURL;
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 
-                                [filesForUpload addObject:file];
+                                [self.filesForUpload addObject:file];
                             }
                         }];
                     }
@@ -188,8 +189,8 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    self.galleryController.items = filesForUpload.copy;
-    self.previewController.items = filesForUpload.copy;
+    self.galleryController.items = self.filesForUpload.copy;
+    self.previewController.items = self.filesForUpload.copy;
     self.galleryController.delegate = self;
     [self.currentUploadPathView.openFileButton addTarget:self action:@selector(showUploadFolders) forControlEvents:UIControlEventTouchUpInside];
 //    [self.currentUploadPathView setUploadPath:uploadFolderPath];
@@ -248,7 +249,7 @@
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     requestsForUpload = [NSMutableArray new];
     
-    for (UploadedFile *file in filesForUpload){
+    for (UploadedFile *file in self.filesForUpload){
         if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
             
             file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
@@ -265,7 +266,7 @@
         [self done];
     } parrentView:self];
     
-    [self startUploadingForFiles:filesForUpload];
+    [self startUploadingForFiles:self.filesForUpload];
 }
 
 -(void)startUploadingForFiles:(NSArray *)files{
@@ -326,7 +327,7 @@
             
             if (error)
             {
-                if (filesForUpload.count == 0) {
+                if (self.filesForUpload.count == 0) {
                     [allertPopUp closeViewWithComplition:^{
                         PopupViewController* errorPopUp = [[PopupViewController alloc] initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
                             [self done];
@@ -340,7 +341,7 @@
 
             }
             
-            if (filesForUpload.count == 1) {
+            if (self.filesForUpload.count == 1) {
                 [allertPopUp closeViewWithComplition:^{
                     PopupViewController* congratPopUp = [[PopupViewController alloc]initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Great!", @"") message:NSLocalizedString(@"File succesfully uploaded!", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
                           [self done];
@@ -348,8 +349,8 @@
                     [congratPopUp showPopup];
                 }];
             }else{
-                [filesForUpload removeObject:file];
-                [self startUploadingForFiles:filesForUpload];
+                [self.filesForUpload removeObject:file];
+                [self startUploadingForFiles:self.filesForUpload];
             }
             
         });
@@ -419,7 +420,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
             previewLocalHeight = previewHeightConst * scaleFactor1Devider;
         }
         
-        if (filesForUpload.count > 5) {
+        if (self.filesForUpload.count > 5) {
             previewLocalHeight = previewLocalHeight * 2 + previewLineHeight;
         }else{
             previewLocalHeight += previewLineHeight;

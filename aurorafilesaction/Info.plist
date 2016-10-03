@@ -46,6 +46,8 @@
 		<string>MainInterface</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.ui-services</string>
+		<key>NSExtensionServiceToolbarIconFile</key>
+		<string>appLogo</string>
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your photo library is used to select and upload photo</string>

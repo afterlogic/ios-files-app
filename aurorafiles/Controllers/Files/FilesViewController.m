@@ -698,8 +698,12 @@
     
     NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
     [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    
     NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
     
+    
+//  NSData * data = [NSData dataWithContentsOfURL:[info objectForKey:UIImagePickerControllerReferenceURL]];
     NSData * data = UIImagePNGRepresentation(image);
     NSString * path = self.isCorporate ? @"corporate" : @"personal";
     if (self.folder.fullpath)
