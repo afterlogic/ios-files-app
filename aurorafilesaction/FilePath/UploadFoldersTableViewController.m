@@ -600,7 +600,7 @@
     
     self.folderToOperate = self.folder;
     [alert addAction:[self createFolderAction]];
-    [alert addAction:[self uploadFileAction]];
+//    [alert addAction:[self uploadFileAction]];
     
     if (self.folder)
     {
