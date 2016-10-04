@@ -21,6 +21,9 @@
 #import "Settings.h"
 #import "EXConstants.h"
 #import "NSString+URLEncode.h"
+#import <BugfenderSDK/BugfenderSDK.h>
+#import "MLNetworkLogger.h"
+//#import "AFNetworkActivityLogger.h"
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
     NSString *fileExtension;
@@ -71,10 +74,16 @@
 //#import <AVKit/AVKit.h>
 
 @implementation ActionViewController
+-(void)loadView{
+    [super loadView];
+    [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
+    [[MLNetworkLogger sharedLogger] startLogging];
+    [[MLNetworkLogger sharedLogger] setLogDetalization:MLNetworkLoggerLogDetalizationHigh];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    BFLog(@"EXTENSION STARTED");
     if (![Settings token]) {
         self.uploadButton.enabled = NO;
         [self.uploadButton setTitle:@""];
@@ -106,7 +115,7 @@
 -(void)searchFilesForUpload{
     self.filesForUpload = [NSMutableArray new];
     NSArray *imputItems = self.extensionContext.inputItems;
-    NSLog(@"input items is -> %@",imputItems);
+    BFLog(@"input items is -> %@",imputItems);
     for (NSExtensionItem *item in self.extensionContext.inputItems) {
         for (NSItemProvider *itemProvider in item.attachments) {
             //image
@@ -215,8 +224,6 @@
     [self.currentUploadPathView setUploadPath:[NSString stringWithFormat:@"%@ : %@",root,targetPath]];
 }
 
-
-
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
     if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
@@ -237,6 +244,7 @@
 
 - (IBAction)done
 {
+    BFLog(@"EXTENSION END WORK");
     [self.extensionContext completeRequestReturningItems:self.extensionContext.inputItems completionHandler:nil];
 }
 
@@ -299,7 +307,6 @@
    
     return request;
 }
-
 
 -(void)uploadFile:(UploadedFile *) file{
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
@@ -374,10 +381,10 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 
 
 -(void)requestLog:(NSURLRequest *)request {
-    NSLog(@"Method: %@", request.HTTPMethod);
-    NSLog(@"URL: %@", request.URL.absoluteString);
-    NSLog(@"Body: %@", [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
-    NSLog(@"Head: %@",request.allHTTPHeaderFields);
+    BFLog(@"Method: %@", request.HTTPMethod);
+    BFLog(@"URL: %@", request.URL.absoluteString);
+    BFLog(@"Body: %@", [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
+    BFLog(@"Head: %@",request.allHTTPHeaderFields);
 }
 
 -(NSURL *)createInternetShortcutFile:(NSString *)name ext:(NSString *)extension link:(NSURL *)link{
@@ -392,7 +399,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
     
     NSURL *resultPath = [NSURL fileURLWithPath:filePath];
-    NSLog(@"%@", resultPath);
+    BFLog(@"%@", resultPath);
     return resultPath;
 }
 

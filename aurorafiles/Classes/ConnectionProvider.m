@@ -7,6 +7,7 @@
 //
 #import "Constants.h"
 #import "ConnectionProvider.h"
+#import <BugfenderSDK/BugfenderSDK.h>
 
 @interface ConnectionProvider () {
     Reachability* reach;
@@ -54,7 +55,7 @@
 }
 
 -(void)reachabilityChanged:(NSNotification *)notify{
-    NSLog(@"sender is -> %@", notify);
+//    NSLog(@"sender is -> %@", notify);
     if ([notify.object isKindOfClass:[Reachability class]]) {
         Reachability* tmpReach = notify.object;
         NetworkStatus status = [tmpReach currentReachabilityStatus];
@@ -63,7 +64,8 @@
             case ReachableViaWWAN:{
 //                if (!_isOnline) {
 //                    _isOnline = YES;
-                    [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionOnline object:nil];
+                [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionOnline object:nil];
+//                BFLog(@"");
 //                }
             }
                 break;
@@ -71,6 +73,7 @@
             default:{
 //                _isOnline = NO;
                 [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionLost object:nil];
+                BFLog(@"connection lost");
                 
             }
                 break;

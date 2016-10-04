@@ -366,14 +366,14 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     CGFloat pageWidth = self.collectionView.frame.size.width;
     int pageNum = self.collectionView.contentOffset.x/ pageWidth;
-    NSLog(@"curent media num -> %i",pageNum);
+//    NSLog(@"curent media num -> %i",pageNum);
     [self.delegate selectGalleryItem:[_items objectAtIndex:pageNum]];
 }
 
 #pragma mark - Setters
 -(void)setItems:(NSArray *)items{
     _items = items;
-    NSLog(@"items is -> %@", _items);
+//    NSLog(@"items is -> %@", _items);
     self.currentItem = [_items objectAtIndex:0];
     [self.collectionView reloadData];
 }

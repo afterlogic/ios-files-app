@@ -50,6 +50,22 @@
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
+		FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
+		FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
+		FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
+		FF71D4891DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
+		FF71D48A1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4731DA33162008690D5 /* MLHostnameRequestFilter.m */; };
+		FF71D48B1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4731DA33162008690D5 /* MLHostnameRequestFilter.m */; };
+		FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47B1DA33162008690D5 /* MLNetworkLogFactory.m */; };
+		FF71D48D1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47B1DA33162008690D5 /* MLNetworkLogFactory.m */; };
+		FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m */; };
+		FF71D48F1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m */; };
+		FF71D4901DA33162008690D5 /* MLNetworkLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4801DA33162008690D5 /* MLNetworkLogger.m */; };
+		FF71D4911DA33162008690D5 /* MLNetworkLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4801DA33162008690D5 /* MLNetworkLogger.m */; };
+		FF71D4921DA33162008690D5 /* MLLoggingProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4831DA33162008690D5 /* MLLoggingProtocol.m */; };
+		FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4831DA33162008690D5 /* MLLoggingProtocol.m */; };
+		FF71D4D81DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */; };
+		FF71D4D91DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */; };
 		FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
 		FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
@@ -199,6 +215,25 @@
 		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
+		FF71D46B1DA33162008690D5 /* MLAFNetworkingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAFNetworkingAdapter.h; sourceTree = "<group>"; };
+		FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLAFNetworkingAdapter.m; sourceTree = "<group>"; };
+		FF71D46E1DA33162008690D5 /* MLNetworkLoggingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLoggingAdapter.h; sourceTree = "<group>"; };
+		FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNetworkLoggingAdapter.m; sourceTree = "<group>"; };
+		FF71D4721DA33162008690D5 /* MLHostnameRequestFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLHostnameRequestFilter.h; sourceTree = "<group>"; };
+		FF71D4731DA33162008690D5 /* MLHostnameRequestFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLHostnameRequestFilter.m; sourceTree = "<group>"; };
+		FF71D4741DA33162008690D5 /* MLRequestFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLRequestFilter.h; sourceTree = "<group>"; };
+		FF71D4771DA33162008690D5 /* MLNetworkTrafficDescriptionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkTrafficDescriptionProvider.h; sourceTree = "<group>"; };
+		FF71D4781DA33162008690D5 /* MLNetworkTrafficProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkTrafficProcessor.h; sourceTree = "<group>"; };
+		FF71D47A1DA33162008690D5 /* MLNetworkLogFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLogFactory.h; sourceTree = "<group>"; };
+		FF71D47B1DA33162008690D5 /* MLNetworkLogFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNetworkLogFactory.m; sourceTree = "<group>"; };
+		FF71D47D1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLHTTPTrafficDescriptionProvider.h; sourceTree = "<group>"; };
+		FF71D47E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLHTTPTrafficDescriptionProvider.m; sourceTree = "<group>"; };
+		FF71D47F1DA33162008690D5 /* MLNetworkLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLogger.h; sourceTree = "<group>"; };
+		FF71D4801DA33162008690D5 /* MLNetworkLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLNetworkLogger.m; sourceTree = "<group>"; };
+		FF71D4821DA33162008690D5 /* MLLoggingProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLoggingProtocol.h; sourceTree = "<group>"; };
+		FF71D4831DA33162008690D5 /* MLLoggingProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLLoggingProtocol.m; sourceTree = "<group>"; };
+		FF71D4D61DA3C851008690D5 /* AFNetworkActivityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityLogger.h; sourceTree = "<group>"; };
+		FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityLogger.m; sourceTree = "<group>"; };
 		FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
 		FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -534,6 +569,8 @@
 		DAC1CAAA1D061F1200238EB5 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				FF71D4671DA33162008690D5 /* MLNetworkLogger */,
+				FF71D4D51DA3C851008690D5 /* AFNetworkActivityLogger */,
 				DAC1CAAB1D061F1200238EB5 /* STZPullToRefresh */,
 			);
 			path = vendor;
@@ -584,6 +621,120 @@
 				FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		FF71D4671DA33162008690D5 /* MLNetworkLogger */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4691DA33162008690D5 /* Adapters */,
+				FF71D4701DA33162008690D5 /* Filters */,
+				FF71D4751DA33162008690D5 /* Loggers */,
+				FF71D47F1DA33162008690D5 /* MLNetworkLogger.h */,
+				FF71D4801DA33162008690D5 /* MLNetworkLogger.m */,
+				FF71D4811DA33162008690D5 /* Protocol */,
+			);
+			name = MLNetworkLogger;
+			path = ../Classes/Classes;
+			sourceTree = "<group>";
+		};
+		FF71D4691DA33162008690D5 /* Adapters */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D46A1DA33162008690D5 /* AFNetworking */,
+				FF71D46D1DA33162008690D5 /* Base */,
+			);
+			path = Adapters;
+			sourceTree = "<group>";
+		};
+		FF71D46A1DA33162008690D5 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D46B1DA33162008690D5 /* MLAFNetworkingAdapter.h */,
+				FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
+		FF71D46D1DA33162008690D5 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D46E1DA33162008690D5 /* MLNetworkLoggingAdapter.h */,
+				FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		FF71D4701DA33162008690D5 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4711DA33162008690D5 /* By hostname */,
+				FF71D4741DA33162008690D5 /* MLRequestFilter.h */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
+		FF71D4711DA33162008690D5 /* By hostname */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4721DA33162008690D5 /* MLHostnameRequestFilter.h */,
+				FF71D4731DA33162008690D5 /* MLHostnameRequestFilter.m */,
+			);
+			path = "By hostname";
+			sourceTree = "<group>";
+		};
+		FF71D4751DA33162008690D5 /* Loggers */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4761DA33162008690D5 /* Base */,
+				FF71D4791DA33162008690D5 /* Factory */,
+				FF71D47C1DA33162008690D5 /* HTTP(s) */,
+			);
+			path = Loggers;
+			sourceTree = "<group>";
+		};
+		FF71D4761DA33162008690D5 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4771DA33162008690D5 /* MLNetworkTrafficDescriptionProvider.h */,
+				FF71D4781DA33162008690D5 /* MLNetworkTrafficProcessor.h */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		FF71D4791DA33162008690D5 /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D47A1DA33162008690D5 /* MLNetworkLogFactory.h */,
+				FF71D47B1DA33162008690D5 /* MLNetworkLogFactory.m */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
+		FF71D47C1DA33162008690D5 /* HTTP(s) */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D47D1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.h */,
+				FF71D47E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m */,
+			);
+			path = "HTTP(s)";
+			sourceTree = "<group>";
+		};
+		FF71D4811DA33162008690D5 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4821DA33162008690D5 /* MLLoggingProtocol.h */,
+				FF71D4831DA33162008690D5 /* MLLoggingProtocol.m */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		FF71D4D51DA3C851008690D5 /* AFNetworkActivityLogger */ = {
+			isa = PBXGroup;
+			children = (
+				FF71D4D61DA3C851008690D5 /* AFNetworkActivityLogger.h */,
+				FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */,
+			);
+			path = AFNetworkActivityLogger;
 			sourceTree = "<group>";
 		};
 		FF9053061D9B0E4D00A09A44 /* Supporting Files */ = {
@@ -1027,24 +1178,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF71D4921DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
+				FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
+				FF71D4901DA33162008690D5 /* MLNetworkLogger.m in Sources */,
 				DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */,
 				DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */,
 				DAC1CAC31D061F1200238EB5 /* STZPullToRefresh.m in Sources */,
+				FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */,
 				DAC1CAC11D061F1200238EB5 /* Folder+CoreDataProperties.m in Sources */,
 				DAC1CAB01D061F1200238EB5 /* API.m in Sources */,
 				DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */,
 				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
+				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
 				DAC1CAB21D061F1200238EB5 /* KeychainWrapper.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
+				FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				DAC1CAB11D061F1200238EB5 /* UIImage+Aurora.m in Sources */,
+				FF71D4D81DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
 				DAC1CA391D061D7500238EB5 /* main.m in Sources */,
 				DAC1CAB51D061F1200238EB5 /* StorageManager.m in Sources */,
 				DAC1CABA1D061F1200238EB5 /* FilesViewController.m in Sources */,
@@ -1052,6 +1210,7 @@
 				DAC1CAB41D061F1200238EB5 /* Settings.m in Sources */,
 				DAC1CAB31D061F1200238EB5 /* SessionProvider.m in Sources */,
 				DAC1CAC21D061F1200238EB5 /* Folder.m in Sources */,
+				FF71D48A1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1075,15 +1234,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF71D4891DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */,
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
 				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
+				FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
+				FF71D48B1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
+				FF71D48D1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
 				FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */,
+				FF71D4D91DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
 				FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
 				FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				FF9053701D9BFC9900A09A44 /* FilesTableViewCell.m in Sources */,
 				FF9053731D9C012D00A09A44 /* API.m in Sources */,
+				FF71D48F1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,
+				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
 				FF9053101D9BE55800A09A44 /* Folder.m in Sources */,
 				FF90530F1D9BE55800A09A44 /* Folder+CoreDataProperties.m in Sources */,
@@ -1093,6 +1259,7 @@
 				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,
 				FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */,
 				FF90530E1D9BE53400A09A44 /* aurorafiles.xcdatamodeld in Sources */,
+				FF71D4911DA33162008690D5 /* MLNetworkLogger.m in Sources */,
 				FF9053741D9C02E600A09A44 /* ConnectionProvider.m in Sources */,
 				FF90530C1D9BDCCD00A09A44 /* CurrentFilePathViewController.m in Sources */,
 				FF9053721D9C011700A09A44 /* SessionProvider.m in Sources */,

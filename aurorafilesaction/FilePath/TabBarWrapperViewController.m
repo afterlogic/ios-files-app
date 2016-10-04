@@ -8,6 +8,7 @@
 
 #import "TabBarWrapperViewController.h"
 #import "UploadFoldersTableViewController.h"
+#import <BugfenderSDK/BugfenderSDK.h>
 
 @interface TabBarWrapperViewController ()<UITabBarControllerDelegate, FolderDelegate>{
     
@@ -67,7 +68,7 @@
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController{
     if ([viewController isKindOfClass:[UploadFoldersTableViewController class]]) {
         self.currentFolderController = (UploadFoldersTableViewController *)viewController;
-        NSLog(@"current folder controller is -> %@", self.currentFolderController);
+//        NSLog(@"current folder controller is -> %@", self.currentFolderController);
         self.currentFolderController.delegate = self;
         self.currentFolderController.doneButton = self.navRightButton;
         self.selectedRootPath = self.currentFolderController.type;
@@ -78,7 +79,7 @@
 #pragma mark - Folder
 
 -(void)currentFolder:(Folder *)folder root:(NSString *)root{
-    NSLog(@"current root -> %@ | folder -> %@",root, folder.fullpath);
+    BFLog(@"current root -> %@ | folder -> %@",root, folder.fullpath);
     self.selectedFolderPath = folder.fullpath;
     self.selectedRootPath = root;
 }

@@ -9,6 +9,7 @@
 #import "API.h"
 #import "Settings.h"
 #import "Folder.h"
+#import "AFNetworking.h"
 
 @import UIKit;
 
@@ -44,6 +45,13 @@
 
 @end;
 
+@interface API (){
+//    AFHTTPreqst *manager;
+    AFHTTPRequestOperationManager *manager;
+}
+
+@end
+
 @implementation API
 
 static NSString *appDataAction		= @"SystemGetAppData";
@@ -54,6 +62,17 @@ static NSString *deleteFiles        = @"FilesDelete";
 static NSString *createFolder       = @"FilesFolderCreate";
 static NSString *renameFolder       = @"FilesRename";
 static NSString *folderInfo         = @"FileInfo";
+
+-(id)init{
+    self=[super init];
+    if (self) {
+        manager = [AFHTTPRequestOperationManager manager];
+        manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+        manager.securityPolicy.allowInvalidCertificates = YES;
+        manager.securityPolicy.validatesDomainName = NO;
+    }
+    return self;
+}
 
 + (NSDictionary*)requestParams
 {
@@ -129,44 +148,48 @@ static NSString *folderInfo         = @"FileInfo";
 {
     
     
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-
-    
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            
-            if (error) {
-                handler(@{},error);
-                return ;
-            }
-            NSError * error = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            
-            if ([json isKindOfClass:[NSDictionary class]])
+        NSError *error;
+        NSData *data = [NSData new];
+        if ([responseObject isKindOfClass:[NSData class]]) {
+            data = responseObject;
+        }
+        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+        if ([json isKindOfClass:[NSDictionary class]])
+        {
+            if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+                NSString *token = [json valueForKeyPath:@"Result.Token"];
+                if (token.length)
                 {
-                    NSString *token = [json valueForKeyPath:@"Result.Token"];
-                    if (token.length)
-                    {
-                        [Settings setToken:token];
-                        error = nil;
-                    }
-                    else
-                    {
-                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                    }
+                    [Settings setToken:token];
+                    error = nil;
                 }
                 else
                 {
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
                 }
             }
-            handler(json,error);        
+            else
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+        }
+            handler(json,error);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            handler(nil,error);
+         });
     }];
-    [task resume];
+
+    [manager.operationQueue addOperation:operation];
 }
 
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *))handler
@@ -175,52 +198,85 @@ static NSString *folderInfo         = @"FileInfo";
     
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": type }];
     
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            if (data)
+//            {
+//                id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//                
+//                if (![json isKindOfClass:[NSDictionary class]])
+//                {
+//                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//                }
+//                if (error)
+//                {
+//                    NSLog(@"%@",[error localizedDescription]);
+//                    handler(nil);
+//                    return ;
+//                }
+//                
+//                handler(json);
+//            }
+//            else
+//            {
+//                handler(nil);
+//            }
+//        });
+//    }];
+//    [task resume];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            
-            
-            NSError * error = nil;
-            if (data)
-            {
-                id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                
-                if (![json isKindOfClass:[NSDictionary class]])
-                {
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                }
-                if (error)
-                {
-                    NSLog(@"%@",[error localizedDescription]);
-                    handler(nil);
-                    return ;
-                }
-                
-                handler(json);
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
             }
-            else
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (![json isKindOfClass:[NSDictionary class]])
             {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
                 handler(nil);
+                return ;
             }
+            
+            handler(json);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            handler(nil);
         });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 
 }
 
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler
 {
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":signInAction,@"Email":email, @"IncPassword":password}];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            
-            
-            NSError * error = nil;
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
                 if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
@@ -247,10 +303,15 @@ static NSString *folderInfo         = @"FileInfo";
                 }
             }
             handler(json,error);
-        
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            handler(nil,error);
         });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
 }
 
 - (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *, NSError *))handler
@@ -258,11 +319,22 @@ static NSString *folderInfo         = @"FileInfo";
     
     
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":isAuhtCheck}];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error){
-        dispatch_async(dispatch_get_main_queue(), ^() {
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            handler(json,nil);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
             if (error.code == -1009)
             {
                 handler(@{@"Result":@{@"offlineMod":@YES}},nil);
@@ -273,9 +345,6 @@ static NSString *folderInfo         = @"FileInfo";
                 handler(@{}, error);
                 return ;
             }
-            NSError * error = nil;
-            
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (error)
             {
@@ -283,12 +352,12 @@ static NSString *folderInfo         = @"FileInfo";
                 handler(nil, error);
                 return;
             }
-            
-            handler (json, nil);
-        
+
         });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 }
 
 - (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
@@ -310,13 +379,39 @@ static NSString *folderInfo         = @"FileInfo";
     
     
     NSURLRequest * request = [self requestWithDictionary:newDict];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    NSLog(@"%@",newDict);
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSLog(@"%@",newDict);
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
+
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
-            
-            NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (![json isKindOfClass:[NSDictionary class]])
@@ -331,9 +426,20 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
 
+    
 }
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))handler
@@ -356,13 +462,39 @@ static NSString *folderInfo         = @"FileInfo";
     [newDict setObject:[NSNumber numberWithBool:isLink] forKey:@"IsLink"];
     
     NSURLRequest * request = [self requestWithDictionary:newDict];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
-            
-            NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (![json isKindOfClass:[NSDictionary class]])
@@ -377,8 +509,19 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 
 }
 
@@ -393,13 +536,39 @@ static NSString *folderInfo         = @"FileInfo";
     [newDict setObject:name forKey:@"FolderName"];
     NSLog(@"%@",newDict);
     NSURLRequest * request = [self requestWithDictionary:newDict];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
-            
-            NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (![json isKindOfClass:[NSDictionary class]])
@@ -414,8 +583,19 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 }
 
 - (void)deleteFiles:(NSDictionary *)files isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
@@ -429,13 +609,39 @@ static NSString *folderInfo         = @"FileInfo";
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
     [newDict setObject:@"" forKey:@"Path"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
-            
-            NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (![json isKindOfClass:[NSDictionary class]])
@@ -450,8 +656,19 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 }
 
 - (void)getFolderInfoForName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(NSDictionary *))handler
@@ -465,13 +682,39 @@ static NSString *folderInfo         = @"FileInfo";
     [newDict setObject:path forKey:@"Path"];
     [newDict setObject:name forKey:@"Name"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
-            
-            NSError * error = nil;
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
             if (![json isKindOfClass:[NSDictionary class]])
@@ -486,8 +729,19 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 }
 
 - (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name completion:(void (^)(NSDictionary *))handler
@@ -499,13 +753,43 @@ static NSString *folderInfo         = @"FileInfo";
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
     [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
     [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+//    
+//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            
+//            
+//            NSError * error = nil;
+//            
+//            id json = nil;
+//            if (data)
+//            {
+//                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//            }
+//            
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil);
+//                return ;
+//            }
+//            handler(json);
+//        });
+//    }];
+//    [task resume];
     
-    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            
-            
-            NSError * error = nil;
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
             
             id json = nil;
             if (data)
@@ -525,8 +809,19 @@ static NSString *folderInfo         = @"FileInfo";
             }
             handler(json);
         });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil);
+                return ;
+            }
+        });
     }];
-    [task resume];
+    
+    [manager.operationQueue addOperation:operation];
+
 
 }
 

@@ -17,6 +17,7 @@
 #import "Constants.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "UploadFoldersTableViewController.h"
+#import <BugfenderSDK/BugfenderSDK.h>
 
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
@@ -131,7 +132,7 @@
 {
 //    [self.tabBarController setSelectedIndex:2];
 //    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        //        NSLog(@"vc class is -> %@",[vc class] );
+//        //        BFLog(@"vc class is -> %@",[vc class] );
 //        [vc setEnabled:NO];
 //    };
 }
@@ -139,7 +140,7 @@
 -(void)unlockOnlineButtons{
     //    [self.tabBarController setSelectedIndex:1];
 //    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        //        NSLog(@"vc class is -> %@",[vc class] );
+//        //        BFLog(@"vc class is -> %@",[vc class] );
 //        [vc setEnabled:YES];
 //    };
 }
@@ -395,7 +396,7 @@
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
     
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+    BFLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
     NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
     folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
     NSError * error;
@@ -444,7 +445,7 @@
     }
     if (error)
     {
-        NSLog(@"%@",error);
+        BFLog(@"%@",error);
     }
     return [NSURL URLWithString:filePath];
 }
@@ -466,8 +467,8 @@
     
     NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
     destinationURL = [NSURL fileURLWithPath:[destinationURL absoluteString]];
-    NSLog(@"%@",[self downloadURL]);
-    NSLog(@"%@",destinationURL);
+    BFLog(@"%@",[self downloadURL]);
+    BFLog(@"%@",destinationURL);
     
     if ([fileManager fileExistsAtPath:[destinationURL path]])
     {
@@ -484,7 +485,7 @@
         
         if (!success)
         {
-            NSLog(@"failed to download %@", [error userInfo]);
+            BFLog(@"failed to download %@", [error userInfo]);
         }
         
         file.downloadIdentifier = [NSNumber numberWithInt:-1];
@@ -513,7 +514,7 @@
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
     
-    NSLog(@"%s",__PRETTY_FUNCTION__);
+    BFLog(@"%s",__PRETTY_FUNCTION__);
 }
 
 #pragma mark - Help Methods
@@ -528,7 +529,7 @@
     
     if (error)
     {
-        NSLog(@"%@",[error userInfo]);
+        BFLog(@"%@",[error userInfo]);
     }
     
     [self.managedObjectContext save:nil];
@@ -539,7 +540,7 @@
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     object.wasDeleted = @YES;
     [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-        NSLog(@"%@",handler);
+        BFLog(@"%@",handler);
         [self.managedObjectContext save:nil];
     }];
     
@@ -642,7 +643,7 @@
     }
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-        NSLog(@"%@",response);
+        BFLog(@"%@",response);
         [self updateFiles:^(){
 //            [MBProgressHUD hideHUDForView:self.view animated:YES];
         }];
@@ -696,7 +697,7 @@
                                                                      [self.fetchedResultsController performFetch:&error];
                                                                      if (error)
                                                                      {
-                                                                         NSLog(@"%@",[error userInfo]);
+                                                                         BFLog(@"%@",[error userInfo]);
                                                                      }
                                                                      [self updateFiles:^(){
 //                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -734,7 +735,7 @@
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
-                                                                     NSLog(@"%@",result);
+                                                                     BFLog(@"%@",result);
 //                                                                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                      [self updateFiles:^(){
 //                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];

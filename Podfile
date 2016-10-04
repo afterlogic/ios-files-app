@@ -14,12 +14,16 @@ target 'aurorafiles' do
     
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'BugfenderSDK', '~> 0.3'
+    pod 'AFNetworking', '2.6'
 end
 
 target 'aurorafilesaction' do
     pod 'FastEasyMapping', '~> 1.0'
     pod 'SDWebImage', '3.7.3'
     pod 'Reachability', '~> 3.2'
+    pod 'BugfenderSDK', '~> 0.3'
+    pod 'AFNetworking', '2.6'
 end
 
 target 'aurorafilesTests' do
@@ -29,4 +33,5 @@ end
 target 'aurorafilesUITests' do
     
 end
+
 

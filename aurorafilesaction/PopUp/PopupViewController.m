@@ -5,6 +5,7 @@
 //
 
 #import "PopupViewController.h"
+#import <BugfenderSDK/BugfenderSDK.h>
 
 
 const CGFloat defaultDelay  = 3.0f;
@@ -177,7 +178,8 @@ const CGFloat defaultDelay  = 3.0f;
     self.neededToUploadBytes.text = [self transformedValue:[NSNumber numberWithLongLong:totalBytesExpectedToSend]];
     float progress = (float)totalBytesSent / (float)totalBytesExpectedToSend;
     [self.progressBar setProgress:progress animated:YES];
-//    [self.view setNeedsLayout];
+//    BFLog(@"totalBytesSent: %lld", totalBytesSent);
+//    BFLog(@"totalBytesExpectedToSend: %lld", totalBytesExpectedToSend);
 }
 
 
