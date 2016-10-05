@@ -12,6 +12,7 @@
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
 #import <MBProgressHUD/MBProgressHUD.h>
+#import <BugfenderSDK/BugfenderSDK.h>
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
@@ -93,6 +94,7 @@
             if ([error localizedDescription])
             {
                 text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
+                BFLog(@"login error - > %@",text);
             }
 			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
 //            a ca
@@ -104,7 +106,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == [alertView cancelButtonIndex]) {
-        [self offlineAuth];
+//        [self offlineAuth];
     }
 }
 
