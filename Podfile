@@ -16,6 +16,7 @@ target 'aurorafiles' do
     pod 'Crashlytics'
     pod 'BugfenderSDK', '~> 0.3'
     pod 'AFNetworking', '2.6'
+    pod 'CRMediaPickerController'
 end
 
 target 'aurorafilesaction' do

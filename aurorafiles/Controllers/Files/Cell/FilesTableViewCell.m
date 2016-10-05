@@ -19,7 +19,9 @@
 - (void)awakeFromNib
 {
     // Initialization code
+    [super awakeFromNib];
     self.separatorHeight.constant = 0.5f;
+    self.fileImageView.image = [UIImage imageNamed:@"other"];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -53,6 +55,10 @@
     }else{
         [self.delegate tableViewCellRemoveAction:self];
     }
+}
+
+-(void)dealloc{
+    self.fileImageView.image = nil;
 }
 
 + (NSString*)cellId

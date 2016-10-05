@@ -22,8 +22,9 @@
 #import "ConnectionProvider.h"
 #import "Constants.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "CRMediaPickerController.h"
 
-@interface FilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
+@interface FilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
@@ -34,7 +35,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) Folder * folderToOperate;
-
+@property (strong, nonatomic) CRMediaPickerController *pickerController;
 @end
 
 @implementation FilesViewController
@@ -51,6 +52,11 @@
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    
+    self.pickerController = [[CRMediaPickerController alloc]init];
+    self.pickerController.delegate = self;
+    self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage | CRMediaPickerControllerMediaTypeVideo);;
+    self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
@@ -351,6 +357,7 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSLog(@"object -> %@",object);
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;
@@ -680,43 +687,60 @@
 {
     UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction * action) {
-                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                                                           picker.delegate = self;
-                                                           picker.allowsEditing = YES;
-                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
-                                                           
-                                                           [self presentViewController:picker animated:YES completion:NULL];
+                                                           [self.pickerController show];
                                                        }];
     
     return uploadFile;
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-{
-    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    
-    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
-    [picker dismissViewControllerAnimated:YES completion:nil];
-
-    
-    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
-    
-    
-//  NSData * data = [NSData dataWithContentsOfURL:[info objectForKey:UIImagePickerControllerReferenceURL]];
-    NSData * data = UIImagePNGRepresentation(image);
+- (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
+    NSLog(@"current asset - > %@ ",asset.defaultRepresentation.url);
+    ALAssetRepresentation *rep = [asset defaultRepresentation];
+    Byte *buffer = (Byte*)malloc((NSUInteger)rep.size);
+    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSUInteger)rep.size error:nil];
+    NSData *fileData = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+    NSString *realFileName = asset.defaultRepresentation.filename;
+    NSLog(@"current fileData - > %@ ",fileData);
     NSString * path = self.isCorporate ? @"corporate" : @"personal";
     if (self.folder.fullpath)
     {
         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
+    [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName completion:^(NSDictionary * response){
         NSLog(@"%@",response);
         [self updateFiles:^(){
             [MBProgressHUD hideHUDForView:self.view animated:YES];
         }];
     }];
+
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+//    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+//    
+//    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
+//    [picker dismissViewControllerAnimated:YES completion:nil];
+//
+//    
+//    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
+//    
+//    
+////  NSData * data = [NSData dataWithContentsOfURL:[info objectForKey:UIImagePickerControllerReferenceURL]];
+//    NSData * data = UIImagePNGRepresentation(image);
+//    NSString * path = self.isCorporate ? @"corporate" : @"personal";
+//    if (self.folder.fullpath)
+//    {
+//        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
+//    }
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
+//        NSLog(@"%@",response);
+//        [self updateFiles:^(){
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        }];
+//    }];
 }
 
 - (UIAlertAction*)deleteFolderAction

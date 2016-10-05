@@ -23,6 +23,7 @@ PODS:
   - BugfenderSDK (0.3.22)
   - Crashlytics (3.7.1):
     - Fabric (~> 1.6.3)
+  - CRMediaPickerController (0.0.1)
   - Fabric (1.6.7)
   - FastEasyMapping (1.0.2)
   - MBProgressHUD (0.9.2)
@@ -35,6 +36,7 @@ DEPENDENCIES:
   - AFNetworking (= 2.6)
   - BugfenderSDK (~> 0.3)
   - Crashlytics
+  - CRMediaPickerController
   - Fabric
   - FastEasyMapping (~> 1.0)
   - MBProgressHUD (~> 0.9.2)
@@ -45,12 +47,13 @@ SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   BugfenderSDK: 05a168bd3a494528b41ec729d579724bffb84e7c
   Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
+  CRMediaPickerController: 65e1f968dea26a7759bb1fb4a1518f5b8cd6fba9
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FastEasyMapping: 77d566a817ca73304af3e7fbed130850238f1cb4
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 
-PODFILE CHECKSUM: 75a6303d965700240b07022843cabb89789258d4
+PODFILE CHECKSUM: c97daa03739f1942a2d523c41aab2f01aef54700
 
 COCOAPODS: 1.0.1
