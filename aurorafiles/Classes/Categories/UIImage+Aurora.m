@@ -65,6 +65,11 @@
     {
         return [UIImage imageNamed:@"ppt"];
     }
+    
+    if ([contentType isEqualToString:@"video/quicktime"])
+    {
+        return [UIImage imageNamed:@"video"];
+    }
     return [UIImage imageNamed:@"other"];
 }
 @end
