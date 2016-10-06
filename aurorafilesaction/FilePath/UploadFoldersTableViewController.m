@@ -611,44 +611,44 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (UIAlertAction*)uploadFileAction
-{
-    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * action) {
-                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                                                           picker.delegate = self;
-                                                           picker.allowsEditing = YES;
-                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
-                                                           
-                                                           [self presentViewController:picker animated:YES completion:NULL];
-                                                       }];
-    
-    return uploadFile;
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-{
-    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    
-    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
-    [picker dismissViewControllerAnimated:YES completion:nil];
-    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
-    
-    NSData * data = UIImagePNGRepresentation(image);
-    NSString * path = self.isCorporate ? @"corporate" : @"personal";
-    if (self.folder.fullpath)
-    {
-        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-    }
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-        BFLog(@"%@",response);
-        [self updateFiles:^(){
-//            [MBProgressHUD hideHUDForView:self.view animated:YES];
-        }];
-    }];
-}
+//- (UIAlertAction*)uploadFileAction
+//{
+//    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
+//                                                       handler:^(UIAlertAction * action) {
+//                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//                                                           picker.delegate = self;
+//                                                           picker.allowsEditing = YES;
+//                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
+//                                                           
+//                                                           [self presentViewController:picker animated:YES completion:NULL];
+//                                                       }];
+//    
+//    return uploadFile;
+//}
+//
+//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+//{
+//    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+//    
+//    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
+//    [picker dismissViewControllerAnimated:YES completion:nil];
+//    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
+//    
+//    NSData * data = UIImagePNGRepresentation(image);
+//    NSString * path = self.isCorporate ? @"corporate" : @"personal";
+//    if (self.folder.fullpath)
+//    {
+//        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
+//    }
+////    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
+//        BFLog(@"%@",response);
+//        [self updateFiles:^(){
+////            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        }];
+//    }];
+//}
 
 - (UIAlertAction*)deleteFolderAction
 {

@@ -55,7 +55,7 @@
     
     self.pickerController = [[CRMediaPickerController alloc]init];
     self.pickerController.delegate = self;
-    self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage | CRMediaPickerControllerMediaTypeVideo);;
+    self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
@@ -75,7 +75,6 @@
         
         return [url absoluteString];
     }];
-//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.signOutButton.tintColor = refreshView.progressColor;
     self.editButton.tintColor = refreshView.progressColor;
@@ -706,14 +705,18 @@
     {
         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
     }
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName completion:^(NSDictionary * response){
-        NSLog(@"%@",response);
-        [self updateFiles:^(){
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeDeterminate;
+        hud.labelText = [NSString stringWithFormat:@"%@ uploading", realFileName];
+        
+        [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
+            hud.progress = progress;
+        } completion:^(NSDictionary * response){
+            NSLog(@"%@",response);
+            [self updateFiles:^(){
+                [hud hide:YES];
+            }];
         }];
-    }];
-
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info

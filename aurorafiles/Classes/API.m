@@ -744,7 +744,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 }
 
-- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name completion:(void (^)(NSDictionary *))handler
+- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler
 {
     
     NSString * urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
@@ -753,34 +753,6 @@ static NSString *folderInfo         = @"FileInfo";
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
     [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
     [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
-//    NSURLSession * session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-//    
-//    NSURLSessionDataTask * task = [session dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
-//        dispatch_async(dispatch_get_main_queue(), ^(){
-//            
-//            
-//            NSError * error = nil;
-//            
-//            id json = nil;
-//            if (data)
-//            {
-//                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-//            }
-//            
-//            if (![json isKindOfClass:[NSDictionary class]])
-//            {
-//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-//            }
-//            if (error)
-//            {
-//                NSLog(@"%@",[error localizedDescription]);
-//                handler(nil);
-//                return ;
-//            }
-//            handler(json);
-//        });
-//    }];
-//    [task resume];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -818,6 +790,13 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
+    }];
+    
+    [operation setUploadProgressBlock:^(NSUInteger __unused bytesWritten,
+                                        long long totalBytesWritten,
+                                        long long totalBytesExpectedToWrite) {
+        float progress = (float)totalBytesWritten / (float)file.length;
+        uploadProgressBlock(progress);
     }];
     
     [manager.operationQueue addOperation:operation];

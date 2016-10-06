@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+
+typedef void (^UploadProgressBlock)(float progress);
+
 @class Folder;
 @interface API : NSObject
 
@@ -28,6 +31,6 @@
 
 - (void)renameFolderFromName:(NSString*)name toName:(NSString*)newName isCorporate:(BOOL)corporate atPath:(NSString*)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary*))handler;
 - (void)getFolderInfoForName:(NSString*)name path:(NSString*)path type:(NSString*)type completion:(void (^)(NSDictionary*))handler;
-- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name completion:(void (^)(NSDictionary *))handler;
+- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler;
 
 @end
