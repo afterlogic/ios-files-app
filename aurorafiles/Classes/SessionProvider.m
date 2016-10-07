@@ -27,7 +27,25 @@
             }
             else
             {
-                handler(NO,NO);
+                if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
+                    NSNumber *errorCode = data[@"ErrorCode"];
+                    if (errorCode.longValue == 101) {
+                        NSString * email = [Settings login];
+                        NSString * password = [Settings password];
+                        if (email.length && password.length)
+                        {
+                            [SessionProvider authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
+                                handler(isAuthorised,NO);
+                            }];
+                            return;
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    handler(NO,NO);
+                }
             }
             return ;
         }
