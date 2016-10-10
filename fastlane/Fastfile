@@ -35,24 +35,24 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :uploadBeta do
     # Проверка на наличие нехакоментированных изменений
-    ensure_git_status_clean
+    # ensure_git_status_clean
 
     # Увеличивает номер билда (не версию)
     # Указывать путь до проекта не обязательно
-    # increment_build_number(xcodeproj: "aurorafiles.xcodeproj")
+    increment_build_number(xcodeproj: "aurorafiles.xcodeproj")
 
-    increment_version_number_in_plist(
-      bump_type: 'minor',
-      target:'aurorafiles',
-      target:'aurorafilesaction'
-    )
+    #increment_version_number_in_plist(
+      #bump_type: 'minor',
+      #target:'aurorafiles',
+      #target:'aurorafilesaction'
+    #)
 
     # Commit the version bump
-    commit_version_bump(xcodeproj: "aurorafiles.xcodeproj")
+    # commit_version_bump(xcodeproj: "aurorafiles.xcodeproj")
 
     # Add a git tag for this build. This will automatically
     # use an appropriate git tag name
-    add_git_tag
+    # add_git_tag
 
     gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true) # Build your app - more options available
     #pilot
