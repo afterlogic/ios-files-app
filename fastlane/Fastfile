@@ -18,7 +18,7 @@ default_platform :ios
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
-    cocoapods
+    # cocoapods
   end
 
   desc "Runs all the tests"
@@ -34,15 +34,21 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :uploadBeta do
-    # Ensure that there that your git status is not dirty
+    # Проверка на наличие нехакоментированных изменений
     ensure_git_status_clean
 
-    # Increment the build number (not the version number)
-    # Providing the xcodeproj is optional
-    increment_build_number(xcodeproj: "Example.xcodeproj")
+    # Увеличивает номер билда (не версию)
+    # Указывать путь до проекта не обязательно
+    # increment_build_number(xcodeproj: "aurorafiles.xcodeproj")
+
+    increment_version_number_in_plist(
+      bump_type: 'minor',
+      target:'aurorafiles',
+      target:'aurorafilesaction'
+    )
 
     # Commit the version bump
-    commit_version_bump(xcodeproj: "Example.xcodeproj")
+    commit_version_bump(xcodeproj: "aurorafiles.xcodeproj")
 
     # Add a git tag for this build. This will automatically
     # use an appropriate git tag name
