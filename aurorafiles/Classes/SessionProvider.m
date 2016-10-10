@@ -38,6 +38,9 @@
                                 handler(isAuthorised,NO);
                             }];
                             return;
+                        }else{
+                            handler(NO,NO);
+                            return;
                         }
                     }
                     

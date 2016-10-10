@@ -50,6 +50,8 @@
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
+		FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C76441DA7F21800AA5576 /* snapshotTest.swift */; };
+		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
 		FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
@@ -114,6 +116,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DAC1CACD1D06216400238EB5;
 			remoteInfo = aurorafilesaction;
+		};
+		FF4C76471DA7F21800AA5576 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAC1CA2C1D061D7500238EB5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAC1CA331D061D7500238EB5;
+			remoteInfo = aurorafiles;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -215,6 +224,10 @@
 		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
+		FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapshotTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
+		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		FF71D46B1DA33162008690D5 /* MLAFNetworkingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAFNetworkingAdapter.h; sourceTree = "<group>"; };
 		FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLAFNetworkingAdapter.m; sourceTree = "<group>"; };
 		FF71D46E1DA33162008690D5 /* MLNetworkLoggingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLoggingAdapter.h; sourceTree = "<group>"; };
@@ -297,6 +310,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FF4C763F1DA7F21800AA5576 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -343,6 +363,7 @@
 				DAC1CA531D061D7500238EB5 /* aurorafilesTests */,
 				DAC1CA5E1D061D7500238EB5 /* aurorafilesUITests */,
 				DAC1CACF1D06216400238EB5 /* aurorafilesaction */,
+				FF4C76431DA7F21800AA5576 /* snapshotTest */,
 				DAC1CA351D061D7500238EB5 /* Products */,
 				08C21F2A8F35CF1838537085 /* Pods */,
 				9D3ABB9A4596045D52E649D4 /* Frameworks */,
@@ -356,6 +377,7 @@
 				DAC1CA501D061D7500238EB5 /* aurorafilesTests.xctest */,
 				DAC1CA5B1D061D7500238EB5 /* aurorafilesUITests.xctest */,
 				DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */,
+				FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -623,6 +645,16 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		FF4C76431DA7F21800AA5576 /* snapshotTest */ = {
+			isa = PBXGroup;
+			children = (
+				FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */,
+				FF4C76441DA7F21800AA5576 /* snapshotTest.swift */,
+				FF4C76461DA7F21800AA5576 /* Info.plist */,
+			);
+			path = snapshotTest;
+			sourceTree = "<group>";
+		};
 		FF71D4671DA33162008690D5 /* MLNetworkLogger */ = {
 			isa = PBXGroup;
 			children = (
@@ -875,12 +907,31 @@
 			productReference = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		FF4C76411DA7F21800AA5576 /* snapshotTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF4C764B1DA7F21800AA5576 /* Build configuration list for PBXNativeTarget "snapshotTest" */;
+			buildPhases = (
+				FF4C763E1DA7F21800AA5576 /* Sources */,
+				FF4C763F1DA7F21800AA5576 /* Frameworks */,
+				FF4C76401DA7F21800AA5576 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FF4C76481DA7F21800AA5576 /* PBXTargetDependency */,
+			);
+			name = snapshotTest;
+			productName = snapshotTest;
+			productReference = FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		DAC1CA2C1D061D7500238EB5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = afterlogic;
 				TargetAttributes = {
@@ -913,6 +964,12 @@
 							};
 						};
 					};
+					FF4C76411DA7F21800AA5576 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = J7AW6VHJK4;
+						ProvisioningStyle = Automatic;
+						TestTargetID = DAC1CA331D061D7500238EB5;
+					};
 				};
 			};
 			buildConfigurationList = DAC1CA2F1D061D7500238EB5 /* Build configuration list for PBXProject "aurorafiles" */;
@@ -932,6 +989,7 @@
 				DAC1CA4F1D061D7500238EB5 /* aurorafilesTests */,
 				DAC1CA5A1D061D7500238EB5 /* aurorafilesUITests */,
 				DAC1CACD1D06216400238EB5 /* aurorafilesaction */,
+				FF4C76411DA7F21800AA5576 /* snapshotTest */,
 			);
 		};
 /* End PBXProject section */
@@ -974,6 +1032,13 @@
 				FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF4C76401DA7F21800AA5576 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1268,6 +1333,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FF4C763E1DA7F21800AA5576 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */,
+				FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1285,6 +1359,11 @@
 			isa = PBXTargetDependency;
 			target = DAC1CACD1D06216400238EB5 /* aurorafilesaction */;
 			targetProxy = DAC1CAD71D06216400238EB5 /* PBXContainerItemProxy */;
+		};
+		FF4C76481DA7F21800AA5576 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAC1CA331D061D7500238EB5 /* aurorafiles */;
+			targetProxy = FF4C76471DA7F21800AA5576 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1512,6 +1591,42 @@
 			};
 			name = Release;
 		};
+		FF4C76491DA7F21800AA5576 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				INFOPLIST_FILE = snapshotTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = afterlogic.snapshotTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = aurorafiles;
+			};
+			name = Debug;
+		};
+		FF4C764A1DA7F21800AA5576 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				INFOPLIST_FILE = snapshotTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = afterlogic.snapshotTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = aurorafiles;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1559,6 +1674,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		FF4C764B1DA7F21800AA5576 /* Build configuration list for PBXNativeTarget "snapshotTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF4C76491DA7F21800AA5576 /* Debug */,
+				FF4C764A1DA7F21800AA5576 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
