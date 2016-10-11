@@ -48,10 +48,12 @@
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
 		FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF16B9391D689E7F003F982C /* PopupViewController.m */; };
 		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
+		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
 		FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C76441DA7F21800AA5576 /* snapshotTest.swift */; };
 		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
+		FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */; };
 		FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
@@ -222,12 +224,16 @@
 		FF16B9381D689E7F003F982C /* PopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupViewController.h; sourceTree = "<group>"; };
 		FF16B9391D689E7F003F982C /* PopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupViewController.m; sourceTree = "<group>"; };
 		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
+		FF32025E1DACF2F7008F3B6A /* ANavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANavigationController.h; sourceTree = "<group>"; };
+		FF32025F1DACF2F7008F3B6A /* ANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANavigationController.m; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
 		FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapshotTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
 		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		FF6A1D0B1DAD0265005CBA76 /* ARootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARootViewController.h; path = RootController/ARootViewController.h; sourceTree = "<group>"; };
+		FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARootViewController.m; path = RootController/ARootViewController.m; sourceTree = "<group>"; };
 		FF71D46B1DA33162008690D5 /* MLAFNetworkingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAFNetworkingAdapter.h; sourceTree = "<group>"; };
 		FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLAFNetworkingAdapter.m; sourceTree = "<group>"; };
 		FF71D46E1DA33162008690D5 /* MLNetworkLoggingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLoggingAdapter.h; sourceTree = "<group>"; };
@@ -483,6 +489,8 @@
 			children = (
 				DAC1CA881D061F1200238EB5 /* UITextFieldCustomEdges.h */,
 				DAC1CA891D061F1200238EB5 /* UITextFieldCustomEdges.m */,
+				FF32025E1DACF2F7008F3B6A /* ANavigationController.h */,
+				FF32025F1DACF2F7008F3B6A /* ANavigationController.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -494,6 +502,7 @@
 				DAC1CA8B1D061F1200238EB5 /* Files */,
 				DAC1CA9F1D061F1200238EB5 /* SignInViewController */,
 				DAC1CAA21D061F1200238EB5 /* TableController */,
+				FF6A1D0E1DAD026F005CBA76 /* RootController */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -653,6 +662,15 @@
 				FF4C76461DA7F21800AA5576 /* Info.plist */,
 			);
 			path = snapshotTest;
+			sourceTree = "<group>";
+		};
+		FF6A1D0E1DAD026F005CBA76 /* RootController */ = {
+			isa = PBXGroup;
+			children = (
+				FF6A1D0B1DAD0265005CBA76 /* ARootViewController.h */,
+				FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */,
+			);
+			name = RootController;
 			sourceTree = "<group>";
 		};
 		FF71D4671DA33162008690D5 /* MLNetworkLogger */ = {
@@ -1244,6 +1262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF71D4921DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
+				FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */,
 				FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
@@ -1264,6 +1283,7 @@
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
 				DAC1CAB21D061F1200238EB5 /* KeychainWrapper.m in Sources */,
+				FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
 				FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				DAC1CAB11D061F1200238EB5 /* UIImage+Aurora.m in Sources */,
