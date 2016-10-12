@@ -27,11 +27,14 @@
     [super viewDidLoad];
     [self.segmentedCotnroller addTarget:self action:@selector(onSegmentedControlTap:) forControlEvents:UIControlEventValueChanged];
     [self showOnlineButtons];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOnlineButtons) name:CPNotificationConnectionOnline object:nil];
+
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOfflineButtons) name:CPNotificationConnectionLost object:nil];
     
     // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,6 +63,7 @@
     [self.segmentedCotnroller insertSegmentWithTitle:@"Corporate" atIndex:1 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
     [self showPersonal];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:CPNotificationConnectionOnline object:nil];
 }
 
 
@@ -68,6 +72,7 @@
     [self.segmentedCotnroller insertSegmentWithTitle:@"Downloads" atIndex:0 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
     [self showDownloads];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOnlineButtons) name:CPNotificationConnectionOnline object:nil];
 }
 
 -(void)showPersonal{
@@ -101,9 +106,9 @@
         self.containerCorporate.alpha = 0.0f;
         self.containerDownloads.alpha = 0.0f;
     }
-    if([segue.identifier isEqualToString:@"corp_embed"]){
-        
-    }
+//    if([segue.identifier isEqualToString:@"corp_embed"]){
+//        
+//    }
     if([segue.identifier isEqualToString:@"downloads_embed"]){
         
     }

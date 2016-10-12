@@ -82,6 +82,7 @@
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
     self.moreItem = moreItem;
     self.navigationItem.rightBarButtonItems = @[self.shareItem, self.moreItem];
+    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (IBAction)moreItemAction:(id)sender

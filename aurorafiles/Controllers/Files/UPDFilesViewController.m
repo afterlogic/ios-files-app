@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Michael Akopyants. All rights reserved.
 //
 
-#import "FilesViewController.h"
+#import "UPDFilesViewController.h"
 #import "FilesTableViewCell.h"
 #import "FileDetailViewController.h"
 #import "SessionProvider.h"
@@ -24,21 +24,24 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "CRMediaPickerController.h"
 
-@interface FilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
+@interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
-@property (strong, nonatomic) IBOutlet UIView *activityView;
+//@property (strong, nonatomic) IBOutlet UIView *activityView;
 @property (strong, nonatomic) STZPullToRefresh * pullToRefresh;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) Folder * folderToOperate;
 @property (strong, nonatomic) CRMediaPickerController *pickerController;
+@property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 @end
 
-@implementation FilesViewController
+@implementation UPDFilesViewController
 
 - (void)awakeFromNib
 {
@@ -58,11 +61,16 @@
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
     
+//    if (self.folder) {
+        self.toolbar.hidden = NO;
+//    }else{
+//        self.toolbar.hidden = YES;
+//    }
+    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
     
     self.navigationController.navigationBar.hidden = NO;
-    
     
     self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
@@ -71,7 +79,7 @@
 //    // Setup PullToRefresh
     self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
                                                          refreshView:refreshView
-                                                   tableViewDelegate:nil];
+                                                   tableViewDelegate:self];
 //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
@@ -81,7 +89,9 @@
     
     self.signOutButton.tintColor = refreshView.progressColor;
     self.editButton.tintColor = refreshView.progressColor;
+    self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.refreshControl = self.refreshControl;
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
@@ -121,14 +131,14 @@
         
         self.navigationItem.title = self.folder.name;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-        self.navigationItem.rightBarButtonItems = @[self.editButton];
+//        self.navigationItem.rightBarButtonItems = @[self.editButton];
 
     }
     else
     {
         self.navigationItem.title = [self.type capitalizedString];
-        self.navigationItem.leftBarButtonItems = @[self.signOutButton];
-        self.navigationItem.rightBarButtonItems = @[self.editButton];
+//        self.navigationItem.leftBarButtonItems = @[self.signOutButton];
+//        self.navigationItem.rightBarButtonItems = @[self.editButton];
 
     }
     NSError * error = nil;
@@ -265,10 +275,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"GoToFolderSegue"])
+    if ([segue.identifier isEqualToString:@"UPDGoToFolderSegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        FilesViewController * vc = [segue destinationViewController];
+        UPDFilesViewController * vc = [segue destinationViewController];
         vc.folder = object;
         vc.isCorporate = self.isCorporate;
     }
@@ -315,7 +325,7 @@
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
     if ([object.isFolder boolValue])
     {
-        [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+        [self performSegueWithIdentifier:@"UPDGoToFolderSegue" sender:self];
     }
     else
     {
@@ -421,11 +431,15 @@
 
 - (IBAction)signOut:(id)sender
 {
+    [self signOut];
+}
+
+-(void)signOut{
     [Settings setAuthToken:nil];
     [Settings setCurrentAccount:nil];
     [Settings setToken:nil];
     [Settings setPassword:nil];
-
+    
     [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
         if (!authorised)
         {
@@ -438,6 +452,7 @@
         }
     }];
 }
+
 
 - (void)updateFiles:(void (^)())handler
 {
@@ -460,6 +475,15 @@
 
 - (void)tableViewCellDownloadAction:(UITableViewCell *)cell
 {
+    if (![Settings isFirstRun]) {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Download files", @"") message:NSLocalizedString(@"Tapping this icon makes the file available offline. The file will be stored on your device locally. If you want to remove the file from the device, just tap the icon again making it grey and the file won't consume space on your device anymore.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Got it!", @"") otherButtonTitles:nil, nil];
+        [alert show];
+        [Settings setFirstRun:@"YES"];
+    }
+    [self tableViewCellDownload:cell];
+}
+
+-(void)tableViewCellDownload:(UITableViewCell *)cell{
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
     if (folder.isDownloaded.boolValue)
     {
@@ -468,7 +492,7 @@
     
     [(FilesTableViewCell*)cell disclosureButton].hidden = YES;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-
+    
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
     NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
     NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
@@ -476,7 +500,6 @@
     NSError * error;
     [folder.managedObjectContext save:&error];
     [downloadTask resume];
-    
 }
 
 -(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
@@ -665,6 +688,10 @@
 
 #pragma mark Edit Menu Actions
 
+- (IBAction)uploadAction:(id)sender {
+    [self.pickerController show];
+}
+
 - (IBAction)editAction:(id)sender
 {
     UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -675,7 +702,7 @@
     
     self.folderToOperate = self.folder;
     [alert addAction:[self createFolderAction]];
-    [alert addAction:[self uploadFileAction]];
+    [alert addAction:[self logout]];
     
     if (self.folder)
     {
@@ -685,15 +712,17 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (UIAlertAction*)uploadFileAction
+- (UIAlertAction*)logout
 {
-    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Logout", @"") style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction * action) {
-                                                           [self.pickerController show];
+                                                           [self signOut];
                                                        }];
     
-    return uploadFile;
+    return logout;
 }
+
+
 
 - (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
     NSLog(@"current asset - > %@ ",asset.defaultRepresentation.url);

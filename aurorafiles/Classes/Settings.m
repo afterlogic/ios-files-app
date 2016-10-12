@@ -81,5 +81,13 @@
     return [[Settings sharedDefaults] valueForKey:@"current_account"];
 }
 
++ (void)setFirstRun:(NSString *)isFirstRun{
+    [[Settings sharedDefaults] setValue:isFirstRun forKey:@"first_run"];
+    [[Settings sharedDefaults] synchronize];
+}
+
++ (NSString *)isFirstRun{
+    return [[Settings sharedDefaults] valueForKey:@"first_run"];
+}
 
 @end

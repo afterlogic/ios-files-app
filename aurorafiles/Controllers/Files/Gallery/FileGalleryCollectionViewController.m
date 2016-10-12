@@ -71,6 +71,8 @@
     // Register cell classes
     [self.collectionView registerNib:[UINib nibWithNibName:@"FileGalleryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:[FileGalleryCollectionViewCell cellId]];
     [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:self.panCollectionGesture];
+    
+    self.navigationController.navigationBar.hidden = NO;
     // Do any additional setup after loading the view.
 }
 

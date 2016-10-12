@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DownloadsTableViewController : UITableViewController
+@interface DownloadsTableViewController : UIViewController
 
 @end

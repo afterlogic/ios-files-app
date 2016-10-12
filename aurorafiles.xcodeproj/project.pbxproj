@@ -89,6 +89,7 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
+		FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */; };
 		FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
 		FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
 		FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */; };
@@ -270,6 +271,8 @@
 		FF90536E1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadFoldersTableViewController.m; path = FilePath/UploadFoldersTableViewController.m; sourceTree = "<group>"; };
 		FF9053771D9C313C00A09A44 /* TabBarWrapperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabBarWrapperViewController.h; path = FilePath/TabBarWrapperViewController.h; sourceTree = "<group>"; };
 		FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabBarWrapperViewController.m; path = FilePath/TabBarWrapperViewController.m; sourceTree = "<group>"; };
+		FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPDFilesViewController.h; sourceTree = "<group>"; };
+		FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPDFilesViewController.m; sourceTree = "<group>"; };
 		FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXFileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXFileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -514,6 +517,8 @@
 				DAC1CA901D061F1200238EB5 /* Detail */,
 				DAC1CA931D061F1200238EB5 /* FilesViewController.h */,
 				DAC1CA941D061F1200238EB5 /* FilesViewController.m */,
+				FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */,
+				FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */,
 				DAC1CA951D061F1200238EB5 /* Gallery */,
 				DAC1CA9C1D061F1200238EB5 /* ViewImage */,
 			);
@@ -1267,6 +1272,7 @@
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
+				FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,

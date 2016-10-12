@@ -14,7 +14,9 @@
 #import "UIImage+Aurora.h"
 #import "FileDetailViewController.h"
 #import "FileGalleryCollectionViewController.h"
-@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate>
+@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource>
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @end
@@ -24,6 +26,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
 

@@ -29,6 +29,7 @@
 + (void)setPassword:(NSString*)password;
 + (NSString*)password;
 
-
++ (void)setFirstRun:(NSString *)isFirstRun;
++ (NSString *)isFirstRun;
 
 @end
