@@ -46,8 +46,6 @@
 		DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */; };
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
-		FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF16B9391D689E7F003F982C /* PopupViewController.m */; };
-		FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF16B93A1D689E7F003F982C /* PopupViewController.xib */; };
 		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
@@ -90,6 +88,12 @@
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
 		FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */; };
+		FFB959301DAE96E8008031B3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */; };
+		FFB959311DAE96E8008031B3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */; };
+		FFB959351DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */; };
+		FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */; };
+		FFB959391DAF96D8008031B3 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
+		FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
 		FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
 		FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
 		FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */; };
@@ -222,9 +226,6 @@
 		DAC1CADE1D062BEB00238EB5 /* aurorafiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafiles.entitlements; sourceTree = "<group>"; };
 		DAC1CADF1D062BF400238EB5 /* aurorafilesaction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafilesaction.entitlements; sourceTree = "<group>"; };
 		DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
-		FF16B9381D689E7F003F982C /* PopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupViewController.h; sourceTree = "<group>"; };
-		FF16B9391D689E7F003F982C /* PopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupViewController.m; sourceTree = "<group>"; };
-		FF16B93A1D689E7F003F982C /* PopupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupViewController.xib; sourceTree = "<group>"; };
 		FF32025E1DACF2F7008F3B6A /* ANavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANavigationController.h; sourceTree = "<group>"; };
 		FF32025F1DACF2F7008F3B6A /* ANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANavigationController.m; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
@@ -273,6 +274,12 @@
 		FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabBarWrapperViewController.m; path = FilePath/TabBarWrapperViewController.m; sourceTree = "<group>"; };
 		FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPDFilesViewController.h; sourceTree = "<group>"; };
 		FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPDFilesViewController.m; sourceTree = "<group>"; };
+		FFB9592E1DAE96E8008031B3 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		FFB959331DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PerformSelectorWithCallback.h"; sourceTree = "<group>"; };
+		FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PerformSelectorWithCallback.m"; sourceTree = "<group>"; };
+		FFB959371DAF96D8008031B3 /* NSString+transferedValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+transferedValues.h"; sourceTree = "<group>"; };
+		FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+transferedValues.m"; sourceTree = "<group>"; };
 		FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXFileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXFileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -461,10 +468,14 @@
 		DAC1CA7A1D061F1200238EB5 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				FFB959331DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.h */,
+				FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */,
 				DAC1CA7B1D061F1200238EB5 /* UIImage+Aurora.h */,
 				DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */,
 				FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */,
 				FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */,
+				FFB959371DAF96D8008031B3 /* NSString+transferedValues.h */,
+				FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -605,6 +616,7 @@
 		DAC1CAAA1D061F1200238EB5 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				FFB959321DAE96F9008031B3 /* MBProgressHUD */,
 				FF71D4671DA33162008690D5 /* MLNetworkLogger */,
 				FF71D4D51DA3C851008690D5 /* AFNetworkActivityLogger */,
 				DAC1CAAB1D061F1200238EB5 /* STZPullToRefresh */,
@@ -631,23 +643,12 @@
 				DAC1CAD11D06216400238EB5 /* ActionViewController.m */,
 				DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */,
 				FF9053061D9B0E4D00A09A44 /* Supporting Files */,
-				FF16B9371D689E7F003F982C /* PopUp */,
 				FF4255F31D7EDBC9009B2E56 /* Model */,
 				FFFFA5D81D9A5395006BA9FB /* Gallery */,
 				FF90530D1D9BDCD800A09A44 /* Upload Path */,
 				DAC1CAD61D06216400238EB5 /* Info.plist */,
 			);
 			path = aurorafilesaction;
-			sourceTree = "<group>";
-		};
-		FF16B9371D689E7F003F982C /* PopUp */ = {
-			isa = PBXGroup;
-			children = (
-				FF16B9381D689E7F003F982C /* PopupViewController.h */,
-				FF16B9391D689E7F003F982C /* PopupViewController.m */,
-				FF16B93A1D689E7F003F982C /* PopupViewController.xib */,
-			);
-			path = PopUp;
 			sourceTree = "<group>";
 		};
 		FF4255F31D7EDBC9009B2E56 /* Model */ = {
@@ -815,6 +816,15 @@
 				FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */,
 			);
 			name = "Upload Path";
+			sourceTree = "<group>";
+		};
+		FFB959321DAE96F9008031B3 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				FFB9592E1DAE96E8008031B3 /* MBProgressHUD.h */,
+				FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		FFFFA5D81D9A5395006BA9FB /* Gallery */ = {
@@ -1052,7 +1062,6 @@
 				DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */,
 				FF9053711D9BFCAA00A09A44 /* FilesTableViewCell.xib in Resources */,
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
-				FF16B93C1D689E7F003F982C /* PopupViewController.xib in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
 			);
@@ -1273,6 +1282,7 @@
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */,
+				FFB959351DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
@@ -1288,6 +1298,8 @@
 				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
+				FFB959301DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
+				FFB959391DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
 				DAC1CAB21D061F1200238EB5 /* KeychainWrapper.m in Sources */,
 				FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
@@ -1326,8 +1338,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF71D4891DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
+				FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
 				FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */,
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
+				FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
 				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
 				FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				FF71D48B1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
@@ -1340,11 +1354,11 @@
 				FF9053731D9C012D00A09A44 /* API.m in Sources */,
 				FF71D48F1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,
+				FFB959311DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
 				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
 				FF9053101D9BE55800A09A44 /* Folder.m in Sources */,
 				FF90530F1D9BE55800A09A44 /* Folder+CoreDataProperties.m in Sources */,
-				FF16B93B1D689E7F003F982C /* PopupViewController.m in Sources */,
 				FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */,
 				FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */,
 				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,

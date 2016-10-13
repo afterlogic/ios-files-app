@@ -11,7 +11,7 @@
 #import "Api.h"
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
-#import <MBProgressHUD/MBProgressHUD.h>
+#import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 
 //#import "StorageProvider.h"

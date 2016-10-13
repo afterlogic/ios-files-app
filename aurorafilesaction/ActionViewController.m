@@ -12,7 +12,6 @@
 #import "EXPreviewFileGalleryCollectionViewController.h"
 #import "CurrentFilePathViewController.h"
 #import "TabBarWrapperViewController.h"
-#import "PopUp/PopupViewController.h"
 #import "Model/UploadedFile.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -23,7 +22,9 @@
 #import "NSString+URLEncode.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "MLNetworkLogger.h"
-//#import "AFNetworkActivityLogger.h"
+#import "MBProgressHUD.h"
+#import "NSObject+PerformSelectorWithCallback.h"
+#import "NSString+transferedValues.h"
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
     NSString *fileExtension;
@@ -40,15 +41,15 @@
     UIAlertController * alertController;
     UIProgressView *pv;
     
-    PopupViewController *allertPopUp;
+    MBProgressHUD *hud;
     
-//    NSMutableArray <UploadedFile *> *filesForUpload;
     NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
     
     
     int64_t totalBytesForAllFilesSend;
     CGFloat previewLocalHeight;
     UIViewController *currentModalView;
+    BOOL uploadStart;
 }
 
 
@@ -108,6 +109,7 @@
 -(void)setupForUpload{
     
     totalBytesForAllFilesSend = 0;
+    uploadStart = NO;
     [self searchFilesForUpload];
     
 }
@@ -202,7 +204,6 @@
     self.previewController.items = self.filesForUpload.copy;
     self.galleryController.delegate = self;
     [self.currentUploadPathView.openFileButton addTarget:self action:@selector(showUploadFolders) forControlEvents:UIControlEventTouchUpInside];
-//    [self.currentUploadPathView setUploadPath:uploadFolderPath];
     [self generatePath:uploadFolderPath root:uploadRootPath];
     if([NSObject orientation] == InterfaceOrientationTypePortrait){
         [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypePortrait];
@@ -252,37 +253,33 @@
 
 - (IBAction)uploadAction:(id)sender
 {
-    
     urlString = @"";
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     requestsForUpload = [NSMutableArray new];
     
     for (UploadedFile *file in self.filesForUpload){
         if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
-            
             file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
         }else{
             file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
         }
         urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
         file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
-        
-        uploadSize += file.size;
+        if(!uploadStart){
+            uploadSize += file.size;
+        }
     }
-    
-    allertPopUp = [[PopupViewController alloc]initProgressAllertWithTitle:@"" message:NSLocalizedString(@"Uploading..", @"")  fileName:fileName fileSize:[NSString stringWithFormat:@"%llu",uploadSize] disagreeText:NSLocalizedString(@"Cancel", @"") disagreeBlock:^{
-        [self done];
-    } parrentView:self];
-    
+    self.uploadButton.enabled = NO;
     [self startUploadingForFiles:self.filesForUpload];
 }
 
 -(void)startUploadingForFiles:(NSArray *)files{
     
     UploadedFile *currentFile = files.firstObject;
-    if (allertPopUp.isShown) {
+    fileName = currentFile.name;
+    if (uploadStart) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [allertPopUp setCurrentFileName:currentFile.name];
+            fileName = currentFile.name;
         });
     }
     [self uploadFile:currentFile];
@@ -310,17 +307,20 @@
 
 -(void)uploadFile:(UploadedFile *) file{
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-    
-    if (!allertPopUp.isShown) {
-        [allertPopUp showPopup];
+    uploadStart = YES;
+    if (!hud) {
+        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.mode = MBProgressHUDModeDeterminate;
+        [hud showAnimated:YES];
     }
 
     [self requestLog:file.request];
+    __weak ActionViewController * weakSelf = self;
     NSURLSessionDataTask * task = [session dataTaskWithRequest:file.request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            
             NSError * error = nil;
             
+            ActionViewController *strongSelf = weakSelf;
             id json = nil;
             if (data)
             {
@@ -335,12 +335,11 @@
             if (error)
             {
                 if (self.filesForUpload.count == 0) {
-                    [allertPopUp closeViewWithComplition:^{
-                        PopupViewController* errorPopUp = [[PopupViewController alloc] initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Error", @"") message:NSLocalizedString(@"Operation can't be completed", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
-                            [self done];
-                        } parrentView:self];
-                        [errorPopUp showPopup];
-                    }];
+                    hud.mode = MBProgressHUDModeCustomView;
+                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+                    hud.detailsLabel.text = @"";
+                    hud.label.text = NSLocalizedString(@"Operation can't be completed", @"");
+                    [hud hideAnimated:YES afterDelay:0.7f];
                     return ;
                 }else{
                     
@@ -349,15 +348,15 @@
             }
             
             if (self.filesForUpload.count == 1) {
-                [allertPopUp closeViewWithComplition:^{
-                    PopupViewController* congratPopUp = [[PopupViewController alloc]initPopUpWithOneButtonWithTitle:NSLocalizedString(@"Great!", @"") message:NSLocalizedString(@"File succesfully uploaded!", @"") agreeText:NSLocalizedString(@"OK", @"") agreeBlock:^{
-                          [self done];
-                    } parrentView:self];
-                    [congratPopUp showPopup];
-                }];
+                hud.mode = MBProgressHUDModeCustomView;
+                hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
+                hud.detailsLabel.text = @"";
+                hud.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
+                [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
+                
             }else{
-                [self.filesForUpload removeObject:file];
-                [self startUploadingForFiles:self.filesForUpload];
+                [strongSelf.filesForUpload removeObject:file];
+                [strongSelf uploadAction:self];
             }
             
         });
@@ -372,7 +371,12 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 
     dispatch_async(dispatch_get_main_queue(), ^(){
         totalBytesForAllFilesSend +=bytesSent;
-        [allertPopUp setProgressWihtCurrentBytes:totalBytesForAllFilesSend totalBytesExpectedToSend:uploadSize];
+        float progress = (float)totalBytesForAllFilesSend / (float)uploadSize;
+        hud.progress = progress;
+        NSString *uploadStatus = [NSString stringWithFormat:@"%@ %@",[NSString transformedValue:[NSNumber numberWithLongLong:totalBytesForAllFilesSend]],[NSString transformedValue:[NSNumber numberWithLongLong:uploadSize]]];
+        hud.detailsLabel.text = uploadStatus;
+        NSLog(@"fileName is -> %@",fileName);
+        hud.label.text = fileName;
     });
 
     
@@ -401,6 +405,13 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     NSURL *resultPath = [NSURL fileURLWithPath:filePath];
     BFLog(@"%@", resultPath);
     return resultPath;
+}
+
+#pragma mark - HUD
+
+- (void)hideHud{
+    [hud hideAnimated:YES];
+    [self done];
 }
 
 #pragma mark - Preview

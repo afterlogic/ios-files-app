@@ -18,7 +18,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "STZPullToRefresh.h"
 #import "StorageManager.h"
-#import <MBProgressHUD.h>
+#import "MBProgressHUD.h"
 #import "ConnectionProvider.h"
 #import "Constants.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -739,14 +739,14 @@
     }
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeDeterminate;
-        hud.labelText = [NSString stringWithFormat:@"%@ uploading", realFileName];
+        hud.label.text = [NSString stringWithFormat:@"%@ uploading", realFileName];
         
         [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
             hud.progress = progress;
         } completion:^(NSDictionary * response){
             NSLog(@"%@",response);
             [self updateFiles:^(){
-                [hud hide:YES];
+                [hud hideAnimated:YES];
             }];
         }];
 }
