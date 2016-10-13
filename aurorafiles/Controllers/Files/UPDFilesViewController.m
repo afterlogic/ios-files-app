@@ -303,7 +303,6 @@
         vc.folder = self.folder;
         UIImage * snap = [self snapshot:self.navigationController.view];
         vc.snapshot= snap;
-        
         vc.currentItem = object;
     }
 }

@@ -9,6 +9,7 @@
 #import "FileGalleryCollectionViewCell.h"
 #import "Folder.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "MBProgressHUD.h"
 
 @interface FileGalleryCollectionViewCell () <UIScrollViewDelegate>
 
@@ -25,8 +26,9 @@
     [super awakeFromNib];
     self.scrollView.minimumZoomScale = 1;
     self.scrollView.maximumZoomScale = 5;
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;    
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.scrollView.delegate = self;
+    self.activityView.hidden = YES;
     // Initialization code
 }
 
@@ -43,7 +45,10 @@
     _file = file;
     if (file)
     {
-        [self.activityView startAnimating];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.contentView animated:YES];
+        hud.mode = MBProgressHUDModeIndeterminate;
+        [hud showAnimated:YES];
+//        [self.activityView startAnimating];
         UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
 
         zoomOn.numberOfTapsRequired = 2;
@@ -53,7 +58,7 @@
         self.imageView.userInteractionEnabled = YES;
         self.imageView.alpha = 0.0f;
         
-        NSLog(@"%@",[file viewLink]);
+        NSLog(@"collection view cell image - > %@",[file viewLink]);
         self.imageView.image = nil;
         UIImage * image = nil;
         if (file.isDownloaded.boolValue)
@@ -68,9 +73,12 @@
         }
         if (!image)
         {
-            [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL){
+            [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+//                hud.progress = (float)receivedSize / (float)expectedSize;
+            } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                [hud hideAnimated:YES];
                 self.imageView.alpha = 1.0f;
-                [self.activityView stopAnimating];
+//                [self.activityView stopAnimating];
                 CGFloat minScale = 1;
                 self.scrollView.minimumZoomScale = minScale;
                 
@@ -78,12 +86,24 @@
                 self.scrollView.maximumZoomScale = 5.0f;
                 self.scrollView.zoomScale = minScale;
             }];
+            
+//            [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL){
+//                self.imageView.alpha = 1.0f;
+//                [self.activityView stopAnimating];
+//                CGFloat minScale = 1;
+//                self.scrollView.minimumZoomScale = minScale;
+//                
+//                // 5
+//                self.scrollView.maximumZoomScale = 5.0f;
+//                self.scrollView.zoomScale = minScale;
+//            }];
         }
         else
         {
             self.imageView.image = image;
             self.imageView.alpha = 1.0f;
-            [self.activityView stopAnimating];
+            [hud hideAnimated:YES];
+//            [self.activityView stopAnimating];
             CGFloat minScale = 1;
             self.scrollView.minimumZoomScale = minScale;
             

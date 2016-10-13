@@ -86,8 +86,14 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     [self.collectionView setCollectionViewLayout:layout];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    NSInteger row = [self.items indexOfObject:self.currentItem];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
