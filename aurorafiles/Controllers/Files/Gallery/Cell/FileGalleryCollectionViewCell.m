@@ -11,7 +11,9 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "MBProgressHUD.h"
 
-@interface FileGalleryCollectionViewCell () <UIScrollViewDelegate>
+@interface FileGalleryCollectionViewCell () <UIScrollViewDelegate>{
+    MBProgressHUD *hud;
+}
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -29,7 +31,7 @@
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.scrollView.delegate = self;
     self.activityView.hidden = YES;
-    // Initialization code
+    hud.hidden = YES;
 }
 
 
@@ -38,15 +40,21 @@
 {
     [super prepareForReuse];
     self.imageView.image = nil;
+    [hud hideAnimated:YES];
+    hud = nil;
+    hud.hidden = YES;
 }
 
 - (void)setFile:(Folder *)file
 {
+    hud = [MBProgressHUD showHUDAddedTo:self.contentView animated:YES];
     _file = file;
     if (file)
     {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.contentView animated:YES];
         hud.mode = MBProgressHUDModeIndeterminate;
+        [hud setBackgroundColor:[UIColor clearColor]];
+        
+        hud.hidden = NO;
         [hud showAnimated:YES];
 //        [self.activityView startAnimating];
         UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
@@ -77,8 +85,8 @@
 //                hud.progress = (float)receivedSize / (float)expectedSize;
             } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 [hud hideAnimated:YES];
+                hud.hidden = YES;
                 self.imageView.alpha = 1.0f;
-//                [self.activityView stopAnimating];
                 CGFloat minScale = 1;
                 self.scrollView.minimumZoomScale = minScale;
                 
@@ -87,23 +95,13 @@
                 self.scrollView.zoomScale = minScale;
             }];
             
-//            [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL){
-//                self.imageView.alpha = 1.0f;
-//                [self.activityView stopAnimating];
-//                CGFloat minScale = 1;
-//                self.scrollView.minimumZoomScale = minScale;
-//                
-//                // 5
-//                self.scrollView.maximumZoomScale = 5.0f;
-//                self.scrollView.zoomScale = minScale;
-//            }];
         }
         else
         {
             self.imageView.image = image;
             self.imageView.alpha = 1.0f;
             [hud hideAnimated:YES];
-//            [self.activityView stopAnimating];
+            hud.hidden = YES;
             CGFloat minScale = 1;
             self.scrollView.minimumZoomScale = minScale;
             

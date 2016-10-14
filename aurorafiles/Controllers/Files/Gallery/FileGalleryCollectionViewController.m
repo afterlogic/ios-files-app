@@ -71,9 +71,14 @@
     // Register cell classes
     [self.collectionView registerNib:[UINib nibWithNibName:@"FileGalleryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:[FileGalleryCollectionViewCell cellId]];
     [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:self.panCollectionGesture];
+//    self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
+    
     
     self.navigationController.navigationBar.hidden = NO;
+    self.title = self.currentItem.name;
     // Do any additional setup after loading the view.
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -86,14 +91,18 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     [self.collectionView setCollectionViewLayout:layout];
-
     [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    NSInteger row = [self.items indexOfObject:self.currentItem];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    NSInteger row = [self.items indexOfObject:self.currentItem];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -287,14 +296,17 @@
 {
     FileGalleryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[FileGalleryCollectionViewCell cellId] forIndexPath:indexPath];
     Folder * item = [self.items objectAtIndex:indexPath.row];
-    
-    self.title = item.name;
-    // Configure the cell
-  
     cell.file = item;
     [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
     return cell;
 }
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    FileGalleryCollectionViewCell *sameCell = [self.collectionView.visibleCells lastObject];
+    self.title = sameCell.file.name;
+
+}
+
 
 - (IBAction)panCollectionToBack:(UIPanGestureRecognizer*)recognizer
 {
