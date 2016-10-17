@@ -308,53 +308,7 @@
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;
-    if ([[object isFolder] boolValue])
-    {
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.disclosureButton.alpha = 0.0f;
-        cell.fileImageView.image = [UIImage imageNamed:@"folder"];
-    }
-    else
-    {
-        
-        cell.fileImageView.image = nil;
-        UIImage * placeholder = [UIImage assetImageForContentType:[object validContentType]];
-        if (object.isLink.boolValue && ![object isImageContentType])
-        {
-            placeholder = [UIImage imageNamed:@"shotcut"];
-        }
-        if (object.downloadIdentifier.integerValue != -1)
-        {
-            [cell.downloadActivity startAnimating];
-            cell.disclosureButton.hidden = YES;
-        }
-        else
-        {
-            [cell.downloadActivity stopAnimating];
-            cell.disclosureButton.hidden = NO;
-        }
-            [cell.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
-            [cell.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-                cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
-        
-        [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
-        cell.fileDownloaded = object.isDownloaded.boolValue;
-        
-        cell.fileImageView.image =placeholder;
-        cell.disclosureButton.alpha = 1.0f;
-        
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        
-        NSString * thumbnail = [object embedThumbnailLink];
-        
-        if (thumbnail)
-        {
-            [cell.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:placeholder options:SDWebImageRefreshCached];
-        }
-    }
-    
-    
-    cell.titileLabel.text = object.name;
+    [cell setupCellForFile:object];
     return cell;
 }
 

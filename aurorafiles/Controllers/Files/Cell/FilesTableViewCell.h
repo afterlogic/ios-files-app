@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class Folder;
 @protocol FilesTableViewCellDelegate <NSObject>
 @required
 - (void)tableViewCellDownloadAction:(UITableViewCell*)cell;
@@ -29,6 +29,7 @@
 
 - (IBAction)downloadAction:(id)sender;
 - (IBAction)moreAction:(id)sender;
+- (void)setupCellForFile:(Folder *) folder;
 + (CGFloat)cellHeight;
 + (NSString*)cellId;
 @end
