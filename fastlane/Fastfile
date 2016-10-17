@@ -17,7 +17,8 @@ default_platform :ios
 
 platform :ios do
   before_all do
-    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    # https://afterlogic.slack.com/apps/A0F7XDUAZ-incoming-webhooks - ссылка на подключение вебхука
+    ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
     # cocoapods
   end
 
@@ -31,40 +32,80 @@ platform :ios do
     snapshot
   end
 
+  def change_log_since_last_tag
+    # http://git-scm.com/docs/pretty-formats
+    # <short hash> <commit title>
+    return changelog_from_git_commits(pretty: '%h %s')
+  end
+
+  def version_string(version_number, build_number)
+    "#{version_number} (#{build_number})"
+  end
+
+  def tag_name(build_type, version_number, build_number)
+    "#{build_type}/#{version_number}/#{build_number}"
+  end
+
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
-  lane :uploadBeta do
-    # Проверка на наличие нехакоментированных изменений
+  lane :uploadBeta do |options|
+
+
+    # Проверка на наличие незакоментированных изменений
     # ensure_git_status_clean
+
+    version_number = options[:version_number]
+
+    # Увеличивает номер версии
+    # Указывать путь до проекта не обязательно
+    # increment_version_number(version_number: version_number, xcodeproj: "aurorafiles.xcodeproj")
 
     # Увеличивает номер билда (не версию)
     # Указывать путь до проекта не обязательно
-    increment_build_number(xcodeproj: "aurorafiles.xcodeproj")
+    build_number = increment_build_number
 
-    #increment_version_number_in_plist(
-      #bump_type: 'minor',
-      #target:'aurorafiles',
-      #target:'aurorafilesaction'
-    #)
 
-    # Commit the version bump
-    # commit_version_bump(xcodeproj: "aurorafiles.xcodeproj")
+    complete_version_number = version_string(version_number, build_number)
 
-    # Add a git tag for this build. This will automatically
-    # use an appropriate git tag name
-    # add_git_tag
+    # Добавляем гит тэг для билда. Имя гит-тэга такое же как и называние лэйна
+    add_git_tag(
+        grouping: "debug-builds",
+        prefix: "au",
+        build_number: build_number
+    )
 
-    gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true) # Build your app - more options available
-    #pilot
+    commit_version_bump(
+      message: "Version bump to #{complete_version_number}",
+      xcodeproj: "aurorafiles.xcodeproj"
+    )
 
-    changelog_from_git_commits
-    testflight
+    clean_build_artifacts
+    clear_derived_data
 
-    # Push the new commit and tag back to your git remote
+
+    # Пушим в гит новый тэг и все коммиты
     push_to_git_remote
 
-    # sh "your_script.sh"
-    # You can also use other beta testing services here (run `fastlane actions`)
+    # Собираем билд
+    gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true) 
+
+    #pilot
+
+    # забираем все коммиты из гита для ченджлога
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
+
+    # отправляем в тестфлайт
+    testflight(
+      changelog: change_log,
+      skip_submission: true
+    )
+
+    #отправляем сообщение в слак
+    slack(
+      message: "Submitted build to TestFlight: v#{complete_version_number} \nChanges:\n #{change_log}",
+      channel: "@cheshire"
+    )
+
   end
 
   desc "Deploy a new version to the App Store"
