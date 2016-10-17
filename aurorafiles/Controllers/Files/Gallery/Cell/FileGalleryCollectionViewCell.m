@@ -51,12 +51,11 @@
     _file = file;
     if (file)
     {
-        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.mode = MBProgressHUDModeDeterminate;
         [hud setBackgroundColor:[UIColor clearColor]];
         
         hud.hidden = NO;
         [hud showAnimated:YES];
-//        [self.activityView startAnimating];
         UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
 
         zoomOn.numberOfTapsRequired = 2;
@@ -82,7 +81,7 @@
         if (!image)
         {
             [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//                hud.progress = (float)receivedSize / (float)expectedSize;
+                hud.progress = (float)receivedSize / file.size.floatValue;
             } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 [hud hideAnimated:YES];
                 hud.hidden = YES;

@@ -10,4 +10,5 @@
 
 @interface UIImage (Aurora)
 + (UIImage*)assetImageForContentType:(NSString*)contentType;
+- (UIImage *)fixOrientation;
 @end

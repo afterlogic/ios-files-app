@@ -410,7 +410,9 @@
         
         if (thumbnail)
         {
-            [cell.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:placeholder options:SDWebImageRefreshCached];
+            UIImageView *tmpImgView = [[UIImageView alloc]init];
+            [tmpImgView sd_setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:placeholder options:SDWebImageRefreshCached];
+            cell.fileImageView.image = [tmpImgView.image fixOrientation];
         }
     }
 
