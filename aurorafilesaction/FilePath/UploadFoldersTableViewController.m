@@ -28,8 +28,9 @@
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-@property (weak, nonatomic) UITextField * folderName;
+@property (strong, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) Folder * folderToOperate;
+@property (strong, nonatomic) Folder * folderToNavigate;
 @property (weak, nonatomic) IBOutlet UIRefreshControl *refreshController;
 
 
@@ -242,7 +243,8 @@
 {
     if ([segue.identifier isEqualToString:@"GoToFolderSegue"])
     {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+//        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        Folder * object = self.folderToNavigate;
         UploadFoldersTableViewController * vc = [segue destinationViewController];
         vc.delegate = self.delegate;
         vc.folder = object;
@@ -268,6 +270,7 @@
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
     if ([object.isFolder boolValue])
     {
+        self.folderToNavigate = object;
         [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
     }
 }
@@ -734,13 +737,19 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 __weak typeof (self)weakSelf = self;
                                                                  [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
                                                                      BFLog(@"%@",result);
 //                                                                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                      [self updateFiles:^(){
 //                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         
                                                                          [self.tableView reloadData];
+                                                                          __strong typeof(self)self = weakSelf;
+                                                                         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
+                                                                         NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
+                                                                         NSLog(@"%@", filteredArray);
+                                                                         self.folderToNavigate = [filteredArray lastObject];
+                                                                         [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
                                                                      }];
                                                                  }];;
                                                                  

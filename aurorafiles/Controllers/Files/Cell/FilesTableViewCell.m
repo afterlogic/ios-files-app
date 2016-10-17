@@ -33,7 +33,7 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    self.fileImageView.image = nil;
+    self.fileImageView.image = [UIImage imageNamed:@"other"];
 }
 
 - (IBAction)moreAction:(id)sender

@@ -663,7 +663,8 @@
     
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                               initWithKey:@"isFolder" ascending:NO];
-    NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+//    NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     [fetchRequest setSortDescriptors:@[isFolder, title]];
     
     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
@@ -703,12 +704,12 @@
     
     self.folderToOperate = self.folder;
     [alert addAction:[self createFolderAction]];
-    [alert addAction:[self logout]];
     
     if (self.folder)
     {
         [alert addAction:[self renameCurrentFolderAction]];
     }
+    [alert addAction:[self logout]];
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
