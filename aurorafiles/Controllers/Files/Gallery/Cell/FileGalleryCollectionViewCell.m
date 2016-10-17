@@ -40,6 +40,7 @@
 {
     [super prepareForReuse];
     self.imageView.image = nil;
+    [self.imageView sd_cancelCurrentImageLoad];
     [hud hideAnimated:YES];
     hud = nil;
     hud.hidden = YES;
