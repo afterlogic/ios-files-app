@@ -100,11 +100,8 @@ platform :ios do
       skip_submission: true
     )
 
-    #отправляем сообщение в слак
-    slack(
-      message: "Submitted build to TestFlight: v#{complete_version_number} \nChanges:\n #{change_log}",
-      channel: "@cheshire"
-    )
+    #отправляем кастомное сообщение в слак
+    MrHandyMessage(slackMessage:"Submitted build to TestFlight: \n #{change_log} \n")
 
   end
 
@@ -116,6 +113,20 @@ platform :ios do
     deliver(force: true)
     # frameit
   end
+
+  desc "send message to slack"
+  lane :MrHandyMessage do |options|
+    #отправляем сообщение в слак
+    slack(
+      message: options[:slackMessage],
+      channel: "#iosdev",
+      use_webhook_configured_username_and_icon: false,
+      username: "Mr.Handy from Fastlane",
+      icon_url:"http://vignette2.wikia.nocookie.net/fallout/images/3/39/FoS_Mister_Handy.png/revision/latest?cb=20150904224359"
+    )
+  end
+
+
 
   # You can define as many lanes as you want
 
@@ -140,3 +151,25 @@ end
 
 # fastlane reports which actions are used
 # No personal data is recorded. Learn more at https://github.com/fastlane/enhancer
+
+
+#test lanes
+  desc "Fake upload. Only for tests!!!"
+  lane :fakeUpload do |options|
+
+    version_number = options[:version_number]
+
+    build_number = increment_build_number
+
+
+    complete_version_number = version_string(version_number, build_number)
+
+    clean_build_artifacts
+    clear_derived_data
+
+    # забираем все коммиты из гита для ченджлога
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
+
+    #отправляем сообщение в слак
+    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
+  end
