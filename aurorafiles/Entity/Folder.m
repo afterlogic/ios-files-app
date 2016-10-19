@@ -53,7 +53,14 @@
     [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
     [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
     [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
-    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
+//    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
+    FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return [(NSNumber *)value stringValue];
+        }
+        return value;
+    } reverseMap:NULL];
+    [mapping addAttribute:linkType];
     [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
@@ -68,6 +75,89 @@
 
     
     return mapping;
+}
+
++ (FEMMapping*)P8DefaultMapping
+{
+    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
+    mapping.primaryKey = @"name";
+    
+    [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
+    [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
+    [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
+    [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
+    [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
+    [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
+    [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
+    
+    
+    
+    FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return [(NSNumber *)value stringValue];
+        }
+        return value;
+    } reverseMap:NULL];
+    [mapping addAttribute:linkType];
+    [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
+    [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
+    [mapping addAttributesFromDictionary:@{@"thumb":@"Thumb"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailLink":@"ThumbnailLink"}];
+    [mapping addAttributesFromDictionary:@{@"oembedHtml":@"OembedHtml"}];
+    [mapping addAttributesFromDictionary:@{@"isShared": @"Shared"}];
+    [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
+    [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
+    [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
+    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
+    
+    
+    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+
+    
+
+    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
+
+
+    
+    
+
+
+//    "Path": "",
+//    "LastModified": 0,
+
+
+
+    
+    return mapping;
+}
+
++ (FEMMapping*)P8RenameMapping
+{
+    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
+    mapping.primaryKey = @"name";
+    
+    [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
+    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+    [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
+    [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
+    [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
+    [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
+    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
+    [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
+    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
+    [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
+    [mapping addAttributesFromDictionary:@{@"thumb":@"Thumb"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailLink":@"ThumbnailLink"}];
+    [mapping addAttributesFromDictionary:@{@"oembedHtml":@"OembedHtml"}];
+    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
+    [mapping addAttributesFromDictionary:@{@"isShared": @"IsShared"}];
+    [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
+    [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
+    [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
+    
+    
+    return mapping;
+    
 }
 // Insert code here to add functionality to your managed object subclass
 

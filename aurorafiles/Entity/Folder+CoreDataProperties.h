@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSNumber *size;
 @property (nullable, nonatomic, retain) NSNumber *isFolder;
 @property (nullable, nonatomic, retain) NSNumber *isLink;
-@property (nullable, nonatomic, retain) NSNumber *linkType;
+@property (nullable, nonatomic, retain) NSString *linkType;
 @property (nullable, nonatomic, retain) NSString *linkUrl;
 @property (nullable, nonatomic, retain) NSDate *lastModified;
 @property (nullable, nonatomic, retain) NSString *contentType;

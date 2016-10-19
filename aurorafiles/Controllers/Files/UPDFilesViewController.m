@@ -13,6 +13,7 @@
 #import "FileGalleryCollectionViewController.h"
 #import "Settings.h"
 #import "API.h"
+#import "ApiP8.h"
 #import "SignInViewController.h"
 #import "UIImage+Aurora.h"
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -183,7 +184,7 @@
 {
     [super viewDidAppear:animated];
 
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
+    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;
@@ -391,20 +392,31 @@
 }
 
 -(void)signOut{
-    [Settings setAuthToken:nil];
+//    [Settings setAuthToken:nil];
     [Settings setCurrentAccount:nil];
     [Settings setToken:nil];
     [Settings setPassword:nil];
     
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
-        if (!authorised)
-        {
-            
-            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-            signIn.delegate = self;
-            [self presentViewController:signIn animated:YES completion:^(){
-                
+    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+        if (isP8) {
+            [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
+                if (succsess) {
+                    SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+                    signIn.delegate = self;
+                    [self presentViewController:signIn animated:YES completion:^(){
+                        
+                    }];
+                }
             }];
+        }else{
+            if (!authorised)
+            {
+                SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+                signIn.delegate = self;
+                [self presentViewController:signIn animated:YES completion:^(){
+                    
+                }];
+            }
         }
     }];
 }

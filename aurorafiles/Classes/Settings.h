@@ -32,4 +32,7 @@
 + (void)setFirstRun:(NSString *)isFirstRun;
 + (NSString *)isFirstRun;
 
++ (void)setIsPEight:(BOOL)isPEight;
++ (BOOL)isPEight;
+
 @end

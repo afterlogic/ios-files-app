@@ -9,6 +9,7 @@
 #import "StorageManager.h"
 #import "API.h"
 #import "SessionProvider.h"
+#import "ApiP8.h"
 
 @interface StorageManager()
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -191,71 +192,108 @@
     NSManagedObjectContext* context = self.managedObjectContext;
     
     [context performBlockAndWait:^ {
-        [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline){
-            if (authorised)
-            {
-                NSString * path = folderPath;
-                [[API sharedInstance] getFilesForFolder:path withType:type completion:^(NSDictionary * result) {
-                    NSArray * items;
-                    if (result && [result isKindOfClass:[NSDictionary class]] && [[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
-                    {
-                        items = [[[result objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[result objectForKey:@"Result"] objectForKey:@"Items"] : @[];
-                    }
-                    else
-                    {
-                        items = @[];
-                    }
-                    if (items.count)
-                    {
-                        NSMutableArray * existIds = [[NSMutableArray alloc] init];
-                        for (NSDictionary * itemRef in items)
+        [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+            if (isP8) {
+                if (authorised){
+                    NSString * path = folderPath;
+                    [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSDictionary *data, NSString *methodName){
+                        NSArray * items;
+                        if (data && [data isKindOfClass:[NSDictionary class]] && [[data objectForKey:@"Result"] isKindOfClass:[NSArray class]])
                         {
-                            Folder * childFolder = [FEMDeserializer objectFromRepresentation:itemRef mapping:[Folder defaultMapping] context:context];
-                            [existIds addObject:childFolder.name];
-                            childFolder.toRemove = [NSNumber numberWithBool:NO];
-                            if (folder)
-                            {
-                                childFolder.parentPath = folderPath;
+                            for (NSDictionary* module in [data objectForKey:@"Result"]) {
+                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:[[ApiP8 filesModule]moduleName]] && [[module valueForKey:@"Method"] isEqualToString:methodName]) {
+                                    items = [[[module objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[module objectForKey:@"Result"] objectForKey:@"Items"] : @[];
+
+                                }
                             }
+                        }
+                        else
+                        {
+                            items = @[];
+                        }
+                        [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            if (handler) {
+                                handler();
+                            }
+                            
+                        });
+                    }];
+                }
+            }else{
+                if (authorised)
+                {
+                    NSString * path = folderPath;
+                    [[API sharedInstance] getFilesForFolder:path withType:type completion:^(NSDictionary * result) {
+                        NSArray * items;
+                        if (result && [result isKindOfClass:[NSDictionary class]] && [[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+                        {
+                            items = [[[result objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[result objectForKey:@"Result"] objectForKey:@"Items"] : @[];
+                        }
+                        else
+                        {
+                            items = @[];
                         }
                         
-                        NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                        fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-                        fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,folder.fullpath,type];
-                        NSError * error = nil;
-                        NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
+                        [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
                         
-                        for (Folder* fold in oldFolders)
-                        {
-                            if (!fold.isDownloaded.boolValue)
-                            {
-                                [context deleteObject:[context objectWithID:fold.objectID]];
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            if (handler) {
+                                handler();
                             }
-                            else
-                            {
-                                fold.wasDeleted = @YES;
-                            }
-
-                        }
-                        [context save:&error];
-                        if (error)
-                        {
-                            NSLog(@"%@",[error userInfo]);
-                        }
-                    }
-
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        if (handler) {
-                            handler();
-                        }
+                            
+                        });
+                    }];
                     
-                    });
-                }];
-                
+                }
             }
         }];
 
      }];
+}
+
+- (void)saveItems:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
+    NSString * folderPath = folder ? folder.fullpath : @"";
+    if (items.count)
+    {
+        NSMutableArray * existIds = [[NSMutableArray alloc] init];
+        for (NSDictionary * itemRef in items)
+        {
+            Folder * childFolder = [FEMDeserializer objectFromRepresentation:itemRef mapping: isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+            [existIds addObject:childFolder.name];
+            childFolder.toRemove = [NSNumber numberWithBool:NO];
+            if (folder)
+            {
+                childFolder.parentPath = folderPath;
+            }
+        }
+        
+        NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,folder.fullpath,type];
+        NSError * error = nil;
+        NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
+        
+        for (Folder* fold in oldFolders)
+        {
+            if (!fold.isDownloaded.boolValue)
+            {
+                [context deleteObject:[context objectWithID:fold.objectID]];
+            }
+            else
+            {
+                fold.wasDeleted = @YES;
+            }
+            
+        }
+        [context save:&error];
+        if (error)
+        {
+            NSLog(@"%@",[error userInfo]);
+        }
+    }
+
 }
 
 #pragma mark Fiels Stack

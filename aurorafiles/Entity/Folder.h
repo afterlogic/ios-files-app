@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Insert code here to declare functionality of your managed object subclass
 + (FEMMapping*)defaultMapping;
 + (FEMMapping*)renameMapping;
++ (FEMMapping*)P8DefaultMapping;
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
 + (NSArray*)imageContentTypes;

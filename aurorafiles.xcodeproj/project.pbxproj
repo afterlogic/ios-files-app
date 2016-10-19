@@ -49,9 +49,19 @@
 		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
+		FF42B1E61DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
+		FF42B1E71DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
 		FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C76441DA7F21800AA5576 /* snapshotTest.swift */; };
 		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
 		FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */; };
+		FF6A94B91DB666BE00543269 /* ApiP8.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94B81DB666BE00543269 /* ApiP8.m */; };
+		FF6A94BA1DB666BE00543269 /* ApiP8.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94B81DB666BE00543269 /* ApiP8.m */; };
+		FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94BD1DB666FC00543269 /* standardAuth.m */; };
+		FF6A94BF1DB666FC00543269 /* standardAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94BD1DB666FC00543269 /* standardAuth.m */; };
+		FF6A94C21DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */; };
+		FF6A94C31DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */; };
+		FF6A94C61DB67D8700543269 /* core.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C51DB67D8700543269 /* core.m */; };
+		FF6A94C71DB67D8700543269 /* core.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C51DB67D8700543269 /* core.m */; };
 		FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
 		FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
@@ -230,12 +240,24 @@
 		FF32025F1DACF2F7008F3B6A /* ANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANavigationController.m; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
+		FF42B1E41DB77F88005A2B0C /* files.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = files.h; path = APIpEight/files.h; sourceTree = "<group>"; };
+		FF42B1E51DB77F88005A2B0C /* files.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = files.m; path = APIpEight/files.m; sourceTree = "<group>"; };
+		FF42B1E81DB77FDF005A2B0C /* AuroraModuleProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AuroraModuleProtocol.h; path = APIpEight/AuroraModuleProtocol.h; sourceTree = "<group>"; };
+		FF42B1EB1DB7CDA0005A2B0C /* aurorafiles 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "aurorafiles 3.xcdatamodel"; sourceTree = "<group>"; };
 		FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapshotTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
 		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		FF6A1D0B1DAD0265005CBA76 /* ARootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARootViewController.h; path = RootController/ARootViewController.h; sourceTree = "<group>"; };
 		FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARootViewController.m; path = RootController/ARootViewController.m; sourceTree = "<group>"; };
+		FF6A94B71DB666BE00543269 /* ApiP8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiP8.h; sourceTree = "<group>"; };
+		FF6A94B81DB666BE00543269 /* ApiP8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiP8.m; sourceTree = "<group>"; };
+		FF6A94BC1DB666FC00543269 /* standardAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = standardAuth.h; sourceTree = "<group>"; };
+		FF6A94BD1DB666FC00543269 /* standardAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = standardAuth.m; sourceTree = "<group>"; };
+		FF6A94C01DB66B4900543269 /* NSURLRequest+requestGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+requestGenerator.h"; sourceTree = "<group>"; };
+		FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLRequest+requestGenerator.m"; sourceTree = "<group>"; };
+		FF6A94C41DB67D8700543269 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
+		FF6A94C51DB67D8700543269 /* core.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = core.m; sourceTree = "<group>"; };
 		FF71D46B1DA33162008690D5 /* MLAFNetworkingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAFNetworkingAdapter.h; sourceTree = "<group>"; };
 		FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLAFNetworkingAdapter.m; sourceTree = "<group>"; };
 		FF71D46E1DA33162008690D5 /* MLNetworkLoggingAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLNetworkLoggingAdapter.h; sourceTree = "<group>"; };
@@ -451,6 +473,7 @@
 			children = (
 				DAC1CA781D061F1200238EB5 /* API.h */,
 				DAC1CA791D061F1200238EB5 /* API.m */,
+				FF6A94BB1DB666CA00543269 /* ApiP8 */,
 				DAC1CA7A1D061F1200238EB5 /* Categories */,
 				DAC1CA7D1D061F1200238EB5 /* Keychain */,
 				DAC1CA801D061F1200238EB5 /* SessionProvider.h */,
@@ -476,6 +499,8 @@
 				FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */,
 				FFB959371DAF96D8008031B3 /* NSString+transferedValues.h */,
 				FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */,
+				FF6A94C01DB66B4900543269 /* NSURLRequest+requestGenerator.h */,
+				FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -660,6 +685,27 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		FF42B1E91DB782B6005A2B0C /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				FF6A94BC1DB666FC00543269 /* standardAuth.h */,
+				FF6A94BD1DB666FC00543269 /* standardAuth.m */,
+				FF6A94C41DB67D8700543269 /* core.h */,
+				FF6A94C51DB67D8700543269 /* core.m */,
+				FF42B1E41DB77F88005A2B0C /* files.h */,
+				FF42B1E51DB77F88005A2B0C /* files.m */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		FF42B1EA1DB782C3005A2B0C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				FF42B1E81DB77FDF005A2B0C /* AuroraModuleProtocol.h */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
 		FF4C76431DA7F21800AA5576 /* snapshotTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -677,6 +723,17 @@
 				FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */,
 			);
 			name = RootController;
+			sourceTree = "<group>";
+		};
+		FF6A94BB1DB666CA00543269 /* ApiP8 */ = {
+			isa = PBXGroup;
+			children = (
+				FF6A94B71DB666BE00543269 /* ApiP8.h */,
+				FF6A94B81DB666BE00543269 /* ApiP8.m */,
+				FF42B1EA1DB782C3005A2B0C /* Protocols */,
+				FF42B1E91DB782B6005A2B0C /* Modules */,
+			);
+			name = ApiP8;
 			sourceTree = "<group>";
 		};
 		FF71D4671DA33162008690D5 /* MLNetworkLogger */ = {
@@ -1296,12 +1353,16 @@
 				DAC1CAB01D061F1200238EB5 /* API.m in Sources */,
 				DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */,
 				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
+				FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */,
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
+				FF6A94C21DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */,
+				FF42B1E61DB77F88005A2B0C /* files.m in Sources */,
 				FFB959301DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
 				FFB959391DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
 				DAC1CAB21D061F1200238EB5 /* KeychainWrapper.m in Sources */,
 				FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */,
+				FF6A94C61DB67D8700543269 /* core.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
 				FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				DAC1CAB11D061F1200238EB5 /* UIImage+Aurora.m in Sources */,
@@ -1311,6 +1372,7 @@
 				DAC1CABA1D061F1200238EB5 /* FilesViewController.m in Sources */,
 				DAC1CAC41D061F1200238EB5 /* STZPullToRefreshView.m in Sources */,
 				DAC1CAB41D061F1200238EB5 /* Settings.m in Sources */,
+				FF6A94B91DB666BE00543269 /* ApiP8.m in Sources */,
 				DAC1CAB31D061F1200238EB5 /* SessionProvider.m in Sources */,
 				DAC1CAC21D061F1200238EB5 /* Folder.m in Sources */,
 				FF71D48A1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
@@ -1338,10 +1400,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF71D4891DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
+				FF42B1E71DB77F88005A2B0C /* files.m in Sources */,
 				FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
+				FF6A94BA1DB666BE00543269 /* ApiP8.m in Sources */,
 				FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */,
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
 				FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
+				FF6A94C31DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */,
 				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
 				FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				FF71D48B1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
@@ -1353,10 +1418,12 @@
 				FF9053701D9BFC9900A09A44 /* FilesTableViewCell.m in Sources */,
 				FF9053731D9C012D00A09A44 /* API.m in Sources */,
 				FF71D48F1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
+				FF6A94C71DB67D8700543269 /* core.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,
 				FFB959311DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
 				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
+				FF6A94BF1DB666FC00543269 /* standardAuth.m in Sources */,
 				FF9053101D9BE55800A09A44 /* Folder.m in Sources */,
 				FF90530F1D9BE55800A09A44 /* Folder+CoreDataProperties.m in Sources */,
 				FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */,
@@ -1736,10 +1803,11 @@
 		DAC1CA431D061D7500238EB5 /* aurorafiles.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				FF42B1EB1DB7CDA0005A2B0C /* aurorafiles 3.xcdatamodel */,
 				DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */,
 				DAC1CA441D061D7500238EB5 /* aurorafiles.xcdatamodel */,
 			);
-			currentVersion = DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */;
+			currentVersion = FF42B1EB1DB7CDA0005A2B0C /* aurorafiles 3.xcdatamodel */;
 			path = aurorafiles.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

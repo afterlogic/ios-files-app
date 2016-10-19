@@ -34,7 +34,9 @@
 
 + (NSString*)authToken
 {
-    return [[Settings sharedDefaults] valueForKey:@"auth_token"];
+    NSString *token = [[Settings sharedDefaults] valueForKey:@"auth_token"];
+    
+    return token ? token :@"";
 }
 
 + (void)setLogin:(NSString*)login

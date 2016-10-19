@@ -10,7 +10,7 @@
 
 @interface SessionProvider : NSObject
 
-+ (void) checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline ))handler;
++ (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler;
 
 + (void) authroizeEmail:(NSString*)email withPassword:(NSString*)password completion:(void (^)(BOOL authorized, NSError* error)) handler;
 
