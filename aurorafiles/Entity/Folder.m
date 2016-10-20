@@ -55,8 +55,11 @@
     [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
 //    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
     FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
-        if ([value isKindOfClass:[NSNumber class]]) {
-            return [(NSNumber *)value stringValue];
+        if ([value isKindOfClass:[NSString class]]) {
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            NSNumber *myNumber = [f numberFromString:(NSString *)value];
+            return myNumber;
         }
         return value;
     } reverseMap:NULL];
@@ -93,11 +96,15 @@
     
     
     FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
-        if ([value isKindOfClass:[NSNumber class]]) {
-            return [(NSNumber *)value stringValue];
+        if ([value isKindOfClass:[NSString class]]) {
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            NSNumber *myNumber = [f numberFromString:(NSString *)value];
+            return myNumber;
         }
         return value;
     } reverseMap:NULL];
+    
     [mapping addAttribute:linkType];
     [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
     [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];

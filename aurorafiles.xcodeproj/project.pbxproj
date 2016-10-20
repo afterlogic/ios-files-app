@@ -1807,7 +1807,7 @@
 				DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */,
 				DAC1CA441D061D7500238EB5 /* aurorafiles.xcdatamodel */,
 			);
-			currentVersion = FF42B1EB1DB7CDA0005A2B0C /* aurorafiles 3.xcdatamodel */;
+			currentVersion = DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */;
 			path = aurorafiles.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
