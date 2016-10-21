@@ -9,8 +9,10 @@
 #import "FilesTableViewCell.h"
 #import "Folder.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIImage+MultiFormat.h>
 #import "UIImage+Aurora.h"
 #import "MBProgressHUD.h"
+#import "StorageManager.h"
 @interface FilesTableViewCell (){
        MBProgressHUD *hud;
 }
@@ -75,23 +77,53 @@
         
         self.accessoryType = UITableViewCellAccessoryNone;
         
-        NSString * thumbnail = [folder embedThumbnailLink];
-        UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
-        if (thumbnail)
-        {
-            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+
+        if ([folder.isP8 boolValue]) {
+            NSString * thumb = folder.thumbnailLink;
+            NSData *data;
+            if ([thumb length]) {
+                data= [[NSData alloc]initWithBase64EncodedString:thumb options:0];
+            }
+            if(data){
+                [self.fileImageView setImage:[UIImage sd_imageWithData:data]];
                 [hud hideAnimated:YES];
                 hud.hidden = YES;
-            }];
-        }else{
-            
-            if (folder.isLink.boolValue && ![folder isImageContentType])
-            {
-                placeholder = [UIImage imageNamed:@"shotcut"];
+            }else{
+                [[StorageManager sharedManager]updateFileThumbnail:folder type:folder.type context:nil complition:^(NSData *thumbnail){
+                    if (thumbnail) {
+                        [self.fileImageView setImage:[UIImage sd_imageWithData:thumbnail]];
+                        [hud hideAnimated:YES];
+                        hud.hidden = YES;
+                    }else{
+                        UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
+                        if (folder.isLink.boolValue && ![folder isImageContentType])
+                        {
+                            placeholder = [UIImage imageNamed:@"shotcut"];
+                        }
+                        self.fileImageView.image =placeholder;
+                        [hud hideAnimated:YES];
+                        hud.hidden = YES;
+                    }
+                }];
             }
-            self.fileImageView.image =placeholder;
-            [hud hideAnimated:YES];
-            hud.hidden = YES;
+        }else{
+            NSString * thumb = [folder embedThumbnailLink];
+            UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
+            if (thumb)
+            {
+                [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                    [hud hideAnimated:YES];
+                    hud.hidden = YES;
+                }];
+            }else{
+                if (folder.isLink.boolValue && ![folder isImageContentType])
+                {
+                    placeholder = [UIImage imageNamed:@"shotcut"];
+                }
+                self.fileImageView.image =placeholder;
+                [hud hideAnimated:YES];
+                hud.hidden = YES;
+            }
         }
     }
     
@@ -110,6 +142,7 @@
     [super prepareForReuse];
     self.fileImageView.image = nil;
     [self.fileImageView sd_cancelCurrentImageLoad];
+    [[StorageManager sharedManager]stopGettingFileThumb:self.titileLabel.text];
     [hud hideAnimated:YES];
     hud = nil;
     hud.hidden = YES;

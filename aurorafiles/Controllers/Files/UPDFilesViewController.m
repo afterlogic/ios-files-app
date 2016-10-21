@@ -48,6 +48,7 @@
 {
     [super awakeFromNib];
     self.isCorporate = NO;
+    self.isP8 = NO;
 }
 
 - (void)viewDidLoad
@@ -185,6 +186,7 @@
     [super viewDidAppear:animated];
 
     [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+        self.isP8 = isP8;
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;
@@ -369,7 +371,7 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSLog(@"object -> %@",object);
+//    NSLog(@"object -> %@",object);
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;
@@ -398,6 +400,7 @@
     [Settings setPassword:nil];
     
     [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+        self.isP8 = isP8;
         if (isP8) {
             [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
                 if (succsess) {

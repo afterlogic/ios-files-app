@@ -359,7 +359,7 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSLog(@"object -> %@",object);
+//    NSLog(@"object -> %@",object);
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;

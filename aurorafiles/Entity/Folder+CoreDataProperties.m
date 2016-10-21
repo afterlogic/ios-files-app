@@ -39,5 +39,6 @@
 @dynamic content;
 @dynamic isExternal;
 @dynamic parentPath;
+@dynamic isP8;
 
 @end

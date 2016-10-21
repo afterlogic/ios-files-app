@@ -11,7 +11,7 @@
 #import "Settings.h"
 #import "KeychainWrapper.h"
 #import "ApiP8.h"
-
+#import "StorageManager.h"
 @implementation SessionProvider
 
 + (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler
@@ -27,6 +27,10 @@
             }
         }
         if (isP8) {
+            if (![[Settings version] isEqualToString:@"P8"]) {
+                [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
+            }
+            [Settings setLastLoginServerVersion:@"P8"];
             NSLog(@"host version is 8 or above");
             [[ApiP8 filesModule] getUserFilestorageQoutaWithCompletion:^(NSString *publicID, NSError *error) {
                 if ([publicID isEqualToString:[Settings login]]) {
@@ -52,6 +56,10 @@
             }];
         }else{
             NSLog(@"host version smaller than 8");
+            if (![[Settings version] isEqualToString:@"P7"]) {
+                [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
+            }
+            [Settings setLastLoginServerVersion:@"P7"];
             [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
                 if (!error)
                 {
@@ -116,6 +124,10 @@
 {
     [[ApiP8 coreModule] pingHostWithCompletion:^(BOOL isP8, NSError *error) {
         if (isP8) {
+            if (![[Settings version] isEqualToString:@"P8"]) {
+                [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
+            }
+            [Settings setLastLoginServerVersion:@"P8"];
             NSLog(@"host version is 8 or above");
             [[ApiP8 standardAuthModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
                 if (error)
@@ -128,6 +140,10 @@
             }];
         }else{
             NSLog(@"host version smaller than 8");
+            if (![[Settings version] isEqualToString:@"P7"]) {
+                [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
+            }
+            [Settings setLastLoginServerVersion:@"P7"];
             [[API sharedInstance] getAppDataCompletionHandler:^(NSDictionary *result, NSError *error) {
                 if (error)
                 {

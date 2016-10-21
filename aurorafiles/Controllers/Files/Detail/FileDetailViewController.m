@@ -11,6 +11,8 @@
 #import "API.h"
 #import "Folder.h"
 #import "UIImage+Aurora.h"
+#import "Settings.h"
+#import "ApiP8.h"
 
 @interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -131,11 +133,22 @@
                                                                      file.name = self.folderName.text;
                                                                  }
                                                                  NSLog(@"%@",file.name);
-                                                                 [[API sharedInstance] renameFolderFromName:oldName toName:file.name isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.object.parentPath ? self.object.parentPath : @"" isLink:self.object.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                     self.title = file.name;
-                                                                     self.object = file;
-                                                                     [file.managedObjectContext save:nil];
-                                                                 }];
+                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
+                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:self.object.parentPath isLink:self.object.isLink.boolValue completion:^(BOOL success) {
+                                                                         if (success) {
+                                                                             self.title = file.name;
+                                                                             self.object = file;
+                                                                             [file.managedObjectContext save:nil];
+                                                                         }
+                                                                     }];
+                                                                 }else{
+                                                                     [[API sharedInstance] renameFolderFromName:oldName toName:file.name isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.object.parentPath ? self.object.parentPath : @"" isLink:self.object.isLink.boolValue completion:^(NSDictionary* handler) {
+                                                                         self.title = file.name;
+                                                                         self.object = file;
+                                                                         [file.managedObjectContext save:nil];
+                                                                     }];
+                                                                 }
+
                                                                  
                                                              }];
                                                              

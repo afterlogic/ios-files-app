@@ -53,7 +53,6 @@
     [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
     [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
     [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
-//    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
     FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
         if ([value isKindOfClass:[NSString class]]) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
@@ -92,9 +91,6 @@
     [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
     [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
     [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
-    
-    
-    
     FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
         if ([value isKindOfClass:[NSString class]]) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];

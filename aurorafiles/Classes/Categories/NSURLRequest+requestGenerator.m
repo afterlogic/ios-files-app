@@ -11,15 +11,15 @@
 
 @implementation NSURLRequest (requestGenerator)
 
-+(NSURLRequest *)requestWithDictionary:(NSDictionary *)dict{
-    NSURLRequest * request = [NSURLRequest new];
-    if ([Settings isPEight]) {
-        request = [NSURLRequest p8RequestWithDictionary:dict];
-    }else{
-        request = [NSURLRequest p7RequestWithDictionary:dict];
-    }
-    return request;
-}
+//+(NSURLRequest *)requestWithDictionary:(NSDictionary *)dict{
+//    NSURLRequest * request = [NSURLRequest new];
+//    if ([Settings isPEight]) {
+//        request = [NSURLRequest p8RequestWithDictionary:dict];
+//    }else{
+//        request = [NSURLRequest p7RequestWithDictionary:dict];
+//    }
+//    return request;
+//}
 
 
 +(NSURLRequest*)p7RequestWithDictionary:(NSDictionary*) dict

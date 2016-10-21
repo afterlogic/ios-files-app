@@ -9,6 +9,8 @@
 #import "FileGalleryCollectionViewController.h"
 #import "FileGalleryCollectionViewCell.h"
 #import "StorageManager.h"
+#import "Settings.h"
+#import "ApiP8.h"
 #import "API.h"
 
 @interface FileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
@@ -193,11 +195,18 @@
                                                                  
                                                                  file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
                                                                  self.title = file.name;
-                                                                 [[API sharedInstance] renameFolderFromName:oldName toName:[self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]] isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                     
-                                                                     [file.managedObjectContext save:nil];
-                                                                 }];
                                                                  
+                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
+                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(BOOL success) {
+                                                                         if (success) {
+                                                                             [file.managedObjectContext save:nil];
+                                                                         }
+                                                                     }];
+                                                                 }else{
+                                                                     [[API sharedInstance] renameFolderFromName:oldName toName:[self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]] isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(NSDictionary* handler) {
+                                                                         [file.managedObjectContext save:nil];
+                                                                     }];
+                                                                 }
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){

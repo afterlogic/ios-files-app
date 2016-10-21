@@ -92,4 +92,12 @@
     return [[Settings sharedDefaults] valueForKey:@"first_run"];
 }
 
++ (void)setLastLoginServerVersion:(NSString *)version{
+    [[Settings sharedDefaults] setValue:version forKey:@"hostVersion"];
+    [[Settings sharedDefaults] synchronize];
+}
++ (NSString *)version{
+    return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
+}
+
 @end

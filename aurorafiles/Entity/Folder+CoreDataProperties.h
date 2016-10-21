@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSString *owner;
 @property (nullable, nonatomic, retain) NSString *content;
 @property (nullable, nonatomic, retain) NSNumber *isExternal;
+@property (nullable, nonatomic, retain) NSNumber *isP8;
 @property (nullable, nonatomic, retain) NSString *parentPath;
 
 @end

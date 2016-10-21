@@ -13,6 +13,7 @@
         <attribute name="isExternal" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isFolder" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isLink" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isP8" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="isShared" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="linkType" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -29,6 +30,6 @@
         <attribute name="wasDeleted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Folder" positionX="-63" positionY="-18" width="128" height="435"/>
+        <element name="Folder" positionX="-63" positionY="-18" width="128" height="450"/>
     </elements>
 </model>

@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) Folder * folder;
 @property (nonatomic, assign) BOOL isCorporate;
+@property (nonatomic, assign) BOOL isP8;
 
 
 - (IBAction)editAction:(id)sender;

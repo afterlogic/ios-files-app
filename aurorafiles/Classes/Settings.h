@@ -32,7 +32,7 @@
 + (void)setFirstRun:(NSString *)isFirstRun;
 + (NSString *)isFirstRun;
 
-+ (void)setIsPEight:(BOOL)isPEight;
-+ (BOOL)isPEight;
++ (void)setLastLoginServerVersion:(NSString *)version;
++ (NSString *)version;
 
 @end
