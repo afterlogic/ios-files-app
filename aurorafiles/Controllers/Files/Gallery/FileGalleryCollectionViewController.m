@@ -197,7 +197,7 @@
                                                                  self.title = file.name;
                                                                  
                                                                  if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(BOOL success) {
+                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:file.parentPath ? file.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(BOOL success) {
                                                                          if (success) {
                                                                              [file.managedObjectContext save:nil];
                                                                          }

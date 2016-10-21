@@ -134,7 +134,7 @@
                                                                  }
                                                                  NSLog(@"%@",file.name);
                                                                  if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:self.object.parentPath isLink:self.object.isLink.boolValue completion:^(BOOL success) {
+                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:file.parentPath isLink:self.object.isLink.boolValue completion:^(BOOL success) {
                                                                          if (success) {
                                                                              self.title = file.name;
                                                                              self.object = file;
