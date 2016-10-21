@@ -834,16 +834,32 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
-                                                                     NSLog(@"%@",result);
-                                                                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                                     [self updateFiles:^(){
-                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         
-                                                                         [self.tableView reloadData];
+                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
+                                                                     [[ApiP8 filesModule]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL result) {
+                                                                         if (result) {
+//                                                                            [[ApiP8 filesModule]getFileInfoForName:self.folderName.text path:self.folder.fullpath corporate:self.isCorporate completion:^(NSDictionary *result) {
+//                                                                                 
+//                                                                            }];
+                                                                             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                             [self updateFiles:^(){
+                                                                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                                 
+                                                                                 [self.tableView reloadData];
+                                                                             }];
+
+                                                                         }
                                                                      }];
-                                                                 }];;
-                                                                 
+                                                                 }else{
+                                                                     [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
+                                                                         NSLog(@"%@",result);
+                                                                         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                         [self updateFiles:^(){
+                                                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                             
+                                                                             [self.tableView reloadData];
+                                                                         }];
+                                                                     }];
+                                                                 }
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){

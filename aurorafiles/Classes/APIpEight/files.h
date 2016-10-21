@@ -19,4 +19,9 @@
 - (void)stopFileThumb:(NSString *)folderName;
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler;
+
+- (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(BOOL)corporate completion:(void (^)(NSDictionary *result))handler;
+
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL result))handler;
+
 @end
