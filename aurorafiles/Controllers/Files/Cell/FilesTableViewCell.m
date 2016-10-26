@@ -15,10 +15,12 @@
 #import "StorageManager.h"
 @interface FilesTableViewCell (){
        MBProgressHUD *hud;
+//    UIActivityIndicatorView *hudView;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *separatorHeight;
 @property (weak, nonatomic) IBOutlet UIView *separatorView;
+@property (strong, nonatomic) IBOutlet UIView *disclosureBox;
 
 @end
 
@@ -30,24 +32,22 @@
     [super awakeFromNib];
     self.separatorHeight.constant = 0.5f;
     self.fileImageView.image = nil;
-    hud.hidden = YES;
+    [self.disclosureButton addTarget:self action:@selector(downloadAction) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(void)setupCellForFile:(Folder *) folder{
-    self.fileImageView.image = nil;
-    hud = [MBProgressHUD showHUDAddedTo:self.fileImageView animated:YES];
-    hud.mode = MBProgressHUDModeIndeterminate;
-    [hud setBackgroundColor:[UIColor clearColor]];
-    hud.hidden = NO;
-    [hud showAnimated:YES];
-    
+
+    if (!self.fileImageView.image) {
+        [self startHUD];
+    }
+
     if ([[folder isFolder] boolValue])
     {
+        
         self.accessoryType = UITableViewCellAccessoryNone;
         self.disclosureButton.alpha = 0.0f;
         self.fileImageView.image = [UIImage imageNamed:@"folder"];
-        [hud hideAnimated:YES];
-        hud.hidden = YES;
+        [self stopHUD];
     }
     else
     {
@@ -65,14 +65,12 @@
             self.disclosureButton.hidden = NO;
         }
         
+        
         [self.disclosureButton setImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
         [self.disclosureButton setImage:[UIImage imageNamed:@"onboard"] forState:UIControlStateDisabled];
-        self.disclosureButton.enabled = !folder.isDownloaded.boolValue;
-        
-        [self.disclosureButton setImage: !folder.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
+        self.disclosureButton.enabled = YES;
+        [self.disclosureButton setImage: !folder.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"onboard"] forState:UIControlStateNormal];
         self.fileDownloaded = folder.isDownloaded.boolValue;
-        
-        
         self.disclosureButton.alpha = 1.0f;
         
         self.accessoryType = UITableViewCellAccessoryNone;
@@ -81,30 +79,35 @@
         if ([folder.isP8 boolValue]) {
             NSString * thumb = folder.thumbnailLink;
             NSData *data;
-            if ([thumb length]) {
-                data= [[NSData alloc]initWithBase64EncodedString:thumb options:0];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([thumb length] && [fileManager fileExistsAtPath:thumb]) {
+                data= [[NSData alloc]initWithContentsOfFile:thumb];
             }
             if(data){
-                [self.fileImageView setImage:[UIImage sd_imageWithData:data]];
-                [hud hideAnimated:YES];
-                hud.hidden = YES;
+                UIImage *image = [UIImage imageWithData:data];
+                [self.fileImageView setImage:image];
+                [self stopHUD];
+//                hud.hidden = YES;
             }else{
-                [[StorageManager sharedManager]updateFileThumbnail:folder type:folder.type context:nil complition:^(NSData *thumbnail){
-                    if (thumbnail) {
-                        [self.fileImageView setImage:[UIImage sd_imageWithData:thumbnail]];
-                        [hud hideAnimated:YES];
-                        hud.hidden = YES;
-                    }else{
-                        UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
-                        if (folder.isLink.boolValue && ![folder isImageContentType])
-                        {
-                            placeholder = [UIImage imageNamed:@"shotcut"];
-                        }
-                        self.fileImageView.image =placeholder;
-                        [hud hideAnimated:YES];
-                        hud.hidden = YES;
+                if ([folder.thumb boolValue] && !folder.isLink.boolValue) {
+//                    [[StorageManager sharedManager]updateFileThumbnail:folder type:folder.type context:nil complition:^(UIImage *thumbnail){
+//                        if (thumbnail) {
+//                            [self.fileImageView setImage:thumbnail];
+//                            [hud hideAnimated:YES];
+//                            hud.hidden = YES;
+//                        }
+//                    }];
+                }else{
+                    UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
+                    if (folder.isLink.boolValue && ![folder isImageContentType])
+                    {
+                        placeholder = [UIImage imageNamed:@"shotcut"];
                     }
-                }];
+                    self.fileImageView.image =placeholder;
+                    [self stopHUD];
+//                    hud.hidden = YES;
+
+                }
             }
         }else{
             NSString * thumb = [folder embedThumbnailLink];
@@ -112,8 +115,9 @@
             if (thumb)
             {
                 [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                    [hud hideAnimated:YES];
-                    hud.hidden = YES;
+//                    [hud hideAnimated:YES];
+//                    hud.hidden = YES;
+                    [self stopHUD];
                 }];
             }else{
                 if (folder.isLink.boolValue && ![folder isImageContentType])
@@ -121,12 +125,12 @@
                     placeholder = [UIImage imageNamed:@"shotcut"];
                 }
                 self.fileImageView.image =placeholder;
-                [hud hideAnimated:YES];
-                hud.hidden = YES;
+//                [hud hideAnimated:YES];
+//                hud.hidden = YES;
+                [self stopHUD];
             }
         }
     }
-    
     
     self.titileLabel.text = folder.name;
 }
@@ -143,9 +147,7 @@
     self.fileImageView.image = nil;
     [self.fileImageView sd_cancelCurrentImageLoad];
     [[StorageManager sharedManager]stopGettingFileThumb:self.titileLabel.text];
-    [hud hideAnimated:YES];
-    hud = nil;
-    hud.hidden = YES;
+    [self stopHUD];
 }
 
 - (IBAction)moreAction:(id)sender
@@ -158,12 +160,11 @@
     return 60.0f;
 }
 
-- (IBAction)downloadAction:(id)sender
+- (void)downloadAction
 {
     if (!self.fileDownloaded) {
         [self.downloadActivity startAnimating];
         [self.delegate tableViewCellDownloadAction:self];
-
     }else{
         [self.delegate tableViewCellRemoveAction:self];
     }
@@ -178,6 +179,21 @@
 + (NSString*)cellId
 {
     return @"FilesTableViewCellId";
+}
+
+-(void)stopHUD{
+//    [hudView stopAnimating];
+    if ([MBProgressHUD HUDForView:self.fileImageView]) {
+        [MBProgressHUD hideHUDForView:self.fileImageView animated:YES];
+    }
+}
+
+-(void)startHUD{
+
+    if (![MBProgressHUD HUDForView:self.fileImageView]) {
+        [MBProgressHUD showHUDAddedTo:self.fileImageView animated:YES];
+    }
+
 }
 
 @end

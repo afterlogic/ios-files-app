@@ -30,7 +30,6 @@
 		DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA8E1D061F1200238EB5 /* FilesTableViewCell.m */; };
 		DAC1CAB81D061F1200238EB5 /* FilesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */; };
 		DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA921D061F1200238EB5 /* FileDetailViewController.m */; };
-		DAC1CABA1D061F1200238EB5 /* FilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA941D061F1200238EB5 /* FilesViewController.m */; };
 		DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA981D061F1200238EB5 /* FileGalleryCollectionViewCell.m */; };
 		DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA991D061F1200238EB5 /* FileGalleryCollectionViewCell.xib */; };
 		DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA9B1D061F1200238EB5 /* FileGalleryCollectionViewController.m */; };
@@ -206,8 +205,6 @@
 		DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilesTableViewCell.xib; sourceTree = "<group>"; };
 		DAC1CA911D061F1200238EB5 /* FileDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDetailViewController.h; sourceTree = "<group>"; };
 		DAC1CA921D061F1200238EB5 /* FileDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDetailViewController.m; sourceTree = "<group>"; };
-		DAC1CA931D061F1200238EB5 /* FilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilesViewController.h; sourceTree = "<group>"; };
-		DAC1CA941D061F1200238EB5 /* FilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilesViewController.m; sourceTree = "<group>"; };
 		DAC1CA971D061F1200238EB5 /* FileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		DAC1CA981D061F1200238EB5 /* FileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		DAC1CA991D061F1200238EB5 /* FileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -551,8 +548,6 @@
 			children = (
 				DAC1CA8C1D061F1200238EB5 /* Cell */,
 				DAC1CA901D061F1200238EB5 /* Detail */,
-				DAC1CA931D061F1200238EB5 /* FilesViewController.h */,
-				DAC1CA941D061F1200238EB5 /* FilesViewController.m */,
 				FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */,
 				FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */,
 				DAC1CA951D061F1200238EB5 /* Gallery */,
@@ -1369,7 +1364,6 @@
 				FF71D4D81DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
 				DAC1CA391D061D7500238EB5 /* main.m in Sources */,
 				DAC1CAB51D061F1200238EB5 /* StorageManager.m in Sources */,
-				DAC1CABA1D061F1200238EB5 /* FilesViewController.m in Sources */,
 				DAC1CAC41D061F1200238EB5 /* STZPullToRefreshView.m in Sources */,
 				DAC1CAB41D061F1200238EB5 /* Settings.m in Sources */,
 				FF6A94B91DB666BE00543269 /* ApiP8.m in Sources */,

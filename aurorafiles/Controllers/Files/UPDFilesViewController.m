@@ -101,6 +101,7 @@
     [self.pullToRefresh startRefresh];
     [self updateFiles:^() {
         [self.pullToRefresh finishRefresh];
+        [self reloadTableData];
     }];
     // Do any additional setup after loading the view.
 }
@@ -118,6 +119,7 @@
 {
     [self updateFiles:^(){
         [self.refreshControl endRefreshing];
+        [self reloadTableData];
     }];
 }
 
@@ -133,21 +135,17 @@
         
         self.navigationItem.title = self.folder.name;
         self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-//        self.navigationItem.rightBarButtonItems = @[self.editButton];
-
     }
     else
     {
         self.navigationItem.title = [self.type capitalizedString];
-//        self.navigationItem.leftBarButtonItems = @[self.signOutButton];
-//        self.navigationItem.rightBarButtonItems = @[self.editButton];
 
     }
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
     
     [self updateFiles:^(){
-    
+        [self reloadTableData];
     }];
 }
 
@@ -156,6 +154,7 @@
     [self.pullToRefresh startRefresh];
     [self updateFiles:^(){
         [self.pullToRefresh finishRefresh];
+        [self reloadTableData];
     }];
 }
 
@@ -212,6 +211,7 @@
 {
     [self updateFiles:^(){
         [self.pullToRefresh finishRefresh];
+        [self reloadTableData];
     }];
 }
 
@@ -427,9 +427,9 @@
 
 - (void)updateFiles:(void (^)())handler
 {
-    [self reloadTableData];
-    
-    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(){
+//    [self reloadTableData];
+
+    [[StorageManager sharedManager] updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
         if (handler)
         {
             handler();
@@ -461,7 +461,8 @@
         return;
     }
     
-    [(FilesTableViewCell*)cell disclosureButton].hidden = YES;
+    [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
+    [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
     
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
@@ -589,7 +590,6 @@
 }
 
 #pragma mark - Help Methods
-
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
@@ -633,10 +633,9 @@
     
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                               initWithKey:@"isFolder" ascending:NO];
-//    NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     [fetchRequest setSortDescriptors:@[isFolder, title]];
-    
+
     fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
     
     NSFetchedResultsController *theFetchedResultsController =
@@ -704,15 +703,34 @@
     NSData *fileData = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
     NSString *realFileName = asset.defaultRepresentation.filename;
     NSLog(@"current fileData - > %@ ",fileData);
-    NSString * path = self.isCorporate ? @"corporate" : @"personal";
-    if (self.folder.fullpath)
-    {
-        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-    }
+    NSString* MIMEType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass
+    ((__bridge CFStringRef)[rep UTI], kUTTagClassMIMEType);
+
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeDeterminate;
         hud.label.text = [NSString stringWithFormat:@"%@ uploading", realFileName];
-        
+    
+    if ([[Settings version]isEqualToString:@"P8"]) {
+        [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
+             hud.progress = progress;
+        } completion:^(NSDictionary *response) {
+            NSLog(@"%@",response);
+            if (response) {
+                [self updateFiles:^(){
+                    [hud hideAnimated:YES];
+                    [self reloadTableData];
+                }];
+            }else{
+                [hud hideAnimated:YES];
+            }
+
+        }];
+    }else{
+        NSString * path = self.isCorporate ? @"corporate" : @"personal";
+        if (self.folder.fullpath)
+        {
+            path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
+        }
         [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
             hud.progress = progress;
         } completion:^(NSDictionary * response){
@@ -721,6 +739,7 @@
                 [hud hideAnimated:YES];
             }];
         }];
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
@@ -843,7 +862,6 @@
                                                                              [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                              [self updateFiles:^(){
                                                                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                                 
                                                                                  [self.tableView reloadData];
                                                                              }];
 

@@ -10,4 +10,6 @@
 
 @interface NSURLRequest (requestGenerator)
 +(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict;
++(NSURLRequest*)p8DownloadRequestWithDictionary:(NSDictionary*) dict;
++(NSString *)stringParamsFromDict:(NSDictionary *)dict;
 @end

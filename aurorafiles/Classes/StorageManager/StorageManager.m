@@ -11,7 +11,7 @@
 #import "SessionProvider.h"
 #import "ApiP8.h"
 #import "Settings.h"
-
+//#import <UIKit/UIKit.h>
 @interface StorageManager()
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -240,7 +240,7 @@
     }
 }
 
-- (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(NSData* thumbnail))handler{
+- (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(UIImage* thumbnail))handler{
     NSString * filepathPath = file ? file.fullpath : @"";
     NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
     [pathArr removeObject:[pathArr lastObject]];
@@ -251,10 +251,19 @@
         [[ApiP8 filesModule]getFileThumbnail:file.name type:type path:[pathArr componentsJoinedByString:@"/"] withCompletion:^(NSString *thumbnail) {
             if (thumbnail) {
                 NSError * error = nil;
-                NSData *data = [[NSData alloc]initWithBase64EncodedString:thumbnail options:0];
-                file.thumbnailLink = thumbnail;
-                
-                [context save:&error];
+                NSData *data;
+                UIImage *image;
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+                    data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+                    file.thumbnailLink = thumbnail;
+                    image = [UIImage imageWithData:data];
+                    [context save:&error];
+                }else{
+                    handler (nil);
+                    return;
+                }
+
                 
                 if (error)
                 {
@@ -262,13 +271,56 @@
                     handler (nil);
                     return;
                 }
-                handler(data);
+                
+                handler(image);
                 return ;
             }
             handler (nil);
         }];
     }];
 }
+
+- (void)updateFileView:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context withProgress:(void (^)(float progress))progressBlock complition:(void (^)(UIImage* thumbnail))handler{
+    NSString * filepathPath = file ? file.fullpath : @"";
+    NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
+    [pathArr removeObject:[pathArr lastObject]];
+    if (!context) {
+        context = self.managedObjectContext;
+    }
+    [context performBlockAndWait:^ {
+        [[ApiP8 filesModule]getFileView:file type:type path:[pathArr componentsJoinedByString:@"/"] withProgress:^(float progress) {
+            progressBlock(progress);
+        } withCompletion:^(NSString *thumbnail){
+            if (thumbnail) {
+                NSError * error = nil;
+                NSData *data;
+                UIImage *image;
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+                    data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+                    file.content = thumbnail;
+                    image = [UIImage imageWithData:data];
+                    [context save:&error];
+                }else{
+                    handler (nil);
+                    return;
+                }
+
+                
+                if (error)
+                {
+                    NSLog(@"%@",[error userInfo]);
+                    handler (nil);
+                    return;
+                }
+                handler(image);
+                return ;
+            }
+            handler (nil);
+        }];
+    }];
+}
+
 - (void)stopGettingFileThumb:(NSString *)fileName{
     [[ApiP8 filesModule]stopFileThumb:fileName];
 }
@@ -285,12 +337,21 @@
                     NSString * path = folderPath;
                     [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
                         [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            if (handler) {
-                                handler();
+                        
+                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+                        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND thumb = YES AND isLink = NO",type, folder.fullpath];
+                        NSError * error = nil;
+                        NSArray * filesItems = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+                        [[ApiP8 filesModule]getThumbnailsForFiles:filesItems withCompletion:^(bool success) {
+                            if (success) {
+                                dispatch_async(dispatch_get_main_queue(), ^(){
+                                    if (handler) {
+                                        handler();
+                                    }
+                                });
                             }
-                            
-                        });
+                        }];
                     }];
                 }
             }else{
