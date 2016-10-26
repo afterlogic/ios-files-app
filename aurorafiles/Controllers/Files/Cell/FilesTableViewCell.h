@@ -27,7 +27,7 @@
 
 @property (nonatomic, assign) id <FilesTableViewCellDelegate> delegate;
 
-- (IBAction)downloadAction:(id)sender;
+//- (IBAction)downloadAction:(id)sender;
 - (IBAction)moreAction:(id)sender;
 - (void)setupCellForFile:(Folder *) folder;
 + (CGFloat)cellHeight;

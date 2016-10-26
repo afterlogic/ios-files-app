@@ -495,11 +495,19 @@
 -(void)removeFileFromCloud:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     object.wasDeleted = @YES;
-    [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-        BFLog(@"%@",handler);
-        [self.managedObjectContext save:nil];
-    }];
-    
+    if ([[Settings version] isEqualToString:@"P8"]) {
+//        [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
+//            if (succsess) {
+//            BFLog(@"%@",handler);
+//            [self.managedObjectContext save:nil];
+//            }
+//        }];
+    }else{
+        [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+            BFLog(@"%@",handler);
+            [self.managedObjectContext save:nil];
+        }];
+    }
 }
 
 
@@ -612,13 +620,23 @@
         Folder * object = self.folderToOperate;
         object.wasDeleted = @YES;
         [self.managedObjectContext save:nil];
-        
-        [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            [self updateFiles:^(){
-                
-                [self.tableView reloadData];
+        if ([[Settings version] isEqualToString:@"P8"]) {
+//            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
+//                if (succsess) {
+//                    [self updateFiles:^(){
+//                        
+//                        [self.tableView reloadData];
+//                    }];
+//                }
+//            }];
+        }else{
+            [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+                [self updateFiles:^(){
+                    
+                    [self.tableView reloadData];
+                }];
             }];
-        }];
+        }
     }];
     
     return deleteFolder;

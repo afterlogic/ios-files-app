@@ -29,10 +29,8 @@ static NSString *methodRename = @"Rename"; //√
 static NSString *methodQuota = @"GetQuota"; //√
 static NSString *methodGetFileThumbail = @"GetFileThumbnail"; //√
 static NSString *methodGetFileInfo = @"GetFileInfo"; //√
-static NSString *methodGetFileView = @"ViewFile";
-
-
-static NSString *methodUploadFile = @"UploadFile";
+static NSString *methodGetFileView = @"ViewFile"; //√
+static NSString *methodUploadFile = @"UploadFile"; //√
 
 -(id)init{
     self = [super init ];
@@ -170,12 +168,66 @@ static NSString *methodUploadFile = @"UploadFile";
 
 }
 ///
-- (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler{
+
+- (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
     [self deleteFiles:@[file] isCorporate:corporate completion:handler];
 }
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler{
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
+    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+                                                                    @"Method":methodDelete,
+                                                                    @"AuthToken":[Settings authToken],
+                                                                    @"Parameters":@{@"Type":corporate ? @"corporate" : @"personal",
+                                                                                    @"Items":files}}];
     
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            BOOL result = NO;
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if ([json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                {
+                    if ([[json valueForKey:@"Result"]count] >=2) {
+                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
+                        {
+                            NSArray *modules = [json objectForKey:@"Result"];
+                            for (NSDictionary* module in modules) {
+                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodDelete]) {
+                                    result = [module valueForKey:@"Result"];
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"server is unavailable now", @"")}];
+                    handler(nil);
+                    return;
+                }
+            }else{
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:9 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Aurora version smaller than 8", @"")}];
+                handler(nil);
+                return;
+            }
+            handler(result);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            handler(nil);
+        });
+    }];
+    
+    [manager.operationQueue addOperation:operation];
+
 }
 
 
@@ -433,9 +485,6 @@ static NSString *methodUploadFile = @"UploadFile";
     }];
     
     [manager.operationQueue addOperation:operation];
-    
-    
-
 }
 ///
 - (void)uploadFile:(NSData *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *response))handler

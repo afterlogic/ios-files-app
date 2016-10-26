@@ -84,17 +84,17 @@
                 [hud hideAnimated:YES];
                 hud.hidden = YES;
             }else{
+//                __weak typeof(self)weakSelf = self;
                 [[StorageManager sharedManager]updateFileView:file type:file.type context:nil withProgress:^(float progress) {
                         dispatch_async(dispatch_get_main_queue(), ^(){
                             hud.progress = progress;
                             NSLog(@"%@ progress -> %f",file.name, progress);
                         });
                 } complition:^(UIImage *thumbnail){
-                    dispatch_async(dispatch_get_main_queue(), ^(){
                         if (thumbnail) {
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            dispatch_async(dispatch_get_main_queue(), ^(){
                                 self.imageView.image = thumbnail;
-                            });
+                                });
                             [hud hideAnimated:YES];
                             hud.hidden = YES;
                         }else{
@@ -110,7 +110,6 @@
                             hud.hidden = YES;
                         }
                         [self setNeedsDisplay];
-                    });
                 }];
             }
         }else{

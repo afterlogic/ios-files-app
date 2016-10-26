@@ -28,4 +28,7 @@ typedef void (^UploadProgressBlock)(float progress);
 - (void)uploadFile:(NSData *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *response))handler;
 - (void)getFileView:(Folder *)folder type:(NSString *)type path:(NSString *)path withProgress:(void (^)(float progress))progressBlock withCompletion:(void(^)(NSString *thumbnail))handler;
 
+
+- (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 @end

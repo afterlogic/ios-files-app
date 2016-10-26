@@ -87,26 +87,23 @@
                 UIImage *image = [UIImage imageWithData:data];
                 [self.fileImageView setImage:image];
                 [self stopHUD];
-//                hud.hidden = YES;
             }else{
                 if ([folder.thumb boolValue] && !folder.isLink.boolValue) {
-//                    [[StorageManager sharedManager]updateFileThumbnail:folder type:folder.type context:nil complition:^(UIImage *thumbnail){
-//                        if (thumbnail) {
-//                            [self.fileImageView setImage:thumbnail];
-//                            [hud hideAnimated:YES];
-//                            hud.hidden = YES;
-//                        }
-//                    }];
+
                 }else{
                     UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
                     if (folder.isLink.boolValue && ![folder isImageContentType])
                     {
                         placeholder = [UIImage imageNamed:@"shotcut"];
+                        if (folder.thumbnailLink) {
+                            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:folder.thumbnailLink] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                [self stopHUD];
+                            }];
+                        }else{
+                            self.fileImageView.image =placeholder;
+                            [self stopHUD];
+                        }
                     }
-                    self.fileImageView.image =placeholder;
-                    [self stopHUD];
-//                    hud.hidden = YES;
-
                 }
             }
         }else{
@@ -115,8 +112,6 @@
             if (thumb)
             {
                 [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-//                    [hud hideAnimated:YES];
-//                    hud.hidden = YES;
                     [self stopHUD];
                 }];
             }else{
@@ -125,8 +120,6 @@
                     placeholder = [UIImage imageNamed:@"shotcut"];
                 }
                 self.fileImageView.image =placeholder;
-//                [hud hideAnimated:YES];
-//                hud.hidden = YES;
                 [self stopHUD];
             }
         }

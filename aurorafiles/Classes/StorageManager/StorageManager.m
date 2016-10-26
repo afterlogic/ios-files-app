@@ -280,45 +280,49 @@
     }];
 }
 
-- (void)updateFileView:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context withProgress:(void (^)(float progress))progressBlock complition:(void (^)(UIImage* thumbnail))handler{
+- (void)updateFileView:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context withProgress:(void (^)(float progress))progressBlock complition:(void (^)(UIImage* thumbnail))thumbHandler{
     NSString * filepathPath = file ? file.fullpath : @"";
     NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
     [pathArr removeObject:[pathArr lastObject]];
     if (!context) {
         context = self.managedObjectContext;
     }
-    [context performBlockAndWait:^ {
-        [[ApiP8 filesModule]getFileView:file type:type path:[pathArr componentsJoinedByString:@"/"] withProgress:^(float progress) {
-            progressBlock(progress);
-        } withCompletion:^(NSString *thumbnail){
-            if (thumbnail) {
-                NSError * error = nil;
-                NSData *data;
-                UIImage *image;
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
-                    data= [[NSData alloc]initWithContentsOfFile:thumbnail];
-                    file.content = thumbnail;
-                    image = [UIImage imageWithData:data];
-                    [context save:&error];
-                }else{
-                    handler (nil);
-                    return;
-                }
+    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        [context performBlockAndWait:^ {
+            [[ApiP8 filesModule]getFileView:file type:type path:[pathArr componentsJoinedByString:@"/"] withProgress:^(float progress) {
+                progressBlock(progress);
+            } withCompletion:^(NSString *thumbnail){
+                if (thumbnail) {
+                    dispatch_async( dispatch_get_main_queue(), ^(void){
+                        NSError * error = nil;
+                        NSData *data;
+                        UIImage *image;
+                        NSFileManager *fileManager = [NSFileManager defaultManager];
+                        if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+                            data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+                            file.content = thumbnail;
+                            image = [UIImage imageWithData:data];
+                            [context save:&error];
+                        }else{
+                            thumbHandler (nil);
+                            return;
+                        }
 
-                
-                if (error)
-                {
-                    NSLog(@"%@",[error userInfo]);
-                    handler (nil);
-                    return;
+                    
+                        if (error)
+                        {
+                            NSLog(@"%@",[error userInfo]);
+                            thumbHandler (nil);
+                            return;
+                        }
+                        thumbHandler(image);
+                        return ;
+                    });
                 }
-                handler(image);
-                return ;
-            }
-            handler (nil);
+                thumbHandler (nil);
+            }];
         }];
-    }];
+    });
 }
 
 - (void)stopGettingFileThumb:(NSString *)fileName{

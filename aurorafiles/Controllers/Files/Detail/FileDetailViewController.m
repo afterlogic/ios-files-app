@@ -170,11 +170,19 @@
         Folder * object = self.object;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
         object.wasDeleted = @YES;
-        
-        [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-            [self.object.managedObjectContext save:nil];
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
+        if ([[Settings version] isEqualToString:@"P8"]) {
+            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
+                if (succsess) {
+                    [self.object.managedObjectContext save:nil];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+        }else{
+            [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+                [self.object.managedObjectContext save:nil];
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+        }
     }];
     
     return deleteFolder;
