@@ -13,6 +13,7 @@
 #import "UIImage+Aurora.h"
 #import "MBProgressHUD.h"
 #import "StorageManager.h"
+#import "ApiP8.h"
 
 @interface FileGalleryCollectionViewCell () <UIScrollViewDelegate>{
     MBProgressHUD *hud;
@@ -68,48 +69,44 @@
         [self.imageView addGestureRecognizer:self.doubleTap];
         self.imageView.userInteractionEnabled = YES;
         self.imageView.alpha = 0.0f;
-        self.imageView.image = nil;
+        self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
-            NSLog(@"collection view cell image - > %@",[file content]);
-            NSString * thumb = file.content;
-            NSData *data;
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            if ([thumb length] && [fileManager fileExistsAtPath:thumb]) {
-                data= [[NSData alloc]initWithContentsOfFile:thumb];
-            }
+            NSData *data = [NSData dataWithContentsOfFile:[[ApiP8 filesModule]getExistedFile:file]];
             if(data){
                 UIImage *image = [UIImage imageWithData:data];
                 [self.imageView setImage:image];
+                self.imageView.alpha = 1.0f;
                 [hud hideAnimated:YES];
                 hud.hidden = YES;
             }else{
-//                __weak typeof(self)weakSelf = self;
-                [[StorageManager sharedManager]updateFileView:file type:file.type context:nil withProgress:^(float progress) {
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            hud.progress = progress;
-                            NSLog(@"%@ progress -> %f",file.name, progress);
+                [[ApiP8 filesModule]getFileView:file type:file.type withProgress:^(float progress) {
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        hud.progress = progress;
+                        NSLog(@"%@ progress -> %f",file.name, progress);
+                    });
+                } withCompletion:^(NSString *thumbnail) {
+                    if(thumbnail){
+                         dispatch_async(dispatch_get_main_queue(), ^(){
+                            NSData* data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+                            UIImage* image = [UIImage imageWithData:data];
+                            self.imageView.image = image;
+                             self.imageView.alpha = 1.0f;
+                            [hud hideAnimated:YES];
+                            hud.hidden = YES;
                         });
-                } complition:^(UIImage *thumbnail){
-                        if (thumbnail) {
-                            dispatch_async(dispatch_get_main_queue(), ^(){
-                                self.imageView.image = thumbnail;
-                                });
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
-                        }else{
-                            UIImage * placeholder = [UIImage assetImageForContentType:[file validContentType]];
-                            if (file.isLink.boolValue && ![file isImageContentType])
-                            {
-                                placeholder = [UIImage imageNamed:@"shotcut"];
-                            }
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                self.imageView.image = placeholder;
-                            });
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
+                    }else{
+                        UIImage * placeholder = [UIImage assetImageForContentType:[file validContentType]];
+                        if (file.isLink.boolValue && ![file isImageContentType])
+                        {
+                            placeholder = [UIImage imageNamed:@"shotcut"];
                         }
-                        [self setNeedsDisplay];
+                        self.imageView.image = placeholder;
+                        self.imageView.alpha = 1.0f;
+                        [hud hideAnimated:YES];
+                        hud.hidden = YES;
+
+                    }
                 }];
             }
         }else{

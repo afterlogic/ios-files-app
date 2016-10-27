@@ -11,3 +11,6 @@
 
 static  NSString * CPNotificationConnectionOnline = @"CPNotificationConnectionOnline";
 static  NSString * CPNotificationConnectionLost = @"CPNotificationConnectionLost";
+
+
+static NSString * youTubeSheme = @"youtube";

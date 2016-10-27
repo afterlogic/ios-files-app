@@ -287,42 +287,39 @@
     if (!context) {
         context = self.managedObjectContext;
     }
-    dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         [context performBlockAndWait:^ {
-            [[ApiP8 filesModule]getFileView:file type:type path:[pathArr componentsJoinedByString:@"/"] withProgress:^(float progress) {
-                progressBlock(progress);
-            } withCompletion:^(NSString *thumbnail){
-                if (thumbnail) {
-                    dispatch_async( dispatch_get_main_queue(), ^(void){
-                        NSError * error = nil;
-                        NSData *data;
-                        UIImage *image;
-                        NSFileManager *fileManager = [NSFileManager defaultManager];
-                        if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
-                            data= [[NSData alloc]initWithContentsOfFile:thumbnail];
-                            file.content = thumbnail;
-                            image = [UIImage imageWithData:data];
-                            [context save:&error];
-                        }else{
-                            thumbHandler (nil);
-                            return;
-                        }
-
-                    
-                        if (error)
-                        {
-                            NSLog(@"%@",[error userInfo]);
-                            thumbHandler (nil);
-                            return;
-                        }
-                        thumbHandler(image);
-                        return ;
-                    });
-                }
-                thumbHandler (nil);
-            }];
+//            [[ApiP8 filesModule]getFileView:file type:type path:[pathArr componentsJoinedByString:@"/"] withProgress:^(float progress) {
+//                progressBlock(progress);
+//            } withCompletion:^(NSString *thumbnail){
+//                if (thumbnail) {
+//                    NSError * error = nil;
+//                    NSData *data;
+//                    UIImage *image;
+//                    NSFileManager *fileManager = [NSFileManager defaultManager];
+//                    if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+//                        data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+//                        file.content = thumbnail;
+//                        image = [UIImage imageWithData:data];
+//                        [context save:&error];
+//                    }else{
+//                        thumbHandler (nil);
+//                        return;
+//                    }
+//
+//                
+//                    if (error)
+//                    {
+//                        NSLog(@"%@",[error userInfo]);
+//                        thumbHandler (nil);
+//                        return;
+//                    }
+//                    thumbHandler(image);
+//                    return ;
+//                    
+//                }
+//                thumbHandler (nil);
+//            }];
         }];
-    });
 }
 
 - (void)stopGettingFileThumb:(NSString *)fileName{

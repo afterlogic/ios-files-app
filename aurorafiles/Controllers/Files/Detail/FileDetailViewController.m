@@ -38,7 +38,6 @@
 
 - (IBAction)shareFileAction:(id)sender
 {
-
     NSURL *myWebsite = [NSURL URLWithString:self.viewLink];
     
     NSArray *objectsToShare = @[myWebsite];

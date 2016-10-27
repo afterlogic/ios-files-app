@@ -560,13 +560,26 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 }
 
 ///
-- (void)getFileView:(Folder *)folder type:(NSString *)type path:(NSString *)path withProgress:(void (^)(float progress))progressBlock withCompletion:(void(^)(NSString *thumbnail))handler{
-    NSURLRequest *request = [NSURLRequest p8DownloadRequestWithDictionary:@{@"Module":moduleName,
+- (void)getFileView:(Folder *)folder type:(NSString *)type withProgress:(void (^)(float progress))progressBlock withCompletion:(void(^)(NSString *thumbnail))handler{
+    
+    NSString * filepathPath = folder ? folder.fullpath : @"";
+    NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
+    [pathArr removeObject:[pathArr lastObject]];
+    
+    NSString *existedPath = [self getExistedFile:folder];
+    if (existedPath) {
+        progressBlock(100.0f);
+        handler(existedPath);
+        return;
+    }
+    
+    
+    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileView,
                                                                     @"AuthToken":[Settings authToken],
                                                                     @"Format":@"Raw",
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":path,
+                                                                                    @"Path":[pathArr componentsJoinedByString:@"/"],
                                                                                     @"Name":folder.name}}];
     
     
@@ -605,5 +618,29 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     if ([fileManager fileExistsAtPath:stringPath]) {
         [fileManager removeItemAtPath:stringPath error:NULL];
     }
+}
+
+-(NSString *)getExistedFile:(Folder *)folder{
+    NSString *filePath = nil;
+    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:folder.name];
+    if ([fileManager fileExistsAtPath:fullURL.path]) {
+//        [fileManager removeItemAtPath:fullURL error:NULL];
+        filePath =  fullURL.path;
+    }
+    return filePath;
+}
+
+-(NSString *)getExistedThumbnailForFile:(Folder *)folder{
+    NSString *filePath = nil;
+    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[NSString stringWithFormat:@"thumb_%@",folder.name]];
+    if ([fileManager fileExistsAtPath:fullURL.path]) {
+        //        [fileManager removeItemAtPath:fullURL error:NULL];
+        filePath =  fullURL.path;
+    }
+    return filePath;
 }
 @end

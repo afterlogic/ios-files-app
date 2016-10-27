@@ -21,7 +21,7 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - BugfenderSDK (0.3.22)
-  - Crashlytics (3.7.1):
+  - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
   - CRMediaPickerController (0.0.1)
   - Fabric (1.6.7)
@@ -44,7 +44,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   BugfenderSDK: 05a168bd3a494528b41ec729d579724bffb84e7c
-  Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
+  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
   CRMediaPickerController: 65e1f968dea26a7759bb1fb4a1518f5b8cd6fba9
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FastEasyMapping: 77d566a817ca73304af3e7fbed130850238f1cb4

@@ -98,11 +98,7 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
     
-    [self.pullToRefresh startRefresh];
-    [self updateFiles:^() {
-        [self.pullToRefresh finishRefresh];
-        [self reloadTableData];
-    }];
+
     // Do any additional setup after loading the view.
 }
 
@@ -144,7 +140,9 @@
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
     
-    [self updateFiles:^(){
+    [self.pullToRefresh startRefresh];
+    [self updateFiles:^() {
+        [self.pullToRefresh finishRefresh];
         [self reloadTableData];
     }];
 }
@@ -336,8 +334,13 @@
             [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
         }
         else if([[object isLink] boolValue]){
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
-//            return;
+            if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+            }else{
+                NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
+                [[UIApplication sharedApplication]openURL:url];
+            }
         }
         else
         {
@@ -427,8 +430,6 @@
 
 - (void)updateFiles:(void (^)())handler
 {
-//    [self reloadTableData];
-
     [[StorageManager sharedManager] updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
         if (handler)
         {

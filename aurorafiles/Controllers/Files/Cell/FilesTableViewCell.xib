@@ -50,6 +50,7 @@
                             <constraint firstAttribute="width" constant="39" id="rVe-Fo-iL5"/>
                         </constraints>
                     </view>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="H7P-KM-aGP"/>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="bKL-kh-8PS" secondAttribute="bottom" constant="2" id="A0u-nt-vkF"/>
@@ -63,7 +64,9 @@
                     <constraint firstAttribute="trailing" secondItem="ZZJ-ha-57p" secondAttribute="trailing" id="cZK-rS-5Nv"/>
                     <constraint firstItem="ZZJ-ha-57p" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" id="kkY-4J-Cw9"/>
                     <constraint firstItem="7Fs-FB-24I" firstAttribute="leading" secondItem="bKL-kh-8PS" secondAttribute="trailing" constant="8" id="rvX-9o-Yuq"/>
+                    <constraint firstItem="H7P-KM-aGP" firstAttribute="centerY" secondItem="bKL-kh-8PS" secondAttribute="centerY" id="skw-PP-Pe3"/>
                     <constraint firstItem="bKL-kh-8PS" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="2" id="vpw-9U-JWN"/>
+                    <constraint firstItem="H7P-KM-aGP" firstAttribute="centerX" secondItem="bKL-kh-8PS" secondAttribute="centerX" id="xPu-Yk-OK7"/>
                     <constraint firstAttribute="bottom" secondItem="5Ej-nI-gGr" secondAttribute="bottom" id="zLz-Bg-J3o"/>
                 </constraints>
             </tableViewCellContentView>
@@ -72,6 +75,7 @@
                 <outlet property="disclosureButton" destination="AnI-EA-Enk" id="xVC-96-AuY"/>
                 <outlet property="downloadActivity" destination="sCa-hf-4CO" id="k8E-of-9yD"/>
                 <outlet property="fileImageView" destination="bKL-kh-8PS" id="2Eh-ee-hX0"/>
+                <outlet property="indicator" destination="H7P-KM-aGP" id="0uG-zB-or4"/>
                 <outlet property="separatorHeight" destination="Igq-aZ-GmO" id="wmZ-lV-NGc"/>
                 <outlet property="separatorView" destination="5Ej-nI-gGr" id="MuI-P7-foI"/>
                 <outlet property="titileLabel" destination="7Fs-FB-24I" id="8Ge-nf-8la"/>

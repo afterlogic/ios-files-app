@@ -13,14 +13,17 @@
 #import "UIImage+Aurora.h"
 #import "MBProgressHUD.h"
 #import "StorageManager.h"
+#import "ApiP8.h"
 @interface FilesTableViewCell (){
        MBProgressHUD *hud;
+//    UIActivityIndicatorView *indicator;
 //    UIActivityIndicatorView *hudView;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *separatorHeight;
 @property (weak, nonatomic) IBOutlet UIView *separatorView;
 @property (strong, nonatomic) IBOutlet UIView *disclosureBox;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 
 @end
 
@@ -33,6 +36,8 @@
     self.separatorHeight.constant = 0.5f;
     self.fileImageView.image = nil;
     [self.disclosureButton addTarget:self action:@selector(downloadAction) forControlEvents:UIControlEventTouchUpInside];
+//    [self.indicator hidesWhenStopped];
+    [self.indicator setHidesWhenStopped:YES];
 }
 
 -(void)setupCellForFile:(Folder *) folder{
@@ -77,12 +82,7 @@
         
 
         if ([folder.isP8 boolValue]) {
-            NSString * thumb = folder.thumbnailLink;
-            NSData *data;
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            if ([thumb length] && [fileManager fileExistsAtPath:thumb]) {
-                data= [[NSData alloc]initWithContentsOfFile:thumb];
-            }
+            NSData *data = [NSData dataWithContentsOfFile:[[ApiP8 filesModule]getExistedThumbnailForFile:folder]];
             if(data){
                 UIImage *image = [UIImage imageWithData:data];
                 [self.fileImageView setImage:image];
@@ -103,6 +103,9 @@
                             self.fileImageView.image =placeholder;
                             [self stopHUD];
                         }
+                    }else{
+                        self.fileImageView.image =placeholder;
+                        [self stopHUD];
                     }
                 }
             }
@@ -111,7 +114,7 @@
             UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
             if (thumb)
             {
-                [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                     [self stopHUD];
                 }];
             }else{
@@ -165,7 +168,7 @@
 
 -(void)dealloc{
     self.fileImageView.image = nil;
-    self.fileImageView = nil;
+//    self.fileImageView = nil;
     [self.fileImageView sd_cancelCurrentImageLoad];
 }
 
@@ -176,16 +179,19 @@
 
 -(void)stopHUD{
 //    [hudView stopAnimating];
-    if ([MBProgressHUD HUDForView:self.fileImageView]) {
-        [MBProgressHUD hideHUDForView:self.fileImageView animated:YES];
-    }
+//    if ([MBProgressHUD HUDForView:self.fileImageView]) {
+//        [MBProgressHUD hideHUDForView:self.fileImageView animated:YES];
+//    }
+    [self.indicator stopAnimating];
+
 }
 
 -(void)startHUD{
 
-    if (![MBProgressHUD HUDForView:self.fileImageView]) {
-        [MBProgressHUD showHUDAddedTo:self.fileImageView animated:YES];
-    }
+    [self.indicator startAnimating];
+//    if (![MBProgressHUD HUDForView:self.fileImageView]) {
+//        [MBProgressHUD showHUDAddedTo:self.fileImageView animated:YES];
+//    }
 
 }
 
