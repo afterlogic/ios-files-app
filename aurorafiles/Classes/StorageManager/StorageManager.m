@@ -294,12 +294,12 @@
                     NSString * path = folderPath;
                     [context performBlockAndWait:^ {
                         [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
-                        [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
-                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isLink= NO AND isFolder= NO",type, folder.fullpath];
-                        NSError * error = nil;
-                        NSArray * filesItems = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+                        NSArray * filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
+//                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+//                        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+//                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isLink= NO AND isFolder= NO AND thumb = YES",type, folder.fullpath];
+//                        NSError * error = nil;
+//                        NSArray * filesItems = [context executeFetchRequest:fetchRequest error:&error];
                         if (filesItems.count>0) {
                             [[ApiP8 filesModule]getThumbnailsForFiles:filesItems withCompletion:^(bool success) {
                                 if (success) {
@@ -345,81 +345,84 @@
         }];
 }
 
-- (void)saveItems:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
+- (NSArray *)saveItems:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
     if (!context) {
         context = self.managedObjectContext;
     }
-    
-            NSString * folderPath = folder ? folder.fullpath : @"";
-            if (items.count)
+    NSMutableArray * existItems = [NSMutableArray new];
+    NSString * folderPath = folder ? folder.fullpath : @"";
+    if (items.count)
+    {
+        NSError * error = nil;
+        NSMutableArray * existIds = [[NSMutableArray alloc] init];
+//                NSMutableArray * existItems = [NSMutableArray new];
+        for (NSDictionary * itemRef in items)
+        {
+            Folder * childFolder = [FEMDeserializer objectFromRepresentation:itemRef mapping: isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+            [existIds addObject:childFolder.name];
+            childFolder.toRemove = [NSNumber numberWithBool:NO];
+            childFolder.isP8 = [NSNumber numberWithBool:isP8];
+            if (folder)
             {
-                NSError * error = nil;
-                NSMutableArray * existIds = [[NSMutableArray alloc] init];
-                NSMutableArray * existItems = [NSMutableArray new];
-                for (NSDictionary * itemRef in items)
-                {
-                    Folder * childFolder = [FEMDeserializer objectFromRepresentation:itemRef mapping: isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-                    [existIds addObject:childFolder.name];
-                    childFolder.toRemove = [NSNumber numberWithBool:NO];
-                    childFolder.isP8 = [NSNumber numberWithBool:isP8];
-                    if (folder)
-                    {
-                        childFolder.parentPath = folderPath;
-                    }
-                    [existItems addObject:childFolder];
-                }
-                [context save:&error];
-                
-                NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-                fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,folder.fullpath,type];
-                NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
-                
-                for (Folder* fold in oldFolders)
-                {
-                    if (!fold.isDownloaded.boolValue)
-                    {
-                        [self deleteOldThumbsAndViews:fold];
-                        [context deleteObject:[context objectWithID:fold.objectID]];
-                    }
-                    else
-                    {
-                        fold.wasDeleted = @YES;
-                    }
-                    
-                }
-                if (error)
-                {
-                    NSLog(@"%@",[error userInfo]);
-                }
-                [context save:&error];
-            }else{
-                NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-                fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND type=%@",folder.fullpath,type];
-                NSError * error = nil;
-                NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
-                
-                for (Folder* fold in oldFolders)
-                {
-                    if (!fold.isDownloaded.boolValue)
-                    {
-                        [self deleteOldThumbsAndViews:fold];
-                        [context deleteObject:[context objectWithID:fold.objectID]];
-                    }
-                    else
-                    {
-                        fold.wasDeleted = @YES;
-                    }
-                    
-                }
-                if (error)
-                {
-                    NSLog(@"%@",[error userInfo]);
-                }
-                [context save:&error];
-
+                childFolder.parentPath = folderPath;
             }
+            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
+                    [existItems addObject:childFolder];
+            }
+        }
+        [context save:&error];
+        
+        NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,folder.fullpath,type];
+        NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
+        
+        for (Folder* fold in oldFolders)
+        {
+            if (!fold.isDownloaded.boolValue)
+            {
+                [self deleteOldThumbsAndViews:fold];
+                [context deleteObject:[context objectWithID:fold.objectID]];
+            }
+            else
+            {
+                fold.wasDeleted = @YES;
+            }
+            
+        }
+        if (error)
+        {
+            NSLog(@"%@",[error userInfo]);
+        }
+        [context save:&error];
+    }else{
+        NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        fetchOldAudiosRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND type=%@",folder.fullpath,type];
+        NSError * error = nil;
+        NSArray * oldFolders = [self.managedObjectContext executeFetchRequest:fetchOldAudiosRequest error:&error];
+        
+        for (Folder* fold in oldFolders)
+        {
+            if (!fold.isDownloaded.boolValue)
+            {
+                [self deleteOldThumbsAndViews:fold];
+                [context deleteObject:[context objectWithID:fold.objectID]];
+            }
+            else
+            {
+                fold.wasDeleted = @YES;
+            }
+            
+        }
+        if (error)
+        {
+            NSLog(@"%@",[error userInfo]);
+        }
+        [context save:&error];
+
+    }
+    return existItems;
 }
 
 #pragma mark - Files Stack

@@ -5,6 +5,14 @@ fastlane documentation
 sudo gem install fastlane
 ```
 # Available Actions
+### fakeUpload
+```
+fastlane fakeUpload
+```
+Fake upload. Only for tests!!!
+
+----
+
 ## iOS
 ### ios test
 ```
@@ -28,11 +36,6 @@ This will also make sure the profile is up to date
 fastlane ios release
 ```
 Deploy a new version to the App Store
-### ios fakeUpload
-```
-fastlane ios fakeUpload
-```
-Fake upload. Only for tests!!!
 ### ios MrHandyMessage
 ```
 fastlane ios MrHandyMessage

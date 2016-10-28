@@ -335,7 +335,11 @@
             }else{
                 NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
                 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
-                [[UIApplication sharedApplication]openURL:url];
+                if ([[UIApplication sharedApplication]canOpenURL:url]) {
+                     [[UIApplication sharedApplication]openURL:url];
+                }else{
+                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+                }
             }
         }
         else
