@@ -28,7 +28,7 @@
                 NSString * password = [Settings password];
                 if (email.length && password.length)
                 {
-                    [[ApiP8 standardAuthModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
+                    [[ApiP8 coreModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
                         if (error)
                         {
                             handler(NO,error,YES);
@@ -116,7 +116,7 @@
             }
             [Settings setLastLoginServerVersion:@"P8"];
             NSLog(@"host version is 8 or above");
-            [[ApiP8 standardAuthModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
+            [[ApiP8 coreModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
                 if (error)
                 {
                     handler(NO,error);

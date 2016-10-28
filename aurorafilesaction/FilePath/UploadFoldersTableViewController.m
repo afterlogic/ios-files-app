@@ -18,6 +18,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "UploadFoldersTableViewController.h"
 #import <BugfenderSDK/BugfenderSDK.h>
+#import "ApiP8.h"
 
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
@@ -309,6 +310,8 @@
     cell.imageView.image = nil;
     cell.delegate = self;
     [cell setupCellForFile:object];
+    [cell.disclosureButton setEnabled:NO];
+    [cell.disclosureButton setHidden:YES];
     return cell;
 }
 
@@ -621,14 +624,14 @@
         object.wasDeleted = @YES;
         [self.managedObjectContext save:nil];
         if ([[Settings version] isEqualToString:@"P8"]) {
-//            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-//                if (succsess) {
-//                    [self updateFiles:^(){
-//                        
-//                        [self.tableView reloadData];
-//                    }];
-//                }
-//            }];
+            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
+                if (succsess) {
+                    [self updateFiles:^(){
+                        
+                        [self.tableView reloadData];
+                    }];
+                }
+            }];
         }else{
             [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
@@ -661,8 +664,7 @@
                                                                  }
                                                                  _fetchedResultsController.delegate = nil;
                                                                  _fetchedResultsController = nil;
-                                                                 
-//                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
                                                                  [[StorageManager sharedManager] renameFolder:self.folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
                                                                      self.folderToOperate = folder;
                                                                      self.folder = folder;
@@ -709,11 +711,23 @@
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  __weak typeof (self)weakSelf = self;
+                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
+                                                                     [[ApiP8 filesModule]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL result) {
+                                                                         if (result) {
+                                                                             [self updateFiles:^(){
+                                                                                 [self.tableView reloadData];
+                                                                                 __strong typeof(self)self = weakSelf;
+                                                                                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
+                                                                                 NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
+                                                                                 NSLog(@"%@", filteredArray);
+                                                                                 self.folderToNavigate = [filteredArray lastObject];
+                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+                                                                             }];                                                                      }
+                                                                     }];
+                                                                 }else{
                                                                  [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
                                                                      BFLog(@"%@",result);
-//                                                                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                      [self updateFiles:^(){
-//                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                          [self.tableView reloadData];
                                                                           __strong typeof(self)self = weakSelf;
                                                                          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
@@ -722,7 +736,8 @@
                                                                          self.folderToNavigate = [filteredArray lastObject];
                                                                          [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
                                                                      }];
-                                                                 }];;
+                                                                 }];
+                                                                 }
                                                                  
                                                              }];
                                                              

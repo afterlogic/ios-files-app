@@ -63,11 +63,8 @@
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
     
-//    if (self.folder) {
-        self.toolbar.hidden = NO;
-//    }else{
-//        self.toolbar.hidden = YES;
-//    }
+
+    self.toolbar.hidden = NO;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
@@ -98,7 +95,11 @@
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
     
-
+    [self.pullToRefresh startRefresh];
+    [self updateFiles:^() {
+        [self.pullToRefresh finishRefresh];
+        [self reloadTableData];
+    }];
     // Do any additional setup after loading the view.
 }
 
@@ -140,11 +141,6 @@
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
     
-    [self.pullToRefresh startRefresh];
-    [self updateFiles:^() {
-        [self.pullToRefresh finishRefresh];
-        [self reloadTableData];
-    }];
 }
 
 - (void)userWasSignedIn
@@ -348,6 +344,7 @@
         }
         
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -358,6 +355,18 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[section];
+    if ([info numberOfObjects]==0) {
+        UILabel *noDataLabel         = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+        noDataLabel.text             = @"Folder is empty";
+        noDataLabel.textColor        = [UIColor lightGrayColor];
+        noDataLabel.textAlignment    = NSTextAlignmentCenter;
+        noDataLabel.font             = [UIFont fontWithName:@"System" size:22.0f];
+        self.tableView.backgroundView = noDataLabel;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }else{
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.backgroundView = nil;
+    }
     return [info numberOfObjects];
 }
 
@@ -374,7 +383,7 @@
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//    NSLog(@"object -> %@",object);
+    NSLog(@"cell object -> %@",object.name);
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;
@@ -722,9 +731,8 @@
     if ([[Settings version]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
              hud.progress = progress;
-        } completion:^(NSDictionary *response) {
-            NSLog(@"%@",response);
-            if (response) {
+        } completion:^(BOOL result) {
+            if (result) {
                 [self updateFiles:^(){
                     [hud hideAnimated:YES];
                     [self reloadTableData];
@@ -875,9 +883,6 @@
                                                                  if ([[Settings version] isEqualToString:@"P8"]) {
                                                                      [[ApiP8 filesModule]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL result) {
                                                                          if (result) {
-//                                                                            [[ApiP8 filesModule]getFileInfoForName:self.folderName.text path:self.folder.fullpath corporate:self.isCorporate completion:^(NSDictionary *result) {
-//                                                                                 
-//                                                                            }];
                                                                              [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                              [self updateFiles:^(){
                                                                                  [MBProgressHUD hideHUDForView:self.view animated:YES];

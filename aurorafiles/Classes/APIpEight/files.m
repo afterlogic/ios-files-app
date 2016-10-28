@@ -40,7 +40,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
         manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-        [manager.requestSerializer setCachePolicy:NSURLRequestReturnCacheDataElseLoad];
+        [manager.requestSerializer setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
         
         operationsQueue = [NSMutableDictionary new];
     }
@@ -487,12 +487,12 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     [manager.operationQueue addOperation:operation];
 }
 ///
-- (void)uploadFile:(NSData *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *response))handler
+- (void)uploadFile:(NSData *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result))handler
 {
     
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
-    NSString *Link = [NSString stringWithFormat:@"http://cloudtest.afterlogic.com/?/upload/files/%@/%@/%@",storageType,pathTmp,name];
+    NSString *Link = [NSString stringWithFormat:@"http://cloudtest.afterlogic.com/?/upload/files/%@%@/%@",storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSDictionary *headers = @{ @"auth-token": [Settings authToken],
@@ -515,34 +515,37 @@ static NSString *methodUploadFile = @"UploadFile"; //√
         dispatch_async(dispatch_get_main_queue(), ^(){
             NSError *error = nil;
             NSData *data = [NSData new];
+            NSString *result;
+            BOOL handlResult = false;
             if ([responseObject isKindOfClass:[NSData class]]) {
                 data = responseObject;
             }
-            
-            id json = nil;
             if (data)
             {
-                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                handlResult = [result isEqualToString:@"true"];
+                NSLog(@"%@",result);
             }
             
-            if (![json isKindOfClass:[NSDictionary class]])
+            if (!handlResult)
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                
             }
             if (error)
             {
                 NSLog(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(handlResult);
                 return ;
             }
-            handler(json);
+            handler(handlResult);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 NSLog(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(NO);
                 return ;
             }
         });

@@ -10,4 +10,5 @@
 
 @interface NSURLRequest (requestGenerator)
 +(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict;
++(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict login:(BOOL)isLogin;
 @end

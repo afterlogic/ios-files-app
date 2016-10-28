@@ -12,8 +12,7 @@
 
 @implementation NSURLRequest (requestGenerator)
 
-+(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict
-{
++(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict login:(BOOL)isLogin{
     BOOL hasPrefix = [[Settings domain] containsString:@"https://"];
     if (!hasPrefix) {
         hasPrefix = [[Settings domain] containsString:@"http://"];
@@ -21,10 +20,12 @@
     
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?Api=",scheme ? @"" : @"https://",[Settings domain]]]];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?Api=",scheme ? @"" : @"http://",[Settings domain]]]];
     
     NSMutableDictionary * newDict = [dict mutableCopy];
-    [newDict addEntriesFromDictionary:[NSURLRequest requestParams]];
+    if (!isLogin) {
+        [newDict addEntriesFromDictionary:[NSURLRequest requestParams]];
+    }
     
     NSMutableString *query = [[NSMutableString alloc] init];
     for (id obj in newDict)
@@ -44,6 +45,12 @@
     request.timeoutInterval = 20.0f;
     
     return request;
+
+}
+
++(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict
+{
+    return [NSURLRequest p8RequestWithDictionary:dict login:NO];
 }
 
 +(NSString *)stringParamsFromDict:(NSDictionary *)dict{
