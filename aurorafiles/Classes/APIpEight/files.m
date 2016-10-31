@@ -629,7 +629,6 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:folder.name];
     if ([fileManager fileExistsAtPath:fullURL.path]) {
-//        [fileManager removeItemAtPath:fullURL error:NULL];
         filePath =  fullURL.path;
     }
     return filePath;

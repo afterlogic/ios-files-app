@@ -13,10 +13,6 @@
 @implementation NSURLRequest (requestGenerator)
 
 +(NSURLRequest*)p8RequestWithDictionary:(NSDictionary*) dict login:(BOOL)isLogin{
-    BOOL hasPrefix = [[Settings domain] containsString:@"https://"];
-    if (!hasPrefix) {
-        hasPrefix = [[Settings domain] containsString:@"http://"];
-    }
     
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];

@@ -140,7 +140,7 @@
     self.filesForUpload = [NSMutableArray new];
     NSArray *imputItems = self.extensionContext.inputItems;
     BFLog(@"input items is -> %@",imputItems);
-    for (NSExtensionItem *item in self.extensionContext.inputItems) {
+    for (NSExtensionItem *item in imputItems) {
         for (NSItemProvider *itemProvider in item.attachments) {
             //image
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
@@ -157,6 +157,18 @@
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
                                 [self.filesForUpload addObject:file];
+                            }
+                            if ([image isKindOfClass:[UIImage class]]){
+                                
+//                                fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
+//                                mediaData = image;
+//                                UploadedFile *file = [UploadedFile new];
+//                                file.path = mediaData;
+//                                file.extension = fileExtension;
+//                                file.type = (NSString *)kUTTypeImage;
+//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+//                                [self.filesForUpload addObject:file];
                             }
                         }];
                     }
@@ -545,102 +557,21 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     return ( __bridge NSString *)mimeType;
 }
 
-
-//-(void)uploadP8File:(UploadedFile *)file{
-//    uploadStart = YES;
-//    if (!hud) {
-//        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        hud.mode = MBProgressHUDModeDeterminate;
-//        [hud showAnimated:YES];
+//-(NSString *)getExistedFile:(id)file{
+//    NSString *filePath = nil;
+//    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSURL *fullURL;
+//    
+//    fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[(UIImage *)file ]];
+//    if ([fileManager fileExistsAtPath:fullURL.path]) {
+//        filePath =  fullURL.path;
 //    }
+//    return filePath;
+//}
+//
+//-(void)saveFile:(id)file{
 //    
-//    [self requestLog:file.request];
-//    __weak ActionViewController * weakSelf = self;
-//    
-//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-//    
-//    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:file.request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-//        dispatch_async(dispatch_get_main_queue(), ^(){
-//            NSError *error = nil;
-//            ActionViewController *strongSelf = weakSelf;
-//            NSData *data = [NSData new];
-//            if ([responseObject isKindOfClass:[NSData class]]) {
-//                data = responseObject;
-//            }
-//            
-//            id json = nil;
-//            if (data)
-//            {
-//                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-//            }
-//            
-//            if (![json isKindOfClass:[NSDictionary class]])
-//            {
-//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-//            }
-//            
-//            if (error)
-//            {
-//                if (self.filesForUpload.count == 0) {
-//                    hud.mode = MBProgressHUDModeCustomView;
-//                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-//                    hud.detailsLabel.text = @"";
-//                    hud.label.text = NSLocalizedString(@"Operation can't be completed", @"");
-//                    [hud hideAnimated:YES afterDelay:0.7f];
-//                    return ;
-//                }else{
-//                    
-//                }
-//                
-//            }
-//            
-//            if (self.filesForUpload.count == 1) {
-//                hud.mode = MBProgressHUDModeCustomView;
-//                hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
-//                hud.detailsLabel.text = @"";
-//                hud.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
-//                [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
-//                
-//            }else{
-//                [strongSelf.filesForUpload removeObject:file];
-//                [strongSelf uploadAction:self];
-//            }
-//            
-//        });
-//    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-//        dispatch_async(dispatch_get_main_queue(), ^(){
-//            if (error)
-//            {
-//                if (self.filesForUpload.count == 0) {
-//                    hud.mode = MBProgressHUDModeCustomView;
-//                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-//                    hud.detailsLabel.text = @"";
-//                    hud.label.text = NSLocalizedString(@"Operation can't be completed", @"");
-//                    [hud hideAnimated:YES afterDelay:0.7f];
-//                    return ;
-//                }else{
-//                    [self uploadAction:self];
-//                }
-//                return ;
-//            }
-//        });
-//    }];
-//    
-//    [operation setUploadProgressBlock:^(NSUInteger __unused bytesWritten,
-//                                        long long totalBytesWritten,
-//                                        long long totalBytesExpectedToWrite) {
-//        dispatch_async(dispatch_get_main_queue(), ^(){
-//            totalBytesForAllFilesSend += bytesWritten;
-//            float progress = (float)totalBytesForAllFilesSend / (float)uploadSize;
-//            hud.progress = progress;
-//            NSString *uploadStatus = [NSString stringWithFormat:@"%@ %@",[NSString transformedValue:[NSNumber numberWithLongLong:totalBytesForAllFilesSend]],[NSString transformedValue:[NSNumber numberWithLongLong:uploadSize]]];
-//            hud.detailsLabel.text = uploadStatus;
-//            NSLog(@"fileName is -> %@",fileName);
-//            hud.label.text = fileName;
-//        });
-//    }];
-//    
-//    [manager.operationQueue addOperation:operation];
 //}
 
 @end

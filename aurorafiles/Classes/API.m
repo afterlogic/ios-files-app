@@ -108,15 +108,20 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (NSURLRequest*)requestWithDictionary:(NSDictionary*) dict
 {
-    BOOL hasPrefix = [[Settings domain] containsString:@"https://"];
-    if (!hasPrefix) {
-        hasPrefix = [[Settings domain] containsString:@"http://"];
-    }
-    
+//    BOOL hasPrefix = NO;
+//    BOOL hasSecurePrefix = [[Settings domain] containsString:@"https://"];
+//    if (!hasSecurePrefix) {
+//        hasPrefix = [[Settings domain] containsString:@"http://"];
+//    }
+//    
+//    NSString *prefix = @"";
+//    if (!hasPrefix && !hasSecurePrefix) {
+//        prefix = @"http://";
+//    }
     
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"https://",[Settings domain]]]];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"http://",[Settings domain]]]];
     NSMutableDictionary * newDict = [dict mutableCopy];
     [newDict addEntriesFromDictionary:[API requestParams]];
     
