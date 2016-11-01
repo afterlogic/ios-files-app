@@ -11,5 +11,6 @@
 - (id)init;
 + (instancetype) sharedInstance;
 - (NSString *)moduleName;
+- (void)cancelOperations;
 
 @end

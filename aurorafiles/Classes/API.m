@@ -659,4 +659,8 @@ static NSString *folderInfo         = @"FileInfo";
 
 }
 
+-(void)cancelAllOperations{
+    [manager.operationQueue cancelAllOperations];
+}
+
 @end

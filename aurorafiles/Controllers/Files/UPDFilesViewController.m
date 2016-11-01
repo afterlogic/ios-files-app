@@ -187,6 +187,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
+        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+        signIn.delegate = self;
+        [self presentViewController:signIn animated:YES completion:nil];
+        return;
+    }
+    
 
     [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
         self.isP8 = isP8;
@@ -413,7 +421,6 @@
 }
 
 -(void)signOut{
-//    [Settings setAuthToken:nil];
     [Settings setCurrentAccount:nil];
     [Settings setToken:nil];
     [Settings setPassword:nil];

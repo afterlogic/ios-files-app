@@ -15,4 +15,5 @@
 + (core *)coreModule;
 + (standardAuth *)standardAuthModule;
 + (files *)filesModule;
++ (void)cancelAllOperations;
 @end

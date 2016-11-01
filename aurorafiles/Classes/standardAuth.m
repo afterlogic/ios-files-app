@@ -44,4 +44,12 @@ static NSString *methodLogin = @"Login";
     return sharedInstance;
 }
 
+-(void)cancelOperations{
+    [manager.operationQueue cancelAllOperations];
+}
+
+-(NSString *)moduleName{
+    return moduleName;
+}
+
 @end

@@ -33,4 +33,6 @@ typedef void (^UploadProgressBlock)(float progress);
 - (void)getFolderInfoForName:(NSString*)name path:(NSString*)path type:(NSString*)type completion:(void (^)(NSDictionary*))handler;
 - (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler;
 
+- (void)cancelAllOperations;
+
 @end

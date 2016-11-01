@@ -25,4 +25,10 @@
     return [files sharedInstance];
 }
 
++(void)cancelAllOperations{
+    [[ApiP8 coreModule]cancelOperations];
+    [[ApiP8 filesModule]cancelOperations];
+    [[ApiP8 standardAuthModule ]cancelOperations];
+}
+
 @end

@@ -647,4 +647,9 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }
     return filePath;
 }
+
+
+-(void)cancelOperations{
+    [manager.operationQueue cancelAllOperations];
+}
 @end

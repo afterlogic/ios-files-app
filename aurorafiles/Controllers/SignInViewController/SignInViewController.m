@@ -9,6 +9,7 @@
 #import "SignInViewController.h"
 #import "Settings.h"
 #import "Api.h"
+#import "ApiP8.h"
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
 #import "MBProgressHUD.h"
@@ -53,6 +54,8 @@
     [super viewWillAppear:animated];
     [Settings setAuthToken:nil];
     [Settings setToken:nil];
+    [[API sharedInstance]cancelAllOperations];
+    [ApiP8 cancelAllOperations];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

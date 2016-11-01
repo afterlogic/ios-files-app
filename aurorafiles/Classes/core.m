@@ -215,5 +215,9 @@ static NSString *methodLogin = @"Login";
     
 }
 
+-(void)cancelOperations{
+    [manager.operationQueue cancelAllOperations];
+}
+
 
 @end
