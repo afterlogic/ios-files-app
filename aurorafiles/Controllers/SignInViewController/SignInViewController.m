@@ -13,6 +13,7 @@
 #import "KeychainWrapper.h"
 #import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
+#import "NSString+Validators.h"
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
@@ -47,6 +48,13 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [Settings setAuthToken:nil];
+    [Settings setToken:nil];
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 	if ([textField isEqual:self.domainField])
@@ -75,6 +83,20 @@
 {
     [activeField resignFirstResponder];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if (![self.emailField.text isValidEmail]) {
+        NSError *error;
+        NSString * text = NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"");
+        if ([error localizedDescription])
+        {
+            text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
+            BFLog(@"email error - > %@",text);
+        }
+        UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+        a.delegate = self;
+        [a show];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        return;
+    }
 	[Settings setDomain:self.domainField.text];
 	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -90,14 +112,13 @@
 		else
 		{
             NSLog(@"%@",error);
-            NSString * text = NSLocalizedString(@"The username or password you entered is incorrect", @"");
+            NSString * text = NSLocalizedString(@"The e-mail or password you entered is incorrect", @"");
             if ([error localizedDescription])
             {
                 text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
                 BFLog(@"login error - > %@",text);
             }
 			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-//            a ca
             a.delegate = self;
 			[a show];
 		}

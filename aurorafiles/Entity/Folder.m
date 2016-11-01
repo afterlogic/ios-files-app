@@ -172,8 +172,9 @@
         {
             return self.linkUrl;
         }
-        
-        NSString * viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
+        NSURL * url = [NSURL URLWithString:[Settings domain]];
+        NSString * scheme = [url scheme];
+        NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"http://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
         
         return viewLink;
     }
@@ -183,14 +184,18 @@
 
 - (NSString*)viewLink
 {
-    NSString * viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"http://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
     
     return viewLink;
 }
 
 - (NSString*)downloadLink
-{    
-    NSString * downloadLink =[NSString stringWithFormat:@"https://%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+{
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSString * downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme ? @"" : @"http://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
     return downloadLink;
 }
 

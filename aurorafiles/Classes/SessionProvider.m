@@ -44,9 +44,6 @@
         }];
     }else{
         NSLog(@"host version smaller than 8");
-//            if (![[Settings version] isEqualToString:@"P7"]) {
-//                [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
-//            }
         [Settings setLastLoginServerVersion:@"P7"];
         [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
             if (!error)
@@ -137,8 +134,12 @@
                     handler (NO,error);
                     return ;
                 }
+                NSNumber *loginFormType = [NSNumber new];
+                if ([[result valueForKeyPath:@"Result.App.LoginFormType"] isKindOfClass:[NSNumber class]]) {
+                    loginFormType = [result valueForKeyPath:@"Result.App.LoginFormType"];
+                }
                 
-                [[API sharedInstance] signInWithEmail:email andPassword:password completion:^(NSDictionary *result, NSError *error) {
+                [[API sharedInstance] signInWithEmail:email andPassword:password loginType:[loginFormType stringValue] completion:^(NSDictionary *result, NSError *error) {
                     if (error)
                     {
                         handler(NO,error);

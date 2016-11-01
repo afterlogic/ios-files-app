@@ -17,7 +17,7 @@ typedef void (^UploadProgressBlock)(float progress);
 
 - (void)getAppDataCompletionHandler:(void (^)(NSDictionary* data, NSError* error)) handler;
 
-- (void)signInWithEmail:(NSString*)email andPassword:(NSString*)password completion:(void (^)(NSDictionary *data, NSError *error)) handler;
+- (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password  loginType:(NSString *) type completion:(void (^)(NSDictionary *data, NSError *error))handler;
 
 - (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *data, NSError *error)) handler;
 

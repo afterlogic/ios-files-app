@@ -52,6 +52,8 @@
 		FF42B1E71DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
 		FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C76441DA7F21800AA5576 /* snapshotTest.swift */; };
 		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
+		FF5C01341DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
+		FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
 		FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */; };
 		FF6A94B91DB666BE00543269 /* ApiP8.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94B81DB666BE00543269 /* ApiP8.m */; };
 		FF6A94BA1DB666BE00543269 /* ApiP8.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94B81DB666BE00543269 /* ApiP8.m */; };
@@ -245,6 +247,8 @@
 		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
 		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		FF5C01321DC87CAC00FDA424 /* NSString+Validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Validators.h"; sourceTree = "<group>"; };
+		FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Validators.m"; sourceTree = "<group>"; };
 		FF6A1D0B1DAD0265005CBA76 /* ARootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARootViewController.h; path = RootController/ARootViewController.h; sourceTree = "<group>"; };
 		FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARootViewController.m; path = RootController/ARootViewController.m; sourceTree = "<group>"; };
 		FF6A94B71DB666BE00543269 /* ApiP8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiP8.h; sourceTree = "<group>"; };
@@ -498,6 +502,8 @@
 				FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */,
 				FF6A94C01DB66B4900543269 /* NSURLRequest+requestGenerator.h */,
 				FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */,
+				FF5C01321DC87CAC00FDA424 /* NSString+Validators.h */,
+				FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1327,6 +1333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF5C01341DC87CAC00FDA424 /* NSString+Validators.m in Sources */,
 				FF71D4921DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */,
 				FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
@@ -1426,6 +1433,7 @@
 				FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */,
 				FF90530E1D9BE53400A09A44 /* aurorafiles.xcdatamodeld in Sources */,
 				FF71D4911DA33162008690D5 /* MLNetworkLogger.m in Sources */,
+				FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */,
 				FF9053741D9C02E600A09A44 /* ConnectionProvider.m in Sources */,
 				FF90530C1D9BDCCD00A09A44 /* CurrentFilePathViewController.m in Sources */,
 				FF9053721D9C011700A09A44 /* SessionProvider.m in Sources */,

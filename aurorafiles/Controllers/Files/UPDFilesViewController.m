@@ -25,7 +25,9 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "CRMediaPickerController.h"
 
-@interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
+@interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>{
+    UILabel *noDataLabel;
+}
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
@@ -94,6 +96,14 @@
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
+    
+    noDataLabel                  = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+    noDataLabel.text             = @"Folder is loading...";
+    noDataLabel.textColor        = [UIColor lightGrayColor];
+    noDataLabel.textAlignment    = NSTextAlignmentCenter;
+    noDataLabel.font             = [UIFont fontWithName:@"System" size:22.0f];
+    self.tableView.backgroundView = noDataLabel;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [self.pullToRefresh startRefresh];
     [self updateFiles:^() {
@@ -188,9 +198,7 @@
         {
             SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
             signIn.delegate = self;
-            [self presentViewController:signIn animated:YES completion:^(){
-            
-            }];
+            [self presentViewController:signIn animated:YES completion:nil];
         }
         [[ConnectionProvider sharedInstance]startNotification];
     }];
@@ -360,11 +368,6 @@
 {
     id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[section];
     if ([info numberOfObjects]==0) {
-        UILabel *noDataLabel         = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
-        noDataLabel.text             = @"Folder is empty";
-        noDataLabel.textColor        = [UIColor lightGrayColor];
-        noDataLabel.textAlignment    = NSTextAlignmentCenter;
-        noDataLabel.font             = [UIFont fontWithName:@"System" size:22.0f];
         self.tableView.backgroundView = noDataLabel;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
@@ -447,6 +450,12 @@
         if (handler)
         {
             handler();
+            id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
+            if ([info numberOfObjects]==0) {
+                noDataLabel.text = @"Folder is empty";
+//                self.tableView.backgroundView = noDataLabel;
+//                self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            }
         }
     }];
 }

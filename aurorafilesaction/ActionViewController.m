@@ -297,7 +297,9 @@
         if ([[Settings version]isEqualToString:@"P8"]) {
             file.request = [self generateP8RequestWithFile:file.path mime:file.MIMEType toFolderPath:uploadFolderPath withName:file.name rootPath:uploadRootPath];
         }else{
-            urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
+            NSURL * url = [NSURL URLWithString:[Settings domain]];
+            NSString * scheme = [url scheme];
+            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"http://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
             file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
         }
         

@@ -108,17 +108,6 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (NSURLRequest*)requestWithDictionary:(NSDictionary*) dict
 {
-//    BOOL hasPrefix = NO;
-//    BOOL hasSecurePrefix = [[Settings domain] containsString:@"https://"];
-//    if (!hasSecurePrefix) {
-//        hasPrefix = [[Settings domain] containsString:@"http://"];
-//    }
-//    
-//    NSString *prefix = @"";
-//    if (!hasPrefix && !hasSecurePrefix) {
-//        prefix = @"http://";
-//    }
-    
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"http://",[Settings domain]]]];
@@ -234,9 +223,19 @@ static NSString *folderInfo         = @"FileInfo";
 
 }
 
-- (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler
+- (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password  loginType:(NSString *) type completion:(void (^)(NSDictionary *data, NSError *error))handler
 {
-    NSURLRequest * request = [self requestWithDictionary:@{@"Action":signInAction,@"Email":email, @"IncPassword":password}];
+    NSDictionary *params = [NSDictionary new];
+    NSString *emailUserName = [email componentsSeparatedByString:@"@"].firstObject;
+    if([type isEqualToString:@"0"]){
+        params = @{@"Action":signInAction,@"Email":email, @"IncPassword":password ,@"SignMe":@"1"};
+    }else if([type isEqualToString:@"3"]){
+        params = @{@"Action":signInAction,@"IncLogin":emailUserName, @"IncPassword":password,@"SignMe":@"1"};
+    }else if([type isEqualToString:@"4"]){
+        params = @{@"Action":signInAction,@"IncLogin":emailUserName,@"Email":email, @"IncPassword":password,@"SignMe":@"1"};
+    }
+        
+    NSURLRequest * request = [self requestWithDictionary:params];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -601,8 +600,9 @@ static NSString *folderInfo         = @"FileInfo";
 
 - (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler
 {
-    
-    NSString * urlString = [NSString stringWithFormat:@"https://%@/index.php?Upload/File/%@/%@",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"http://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
