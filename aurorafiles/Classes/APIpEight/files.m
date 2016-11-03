@@ -98,12 +98,13 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                 return ;
             }
             NSArray * items;
-            if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
+            if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
             {
-                for (NSDictionary* module in [json objectForKey:@"Result"]) {
-                    if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodGetFiles]) {
-                        items = [[[module objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[module objectForKey:@"Result"] objectForKey:@"Items"] : @[];
-                    }
+                NSDictionary * module = [json objectForKey:@"Result"];
+                if ([module isKindOfClass:[NSNumber class]]) {
+                    items = @[];
+                }else{
+                    items = [[module objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [module objectForKey:@"Items"] : @[];
                 }
             }
             else
@@ -123,50 +124,50 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 }
 
 ///
-- (void)getUserFilestorageQoutaWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
-                                                                    @"Method":methodQuota,
-                                                                    @"AuthToken":[Settings authToken]}];
-    
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            NSError *error;
-            NSData *data = [NSData new];
-            if ([responseObject isKindOfClass:[NSData class]]) {
-                data = responseObject;
-            }
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-            NSString *userInfoResult = @"";
-            if (![json isKindOfClass:[NSArray class]])
-            {
-                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-            }else{
-                if ([json count] < 2) {
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                }
-                NSDictionary *userData = [json firstObject];
-                userInfoResult = [userData valueForKeyPath:@"Result.PublicId"];
-            }
-            if (error)
-            {
-                NSLog(@"%@",[error localizedDescription]);
-                handler(nil,error);
-                return ;
-            }
-            
-            handler(userInfoResult,nil);
-        });
-    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
-            handler(nil,error);
-        });
-    }];
-    
-    [manager.operationQueue addOperation:operation];
-
-}
+//- (void)getUserFilestorageQoutaWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
+//    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+//                                                                    @"Method":methodQuota,
+//                                                                    @"AuthToken":[Settings authToken]}];
+//    
+//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            NSError *error;
+//            NSData *data = [NSData new];
+//            if ([responseObject isKindOfClass:[NSData class]]) {
+//                data = responseObject;
+//            }
+//            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+//            NSString *userInfoResult = @"";
+//            if (![json isKindOfClass:[NSDictionary class]])
+//            {
+//                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//            }else{
+//                if ([json count] < 2) {
+//                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+//                }
+//                NSDictionary *userData = [json objectForKey:@"Result"];
+//                userInfoResult = [userData valueForKeyPath:@"Result.PublicId"];
+//            }
+//            if (error)
+//            {
+//                NSLog(@"%@",[error localizedDescription]);
+//                handler(nil,error);
+//                return ;
+//            }
+//            
+//            handler(userInfoResult,nil);
+//        });
+//    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+//        dispatch_async(dispatch_get_main_queue(), ^(){
+//            NSLog(@"HTTP Request failed: %@", error);
+//            handler(nil,error);
+//        });
+//    }];
+//    
+//    [manager.operationQueue addOperation:operation];
+//
+//}
 ///
 
 - (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
@@ -192,19 +193,9 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSNumber class]])
                 {
-                    if ([[json valueForKey:@"Result"]count] >=2) {
-                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
-                        {
-                            NSArray *modules = [json objectForKey:@"Result"];
-                            for (NSDictionary* module in modules) {
-                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodDelete]) {
-                                    result = [module valueForKey:@"Result"];
-                                }
-                            }
-                        }
-                    }
+                    result = [json valueForKey:@"Result"];
                 }
                 else
                 {
@@ -269,21 +260,14 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSString class]])
                 {
-                    if ([[json valueForKey:@"Result"]count] >=2) {
-                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
-                        {
-                            for (NSDictionary* module in [json objectForKey:@"Result"]) {
-                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodGetFileThumbail] && [[module valueForKey:@"Result"] isKindOfClass:[NSString class]]) {
-                                    thumbnail = [module valueForKey:@"Result"];
-                                    NSData *data = [[NSData alloc]initWithBase64EncodedString:thumbnail options:0];
-                                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                                    path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"thumb_%@",folderName]];
-                                    [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-                                }
-                            }
-                        }
+                    if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodGetFileThumbail] && [[json valueForKey:@"Result"] isKindOfClass:[NSString class]]) {
+                        thumbnail = [json valueForKey:@"Result"];
+                        NSData *data = [[NSData alloc]initWithBase64EncodedString:thumbnail options:0];
+                        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                        path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"thumb_%@",folderName]];
+                        [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
                     }
                 }
                 else
@@ -339,18 +323,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSNumber class]])
                 {
-                    if ([[json valueForKey:@"Result"]count] >=2) {
-                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
-                        {
-                            for (NSDictionary* module in [json objectForKey:@"Result"]) {
-                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodRename]) {
-                                    //                                    thumbnail = [[NSData alloc]initWithBase64EncodedString:[module valueForKey:@"Result"] options:0];
-                                    result = [module valueForKey:@"Result"];
-                                }
-                            }
-                        }
+                    if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodRename]) {
+                        result = [json valueForKey:@"Result"];
                     }
                 }
                 
@@ -394,17 +370,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
                 {
-                    if ([[json valueForKey:@"Result"]count] >=2) {
-                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
-                        {
-                            for (NSDictionary* module in [json objectForKey:@"Result"]) {
-                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodGetFileInfo]) {
-                                    result = [module valueForKey:@"Result"];
-                                }
-                            }
-                        }
+                    if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodGetFileInfo]) {
+                        result = [json valueForKey:@"Result"];
                     }
                 }
                 else
@@ -451,17 +420,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if ([json isKindOfClass:[NSDictionary class]])
             {
-                if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSNumber class]])
                 {
-                    if ([[json valueForKey:@"Result"]count] >=2) {
-                        if (json && [json isKindOfClass:[NSDictionary class]] && [[json objectForKey:@"Result"] isKindOfClass:[NSArray class]])
-                        {
-                            for (NSDictionary* module in [json objectForKey:@"Result"]) {
-                                if ([[module valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[module valueForKey:@"Module"] isEqualToString:moduleName] && [[module valueForKey:@"Method"] isEqualToString:methodCreateFolder]) {
-                                    result = [module valueForKey:@"Result"];
-                                }
-                            }
-                        }
+                    if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodCreateFolder]) {
+                        result = [json valueForKey:@"Result"];
                     }
                 }
                 else

@@ -82,8 +82,6 @@
 -(void)loadView{
     [super loadView];
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
-//    [[MLNetworkLogger sharedLogger] startLogging];
-//    [[MLNetworkLogger sharedLogger] setLogDetalization:MLNetworkLoggerLogDetalizationHigh];
 }
 
 - (void)viewDidLoad {
@@ -558,22 +556,5 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     }
     return ( __bridge NSString *)mimeType;
 }
-
-//-(NSString *)getExistedFile:(id)file{
-//    NSString *filePath = nil;
-//    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    NSURL *fullURL;
-//    
-//    fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[(UIImage *)file ]];
-//    if ([fileManager fileExistsAtPath:fullURL.path]) {
-//        filePath =  fullURL.path;
-//    }
-//    return filePath;
-//}
-//
-//-(void)saveFile:(id)file{
-//    
-//}
 
 @end

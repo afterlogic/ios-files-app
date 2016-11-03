@@ -22,4 +22,7 @@
 - (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(UIImage* thumbnail))handler;
 - (void)stopGettingFileThumb:(NSString *)file;
 - (void)deleteAllObjects: (NSString *) entityDescription ;
+- (void)saveLastUsedFolder:(Folder *)folder;
+- (Folder *)getLastUsedFolder;
+- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
 @end

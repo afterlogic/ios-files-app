@@ -11,7 +11,6 @@
 #import "SessionProvider.h"
 #import "ApiP8.h"
 #import "Settings.h"
-//#import <UIKit/UIKit.h>
 @interface StorageManager()
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -33,10 +32,9 @@
     return sharedInstance;
 }
 
-- (NSURL *)applicationDocumentsDirectory
-{
-    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.hotger.vMusic" in the application's documents directory.
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+- (NSURL *)applicationDocumentsDirectory {
+    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.makopyants.aurorafiles" in the application's documents directory.
+    return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.afterlogic.aurorafiles"];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
@@ -124,8 +122,6 @@
         NSError *error = nil;
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
         {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         }
     }
@@ -295,11 +291,6 @@
                     [context performBlockAndWait:^ {
                         [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
                         NSArray * filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
-//                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-//                        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-//                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isLink= NO AND isFolder= NO AND thumb = YES",type, folder.fullpath];
-//                        NSError * error = nil;
-//                        NSArray * filesItems = [context executeFetchRequest:fetchRequest error:&error];
                         if (filesItems.count>0) {
                             [[ApiP8 filesModule]getThumbnailsForFiles:filesItems withCompletion:^(bool success) {
                                 if (success) {
@@ -423,6 +414,59 @@
 
     }
     return existItems;
+}
+
+- (void)saveLastUsedFolder:(Folder *)folder{
+    NSManagedObjectContext* context = self.managedObjectContext;
+//    [context performBlock:^{
+        NSError * error = nil;
+        NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES"];
+        NSArray * lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
+        for (Folder *item in lastUsedFolders) {
+            item.isLastUsedUploadFolder = [NSNumber numberWithBool:NO];
+        }
+        
+        if (folder){
+            folder.isLastUsedUploadFolder = [NSNumber numberWithBool:YES];
+        }
+        
+        if (error)
+        {
+            NSLog(@"last used path saved with error -> %@",[error userInfo]);
+        }
+        NSLog(@"last used path saved without error");
+        [context save:&error];
+//    }];
+}
+
+- (Folder *)getLastUsedFolder{
+    NSManagedObjectContext* context = self.managedObjectContext;
+    NSError * error = nil;
+    NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+    fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+    fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES"];
+    NSArray * lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
+    return [lastUsedFolders lastObject];
+}
+
+-(Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path{
+    return [self getObjectWithName:name type:type fullPath:path isFolder:YES];
+}
+
+
+-(Folder *)getObjectWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path isFolder:(BOOL) isFolder{
+    NSManagedObjectContext* context = self.managedObjectContext;
+   __block NSArray * items;
+//    [context performBlockAndWait:^{
+        NSError * error = nil;
+        NSFetchRequest * fetchItem = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchItem.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        fetchItem.predicate = [NSPredicate predicateWithFormat:@"isFolder = %@ AND fullpath = %@ AND name = %@ AND type = %@",[NSNumber numberWithBool:isFolder],path,name,type];
+        items = [context executeFetchRequest:fetchItem error:&error];
+//    }];
+    return [items lastObject];
 }
 
 #pragma mark - Files Stack

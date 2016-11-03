@@ -11,5 +11,6 @@
 @interface standardAuth : NSObject <AuroraModuleProtocol>
 
 + (instancetype) sharedInstance;
+- (void)getUserAccountsWithCompletion:(void(^)(NSString *publicID, NSError *error))handler;
 //- (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler;
 @end

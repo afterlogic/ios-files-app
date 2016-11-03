@@ -40,5 +40,6 @@
 @dynamic isExternal;
 @dynamic parentPath;
 @dynamic isP8;
+@dynamic isLastUsedUploadFolder;
 
 @end

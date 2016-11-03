@@ -25,6 +25,9 @@
 @property (nonatomic, assign) BOOL isCorporate;
 @property (strong, nonatomic) NSString * type;
 @property (nonatomic, strong) id <FolderDelegate> delegate;
+@property (nonatomic, strong) NSMutableArray <UploadFoldersTableViewController *> * controllersStack;
+@property (nonatomic, strong) NSMutableArray <Folder *> * foldersStack;
+
 
 - (IBAction)editAction:(id)sender;
 - (IBAction)backAction:(id)sender;

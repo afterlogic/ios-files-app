@@ -23,9 +23,6 @@
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
 @property (strong, nonatomic) NSURLSession * session;
-
-//@property (strong, nonatomic) IBOutlet UIView *activityView;
-//@property (strong, nonatomic) STZPullToRefresh * pullToRefresh;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -38,6 +35,12 @@
 @end
 
 @implementation UploadFoldersTableViewController
+
+- (void)loadView{
+    NSLog(@"self -> %@",self);
+    [super loadView];
+    NSLog(@"self after super load -> %@",self);
+}
 
 - (void)awakeFromNib{
     [super awakeFromNib];
@@ -54,11 +57,13 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
     
     self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
+    
     self.isCorporate = [self.type isEqualToString:@"corporate"];
+    
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
-        
         return [url absoluteString];
     }];
+    
     [self.refreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
     self.searchBar.delegate = self;
     
@@ -76,6 +81,22 @@
     {
         self.title = folder.name;
         [self.delegate currentFolder:self.folder root:self.type];
+    }
+}
+
+-(void)setControllersStack:(NSMutableArray<UploadFoldersTableViewController *> *)controllersStack{
+    _controllersStack = controllersStack;
+    if (controllersStack && controllersStack.count > 0) {
+        NSMutableArray *curentControllersStack = [self.navigationController viewControllers].mutableCopy;
+        for (UploadFoldersTableViewController *vc in controllersStack) {
+            vc.doneButton = self.doneButton;
+            vc.EditButton = self.EditButton;
+        };
+        NSLog(@"curentControllersStack %@",curentControllersStack);
+        for (UploadFoldersTableViewController* vc in controllersStack) {
+                [self.navigationController pushViewController:vc animated:NO];
+        }
+        
     }
 }
 
@@ -117,34 +138,20 @@
     }];
 }
 
-- (void)userWasSignedIn
-{
-    //[self.pullToRefresh startRefresh];
-    //[self updateFiles:^(){
-    //    [self.pullToRefresh finishRefresh];
-    //}];
+- (void)userWasSignedIn{
+
 }
 
--(void)userWasSigneInOffline
-{
-//    [self lockOnlineButtons];
+-(void)userWasSigneInOffline{
+
 }
 
--(void)lockOnlineButtons
-{
-//    [self.tabBarController setSelectedIndex:2];
-//    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        //        BFLog(@"vc class is -> %@",[vc class] );
-//        [vc setEnabled:NO];
-//    };
+-(void)lockOnlineButtons{
+
 }
 
 -(void)unlockOnlineButtons{
-    //    [self.tabBarController setSelectedIndex:1];
-//    for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        //        BFLog(@"vc class is -> %@",[vc class] );
-//        [vc setEnabled:YES];
-//    };
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -163,14 +170,10 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-- (void)pullToRefreshDidStart
-{
-//    [self updateFiles:^(){
-//        [self.pullToRefresh finishRefresh];
-//    }];
+- (void)pullToRefreshDidStart{
+
 }
 
 -(void)setDelegate:(id<FolderDelegate>)delegate{
@@ -244,13 +247,14 @@
 {
     if ([segue.identifier isEqualToString:@"GoToFolderSegue"])
     {
-//        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
         Folder * object = self.folderToNavigate;
         UploadFoldersTableViewController * vc = [segue destinationViewController];
         vc.delegate = self.delegate;
         vc.folder = object;
         vc.isCorporate = self.isCorporate;
         vc.doneButton = self.doneButton;
+        [self.foldersStack removeObject:[self.foldersStack lastObject]];
+        vc.foldersStack = self.foldersStack;
     }
 }
 
@@ -289,12 +293,6 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    //    if (!object.canEdit) return NO;
-    //
-    //
-    //    return YES;
-    
     return NO;
 }
 
@@ -552,7 +550,7 @@
 #pragma mark More Actions
 
 -(void)backAction:(id)sender{
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 
@@ -568,8 +566,6 @@
     
     self.folderToOperate = self.folder;
     [alert addAction:[self createFolderAction]];
-//    [alert addAction:[self uploadFileAction]];
-    
     if (self.folder)
     {
         [alert addAction:[self renameCurrentFolderAction]];

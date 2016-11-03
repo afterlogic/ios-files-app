@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Folder (CoreDataProperties)
 
 @property (nullable, nonatomic, retain) NSNumber *wasDeleted;
+@property (nullable, nonatomic, retain) NSNumber *isLastUsedUploadFolder;
 @property (nullable, nonatomic, retain) NSString *downloadedName;
 @property (nullable, nonatomic, retain) NSNumber *isDownloaded;
 @property (nullable, nonatomic, retain) NSNumber *downloadIdentifier;

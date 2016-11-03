@@ -20,7 +20,7 @@
     if ([[Settings version] isEqualToString:@"P8"]) {
         [Settings setLastLoginServerVersion:@"P8"];
         NSLog(@"host version is 8 or above");
-        [[ApiP8 filesModule] getUserFilestorageQoutaWithCompletion:^(NSString *publicID, NSError *error) {
+        [[ApiP8 coreModule] getUserWithCompletion:^(NSString *publicID, NSError *error) {
             if ([publicID isEqualToString:[Settings login]]) {
                 handler(YES,NO,YES);
             }else{
@@ -35,7 +35,6 @@
                             return;
                         }
                         handler(YES,NO,YES);
-                        
                     }];
                 }else{
                     handler(NO,NO,YES);

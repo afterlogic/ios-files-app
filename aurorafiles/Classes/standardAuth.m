@@ -20,8 +20,8 @@
 
 @implementation standardAuth 
 
-static NSString *moduleName = @"Core";
-static NSString *methodLogin = @"Login";
+static NSString *moduleName = @"StandardAuth";
+static NSString *methodGetUsersAccount = @"GetUserAccounts";
 
 -(id)init{
     self = [super init ];
@@ -42,6 +42,58 @@ static NSString *methodLogin = @"Login";
         sharedInstance = [[standardAuth alloc] init];
     });
     return sharedInstance;
+}
+
+- (void)getUserAccountsWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
+    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+                                                                    @"Method":methodGetUsersAccount,
+                                                                    @"AuthToken":[Settings authToken]}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSString *userInfoResult = @"";
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else{
+                if ([json count] < 2) {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
+                if ([[json objectForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]) {
+                    NSNumber *errorCode = [json objectForKey:@"ErrorCode"];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }else if ([[json objectForKey:@"Result"] isKindOfClass:[NSDictionary class]]){
+                    NSDictionary *userData = [json objectForKey:@"Result"];
+                    userInfoResult = [userData valueForKeyPath:@"login"];
+                }
+
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                handler(nil,error);
+                return ;
+            }
+            
+            handler(userInfoResult,nil);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            handler(nil,error);
+        });
+    }];
+    
+    [manager.operationQueue addOperation:operation];
+    
+
 }
 
 -(void)cancelOperations{
