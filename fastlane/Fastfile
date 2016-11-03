@@ -83,6 +83,9 @@ platform :ios do
     clear_derived_data
 
 
+    # забираем все коммиты из гита для ченджлога
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
+    
     # Пушим в гит новый тэг и все коммиты
     push_to_git_remote
 
@@ -90,9 +93,6 @@ platform :ios do
     gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true) 
 
     #pilot
-
-    # забираем все коммиты из гита для ченджлога
-    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
 
     # отправляем в тестфлайт
     testflight(
