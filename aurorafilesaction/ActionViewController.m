@@ -87,8 +87,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     BFLog(@"EXTENSION STARTED");
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [url scheme];
     if ([[Settings version]isEqualToString:@"P8"]){
-        if (![Settings authToken]) {
+        if (![Settings authToken] || !scheme) {
             self.uploadButton.enabled = NO;
             [self.uploadButton setTitle:@""];
             [self.userLoggedOutView setHidden:NO];
@@ -100,7 +102,7 @@
             [self showUploadFolders];
         }
     }else{
-        if (![Settings token]) {
+        if (![Settings token] || !scheme) {
             self.uploadButton.enabled = NO;
             [self.uploadButton setTitle:@""];
             [self.userLoggedOutView setHidden:NO];

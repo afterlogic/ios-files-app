@@ -202,24 +202,24 @@
                 {
                     NSManagedObjectContext* context = [self managedObjectContext];
                     
-                        Folder * object = [FEMDeserializer objectFromRepresentation:[result objectForKey:@"Result"] mapping:[Folder renameMapping] context:context];
-                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                        NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-                        [fetchRequest setSortDescriptors:@[title]];
-                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
-                        NSError * error = nil;
-                        NSArray * fetched = [context executeFetchRequest:fetchRequest error:&error];
-                        for(Folder * f in fetched)
-                        {
-                            f.parentPath = object.fullpath;
-                            NSLog(@"%@",f);
+                    Folder * object = [FEMDeserializer objectFromRepresentation:[result objectForKey:@"Result"] mapping:[Folder renameMapping] context:context];
+                    NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+                    NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+                    [fetchRequest setSortDescriptors:@[title]];
+                    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
+                    NSError * error = nil;
+                    NSArray * fetched = [context executeFetchRequest:fetchRequest error:&error];
+                    for(Folder * f in fetched)
+                    {
+                        f.parentPath = object.fullpath;
+                        NSLog(@"%@",f);
+                    }
+                    [self saveContext];
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        if (handler) {
+                            handler(object);
                         }
-                        [context save:nil];
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            if (handler) {
-                                handler(object);
-                            }
-                        });
+                    });
                 }
                 else
                 {
@@ -254,7 +254,7 @@
                     data= [[NSData alloc]initWithContentsOfFile:thumbnail];
                     file.thumbnailLink = thumbnail;
                     image = [UIImage imageWithData:data];
-                    [context save:&error];
+                    [self saveContext];
                 }else{
                     handler (nil);
                     return;
@@ -361,7 +361,7 @@
                     [existItems addObject:childFolder];
             }
         }
-        [context save:&error];
+        [self saveContext];
         
         NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
@@ -385,7 +385,7 @@
         {
             NSLog(@"%@",[error userInfo]);
         }
-        [context save:&error];
+        [self saveContext];
     }else{
         NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
@@ -410,7 +410,7 @@
         {
             NSLog(@"%@",[error userInfo]);
         }
-        [context save:&error];
+        [self saveContext];
 
     }
     return existItems;
@@ -437,7 +437,7 @@
             NSLog(@"last used path saved with error -> %@",[error userInfo]);
         }
         NSLog(@"last used path saved without error");
-        [context save:&error];
+        [self saveContext];
 //    }];
 }
 
@@ -501,7 +501,7 @@
         [context deleteObject:managedObject];
         NSLog(@"%@ object deleted",entityDescription);
     }
-    [context save:&error];
+    [self saveContext];
     if (error) {
         NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
     }}];

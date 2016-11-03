@@ -187,6 +187,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [url scheme];
+    if (!scheme) {
+        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+        signIn.delegate = self;
+        [self presentViewController:signIn animated:YES completion:nil];
+        return;
+    }
     
     if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
         SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];

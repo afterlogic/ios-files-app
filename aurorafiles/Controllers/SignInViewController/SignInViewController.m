@@ -100,7 +100,10 @@
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
-	[Settings setDomain:self.domainField.text];
+    NSURL * url = [NSURL URLWithString:self.domainField.text];
+    NSString *scheme = [url scheme];
+    NSString *domain = [NSString stringWithFormat:@"%@%@",scheme ? @"" : @"http://",self.domainField.text];
+	[Settings setDomain:domain];
 	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
 		if (authorized)
