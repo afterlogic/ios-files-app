@@ -110,7 +110,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"http://",[Settings domain]]]];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"https://",[Settings domain]]]];
     NSMutableDictionary * newDict = [dict mutableCopy];
     [newDict addEntriesFromDictionary:[API requestParams]];
     
@@ -602,7 +602,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"http://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];

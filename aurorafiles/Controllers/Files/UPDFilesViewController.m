@@ -56,7 +56,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self setupView];
+
+    // Do any additional setup after loading the view.
+}
+
+-(void)setupView{
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -65,7 +70,7 @@
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
     
-
+    
     self.toolbar.hidden = NO;
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
@@ -77,11 +82,11 @@
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
     [self.view addSubview:refreshView];
     
-//    // Setup PullToRefresh
+    //    // Setup PullToRefresh
     self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
                                                          refreshView:refreshView
                                                    tableViewDelegate:self];
-//
+    //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
         
@@ -110,7 +115,14 @@
         [self.pullToRefresh finishRefresh];
         [self reloadTableData];
     }];
-    // Do any additional setup after loading the view.
+}
+
+- (void)updateView{
+    [self.pullToRefresh startRefresh];
+    [self updateFiles:^() {
+        [self.pullToRefresh finishRefresh];
+        [self reloadTableData];
+    }];
 }
 
 - (void)setFolder:(Folder *)folder
@@ -187,14 +199,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString *scheme = [url scheme];
-    if (!scheme) {
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
-        return;
-    }
     
     if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
         SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
@@ -203,21 +207,48 @@
         return;
     }
     
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [url scheme];
+    if (!scheme) {
+        [[SessionProvider sharedManager] checkSSLConnection:^(NSString *domain) {
+            if(domain && domain.length > 0){
+                [Settings setDomain:domain];
+                [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+                    self.isP8 = isP8;
+                    if(authorised && offline){
+                        [self userWasSigneInOffline];
+                        return;
+                    }
+                    if (!authorised)
+                    {
+                        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+                        signIn.delegate = self;
+                        [self presentViewController:signIn animated:YES completion:nil];
+                    }
+                    [[ConnectionProvider sharedInstance]startNotification];
+                }];
 
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-        self.isP8 = isP8;
-        if(authorised && offline){
-            [self userWasSigneInOffline];
-            return;
-        }
-        if (!authorised)
-        {
-            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-            signIn.delegate = self;
-            [self presentViewController:signIn animated:YES completion:nil];
-        }
-        [[ConnectionProvider sharedInstance]startNotification];
-    }];
+            }
+        }];
+    }else{
+        [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+            self.isP8 = isP8;
+            if(authorised && offline){
+                [self userWasSigneInOffline];
+                return;
+            }
+            if (!authorised)
+            {
+                SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+                signIn.delegate = self;
+                [self presentViewController:signIn animated:YES completion:nil];
+            }
+            [[ConnectionProvider sharedInstance]startNotification];
+        }];
+
+    }
+
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -433,7 +464,7 @@
     [Settings setToken:nil];
     [Settings setPassword:nil];
     
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
         self.isP8 = isP8;
         if (isP8) {
             [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
@@ -468,8 +499,6 @@
             id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
             if ([info numberOfObjects]==0) {
                 noDataLabel.text = @"Folder is empty";
-//                self.tableView.backgroundView = noDataLabel;
-//                self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             }
         }
     }];

@@ -10,4 +10,5 @@
 
 @interface NSString (Validators)
 - (BOOL)isValidEmail;
+- (BOOL)isValidURL;
 @end

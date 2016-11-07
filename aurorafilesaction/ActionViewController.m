@@ -26,6 +26,7 @@
 #import "NSObject+PerformSelectorWithCallback.h"
 #import "NSString+transferedValues.h"
 #import "AFNetworking.h"
+#import "SessionProvider.h"
 //#import
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
@@ -87,9 +88,36 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     BFLog(@"EXTENSION STARTED");
+    
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.label.text = NSLocalizedString(@"Check connection...", @"");
+    
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [url scheme];
-    if ([[Settings version]isEqualToString:@"P8"]){
+    if (scheme) {
+        [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+        [hud hideAnimated:YES];
+    }else{
+        [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+            [hud hideAnimated:YES];
+            if(domain && domain.length > 0){
+                [Settings setDomain:domain];
+                [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+            }else{
+                self.uploadButton.enabled = NO;
+                [self.uploadButton setTitle:@""];
+                [self.userLoggedOutView setHidden:NO];
+                [self hideContainers:YES];
+            }
+        }];
+    }
+}
+
+-(void)setupInterfaceForP8:(BOOL)isP8 {
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [url scheme];
+    if (isP8){
         if (![Settings authToken] || !scheme) {
             self.uploadButton.enabled = NO;
             [self.uploadButton setTitle:@""];
@@ -114,7 +142,6 @@
             [self showUploadFolders];
         }
     }
-    
     
 }
 
@@ -299,7 +326,7 @@
         }else{
             NSURL * url = [NSURL URLWithString:[Settings domain]];
             NSString * scheme = [url scheme];
-            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"http://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
+            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
             file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
         }
         

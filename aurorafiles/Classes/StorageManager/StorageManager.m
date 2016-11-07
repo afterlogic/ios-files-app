@@ -284,7 +284,7 @@
 {
     NSString * folderPath = folder ? folder.fullpath : @"";
     NSManagedObjectContext* context = self.managedObjectContext;
-        [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+        [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
             if (isP8) {
                 if (authorised){
                     NSString * path = folderPath;

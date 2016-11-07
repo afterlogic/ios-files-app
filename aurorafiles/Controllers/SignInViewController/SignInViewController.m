@@ -29,7 +29,9 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
-	self.domainField.text = [Settings domain];
+    [NSURL URLWithString:[Settings domain]];
+
+    self.domainField.text = [[[NSURL URLWithString:[Settings domain]] resourceSpecifier]stringByReplacingOccurrencesOfString:@"//" withString:@""];
     self.emailField.text = [Settings login];
     UIColor *borderColor = [UIColor colorWithWhite:243/255.0f alpha:1.0f];
     
@@ -100,35 +102,72 @@
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
-    NSURL * url = [NSURL URLWithString:self.domainField.text];
-    NSString *scheme = [url scheme];
-    NSString *domain = [NSString stringWithFormat:@"%@%@",scheme ? @"" : @"http://",self.domainField.text];
-	[Settings setDomain:domain];
-	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
+    
+    if (self.domainField.text.length == 0) {
+        NSError *error;
+        NSString * text = NSLocalizedString(@"Host field should not be empty. Please, enter the host url and try again", @"");
+        if ([error localizedDescription])
+        {
+            text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
+            BFLog(@"email error - > %@",text);
+        }
+        UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+        a.delegate = self;
+        [a show];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-		if (authorized)
-		{
-            [Settings setLogin:self.emailField.text];
-            [Settings setPassword:self.passwordField.text];
-			[self dismissViewControllerAnimated:YES completion:^(){
-                [self.delegate userWasSignedIn];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-			}];
-		}
-		else
-		{
-            NSLog(@"%@",error);
-            NSString * text = NSLocalizedString(@"The e-mail or password you entered is incorrect", @"");
+        return;
+    }
+    
+	[Settings setDomain:self.domainField.text];
+    
+    [[SessionProvider sharedManager] checkSSLConnection:^(NSString *domain) {
+        NSLog(@"domain is -> %@", domain);
+        if(domain && domain.length > 0){
+            [Settings setDomain:domain];
+            [[SessionProvider sharedManager] authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                if (authorized)
+                {
+                    [Settings setLogin:self.emailField.text];
+                    [Settings setPassword:self.passwordField.text];
+                    [self dismissViewControllerAnimated:YES completion:^(){
+                        [self.delegate userWasSignedIn];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
+                    }];
+                }
+                else
+                {
+                    NSLog(@"%@",error);
+                    NSString * text = NSLocalizedString(@"The e-mail or password you entered is incorrect", @"");
+                    if ([error localizedDescription])
+                    {
+                        text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
+                        BFLog(@"login error - > %@",text);
+                    }
+                    UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+                    a.delegate = self;
+                    [a show];
+                }
+            }];
+
+        }else{
+            NSError *error;
+            NSString * text = NSLocalizedString(@"The host is not responding. Try connecting again later", @"");
             if ([error localizedDescription])
             {
-                text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
-                BFLog(@"login error - > %@",text);
+                text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
+                BFLog(@"email error - > %@",text);
             }
-			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
+            UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
             a.delegate = self;
-			[a show];
-		}
-	}];
+            [a show];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            return;
+
+        }
+    }];
+    
+    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

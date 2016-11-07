@@ -7,8 +7,8 @@
 //
 
 #import "ARootViewController.h"
-//#import "ConnectionProvider.h"
 #import "Constants.h"
+#import "UPDFilesViewController.h"
 
 @interface ARootViewController ()
 {
@@ -27,7 +27,7 @@
     [super viewDidLoad];
     [self.segmentedCotnroller addTarget:self action:@selector(onSegmentedControlTap:) forControlEvents:UIControlEventValueChanged];
     [self showOnlineButtons];
-
+    [self.childViewControllers makeObjectsPerformSelector:@selector(viewDidLoad)];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOfflineButtons) name:CPNotificationConnectionLost object:nil];
     
     // Do any additional setup after loading the view.
@@ -80,6 +80,15 @@
         self.containerPerson.alpha = 1.0f;
         self.containerCorporate.alpha = 0.0f;
         self.containerDownloads.alpha = 0.0f;
+        
+        NSArray *arr = self.childViewControllers;
+        for (id vc in arr) {
+            if ([vc isKindOfClass:[UPDFilesViewController class]]) {
+                if (![(UPDFilesViewController *)vc isCorporate]) {
+                    [(UPDFilesViewController *)vc updateView];
+                }
+            }
+        }
     }];
 }
 
@@ -88,6 +97,15 @@
         self.containerPerson.alpha = 0.0f;
         self.containerCorporate.alpha = 1.0f;
         self.containerDownloads.alpha = 0.0f;
+        
+        NSArray *arr = self.childViewControllers;
+        for (id vc in arr) {
+            if ([vc isKindOfClass:[UPDFilesViewController class]]) {
+                if ([(UPDFilesViewController *)vc isCorporate]) {
+                    [(UPDFilesViewController *)vc updateView];
+                }
+            }
+        }
     }];
 }
 
@@ -106,9 +124,9 @@
         self.containerCorporate.alpha = 0.0f;
         self.containerDownloads.alpha = 0.0f;
     }
-//    if([segue.identifier isEqualToString:@"corp_embed"]){
-//        
-//    }
+    if([segue.identifier isEqualToString:@"corp_embed"]){
+        
+    }
     if([segue.identifier isEqualToString:@"downloads_embed"]){
         
     }

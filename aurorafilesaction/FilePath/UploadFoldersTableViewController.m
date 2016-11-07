@@ -158,7 +158,7 @@
 {
     [super viewDidAppear:animated];
     
-    [SessionProvider checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;

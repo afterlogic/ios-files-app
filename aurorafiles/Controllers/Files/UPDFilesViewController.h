@@ -24,4 +24,6 @@
 - (IBAction)signOut:(id)sender;
 - (IBAction)uploadAction:(id)sender;
 
+- (void)updateView;
+
 @end
