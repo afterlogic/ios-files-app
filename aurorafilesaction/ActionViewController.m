@@ -89,25 +89,29 @@
     [super viewDidLoad];
     BFLog(@"EXTENSION STARTED");
     
-    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeIndeterminate;
-    hud.label.text = NSLocalizedString(@"Check connection...", @"");
+    self.uploadPathContainer.hidden = YES;
+    
+    MBProgressHUD * connectionHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    connectionHud.mode = MBProgressHUDModeIndeterminate;
+    connectionHud.label.text = NSLocalizedString(@"Check connection...", @"");
     
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [url scheme];
     if (scheme) {
         [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
-        [hud hideAnimated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            [connectionHud hideAnimated:YES];
+        });
     }else{
         [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
-            [hud hideAnimated:YES];
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [connectionHud hideAnimated:YES];
+            });
             if(domain && domain.length > 0){
                 [Settings setDomain:domain];
                 [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
             }else{
-                self.uploadButton.enabled = NO;
-                [self.uploadButton setTitle:@""];
-                [self.userLoggedOutView setHidden:NO];
+                [self hideLogoutView:NO];
                 [self hideContainers:YES];
             }
         }];
@@ -119,9 +123,7 @@
     NSString *scheme = [url scheme];
     if (isP8){
         if (![Settings authToken] || !scheme) {
-            self.uploadButton.enabled = NO;
-            [self.uploadButton setTitle:@""];
-            [self.userLoggedOutView setHidden:NO];
+            [self hideLogoutView:NO];
             [self hideContainers:YES];
         }else{
             [self hideContainers:NO];
@@ -131,9 +133,7 @@
         }
     }else{
         if (![Settings token] || !scheme) {
-            self.uploadButton.enabled = NO;
-            [self.uploadButton setTitle:@""];
-            [self.userLoggedOutView setHidden:NO];
+            [self hideLogoutView:NO];
             [self hideContainers:YES];
         }else{
             [self hideContainers:NO];
@@ -149,6 +149,12 @@
     self.galleryContainer.hidden = hide;
     self.previewContainer.hidden = hide;
     self.uploadPathContainer.hidden = hide;
+}
+
+-(void)hideLogoutView:(BOOL) hide{
+    self.uploadButton.enabled = !hide;
+    [self.uploadButton setTitle:@""];
+    [self.userLoggedOutView setHidden:hide];
 }
 
 -(void)setupForUpload{
