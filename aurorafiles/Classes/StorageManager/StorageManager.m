@@ -507,4 +507,21 @@
     }}];
     
 }
+
+#pragma mark - Remove Files
+
+- (void)removeSavedFilesForItem:(Folder *)item
+{
+    NSString *filePath = [[ApiP8 filesModule]getExistedFile:item];
+//    NSString *fileThumb = [[ApiP8 filesModule]getExistedThumbnailForFile:item];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        [fileManager removeItemAtPath:filePath error:NULL];
+    }
+//    if ([fileManager fileExistsAtPath:fileThumb]) {
+//        [fileManager removeItemAtPath:fileThumb error:NULL];
+//    }
+}
+
+
 @end

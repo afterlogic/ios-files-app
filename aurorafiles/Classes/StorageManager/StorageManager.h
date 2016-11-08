@@ -25,4 +25,5 @@
 - (void)saveLastUsedFolder:(Folder *)folder;
 - (Folder *)getLastUsedFolder;
 - (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
+- (void)removeSavedFilesForItem:(Folder *)item;
 @end
