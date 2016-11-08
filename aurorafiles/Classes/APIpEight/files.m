@@ -103,6 +103,12 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                 NSDictionary * module = [json objectForKey:@"Result"];
                 if ([module isKindOfClass:[NSNumber class]]) {
                     items = @[];
+                }else if([[module objectForKey:@"Items"] isKindOfClass:[NSDictionary class]]){
+                    NSMutableArray *itemsTmp = [NSMutableArray new];
+                    for (NSString *key in [module objectForKey:@"Items"]) {
+                        [itemsTmp addObject:[[module objectForKey:@"Items"] objectForKey:key]];
+                    }
+                    items = itemsTmp.copy;
                 }else{
                     items = [[module objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [module objectForKey:@"Items"] : @[];
                 }
@@ -240,13 +246,13 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }];
 }
 
-- (void)getFileThumbnail:(NSString *)folderName type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler{
+- (void)getFileThumbnail:(Folder *)folder type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler{
     NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileThumbail,
                                                                     @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
-                                                                                    @"Name":folderName}}];
+                                                                                    @"Name":folder.name}}];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -266,7 +272,11 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                         thumbnail = [json valueForKey:@"Result"];
                         NSData *data = [[NSData alloc]initWithBase64EncodedString:thumbnail options:0];
                         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                        path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"thumb_%@",folderName]];
+                        
+                        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+                        NSString *name = [NSString stringWithFormat:@"thumb_%@_%@",folderParentPath,folder.name];
+                        
+                        path = [[paths objectAtIndex:0] stringByAppendingPathComponent:name];
                         [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
                     }
                 }
@@ -291,7 +301,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }];
     
     [manager.operationQueue addOperation:operation];
-    [operationsQueue setObject:operation forKey:folderName];
+    [operationsQueue setObject:operation forKey:folder.name];
 
 }
 
@@ -564,8 +574,9 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     NSURLSessionDownloadTask *downloadTask = [downloadManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         //Getting the path of the document directory
         NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-        NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:folder.name];
-        //If we already have a video file saved, remove it from the phone
+        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+        NSString *name = [NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name];
+        NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:name];
         [self removeFileAtPath:fullURL];
         return fullURL;
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
@@ -591,7 +602,9 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     NSString *filePath = nil;
     NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:folder.name];
+    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    NSString *name = [NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:name];
     if ([fileManager fileExistsAtPath:fullURL.path]) {
         filePath =  fullURL.path;
     }
@@ -602,9 +615,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     NSString *filePath = nil;
     NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[NSString stringWithFormat:@"thumb_%@",folder.name]];
+    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    NSString *name = [NSString stringWithFormat:@"thumb_%@_%@",folderParentPath,folder.name];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:name];
     if ([fileManager fileExistsAtPath:fullURL.path]) {
-        //        [fileManager removeItemAtPath:fullURL error:NULL];
         filePath =  fullURL.path;
     }
     return filePath;

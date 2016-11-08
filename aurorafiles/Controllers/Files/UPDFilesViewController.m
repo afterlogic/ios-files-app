@@ -337,15 +337,22 @@
     if ([segue.identifier isEqualToString:@"OpenFileSegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        
-        NSString * viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
         FileDetailViewController * vc = [segue destinationViewController];
-        if (object.isDownloaded.boolValue)
-        {
-            viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+        NSString *viewLink = nil;
+        if ([[Settings version]isEqualToString:@"P8"]) {
+            vc.isP8 = YES;
+        }else{
+            viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
+            if (object.isDownloaded.boolValue)
+            {
+                viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+            }
+            vc.isP8 = NO;
         }
         vc.viewLink = viewLink;
         vc.object = object;
+        vc.type = self.type;
+        
 
     }
     if ([segue.identifier isEqualToString:@"OpenFileGallerySegue"])
@@ -530,8 +537,21 @@
     
     [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
     [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
+    if (self.isP8) {
+        [[ApiP8 filesModule]getFileView:folder type:self.type withProgress:^(float progress) {
+            
+        } withCompletion:^(NSString *thumbnail) {
+            folder.content = thumbnail;
+            if ([folder.thumb boolValue]) {
+                [[ApiP8 filesModule]getFileThumbnail:folder type:self.type path:folder.parentPath withCompletion:^(NSString *thumbnail) {
+                    folder.thumbnailLink = thumbnail;
+                }];
+            }
+            
+        }];
+    }
     
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
     NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
     NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];

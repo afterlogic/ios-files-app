@@ -13,8 +13,13 @@
 #import "UIImage+Aurora.h"
 #import "Settings.h"
 #import "ApiP8.h"
+#import "StorageManager.h"
+#import "MBProgressHUD.h"
 
-@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>
+
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>{
+    MBProgressHUD *hud;
+}
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
@@ -51,6 +56,10 @@
 {
     [super viewDidLoad];
     self.webView.alpha = 0;
+    
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeDeterminate;
+    
     UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
     zoomOn.numberOfTapsRequired = 2;
     zoomOn.numberOfTouchesRequired = 1;
@@ -61,22 +70,31 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-//        if (self.object.urlScheme && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://",self.object.urlScheme]]])
-//        {
-//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",self.object.urlScheme,self.object.linkUrl]]];
-//            
-//            return;
-//        }
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
         return;
         
     }
     
-    NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    if (self.isP8 && !self.viewLink) {
+        [[ApiP8 filesModule] getFileView:self.object type:self.type withProgress:^(float progress) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                hud.progress = progress;
+                NSLog(@"%@ progress -> %f",self.object.name, progress);
+            });
+        } withCompletion:^(NSString *thumbnail) {
+            NSURL *url = [NSURL URLWithString:[thumbnail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+            self.webView.delegate = self;
+            [self.webView loadRequest:request];
+            [hud hideAnimated:YES];
+        }];
         
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-    self.webView.delegate = self;
-    [self.webView loadRequest:request];
+    }else{
+        NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+        self.webView.delegate = self;
+        [self.webView loadRequest:request];
+    }
 
     self.title = self.object.name;
     

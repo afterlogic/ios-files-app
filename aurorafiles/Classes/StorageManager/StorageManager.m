@@ -244,7 +244,7 @@
         context = self.managedObjectContext;
     }
     [context performBlockAndWait:^ {
-        [[ApiP8 filesModule]getFileThumbnail:file.name type:type path:[pathArr componentsJoinedByString:@"/"] withCompletion:^(NSString *thumbnail) {
+        [[ApiP8 filesModule]getFileThumbnail:file type:type path:[pathArr componentsJoinedByString:@"/"] withCompletion:^(NSString *thumbnail) {
             if (thumbnail) {
                 NSError * error = nil;
                 NSData *data;

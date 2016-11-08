@@ -17,7 +17,7 @@ typedef void (^UploadProgressBlock)(float progress);
 //- (void)getUserFilestorageQoutaWithCompletion:(void(^)(NSString *publicID, NSError *error))handler;
 
 - (void)getThumbnailsForFiles:(NSArray <Folder *>*)files withCompletion:(void(^)(bool success))handler;
-- (void)getFileThumbnail:(NSString *)folderName type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler;
+- (void)getFileThumbnail:(Folder *)folder type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler;
 - (void)stopFileThumb:(NSString *)folderName;
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler;
