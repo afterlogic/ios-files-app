@@ -38,25 +38,45 @@
     folders = [NSMutableArray new];
     [[API sharedInstance]cancelAllOperations];
     [ApiP8 cancelAllOperations];
-    self.savedFolder = [[StorageManager sharedManager]getLastUsedFolder];
-    if (self.savedFolder) {
-        [self generateViewForFolder:self.savedFolder];
-    }
     [self.tabBarController.viewControllers makeObjectsPerformSelector:@selector(view)];
-    if (self.savedFolder) {
-        self.currentFolderController = (UploadFoldersTableViewController *)[self.tabBarController.viewControllers objectAtIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
-        self.selectedFolderPath = self.savedFolder.fullpath;
-        self.currentFolderController.isCorporate = [self.savedFolder.type isEqual:@"corporate"];
-        self.currentFolderController.controllersStack = self.views;
-        if (self.savedFolder) {
-            [self.tabBarController setSelectedIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
+    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(Folder *result) {
+        if (result) {
+            self.savedFolder = result;
+            [self generateViewForFolder:self.savedFolder];
+            self.currentFolderController = (UploadFoldersTableViewController *)[self.tabBarController.viewControllers objectAtIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
+            self.selectedFolderPath = self.savedFolder.fullpath;
+            self.currentFolderController.isCorporate = [self.savedFolder.type isEqual:@"corporate"];
+            self.currentFolderController.controllersStack = self.views;
+            if (self.savedFolder) {
+                [self.tabBarController setSelectedIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
+            }
+
+        }else{
+            self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
+            self.currentFolderController.delegate = self;
+            self.selectedFolderPath = @"";
+            self.selectedRootPath = self.currentFolderController.type;
         }
-    }else{
-        self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
-        self.currentFolderController.delegate = self;
-        self.selectedFolderPath = @"";
-        self.selectedRootPath = self.currentFolderController.type;
-    }
+    }];
+    
+//    if (self.savedFolder) {
+//        [self generateViewForFolder:self.savedFolder];
+//    }
+//    [self.tabBarController.viewControllers makeObjectsPerformSelector:@selector(view)];
+//    if (self.savedFolder) {
+//        self.currentFolderController = (UploadFoldersTableViewController *)[self.tabBarController.viewControllers objectAtIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
+//        self.selectedFolderPath = self.savedFolder.fullpath;
+//        self.currentFolderController.isCorporate = [self.savedFolder.type isEqual:@"corporate"];
+//        self.currentFolderController.controllersStack = self.views;
+//        if (self.savedFolder) {
+//            [self.tabBarController setSelectedIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
+//        }
+//    }else{
+//        self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
+//        self.currentFolderController.delegate = self;
+//        self.selectedFolderPath = @"";
+//        self.selectedRootPath = self.currentFolderController.type;
+//    }
 
 }
 

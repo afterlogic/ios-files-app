@@ -12,6 +12,7 @@
 #import "Settings.h"
 #import "ApiP8.h"
 #import "API.h"
+#import <MagicalRecord/MagicalRecord.h>
 
 @interface FileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
 {
@@ -186,27 +187,13 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 
                                                                  Folder * file = [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-                                                                 if (!file)
-                                                                 {
-                                                                     return ;
-                                                                 }
-                                                                 NSString * oldName = file.name;
-                                                                 
-                                                                 file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
-                                                                 self.title = file.name;
-                                                                 
-                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:file.parentPath ? file.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(BOOL success) {
-                                                                         if (success) {
-                                                                             [file.managedObjectContext save:nil];
-                                                                         }
-                                                                     }];
-                                                                 }else{
-                                                                     [[API sharedInstance] renameFolderFromName:oldName toName:[self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]] isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                         [file.managedObjectContext save:nil];
-                                                                     }];
-                                                                 }
+                                                                 [[StorageManager sharedManager]renameFile:file toNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                     if (updatedFile) {
+                                                                         self.title = updatedFile.name;
+                                                                     }
+                                                                 }];
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){

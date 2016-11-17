@@ -360,11 +360,11 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 
 }
 ///
-- (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(BOOL)corporate completion:(void (^)(NSDictionary *result))handler{
+- (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(NSDictionary *result))handler{
     NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileInfo,
                                                                     @"AuthToken":[Settings authToken],
-                                                                    @"Parameters":@{@"Type":corporate ? @"corporate" : @"personal",
+                                                                    @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name,
                                                                                     @"UserID":[Settings currentAccount]}}];

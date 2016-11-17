@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString*)urlScheme;
 - (NSString*)validContentType;
 - (NSURL*)downloadURL;
+- (NSDictionary *)folderMOC;
 @end
 
 NS_ASSUME_NONNULL_END

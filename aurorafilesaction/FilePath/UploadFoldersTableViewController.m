@@ -631,7 +631,6 @@
         }else{
             [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
-                    
                     [self.tableView reloadData];
                 }];
             }];
@@ -707,34 +706,19 @@
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  __weak typeof (self)weakSelf = self;
-                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL result) {
-                                                                         if (result) {
-                                                                             [self updateFiles:^(){
-                                                                                 [self.tableView reloadData];
-                                                                                 __strong typeof(self)self = weakSelf;
-                                                                                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
-                                                                                 NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
-                                                                                 NSLog(@"%@", filteredArray);
-                                                                                 self.folderToNavigate = [filteredArray lastObject];
-                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                             }];                                                                      }
-                                                                     }];
-                                                                 }else{
-                                                                 [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
-                                                                     BFLog(@"%@",result);
-                                                                     [self updateFiles:^(){
-                                                                         [self.tableView reloadData];
-                                                                          __strong typeof(self)self = weakSelf;
-                                                                         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
-                                                                         NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
-                                                                         NSLog(@"%@", filteredArray);
-                                                                         self.folderToNavigate = [filteredArray lastObject];
-                                                                         [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                     }];
+                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                                     if (success) {
+                                                                         [self updateFiles:^(){
+                                                                             [self.tableView reloadData];
+                                                                             __strong typeof(self)self = weakSelf;
+                                                                             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
+                                                                             NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
+                                                                             NSLog(@"%@", filteredArray);
+                                                                             self.folderToNavigate = [filteredArray lastObject];
+                                                                             [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+                                                                         }];
+                                                                     }
                                                                  }];
-                                                                 }
-                                                                 
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){

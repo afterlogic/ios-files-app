@@ -46,7 +46,7 @@
     mapping.primaryKey = @"name";
     
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
-    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+//    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
     [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
@@ -114,7 +114,7 @@
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     
     
-    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+//    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
 
     
 
@@ -140,7 +140,7 @@
     mapping.primaryKey = @"name";
     
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
-    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+//    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
     [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
@@ -260,5 +260,8 @@
     return NO;
 }
 
+-(NSDictionary *)folderMOC{
+    return [FEMSerializer serializeObject:self usingMapping:self.isP8 ? [Folder P8DefaultMapping] : [Folder defaultMapping]];
+}
 
 @end

@@ -24,6 +24,7 @@
 #import "Constants.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "CRMediaPickerController.h"
+#import <MagicalRecord/MagicalRecord.h>
 
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>{
     UILabel *noDataLabel;
@@ -42,6 +43,7 @@
 @property (strong, nonatomic) CRMediaPickerController *pickerController;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (strong, nonatomic) NSDictionary * folderMOC;
 @end
 
 @implementation UPDFilesViewController
@@ -89,7 +91,6 @@
     //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
-        
         return [url absoluteString];
     }];
     
@@ -128,9 +129,10 @@
 - (void)setFolder:(Folder *)folder
 {
     _folder = folder;
-    if (folder)
+    if (_folder)
     {
-        self.title = folder.name;
+        self.title = _folder.name;
+        self.folderMOC = [_folder folderMOC];
     }
 }
 
@@ -162,6 +164,9 @@
     }
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
+    [self updateFiles:^{
+        [self reloadTableData];
+    }];
     
 }
 
@@ -443,8 +448,8 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSLog(@"cell object -> %@",object.name);
+    NSArray * objects = [self.fetchedResultsController fetchedObjects];
+    Folder * object = [objects objectAtIndex:indexPath.row];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
     cell.delegate = self;
@@ -467,15 +472,15 @@
 }
 
 -(void)signOut{
-    [Settings setCurrentAccount:nil];
-    [Settings setToken:nil];
-    [Settings setPassword:nil];
     
     [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
         self.isP8 = isP8;
         if (isP8) {
             [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
                 if (succsess) {
+                    [Settings setCurrentAccount:nil];
+                    [Settings setToken:nil];
+                    [Settings setPassword:nil];
                     SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
                     signIn.delegate = self;
                     [self presentViewController:signIn animated:YES completion:^(){
@@ -484,14 +489,17 @@
                 }
             }];
         }else{
-            if (!authorised)
-            {
+//            if (authorised)
+//            {
+                [Settings setCurrentAccount:nil];
+                [Settings setToken:nil];
+                [Settings setPassword:nil];
                 SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
                 signIn.delegate = self;
                 [self presentViewController:signIn animated:YES completion:^(){
                     
                 }];
-            }
+//            }
         }
     }];
 }
@@ -761,6 +769,29 @@
 {
     [self.tableView reloadData];
 }
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath{
+    if ([anObject isKindOfClass:[Folder class]]) {
+        Folder *fold = anObject;
+        switch (type) {
+            case 1:
+                NSLog(@"insert fold name is -> %@",fold.name);
+                break;
+            case 2:
+                NSLog(@"deleted fold name is -> %@",fold.name);
+                break;
+            case 3:
+                
+                break;
+            case 4:
+                
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
 #pragma mark More Actions
 
 
@@ -779,7 +810,7 @@
                                                               
                                                           }];
     
-    self.folderToOperate = self.folder;
+    self.folderToOperate = _folder;
     [alert addAction:[self createFolderAction]];
     
     if (self.folder)
@@ -880,13 +911,13 @@
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
-        object.wasDeleted = @YES;
-        [self.managedObjectContext save:nil];
+//        object.wasDeleted = @YES;
+        [[StorageManager sharedManager]deleteItem:object];
+//        [self.managedObjectContext save:nil];
         if ([[Settings version] isEqualToString:@"P8"]) {
             [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     [self updateFiles:^(){
-                        
                         [self.tableView reloadData];
                     }];
                 }
@@ -894,7 +925,6 @@
         }else{
             [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
-                    
                     [self.tableView reloadData];
                 }];
             }];
@@ -912,12 +942,12 @@
                                                              UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField){
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
-                                                                 textField.text = self.folderToOperate.name;
+                                                                 textField.text = _folderToOperate.name;
                                                                  self.folderName = textField;
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 if (!self.folderToOperate)
+                                                                 if (!_folderToOperate)
                                                                  {
                                                                      return ;
                                                                  }
@@ -925,19 +955,22 @@
                                                                  _fetchedResultsController = nil;
                                                                  
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                                 [[StorageManager sharedManager] renameFolder:self.folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
-                                                                     self.folderToOperate = folder;
-                                                                     self.folder = folder;
-                                                                     self.title = folder.name;
-                                                                     NSError * error = nil;
-                                                                     [self.fetchedResultsController performFetch:&error];
-                                                                     if (error)
-                                                                     {
-                                                                         NSLog(@"%@",[error userInfo]);
+                                                                 
+                                                                 [[StorageManager sharedManager] renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                                     if (folder && !folder.isFault) {
+                                                                         self.folderToOperate = folder;
+                                                                         self.folder = folder;
+                                                                         self.title = folder.name;
+                                                                         NSError * error = nil;
+                                                                         [self.fetchedResultsController performFetch:&error];
+                                                                         if (error)
+                                                                         {
+                                                                             NSLog(@"%@",[error userInfo]);
+                                                                         }
+
                                                                      }
-                                                                     [self updateFiles:^(){
+                                                                    [self updateFiles:^(){
                                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         
                                                                          [self.tableView reloadData];
                                                                      }];
                                                                     
@@ -970,29 +1003,18 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL result) {
-                                                                         if (result) {
-                                                                             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                                             [self updateFiles:^(){
-                                                                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                                 [self.tableView reloadData];
-                                                                             }];
-
-                                                                         }
-                                                                     }];
-                                                                 }else{
-                                                                     [[API sharedInstance] createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath ? self.folder.fullpath : @"" completion:^(NSDictionary * result){
-                                                                         NSLog(@"%@",result);
+                                                                 
+                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                                     if (success) {
                                                                          [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                          [self updateFiles:^(){
                                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                             
                                                                              [self.tableView reloadData];
                                                                          }];
-                                                                     }];
-                                                                 }
-                                                             }];
+                                                                     }
+                                                                 }];
+                                                                 
+                                                            }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  

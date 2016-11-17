@@ -100,4 +100,13 @@
     return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
 }
 
++ (void)saveLastUsedFolder:(NSDictionary *)folder{
+    [[Settings sharedDefaults]setValue:folder forKey:@"lastUsedFolder"];
+    [[Settings sharedDefaults]synchronize];
+}
+
++(NSDictionary *)getLastUsedFolder{
+    return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
+}
+
 @end

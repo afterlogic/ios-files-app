@@ -11,6 +11,7 @@
 #import "SessionProvider.h"
 #import "ApiP8.h"
 #import "Settings.h"
+#import <MagicalRecord/MagicalRecord.h>
 @interface StorageManager()
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -94,10 +95,16 @@
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
     }
-    
     return _persistentStoreCoordinator;
 }
 
+#pragma mark - Setup CoreData Stack
+
+- (void)initCoreData{
+    _managedObjectModel = [self managedObjectModel];
+    _persistentStoreCoordinator = [self persistentStoreCoordinator];
+    _managedObjectContext = [self managedObjectContext];
+}
 
 - (NSManagedObjectContext *)managedObjectContext {
     // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
@@ -113,8 +120,7 @@
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     return _managedObjectContext;
 }
-
-
+    
 - (void)saveContext
 {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
@@ -126,115 +132,286 @@
         }
     }
 }
+    
+- (Folder *)objectWithURI:(NSURL *)uri
+{
+    NSManagedObjectID *objectID = [[self persistentStoreCoordinator] managedObjectIDForURIRepresentation:uri];
+    
+    if (!objectID)
+    {
+        return nil;
+    }
+    
+    Folder *objectForID = [self.managedObjectContext objectWithID:objectID];
+    if (![objectForID isFault])
+    {
+        return objectForID;
+    }
+    
+//    NSFetchRequest *request =[[NSFetchRequest alloc] init];
+//    [request setEntity:[objectID entity]];
+    
+    // Equivalent to
+//     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF = %@", objectForID];
+    NSPredicate *predicate =[NSComparisonPredicate
+     predicateWithLeftExpression:
+     [NSExpression expressionForEvaluatedObject]
+     rightExpression:
+     [NSExpression expressionForConstantValue:objectForID]
+     modifier:NSDirectPredicateModifier
+     type:NSEqualToPredicateOperatorType
+     options:0];
+//    [request setPredicate:predicate];
+    
+    NSArray *results = [Folder MR_findAllWithPredicate:predicate];
+    if ([results count] > 0 )
+    {
+        return [results objectAtIndex:0];
+    }
+    
+    return nil;
+}
+
+#pragma mark -
+- (void)renameFile:(Folder *)file toNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler
+{
+    NSString * oldName = file.name;
+    NSString * type = file.type;
+    NSString * parentPath = file.parentPath ? file.parentPath : @"";
+    bool isLink = file.isLink.boolValue;
+    NSString *fileNewName;
+    NSString * ex = [oldName pathExtension];
+    if ([ex length])
+    {
+        fileNewName = [newName stringByAppendingPathExtension:[oldName pathExtension]];
+    }
+    else
+    {
+        fileNewName = newName;
+    }
+
+    if (!file)
+    {
+        complitionHandler(nil);
+        return ;
+    }
+    
+    if ([[Settings version] isEqualToString:@"P8"]) {
+        [[ApiP8 filesModule]renameFolderFromName:oldName toName:fileNewName type:type atPath:parentPath isLink:isLink completion:^(BOOL success) {
+            if (success) {
+                [self.managedObjectContext performBlockAndWait:^{
+                    file.name = fileNewName;
+                    file.identifier = fileNewName;
+                    NSString *newFullPath = @"";
+                    NSMutableArray *path = [file.fullpath componentsSeparatedByString:@"/"].mutableCopy;
+                    [path replaceObjectAtIndex:[path indexOfObject:[path lastObject]] withObject:fileNewName];
+                    newFullPath = [path componentsJoinedByString:@"/"];
+                    file.fullpath = newFullPath;
+                    complitionHandler(file);
+                }];
+                NSError *error = [NSError new];
+                if ([self.managedObjectContext save:&error]) {
+                }
+            }else{
+                complitionHandler(nil);
+            }
+        }];
+    }else{
+        [[API sharedInstance] renameFolderFromName:oldName toName:fileNewName isCorporate:[type isEqualToString:@"corporate"] atPath:parentPath isLink:isLink completion:^(NSDictionary* handler) {
+            if ([[handler objectForKey:@"Result"]boolValue]) {
+                [self.managedObjectContext performBlockAndWait:^{
+                    file.name = fileNewName;
+                    file.identifier = fileNewName;
+                    NSString *newFullPath = @"";
+                    NSMutableArray *path = [file.fullpath componentsSeparatedByString:@"/"].mutableCopy;
+                    [path replaceObjectAtIndex:[path indexOfObject:[path lastObject]] withObject:fileNewName];
+                    newFullPath = [path componentsJoinedByString:@"/"];
+                    file.fullpath = newFullPath;
+                    complitionHandler(file);
+                }];
+                NSError *error = [NSError new];
+                if ([self.managedObjectContext save:&error]) {
+                }
+            }else{
+                complitionHandler(nil);
+            }
+        }];
+    }
+    
+}
 
 - (void)renameFolder:(Folder *) folder toNewName:(NSString *)newName withCompletion:(void (^)(Folder *))handler
 {
-    
+    if (folder.isFault) {
+        return;
+    }
     NSString * oldName = folder.name;
     NSString * oldPath = folder.fullpath;
     NSString * type = folder.type;
     NSString * parentPath = folder.parentPath;
-    folder.name = newName;
-    if ([[Settings version] isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule]renameFolderFromName:oldName toName:newName type:folder.type atPath:folder.parentPath ? folder.parentPath : @"" isLink:folder.isLink.boolValue  completion:^(BOOL success) {
-            if (success) {
-                NSManagedObjectContext * folderContext = folder.managedObjectContext;
-                NSFetchRequest *updatedFileRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-                [updatedFileRequest setSortDescriptors:@[title]];
-                updatedFileRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name = %@",folder.type, folder.parentPath,oldName];
-                NSError * error = nil;
-                NSArray * fetched = [folderContext executeFetchRequest:updatedFileRequest error:&error];
-                NSString *newFullPath = @"";
-                Folder *fold = [fetched lastObject];
-                fold.name = newName;
-                fold.identifier = newName;
-                NSMutableArray *path = [fold.fullpath componentsSeparatedByString:@"/"].mutableCopy;
-                [path replaceObjectAtIndex:[path indexOfObject:[path lastObject]] withObject:newName];
-                newFullPath = [path componentsJoinedByString:@"/"];
-                fold.fullpath = newFullPath;
-                
-                
-                NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-                [fetchRequest setSortDescriptors:@[title]];
-                fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
-                fetched = [folderContext executeFetchRequest:fetchRequest error:&error];
-                for(Folder * f in fetched)
-                {
-                    f.parentPath = newFullPath;
-                    NSLog(@"%@",f);
-                }
-
-
-                [folderContext save:&error];
-                if (error)
-                {
-                    NSLog(@"%@",[error userInfo]);
-                }
-                
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    if (handler) {
-                        handler(fold);
-                    }
-                });
-
-            }else{
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    if (handler) {
-                        handler(nil);
-                    }
-                });
-            }
-        }];
-    }else{
-        [[API sharedInstance] renameFolderFromName:oldName toName:newName isCorporate:[folder.type isEqualToString:@"corporate"] atPath:folder.parentPath ? folder.parentPath : @"" isLink:folder.isLink.boolValue  completion:^(NSDictionary* result) {
-            NSManagedObjectContext * folderContext = folder.managedObjectContext;
-            [folderContext deleteObject:folder];
-            NSError * error;
-            [folderContext save:&error];
-            if (error)
-            {
-                NSLog(@"%@",[error userInfo]);
-            }
-            [[API sharedInstance] getFolderInfoForName:newName path:parentPath ? parentPath : @"" type:type completion:^(NSDictionary * result) {
-                if ([[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
-                {
-                    NSManagedObjectContext* context = [self managedObjectContext];
-                    
-                    Folder * object = [FEMDeserializer objectFromRepresentation:[result objectForKey:@"Result"] mapping:[Folder renameMapping] context:context];
-                    NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-                    NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-                    [fetchRequest setSortDescriptors:@[title]];
-                    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
-                    NSError * error = nil;
-                    NSArray * fetched = [context executeFetchRequest:fetchRequest error:&error];
-                    for(Folder * f in fetched)
-                    {
-                        f.parentPath = object.fullpath;
-                        NSLog(@"%@",f);
-                    }
-                    [self saveContext];
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        if (handler) {
-                            handler(object);
+    BOOL isLink = folder.isLink.boolValue;
+    
+        if ([[Settings version] isEqualToString:@"P8"]) {
+            [[ApiP8 filesModule]renameFolderFromName:oldName toName:newName type:type atPath:parentPath ? parentPath : @"" isLink:isLink  completion:^(BOOL success) {
+                if (success) {
+                    [self.managedObjectContext performBlockAndWait:^{
+                        folder.name = newName;
+                        NSManagedObjectContext * folderContext = folder.managedObjectContext;
+                        NSFetchRequest *updatedFileRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+                        NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+                        [updatedFileRequest setSortDescriptors:@[title]];
+                        updatedFileRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name = %@",folder.type, folder.parentPath,oldName];
+                        NSError * error = nil;
+                        NSArray * fetched = [folderContext executeFetchRequest:updatedFileRequest error:&error];
+                        NSString *newFullPath = @"";
+                        Folder *fold = [fetched lastObject];
+                        fold.name = newName;
+                        fold.identifier = newName;
+                        NSMutableArray *path = [fold.fullpath componentsSeparatedByString:@"/"].mutableCopy;
+                        [path replaceObjectAtIndex:[path indexOfObject:[path lastObject]] withObject:newName];
+                        newFullPath = [path componentsJoinedByString:@"/"];
+                        fold.fullpath = newFullPath;
+                        
+                        
+                        NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+                        title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+                        [fetchRequest setSortDescriptors:@[title]];
+                        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
+                        fetched = [folderContext executeFetchRequest:fetchRequest error:&error];
+                        for(Folder * f in fetched)
+                        {
+                            f.parentPath = newFullPath;
+                            NSLog(@"%@",f);
                         }
-                    });
-                }
-                else
-                {
+                        if (error)
+                        {
+                            NSLog(@"%@",[error userInfo]);
+                        }
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            if (handler) {
+                                handler(fold);
+                            }
+                        });
+                    }];
+                    NSError *error = [NSError new];
+                    if ([self.managedObjectContext save:&error]) {
+                        
+                    }
+                }else{
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         if (handler) {
                             handler(nil);
                         }
                     });
                 }
-                
             }];
-            
+        }else{
+            [[API sharedInstance] renameFolderFromName:oldName toName:newName isCorporate:[type isEqualToString:@"corporate"] atPath:parentPath ? parentPath: @"" isLink:isLink  completion:^(NSDictionary* result) {
+                if ([[result objectForKey:@"Result"]boolValue]){
+                    [[API sharedInstance] getFolderInfoForName:newName path:parentPath ? parentPath : @"" type:type completion:^(NSDictionary * result) {
+                    if ([[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+                    {
+                        [self.managedObjectContext performBlockAndWait:^{
+                            folder.name = newName;
+                            NSManagedObjectContext* context = [self managedObjectContext];
+                            Folder * object = [FEMDeserializer objectFromRepresentation:[result objectForKey:@"Result"] mapping:[Folder renameMapping] context:context];
+                            NSFetchRequest * fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+                            NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+                            [fetchRequest setSortDescriptors:@[title]];
+                            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
+                            NSError * error = nil;
+                            NSArray * fetched = [context executeFetchRequest:fetchRequest error:&error];
+                            for(Folder * childFolder in fetched){
+                                childFolder.parentPath = object.fullpath;
+                            }
+                            [folder MR_deleteEntityInContext:context];
+//                            dispatch_async(dispatch_get_main_queue(), ^(){
+                            if (handler) {
+                                handler(object);
+                            }
+//                            });
+                        }];
+                        NSError *error = [NSError new];
+                        if ([self.managedObjectContext save:&error]) {
+                            NSLog(@"folder %@ renamed successfuly",oldName);
+                        }
+                    }
+                    else
+                    {
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            if (handler) {
+                                handler(nil);
+                            }
+                        });
+                    }
+                    
+                }];
+                }
+                else{
+                    if (handler) {
+                        handler(nil);
+                    }
+                }
+            }];
+        }
+}
+
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler{
+    if ([[Settings version] isEqualToString:@"P8"]) {
+        [[ApiP8 filesModule]createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL result) {
+            if (result) {
+                complitionHandler(YES);
+            }
+        }];
+    }else{
+        [[API sharedInstance] createFolderWithName:name isCorporate:corporate andPath:path ? path : @"" completion:^(NSDictionary * result){
+            if ([[result objectForKey:@"Result"]boolValue]) {
+                complitionHandler(YES);
+            }
+        }];
+    }
+
+}
+
+- (void)getItemInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(Folder *result))complitionHandler{
+    if ([[Settings version] isEqualToString:@"P8"]) {
+        [[ApiP8 filesModule]getFileInfoForName:name path:path corporate:type completion:^(NSDictionary *result) {
+            if(result){
+                Folder * existedItem = [self findObjectByItemRef:result];
+                if (!existedItem) {
+                    existedItem = [Folder MR_createEntity];
+                    existedItem = [FEMDeserializer fillObject:existedItem fromRepresentation:result mapping: [[Settings version] isEqualToString:@"P8"] ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
+                    existedItem.toRemove = [NSNumber numberWithBool:NO];
+                    existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+                    existedItem.parentPath = path;
+                }
+                complitionHandler(existedItem);
+            }
+        }];
+    }else{
+        [[SessionProvider sharedManager]authroizeEmail:[Settings domain] withPassword:[Settings password] completion:^(BOOL authorized, NSError *error) {
+                [[API sharedInstance] getFolderInfoForName:name path:path type:type completion:^(NSDictionary *result) {
+                    if (![[result valueForKey:@"Result"]boolValue]) {
+                        complitionHandler(nil);
+                    }else{
+                        Folder * existedItem = [self findObjectByItemRef:result];
+                        if (!existedItem) {
+                            existedItem = [Folder MR_createEntity];
+                            existedItem = [FEMDeserializer fillObject:existedItem fromRepresentation:result mapping: [[Settings version] isEqualToString:@"P8"] ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
+                            existedItem.toRemove = [NSNumber numberWithBool:NO];
+                            existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+                            existedItem.parentPath = path;
+                        }
+                        complitionHandler(existedItem);
+                    }
+                }];
+//            }
         }];
     }
 }
+
+#pragma mark -
 
 - (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(UIImage* thumbnail))handler{
     NSString * filepathPath = file ? file.fullpath : @"";
@@ -283,14 +460,13 @@
 - (void)updateFilesWithType:(NSString*)type forFolder:(Folder*)folder withCompletion:(void (^)())handler
 {
     NSString * folderPath = folder ? folder.fullpath : @"";
-    NSManagedObjectContext* context = self.managedObjectContext;
         [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-            if (isP8) {
-                if (authorised){
-                    NSString * path = folderPath;
-                    [context performBlockAndWait:^ {
-                        [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
-                        NSArray * filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
+            if (isP8 && authorised) {
+                NSString * path = folderPath;
+                [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+                    [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
+                        NSArray * filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:localContext isP8:isP8];
+                            [self removeChildDuplicatesForFolder:folder];
                         if (filesItems.count>0) {
                             [[ApiP8 filesModule]getThumbnailsForFiles:filesItems withCompletion:^(bool success) {
                                 if (success) {
@@ -304,8 +480,11 @@
                         }
                         handler();
                     }];
-                    }];
-                }
+                }completion:^(BOOL contextDidSave, NSError * _Nullable error) {
+                    if (!error && contextDidSave) {
+                        [self saveContext];
+                    };
+                }];
             }else{
                 if (authorised)
                 {
@@ -320,8 +499,12 @@
                         {
                             items = @[];
                         }
-                        
-                        [self saveItems:items forFolder:folder WithType:type usingContext:context isP8:isP8];
+                        [self.managedObjectContext performBlockAndWait:^{
+                            [self saveItems:items forFolder:folder WithType:type usingContext:self.managedObjectContext isP8:isP8];
+                            [self removeDuplicatesForItems:items];
+                            NSError *error = [NSError new];
+                            [self.managedObjectContext save:&error];
+                        }];
                         
                         dispatch_async(dispatch_get_main_queue(), ^(){
                             if (handler) {
@@ -338,7 +521,7 @@
 
 - (NSArray *)saveItems:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
     if (!context) {
-        context = self.managedObjectContext;
+        context = [[StorageManager sharedManager]managedObjectContext];
     }
     NSMutableArray * existItems = [NSMutableArray new];
     NSString * folderPath = folder ? folder.fullpath : @"";
@@ -346,22 +529,25 @@
     {
         NSError * error = nil;
         NSMutableArray * existIds = [[NSMutableArray alloc] init];
-//                NSMutableArray * existItems = [NSMutableArray new];
         for (NSDictionary * itemRef in items)
         {
-            Folder * childFolder = [FEMDeserializer objectFromRepresentation:itemRef mapping: isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-            [existIds addObject:childFolder.name];
-            childFolder.toRemove = [NSNumber numberWithBool:NO];
-            childFolder.isP8 = [NSNumber numberWithBool:isP8];
-            if (folder)
-            {
-                childFolder.parentPath = folderPath;
+            
+            Folder * existedItem = [self findObjectByItemRef:itemRef];
+            if (!existedItem || existedItem.isFault) {
+                existedItem = [Folder MR_createEntityInContext:context];
+                existedItem = [FEMDeserializer fillObject:existedItem fromRepresentation:itemRef mapping: isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
+                existedItem.toRemove = [NSNumber numberWithBool:NO];
+                existedItem.isP8 = [NSNumber numberWithBool:isP8];
+                if (folder)
+                {
+                    existedItem.parentPath = folderPath;
+                }
             }
-            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
-                    [existItems addObject:childFolder];
+            if ([existedItem.thumb boolValue] && ![existedItem.isFolder boolValue] && ![existedItem.isLink boolValue]) {
+                [existItems addObject:existedItem];
             }
+            [existIds addObject:existedItem.name];
         }
-        [self saveContext];
         
         NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
@@ -373,7 +559,7 @@
             if (!fold.isDownloaded.boolValue)
             {
                 [self deleteOldThumbsAndViews:fold];
-                [context deleteObject:[context objectWithID:fold.objectID]];
+                [fold MR_deleteEntityInContext:context];
             }
             else
             {
@@ -385,7 +571,6 @@
         {
             NSLog(@"%@",[error userInfo]);
         }
-        [self saveContext];
     }else{
         NSFetchRequest * fetchOldAudiosRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchOldAudiosRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
@@ -398,7 +583,7 @@
             if (!fold.isDownloaded.boolValue)
             {
                 [self deleteOldThumbsAndViews:fold];
-                [context deleteObject:[context objectWithID:fold.objectID]];
+                [fold MR_deleteEntityInContext:context];
             }
             else
             {
@@ -410,20 +595,17 @@
         {
             NSLog(@"%@",[error userInfo]);
         }
-        [self saveContext];
-
     }
     return existItems;
 }
 
 - (void)saveLastUsedFolder:(Folder *)folder{
-    NSManagedObjectContext* context = self.managedObjectContext;
-//    [context performBlock:^{
-        NSError * error = nil;
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        NSError *error = [NSError new];
         NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
         fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES"];
-        NSArray * lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
+        NSArray * lastUsedFolders = [localContext executeFetchRequest:fetchLastUsedFolder error:&error];
         for (Folder *item in lastUsedFolders) {
             item.isLastUsedUploadFolder = [NSNumber numberWithBool:NO];
         }
@@ -432,41 +614,120 @@
             folder.isLastUsedUploadFolder = [NSNumber numberWithBool:YES];
         }
         
-        if (error)
-        {
-            NSLog(@"last used path saved with error -> %@",[error userInfo]);
-        }
-        NSLog(@"last used path saved without error");
-        [self saveContext];
-//    }];
+        NSDictionary *folderDict = [FEMSerializer serializeObject:folder usingMapping: folder.isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
+        [Settings saveLastUsedFolder:folderDict];
+    }];
 }
 
-- (Folder *)getLastUsedFolder{
+- (void)getLastUsedFolderWithHandler:(void(^)(Folder *result))complition{
+    Folder *savedFolder;
     NSManagedObjectContext* context = self.managedObjectContext;
+    NSDictionary *savedFolderRef = [Settings getLastUsedFolder];
+    NSArray * lastUsedFolders;
+    if ([savedFolderRef isKindOfClass:[NSArray class]]) {
+        lastUsedFolders = @[];
+        complition (nil);
+    }
     NSError * error = nil;
     NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
     fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-    fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES"];
-    NSArray * lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
-    return [lastUsedFolders lastObject];
+    fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES AND name = %@ AND fullpath = %@",savedFolderRef[@"Name"],savedFolderRef[@"FullPath"]];
+    lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
+    NSString* parentPath = [self generateParentPath:savedFolderRef[@"FullPath"]];
+    if (lastUsedFolders.count == 0) {
+        [[StorageManager sharedManager]getItemInfoForName:savedFolderRef[@"Name"] path:parentPath corporate:savedFolderRef[@"Type"] completion:^(Folder *result) {
+            if(result){
+                complition(result);
+            }
+        }];
+    }else{
+        savedFolder = [lastUsedFolders lastObject];
+        complition(savedFolder);
+    }
 }
 
--(Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path{
+- (NSString *)generateParentPath:(NSString *)itemFullpath{
+    NSMutableArray *pathParts = [itemFullpath componentsSeparatedByString:@"/"].mutableCopy;
+    NSLog(@"%@",pathParts);
+    [pathParts removeObject:[pathParts lastObject]];
+    if (pathParts.count == 1) {
+        return [pathParts lastObject];
+    }
+    return [pathParts componentsJoinedByString:@"/"];
+}
+
+- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path{
     return [self getObjectWithName:name type:type fullPath:path isFolder:YES];
 }
 
-
--(Folder *)getObjectWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path isFolder:(BOOL) isFolder{
+- (Folder *)getObjectWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path isFolder:(BOOL) isFolder{
     NSManagedObjectContext* context = self.managedObjectContext;
    __block NSArray * items;
-//    [context performBlockAndWait:^{
-        NSError * error = nil;
-        NSFetchRequest * fetchItem = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-        fetchItem.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-        fetchItem.predicate = [NSPredicate predicateWithFormat:@"isFolder = %@ AND fullpath = %@ AND name = %@ AND type = %@",[NSNumber numberWithBool:isFolder],path,name,type];
-        items = [context executeFetchRequest:fetchItem error:&error];
-//    }];
+    NSError * error = nil;
+    NSFetchRequest * fetchItem = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+    fetchItem.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+    fetchItem.predicate = [NSPredicate predicateWithFormat:@"isFolder = %@ AND fullpath = %@ AND name = %@ AND type = %@",[NSNumber numberWithBool:isFolder],path,name,type];
+    items = [context executeFetchRequest:fetchItem error:&error];
     return [items lastObject];
+}
+
+- (Folder *)findObjectByItemRef:(NSDictionary *)itemRef{
+    NSFetchRequest *fReq = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+    fReq.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+    fReq.predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
+    NSError * error = nil;
+    NSMutableArray * result = [[[StorageManager sharedManager]managedObjectContext]executeFetchRequest:fReq error:&error].mutableCopy;
+    NSArray* cleanedResult  = [self removeDuplicatesFromOneItemFetch:result withParentPath:itemRef[@"Path"]];
+    return cleanedResult.lastObject;
+}
+
+-(void)removeDuplicatesForItems:(NSArray *)items{
+    for (NSDictionary *folder in items) {
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription
+                                       entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
+                                      initWithKey:@"isFolder" ascending:NO];
+        NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+        [fetchRequest setSortDescriptors:@[isFolder, title]];
+        
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND wasDeleted= NO",folder[@"Id"]];
+        NSError * error = nil;
+        NSMutableArray * result = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error].mutableCopy;
+        if (result.count > 1) {
+           result = [self removeDuplicatesFromOneItemFetch:result withParentPath:folder[@"Path"]].mutableCopy;
+        }
+        NSLog(@"%@",result);
+    }
+};
+
+-(NSArray *)removeDuplicatesFromOneItemFetch:(NSMutableArray *)fetchResult  withParentPath:(NSString *)parentPath{
+    [self.managedObjectContext performBlockAndWait:^{
+        Folder *originalFolder;
+        for (Folder *item in fetchResult) {
+            if ([item.parentPath isEqualToString:parentPath]) {
+                originalFolder = item;
+            }
+        }
+        for (Folder *item in fetchResult) {
+            if (![item isEqual:originalFolder]) {
+                [item MR_deleteEntityInContext:self.managedObjectContext];
+            }
+        }
+    }];
+    NSError * error = [NSError new];
+    [self.managedObjectContext save:&error];
+    return fetchResult;
+}
+
+- (void)deleteItem:(Folder *)item{
+    [self.managedObjectContext performBlockAndWait:^{
+        item.wasDeleted = @YES;
+    }];
+    NSError *error = [NSError new];
+    [self.managedObjectContext save:&error];
 }
 
 #pragma mark - Files Stack
@@ -485,7 +746,7 @@
     }
 }
 
-- (void) deleteAllObjects: (NSString *) entityDescription  {
+- (void)deleteAllObjects: (NSString *) entityDescription  {
     NSManagedObjectContext* context = self.managedObjectContext;
      [context performBlockAndWait:^ {
 
@@ -501,7 +762,8 @@
         [context deleteObject:managedObject];
         NSLog(@"%@ object deleted",entityDescription);
     }
-    [self saveContext];
+         [context save:&error];
+         [[StorageManager sharedManager]saveContext];
     if (error) {
         NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
     }}];
@@ -513,14 +775,10 @@
 - (void)removeSavedFilesForItem:(Folder *)item
 {
     NSString *filePath = [[ApiP8 filesModule]getExistedFile:item];
-//    NSString *fileThumb = [[ApiP8 filesModule]getExistedThumbnailForFile:item];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:NULL];
     }
-//    if ([fileManager fileExistsAtPath:fileThumb]) {
-//        [fileManager removeItemAtPath:fileThumb error:NULL];
-//    }
 }
 
 

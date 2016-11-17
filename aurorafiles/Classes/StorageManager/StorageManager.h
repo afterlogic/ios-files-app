@@ -16,14 +16,26 @@
 + (instancetype)sharedManager;
 
 @property (readonly, nonatomic, strong) NSManagedObjectContext * managedObjectContext;
+- (void)initCoreData;
+- (void)saveContext;
+
+- (void)renameFolder:(Folder*)folder toNewName:(NSString*)newName withCompletion:(void (^)(Folder*))handler;
+- (void)renameFile:(Folder *)file toNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler;
+- (void)getItemInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(Folder *result))complitionHandler;
 
 - (void)updateFilesWithType:(NSString*)type forFolder:(Folder*)folder withCompletion:(void (^)())handler;
-- (void)renameFolder:(Folder*)folder toNewName:(NSString*)newName withCompletion:(void (^)(Folder*))handler;
 - (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(UIImage* thumbnail))handler;
 - (void)stopGettingFileThumb:(NSString *)file;
 - (void)deleteAllObjects: (NSString *) entityDescription ;
+
 - (void)saveLastUsedFolder:(Folder *)folder;
-- (Folder *)getLastUsedFolder;
+- (void)getLastUsedFolderWithHandler:(void(^)(Folder *result))complition; 
+
 - (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
 - (void)removeSavedFilesForItem:(Folder *)item;
+- (void)deleteItem:(Folder *)item;
+
+-(void)removeChildDuplicatesForFolder:(Folder *)folder;
+
 @end

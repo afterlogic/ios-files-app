@@ -26,7 +26,9 @@
 #import "NSObject+PerformSelectorWithCallback.h"
 #import "NSString+transferedValues.h"
 #import "AFNetworking.h"
+#import "AFNetworkActivityLogger.h"
 #import "SessionProvider.h"
+#import "StorageManager.h"
 //#import
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
@@ -83,12 +85,14 @@
 -(void)loadView{
     [super loadView];
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
+    [[AFNetworkActivityLogger sharedLogger] startLogging];
+    [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
+    [[StorageManager sharedManager]initCoreData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     BFLog(@"EXTENSION STARTED");
-    
     self.uploadPathContainer.hidden = YES;
     
     MBProgressHUD * connectionHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

@@ -134,39 +134,12 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 Folder * file = self.object;
-                                                                 if (!file)
-                                                                 {
-                                                                     return ;
-                                                                 }
-                                                                 NSString * oldName = file.name;
-                                                                 NSString * ex = [oldName pathExtension];
-                                                                 if ([ex length])
-                                                                 {
-                                                                     file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     file.name = self.folderName.text;
-                                                                 }
-                                                                 NSLog(@"%@",file.name);
-                                                                 if ([[Settings version] isEqualToString:@"P8"]) {
-                                                                     [[ApiP8 filesModule]renameFolderFromName:oldName toName:file.name type:file.type atPath:file.parentPath isLink:self.object.isLink.boolValue completion:^(BOOL success) {
-                                                                         if (success) {
-                                                                             self.title = file.name;
-                                                                             self.object = file;
-                                                                             [file.managedObjectContext save:nil];
-                                                                         }
-                                                                     }];
-                                                                 }else{
-                                                                     [[API sharedInstance] renameFolderFromName:oldName toName:file.name isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.object.parentPath ? self.object.parentPath : @"" isLink:self.object.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                         self.title = file.name;
-                                                                         self.object = file;
-                                                                         [file.managedObjectContext save:nil];
-                                                                     }];
-                                                                 }
-
-                                                                 
+                                                                 [[StorageManager sharedManager]renameFile:self.object toNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                     if (updatedFile) {
+                                                                         self.title = updatedFile.name;
+                                                                         self.object = updatedFile;
+                                                                     }
+                                                                 }];
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){

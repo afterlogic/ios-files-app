@@ -70,6 +70,10 @@ static NSString *folderInfo         = @"FileInfo";
         manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
+        NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+        for (NSHTTPCookie *cookie in [storage cookies]) {
+            [storage deleteCookie:cookie];
+        }
     }
     return self;
 }

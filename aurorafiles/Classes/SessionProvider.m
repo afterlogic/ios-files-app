@@ -44,8 +44,6 @@ static int const kNUMBER_OF_RETRIES = 6;
 
 - (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler
 {
-
-
             if ([[Settings version] isEqualToString:@"P8"]) {
                 [Settings setLastLoginServerVersion:@"P8"];
                 NSLog(@"host version is 8 or above");
@@ -87,7 +85,7 @@ static int const kNUMBER_OF_RETRIES = 6;
                         {
                             if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
                                 NSNumber *errorCode = data[@"ErrorCode"];
-                                if (errorCode.longValue == 101) {
+                                if (errorCode.intValue == 101 || errorCode.intValue == 103) {
                                     NSString * email = [Settings login];
                                     NSString * password = [Settings password];
                                     if (email.length && password.length)
@@ -164,10 +162,12 @@ static int const kNUMBER_OF_RETRIES = 6;
                     return ;
                 }
                 NSNumber *loginFormType = [NSNumber new];
+                if ([[result valueForKeyPath:@"Result.Token"] isKindOfClass:[NSString class]]) {
+                    [Settings setToken:[result valueForKeyPath:@"Result.Token"]];
+                }
                 if ([[result valueForKeyPath:@"Result.App.LoginFormType"] isKindOfClass:[NSNumber class]]) {
                     loginFormType = [result valueForKeyPath:@"Result.App.LoginFormType"];
                 }
-                
                 [[API sharedInstance] signInWithEmail:email andPassword:password loginType:[loginFormType stringValue] completion:^(NSDictionary *result, NSError *error) {
                     if (error)
                     {

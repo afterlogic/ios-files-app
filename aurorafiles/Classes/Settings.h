@@ -35,4 +35,7 @@
 + (void)setLastLoginServerVersion:(NSString *)version;
 + (NSString *)version;
 
++ (void)saveLastUsedFolder:(NSDictionary *)folder;
++ (NSDictionary *)getLastUsedFolder;
+
 @end
