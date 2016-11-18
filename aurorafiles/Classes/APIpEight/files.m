@@ -235,8 +235,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
         return;
     }
     Folder *currentItem = [items lastObject];
-    
-    [[StorageManager sharedManager]updateFileThumbnail:currentItem type:currentItem.type context:nil complition:^(UIImage *thumbnail) {
+    if (!currentItem.managedObjectContext) {
+        NSLog(@"object deleted");
+    }
+    [[StorageManager sharedManager]updateFileThumbnail:currentItem type:currentItem.type context:currentItem.managedObjectContext complition:^(UIImage *thumbnail) {
         if (thumbnail) {
             [items removeObject:currentItem];
         }

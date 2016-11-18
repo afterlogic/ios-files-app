@@ -374,39 +374,41 @@
 
 }
 
-- (void)getItemInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(Folder *result))complitionHandler{
+- (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler{
     if ([[Settings version] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule]getFileInfoForName:name path:path corporate:type completion:^(NSDictionary *result) {
             if(result){
-                Folder * existedItem = [self findObjectByItemRef:result];
-                if (!existedItem) {
-                    existedItem = [Folder MR_createEntity];
-                    existedItem = [FEMDeserializer fillObject:existedItem fromRepresentation:result mapping: [[Settings version] isEqualToString:@"P8"] ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
-                    existedItem.toRemove = [NSNumber numberWithBool:NO];
-                    existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
-                    existedItem.parentPath = path;
-                }
-                complitionHandler(existedItem);
+//                Folder * existedItem = [self findObjectByItemRef:result];
+//                if (!existedItem) {
+//                    existedItem = [FEMDeserializer objectFromRepresentation:result mapping:[Folder P8DefaultMapping] context:self.managedObjectContext];
+//                    existedItem.toRemove = [NSNumber numberWithBool:NO];
+//                    existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+//                    existedItem.parentPath = path;
+//                }
+                complitionHandler(YES);
             }
         }];
     }else{
         [[SessionProvider sharedManager]authroizeEmail:[Settings domain] withPassword:[Settings password] completion:^(BOOL authorized, NSError *error) {
+            if (authorized) {
                 [[API sharedInstance] getFolderInfoForName:name path:path type:type completion:^(NSDictionary *result) {
-                    if (![[result valueForKey:@"Result"]boolValue]) {
-                        complitionHandler(nil);
+                    if ([[result valueForKey:@"Result"]isKindOfClass:[NSNumber class]] && ![[result valueForKey:@"Result"]boolValue]) {
+                        complitionHandler(NO);
                     }else{
-                        Folder * existedItem = [self findObjectByItemRef:result];
-                        if (!existedItem) {
-                            existedItem = [Folder MR_createEntity];
-                            existedItem = [FEMDeserializer fillObject:existedItem fromRepresentation:result mapping: [[Settings version] isEqualToString:@"P8"] ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
-                            existedItem.toRemove = [NSNumber numberWithBool:NO];
-                            existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
-                            existedItem.parentPath = path;
-                        }
-                        complitionHandler(existedItem);
+//                        Folder * existedItem = [self findObjectByItemRef:result];
+//                        if (!existedItem) {
+//                            existedItem = [FEMDeserializer objectFromRepresentation:result mapping:[Folder defaultMapping] context:self.managedObjectContext];
+//                            existedItem.toRemove = [NSNumber numberWithBool:NO];
+//                            existedItem.isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+//                            existedItem.parentPath = path;
+//                        }
+                        complitionHandler(YES);
                     }
                 }];
-//            }
+            }
+            else{
+                complitionHandler(NO);
+            }
         }];
     }
 }
@@ -420,36 +422,35 @@
     if (!context) {
         context = self.managedObjectContext;
     }
-    [context performBlockAndWait:^ {
-        [[ApiP8 filesModule]getFileThumbnail:file type:type path:[pathArr componentsJoinedByString:@"/"] withCompletion:^(NSString *thumbnail) {
-            if (thumbnail) {
-                NSError * error = nil;
-                NSData *data;
-                UIImage *image;
-                NSFileManager *fileManager = [NSFileManager defaultManager];
-                if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+    [[ApiP8 filesModule]getFileThumbnail:file type:type path:[pathArr componentsJoinedByString:@"/"] withCompletion:^(NSString *thumbnail) {
+        if (thumbnail) {
+            NSError * error = nil;
+            __block NSData *data;
+            __block UIImage *image;
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+//                [context performBlockAndWait:^{
                     data= [[NSData alloc]initWithContentsOfFile:thumbnail];
                     file.thumbnailLink = thumbnail;
                     image = [UIImage imageWithData:data];
-                    [self saveContext];
-                }else{
-                    handler (nil);
-                    return;
-                }
-
-                
-                if (error)
-                {
-                    NSLog(@"%@",[error userInfo]);
-                    handler (nil);
-                    return;
-                }
-                
-                handler(image);
-                return ;
+//                }];
+//                if ([context save:&error]) {
+//                    [self saveContext];
+//                }
+            }else{
+                handler (nil);
+                return;
             }
-            handler (nil);
-        }];
+            if (error)
+            {
+                NSLog(@"%@",[error userInfo]);
+                handler (nil);
+                return;
+            }
+            handler(image);
+            return ;
+        }
+        handler (nil);
     }];
 }
 
@@ -463,13 +464,20 @@
         [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
             if (isP8 && authorised) {
                 NSString * path = folderPath;
-                [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+                [self.managedObjectContext performBlock:^{
                     [[ApiP8 filesModule]getFilesForFolder:path withType:type completion:^(NSArray *items){
-                        NSArray * filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:localContext isP8:isP8];
-                            [self removeChildDuplicatesForFolder:folder];
-                        if (filesItems.count>0) {
+                    __block NSArray * filesItems = [NSArray new];
+//                    [self.managedObjectContext performBlockAndWait:^{
+                        filesItems = [self saveItems:items forFolder:folder WithType:type usingContext:self.managedObjectContext isP8:isP8];
+//                    }];
+                    NSError *error = [NSError new];
+//                    [self.managedObjectContext save:&error];
+                    if (filesItems.count>0) {
+//                        [self.managedObjectContext performBlockAndWait:^{
                             [[ApiP8 filesModule]getThumbnailsForFiles:filesItems withCompletion:^(bool success) {
                                 if (success) {
+                                    NSError *error = [NSError new];
+//                                    [self.managedObjectContext save:&error];
                                     dispatch_async(dispatch_get_main_queue(), ^(){
                                         if (handler) {
                                             handler();
@@ -477,13 +485,10 @@
                                     });
                                 }
                             }];
-                        }
-                        handler();
-                    }];
-                }completion:^(BOOL contextDidSave, NSError * _Nullable error) {
-                    if (!error && contextDidSave) {
-                        [self saveContext];
-                    };
+//                        }];
+                    }
+                    handler();
+                }];
                 }];
             }else{
                 if (authorised)
@@ -599,51 +604,41 @@
     return existItems;
 }
 
-- (void)saveLastUsedFolder:(Folder *)folder{
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
-        NSError *error = [NSError new];
-        NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-        fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-        fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES"];
-        NSArray * lastUsedFolders = [localContext executeFetchRequest:fetchLastUsedFolder error:&error];
-        for (Folder *item in lastUsedFolders) {
-            item.isLastUsedUploadFolder = [NSNumber numberWithBool:NO];
-        }
-        
-        if (folder){
-            folder.isLastUsedUploadFolder = [NSNumber numberWithBool:YES];
-        }
-        
-        NSDictionary *folderDict = [FEMSerializer serializeObject:folder usingMapping: folder.isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
-        [Settings saveLastUsedFolder:folderDict];
-    }];
+- (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef{
+        [Settings saveLastUsedFolder:folderSimpleRef];
 }
 
-- (void)getLastUsedFolderWithHandler:(void(^)(Folder *result))complition{
+- (void)getLastUsedFolderWithHandler:(void(^)(NSDictionary *result))complition{
     Folder *savedFolder;
     NSManagedObjectContext* context = self.managedObjectContext;
     NSDictionary *savedFolderRef = [Settings getLastUsedFolder];
     NSArray * lastUsedFolders;
     if ([savedFolderRef isKindOfClass:[NSArray class]]) {
+        [Settings saveLastUsedFolder:nil];
         lastUsedFolders = @[];
         complition (nil);
+        return;
     }
-    NSError * error = nil;
-    NSFetchRequest * fetchLastUsedFolder = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-    fetchLastUsedFolder.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-    fetchLastUsedFolder.predicate = [NSPredicate predicateWithFormat:@"isFolder = YES AND isLastUsedUploadFolder = YES AND name = %@ AND fullpath = %@",savedFolderRef[@"Name"],savedFolderRef[@"FullPath"]];
-    lastUsedFolders = [context executeFetchRequest:fetchLastUsedFolder error:&error];
+    if (savedFolderRef.count == 0) {
+        [Settings saveLastUsedFolder:nil];
+        lastUsedFolders = @[];
+        complition (nil);
+        return;
+    }
     NSString* parentPath = [self generateParentPath:savedFolderRef[@"FullPath"]];
-    if (lastUsedFolders.count == 0) {
-        [[StorageManager sharedManager]getItemInfoForName:savedFolderRef[@"Name"] path:parentPath corporate:savedFolderRef[@"Type"] completion:^(Folder *result) {
-            if(result){
-                complition(result);
-            }
-        }];
-    }else{
-        savedFolder = [lastUsedFolders lastObject];
-        complition(savedFolder);
-    }
+//    if (lastUsedFolders.count == 0) {
+    [[StorageManager sharedManager]checkItemExistanceonServerByName:savedFolderRef[@"Name"] path:parentPath type:savedFolderRef[@"Type"] completion:^(BOOL exist) {
+        if(exist){
+            complition(savedFolderRef);
+        }else{
+            complition(nil);
+        }
+    }];
+//    }else{
+//        savedFolder = [lastUsedFolders lastObject];
+//        complition(savedFolderRef);
+//        return;
+//    }
 }
 
 - (NSString *)generateParentPath:(NSString *)itemFullpath{

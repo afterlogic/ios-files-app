@@ -85,7 +85,7 @@ static int const kNUMBER_OF_RETRIES = 6;
                         {
                             if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
                                 NSNumber *errorCode = data[@"ErrorCode"];
-                                if (errorCode.intValue == 101 || errorCode.intValue == 103) {
+                                if (errorCode.intValue == 101 || errorCode.intValue == 103 || errorCode.integerValue == 102) {
                                     NSString * email = [Settings login];
                                     NSString * password = [Settings password];
                                     if (email.length && password.length)
@@ -169,6 +169,26 @@ static int const kNUMBER_OF_RETRIES = 6;
                     loginFormType = [result valueForKeyPath:@"Result.App.LoginFormType"];
                 }
                 [[API sharedInstance] signInWithEmail:email andPassword:password loginType:[loginFormType stringValue] completion:^(NSDictionary *result, NSError *error) {
+                    if([[result valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
+                        NSNumber *errorCode = result[@"ErrorCode"];
+                        if (errorCode.intValue == 101 || errorCode.intValue == 103 || errorCode.intValue == 102 ) {
+                            NSString * email = [Settings login];
+                            NSString * password = [Settings password];
+                            if (email.length && password.length)
+                            {
+                                [self authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
+                                    handler(isAuthorised,error);
+                                }];
+                                return;
+                            }else{
+                                handler(NO,error);
+                                return;
+                            }
+                        }
+                        
+                    }else{
+                        
+                    }
                     if (error)
                     {
                         handler(NO,error);

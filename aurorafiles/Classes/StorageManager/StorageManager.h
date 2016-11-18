@@ -22,15 +22,16 @@
 - (void)renameFolder:(Folder*)folder toNewName:(NSString*)newName withCompletion:(void (^)(Folder*))handler;
 - (void)renameFile:(Folder *)file toNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler;
-- (void)getItemInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(Folder *result))complitionHandler;
+
+- (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler;
 
 - (void)updateFilesWithType:(NSString*)type forFolder:(Folder*)folder withCompletion:(void (^)())handler;
 - (void)updateFileThumbnail:(Folder *)file type:(NSString*)type context:(NSManagedObjectContext *) context complition:(void (^)(UIImage* thumbnail))handler;
 - (void)stopGettingFileThumb:(NSString *)file;
 - (void)deleteAllObjects: (NSString *) entityDescription ;
 
-- (void)saveLastUsedFolder:(Folder *)folder;
-- (void)getLastUsedFolderWithHandler:(void(^)(Folder *result))complition; 
+- (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef;
+- (void)getLastUsedFolderWithHandler:(void(^)(NSDictionary *result))complition; 
 
 - (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
 - (void)removeSavedFilesForItem:(Folder *)item;

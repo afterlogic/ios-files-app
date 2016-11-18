@@ -94,7 +94,7 @@
     [super viewDidLoad];
     BFLog(@"EXTENSION STARTED");
     self.uploadPathContainer.hidden = YES;
-    
+    [self setCurrentUploadFolder:@"" root:@""];
     MBProgressHUD * connectionHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     connectionHud.mode = MBProgressHUDModeIndeterminate;
     connectionHud.label.text = NSLocalizedString(@"Check connection...", @"");
@@ -130,10 +130,17 @@
             [self hideLogoutView:NO];
             [self hideContainers:YES];
         }else{
-            [self hideContainers:NO];
-            [self setupForUpload];
-            [self setCurrentUploadFolder:@"" root:@"personal"];
-            [self showUploadFolders];
+            [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
+                [self hideContainers:NO];
+                [self setupForUpload];
+                if (result) {
+                    [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
+                }else{
+                    [self setCurrentUploadFolder:@"" root:@"personal"];
+                    [self showUploadFolders];
+                }
+            }];
+
         }
     }else{
         if (![Settings token] || !scheme) {
@@ -142,8 +149,16 @@
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-            [self setCurrentUploadFolder:@"" root:@"personal"];
-            [self showUploadFolders];
+            [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
+//                dispatch_async(dispatch_get_main_queue(), ^(){
+                    if (result) {
+                        [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
+                    }else{
+                        [self setCurrentUploadFolder:@"" root:@"personal"];
+                        [self showUploadFolders];
+                    }
+//                });
+            }];
         }
     }
     
