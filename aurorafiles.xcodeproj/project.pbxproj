@@ -50,13 +50,10 @@
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
 		FF42B1E61DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
 		FF42B1E71DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
-		FF4301BC1DD9E08800D1ABF4 /* XXXProbeIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		FF4301BD1DD9E08800D1ABF4 /* XXXProbeIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		FF4C76451DA7F21800AA5576 /* snapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C76441DA7F21800AA5576 /* snapshotTest.swift */; };
 		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
 		FF5C01341DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
 		FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
-		FF6487791DD9E6610063ACB0 /* XXXProbeIOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF64877B1DD9EA610063ACB0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FF64877A1DD9EA610063ACB0 /* libsqlite3.tbd */; };
 		FF64877C1DD9EA6B0063ACB0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FF64877A1DD9EA610063ACB0 /* libsqlite3.tbd */; };
 		FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */; };
@@ -167,7 +164,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				FF6487791DD9E6610063ACB0 /* XXXProbeIOS.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +334,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF64877B1DD9EA610063ACB0 /* libsqlite3.tbd in Frameworks */,
-				FF4301BC1DD9E08800D1ABF4 /* XXXProbeIOS.framework in Frameworks */,
 				FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */,
 				231184308D0834E67342208D /* libPods-aurorafiles.a in Frameworks */,
 			);
@@ -365,7 +360,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF64877C1DD9EA6B0063ACB0 /* libsqlite3.tbd in Frameworks */,
-				FF4301BD1DD9E08800D1ABF4 /* XXXProbeIOS.framework in Frameworks */,
 				B58C5283746F9C1CBC0FA082 /* libPods-aurorafilesaction.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1617,7 +1611,7 @@
 				CODE_SIGN_ENTITLEMENTS = aurorafiles/aurorafiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1640,7 +1634,7 @@
 				CODE_SIGN_ENTITLEMENTS = aurorafiles/aurorafiles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1713,7 +1707,7 @@
 				CODE_SIGN_ENTITLEMENTS = aurorafilesaction/aurorafilesaction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1736,7 +1730,7 @@
 				CODE_SIGN_ENTITLEMENTS = aurorafilesaction/aurorafilesaction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
