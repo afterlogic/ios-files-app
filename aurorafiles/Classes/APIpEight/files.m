@@ -228,21 +228,29 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 }
 
 
-- (void)getThumbnailsForFiles:(NSArray <Folder *>*)files withCompletion:(void(^)(bool success))handler{
+- (void)getThumbnailsForFiles:(NSArray <Folder *>*)files forContext:(NSManagedObjectContext *)ctx withCompletion:(void(^)(bool success))handler{
     NSMutableArray <Folder *>* items = files.mutableCopy;
+    __block NSManagedObjectContext *localCtx = ctx;
+    if (!localCtx) {
+        localCtx = [StorageManager sharedManager].managedObjectContext;
+    }
+    NSMutableArray <Folder *>* itemsCopy = items.mutableCopy;
+    for (Folder *item in itemsCopy) {
+        if(!item.managedObjectContext){
+            [items removeObject:item];
+        }
+    }
     if (items.count == 0) {
         handler(YES);
         return;
     }
+
     Folder *currentItem = [items lastObject];
-    if (!currentItem.managedObjectContext) {
-        NSLog(@"object deleted");
-    }
-    [[StorageManager sharedManager]updateFileThumbnail:currentItem type:currentItem.type context:currentItem.managedObjectContext complition:^(UIImage *thumbnail) {
+    [[StorageManager sharedManager]updateFileThumbnail:currentItem type:currentItem.type context:localCtx complition:^(UIImage *thumbnail) {
         if (thumbnail) {
             [items removeObject:currentItem];
         }
-        [self getThumbnailsForFiles:items withCompletion:^(bool success) {
+        [self getThumbnailsForFiles:items forContext:localCtx withCompletion:^(bool success) {
             handler(success);
         }];
     }];
@@ -482,8 +490,6 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     [request setHTTPMethod:@"POST"];
     [request setAllHTTPHeaderFields:headers];
     [request setHTTPBodyStream:[NSInputStream inputStreamWithData:postData]];
-    
-    
  
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
@@ -590,6 +596,8 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }];
     [downloadTask resume];
 }
+
+
 
 - (void)removeFileAtPath:(NSURL *)filePath
 {

@@ -88,7 +88,7 @@
 {
     [activeField resignFirstResponder];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    if (![self.emailField.text isValidEmail]) {
+    if (self.emailField.text.length == 0) {
         NSError *error;
         NSString * text = NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"");
         if ([error localizedDescription])

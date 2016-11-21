@@ -94,6 +94,7 @@
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
         self.webView.delegate = self;
         [self.webView loadRequest:request];
+        [hud hideAnimated:YES];
     }
 
     self.title = self.object.name;
@@ -103,6 +104,10 @@
     self.navigationItem.rightBarButtonItems = @[self.shareItem, self.moreItem];
     self.navigationController.navigationBar.hidden = NO;
 }
+
+//-(void)setViewLink:(NSString *)viewLink{
+//    NSLog(@"link");
+//}
 
 - (IBAction)moreItemAction:(id)sender
 {

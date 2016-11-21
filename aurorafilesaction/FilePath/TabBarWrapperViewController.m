@@ -121,8 +121,6 @@
                                     @"Name":name,
                                     @"ParrentPath":parrentPath,
                                     @"FullPath":folderPath};
-//            [[StorageManager sharedManager]getItemInfoForName:savedFolderRef[@"Name"] path:parentPath corporate:savedFolderRef[@"Type"] completion:^(Folder *result) {
-    
     [[StorageManager sharedManager]saveLastUsedFolder:lastSavedPath];
 }
 

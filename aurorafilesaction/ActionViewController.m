@@ -130,9 +130,9 @@
             [self hideLogoutView:NO];
             [self hideContainers:YES];
         }else{
+            [self hideContainers:NO];
+            [self setupForUpload];
             [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
-                [self hideContainers:NO];
-                [self setupForUpload];
                 if (result) {
                     [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
                 }else{
@@ -140,7 +140,6 @@
                     [self showUploadFolders];
                 }
             }];
-
         }
     }else{
         if (![Settings token] || !scheme) {
@@ -150,14 +149,12 @@
             [self hideContainers:NO];
             [self setupForUpload];
             [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
-//                dispatch_async(dispatch_get_main_queue(), ^(){
                     if (result) {
                         [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
                     }else{
                         [self setCurrentUploadFolder:@"" root:@"personal"];
                         [self showUploadFolders];
                     }
-//                });
             }];
         }
     }

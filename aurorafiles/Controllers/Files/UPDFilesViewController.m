@@ -40,6 +40,7 @@
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) Folder * folderToOperate;
+@property (strong, nonatomic) Folder * downloadedItem;
 @property (strong, nonatomic) CRMediaPickerController *pickerController;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
@@ -347,7 +348,7 @@
         if ([[Settings version]isEqualToString:@"P8"]) {
             vc.isP8 = YES;
         }else{
-            viewLink = [NSString stringWithFormat:@"https://%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
+            viewLink = [NSString stringWithFormat:@"%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
             if (object.isDownloaded.boolValue)
             {
                 viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
@@ -574,6 +575,7 @@
         folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
         NSError * error;
         [folder.managedObjectContext save:&error];
+        self.downloadedItem = folder;
         [downloadTask resume];
     }
 }

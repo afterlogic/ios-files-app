@@ -37,6 +37,6 @@
 - (void)removeSavedFilesForItem:(Folder *)item;
 - (void)deleteItem:(Folder *)item;
 
--(void)removeChildDuplicatesForFolder:(Folder *)folder;
+- (Folder *)objectWithURI:(NSURL *)uri;
 
 @end

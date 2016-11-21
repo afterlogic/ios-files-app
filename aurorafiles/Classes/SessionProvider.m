@@ -147,7 +147,7 @@ static int const kNUMBER_OF_RETRIES = 6;
                     return;
                 }
                 handler(YES,error);
-
+                return;
             }];
         }else{
             NSLog(@"host version smaller than 8");
