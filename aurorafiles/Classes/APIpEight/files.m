@@ -547,9 +547,24 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 ///
 - (void)getFileView:(Folder *)folder type:(NSString *)type withProgress:(void (^)(float progress))progressBlock withCompletion:(void(^)(NSString *thumbnail))handler{
     
-    NSString * filepathPath = folder ? folder.fullpath : @"";
-    NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
-    [pathArr removeObject:[pathArr lastObject]];
+    NSString * filepathPath;
+    
+    NSString *path;
+    NSString *name;
+    if ([folder.fullpath containsString:@".zip$ZIP:"]) {
+        filepathPath = folder ? folder.fullpath : @"";
+        NSMutableArray *pathPrtsArr = [filepathPath componentsSeparatedByString:@"$ZIP:"].mutableCopy;
+        NSLog(@"%@",pathPrtsArr);
+        path = [pathPrtsArr firstObject];
+        name = [pathPrtsArr lastObject];
+    }else{
+        filepathPath = folder ? folder.fullpath : @"";
+        NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
+        [pathArr removeObject:[pathArr lastObject]];
+        path = [pathArr componentsJoinedByString:@"/"];
+        name = folder.name;
+    }
+    
     
     NSString *existedPath = [self getExistedFile:folder];
     if (existedPath) {
@@ -564,8 +579,9 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                                                                     @"AuthToken":[Settings authToken],
                                                                     @"Format":@"Raw",
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":[pathArr componentsJoinedByString:@"/"],
-                                                                                    @"Name":folder.name}}];
+                                                                                    @"Path":path,
+                                                                                    @"Name":name}
+                                                                    }];
     
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -581,15 +597,48 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     //Start the download
     NSURLSessionDownloadTask *downloadTask = [downloadManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         //Getting the path of the document directory
+        if (![[response suggestedFilename] isEqualToString:folder.name]) {
+            return nil;
+        }
         NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-        NSString *name = [NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name];
-        NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:name];
-        [self removeFileAtPath:fullURL];
-        return fullURL;
+//        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+//        NSString *folderName = folder.name ? folder.name : @"";
+//        NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folderName]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+//        NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
+        NSURL *originalFileUrl = [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+//        [self removeFileAtPath:fullURL];
+//        NSError *copyError = [[NSError alloc]init];
+//        
+//        if([[NSFileManager defaultManager]fileExistsAtPath:originalFileUrl.path]){
+//            if([[NSFileManager defaultManager] replaceItemAtURL:originalFileUrl withItemAtURL:fullURL backupItemName:[NSString stringWithFormat:@"backup_%@",name] options:NSFileManagerItemReplacementWithoutDeletingBackupItem resultingItemURL:nil error:&copyError]){
+//                 return fullURL;
+//            }
+//            NSLog(@"copy item error -> %@",copyError.localizedDescription);
+//        }else{
+//            
+//        }
+
+        return originalFileUrl;
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
         if (!error) {
-            handler(filePath.path);
+            NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+            NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+            NSString *folderName = folder.name ? folder.name : @"";
+            NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folderName]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+            NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
+            [self removeFileAtPath:fullURL];
+            NSError *copyError = [[NSError alloc]init];
+            
+            if([[NSFileManager defaultManager]fileExistsAtPath:filePath.path]){
+                if([[NSFileManager defaultManager]copyItemAtPath:filePath.path toPath:fullURL.path error:&copyError]){
+                    handler(fullURL.path);
+                }else{
+                    NSLog(@"copy item error -> %@",copyError.localizedDescription);
+                    handler(@"");
+                }
+            }else{
+                handler(@"");
+            }
         } else {
             handler(@"");
         }
@@ -613,8 +662,8 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-    NSString *name = [NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name];
-    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:name];
+    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
     if ([fileManager fileExistsAtPath:fullURL.path]) {
         filePath =  fullURL.path;
     }

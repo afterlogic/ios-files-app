@@ -73,7 +73,7 @@
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
             NSData *data = [NSData dataWithContentsOfFile:[[ApiP8 filesModule]getExistedFile:file]];
-            if(data){
+            if(data && data.length > 0){
                 UIImage *image = [UIImage imageWithData:data];
                 [self.imageView setImage:image];
                 self.imageView.alpha = 1.0f;

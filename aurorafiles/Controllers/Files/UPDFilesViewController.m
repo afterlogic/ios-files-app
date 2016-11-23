@@ -387,7 +387,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-    if ([object.isFolder boolValue])
+    if ([object.isFolder boolValue] || [object.mainAction isEqualToString:@"list"])
     {
         [self performSegueWithIdentifier:@"UPDGoToFolderSegue" sender:self];
     }

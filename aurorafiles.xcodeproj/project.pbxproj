@@ -489,9 +489,7 @@
 		DAC1CA771D061F1200238EB5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				DAC1CA781D061F1200238EB5 /* API.h */,
-				DAC1CA791D061F1200238EB5 /* API.m */,
-				FF6A94BB1DB666CA00543269 /* ApiP8 */,
+				FFE2C6201DE321ED001F798D /* Api */,
 				DAC1CA7A1D061F1200238EB5 /* Categories */,
 				DAC1CA7D1D061F1200238EB5 /* Keychain */,
 				DAC1CA801D061F1200238EB5 /* SessionProvider.h */,
@@ -900,6 +898,24 @@
 				FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */,
 			);
 			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		FFE2C61F1DE321AF001F798D /* ApiP7 */ = {
+			isa = PBXGroup;
+			children = (
+				DAC1CA781D061F1200238EB5 /* API.h */,
+				DAC1CA791D061F1200238EB5 /* API.m */,
+			);
+			name = ApiP7;
+			sourceTree = "<group>";
+		};
+		FFE2C6201DE321ED001F798D /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				FFE2C61F1DE321AF001F798D /* ApiP7 */,
+				FF6A94BB1DB666CA00543269 /* ApiP8 */,
+			);
+			name = Api;
 			sourceTree = "<group>";
 		};
 		FFFFA5D81D9A5395006BA9FB /* Gallery */ = {

@@ -41,5 +41,6 @@
 @dynamic parentPath;
 @dynamic isP8;
 @dynamic isLastUsedUploadFolder;
+@dynamic mainAction;
 
 @end
