@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (FEMMapping*)P8DefaultMapping;
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
-- (BOOL)isArchiveContentType;
+- (BOOL)isZippedFile;
 + (NSArray*)imageContentTypes;
 - (NSString*)embedThumbnailLink;
 - (NSString*)viewLink;

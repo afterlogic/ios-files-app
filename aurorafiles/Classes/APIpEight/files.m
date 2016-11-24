@@ -551,7 +551,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     
     NSString *path;
     NSString *name;
-    if ([folder.fullpath containsString:@".zip$ZIP:"]) {
+    if (folder.isZippedFile) {
         filepathPath = folder ? folder.fullpath : @"";
         NSMutableArray *pathPrtsArr = [filepathPath componentsSeparatedByString:@"$ZIP:"].mutableCopy;
         NSLog(@"%@",pathPrtsArr);

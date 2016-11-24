@@ -1,4 +1,4 @@
-//
+
 //  FileGalleryCollectionViewController.m
 //  aurorafiles
 //
@@ -17,6 +17,7 @@
 @interface FileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
 {
     CGPoint _lastTouch;
+    UIImageView *snapshotView;
 }
 @property (strong, nonatomic) NSArray * items;
 @property (strong, nonatomic) StorageManager * manager;
@@ -26,6 +27,7 @@
 @property (weak, nonatomic) UIBarButtonItem * moreButton;
 @property (weak, nonatomic) UITextField * folderName;
 @property (weak, nonatomic) UIView * dragView;
+@property (weak, nonatomic) Folder *currentViewdItem;
 - (IBAction)panCollectionToBack:(id)sender;
 @end
 
@@ -79,6 +81,14 @@
     
     self.navigationController.navigationBar.hidden = NO;
     self.title = self.currentItem.name;
+    self.currentViewdItem = self.currentItem;
+    
+    snapshotView = [UIImageView new];
+    [self.view addSubview:snapshotView];
+    [snapshotView setFrame:self.collectionView.frame];
+    [snapshotView setCenter:self.view.center];
+    [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
+    snapshotView.alpha = 0.0f;
     // Do any additional setup after loading the view.
     
 
@@ -99,6 +109,13 @@
     [self.view layoutIfNeeded];
     NSInteger row = [self.items indexOfObject:self.currentItem];
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    
+    UIGraphicsBeginImageContext(self.view.bounds.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    [snapshotView setImage:sourceImage];
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -116,28 +133,8 @@
 //    [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [super viewWillTransitionToSize:size
-          withTransitionCoordinator:coordinator];
-    self.collectionView.alpha = 0.0f;
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context)
-     {
-         [self.collectionView.collectionViewLayout invalidateLayout];
-         
-     }
-        completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
-     {
-         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-         self.collectionView.alpha = 1.0f;
-     }];
-}
+- (void)viewWillLayoutSubviews{
 
-#pragma mark <UICollectionViewLayoutDelegate>
-
-- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
-{
-    return YES;
 }
 
 
@@ -268,22 +265,71 @@
     return self.view.bounds.size;
 }
 
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
-    int currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
-    float width = self.collectionView.bounds.size.height;
-    
-    [UIView animateWithDuration:duration animations:^{
-        [self.self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
-        [[self.self.collectionView collectionViewLayout] invalidateLayout];
-    }];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Rotation
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    CGFloat viewWidth = self.view.frame.size.width;
+    CGFloat viewHeight = self.view.frame.size.height;
+    
+    UIGraphicsBeginImageContext(self.view.bounds.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    [snapshotView setImage:sourceImage];
+    
+    snapshotView.alpha =1.0f;
+    
+    if(viewWidth >= viewHeight){
+        [snapshotView setContentMode:UIViewContentModeScaleAspectFill];
+    }else{
+        [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
+    }
+
+    int currentPage;
+    float width;
+    self.collectionView.alpha = 0.0f;
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    
+    currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
+    width = self.collectionView.bounds.size.height;
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+        [snapshotView setFrame:self.collectionView.frame];
+     }
+    completion:^(id<UIViewControllerTransitionCoordinatorContext> context){
+        
+        [self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
+        [self.collectionView reloadData];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentViewdItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+        [UIView animateWithDuration:0.25f animations:^{
+            self.collectionView.alpha = 1.0f;
+            snapshotView.alpha = 0.0;
+        }];
+
+     }];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+//-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+//    
+//    int currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
+//    float width = self.collectionView.bounds.size.height;
+//    
+//    [UIView animateWithDuration:duration animations:^{
+//        [self.self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
+//        [[self.self.collectionView collectionViewLayout] invalidateLayout];
+//    }];
+//}
+
+
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -304,13 +350,14 @@
     Folder * item = [self.items objectAtIndex:indexPath.row];
     cell.file = item;
     [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
+    
     return cell;
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     FileGalleryCollectionViewCell *sameCell = [self.collectionView.visibleCells lastObject];
     self.title = sameCell.file.name;
-
+    self.currentViewdItem = sameCell.file;
 }
 
 

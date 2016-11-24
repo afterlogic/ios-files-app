@@ -242,12 +242,6 @@
     return  @[@"image/jpeg",@"image/pjpeg",@"image/png",@"image/tiff"];
 }
 
-
-+ (NSArray *)zipContentType
-{
-    return @[@"application/zip"];
-}
-
 - (NSString*)validContentType
 {
     NSLog(@"%@",[self.name pathExtension]);
@@ -272,10 +266,9 @@
     return [FEMSerializer serializeObject:self usingMapping:self.isP8 ? [Folder P8DefaultMapping] : [Folder defaultMapping]];
 }
 
--(BOOL)isArchiveContentType
+-(BOOL)isZippedFile
 {
-    NSArray * mimeTypes = [Folder zipContentType];
-    if ([mimeTypes containsObject:self.contentType]) {
+    if ([self.fullpath containsString:@".zip$ZIP:"]) {
         return YES;
     }
     
