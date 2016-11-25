@@ -46,6 +46,7 @@
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
 		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
+		FF399D4B1DE7341B002071A9 /* AuroraHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FF399D4A1DE7341B002071A9 /* AuroraHUD.m */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
 		FF42B1E61DB77F88005A2B0C /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
@@ -248,6 +249,8 @@
 		DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
 		FF32025E1DACF2F7008F3B6A /* ANavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANavigationController.h; sourceTree = "<group>"; };
 		FF32025F1DACF2F7008F3B6A /* ANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANavigationController.m; sourceTree = "<group>"; };
+		FF399D491DE7341B002071A9 /* AuroraHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuroraHUD.h; path = SupportFiles/AuroraHUD.h; sourceTree = "<group>"; };
+		FF399D4A1DE7341B002071A9 /* AuroraHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuroraHUD.m; path = SupportFiles/AuroraHUD.m; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
 		FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadedFile.m; path = Model/UploadedFile.m; sourceTree = "<group>"; };
 		FF42B1E41DB77F88005A2B0C /* files.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = files.h; path = APIpEight/files.h; sourceTree = "<group>"; };
@@ -874,6 +877,8 @@
 				FF9053051D9B0D4800A09A44 /* EXConstants.h */,
 				FF9053071D9B1E9D00A09A44 /* NSObject+ScreenOrientation.h */,
 				FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */,
+				FF399D491DE7341B002071A9 /* AuroraHUD.h */,
+				FF399D4A1DE7341B002071A9 /* AuroraHUD.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1443,6 +1448,7 @@
 				FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
 				FF6A94C31DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */,
 				FFFFA5E51D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
+				FF399D4B1DE7341B002071A9 /* AuroraHUD.m in Sources */,
 				FF71D4871DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				FF71D48B1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
 				FF71D48D1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,

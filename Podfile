@@ -9,7 +9,6 @@ target 'aurorafiles' do
     
     pod 'SDWebImage', '3.7.3'
     pod 'FastEasyMapping', '~> 1.0'
-#    pod 'MBProgressHUD', '~> 0.9.2'
     pod 'MagicalRecord','~> 2.3.0'
     pod 'Reachability', '~> 3.2'
     
@@ -17,6 +16,7 @@ target 'aurorafiles' do
     pod 'Crashlytics'
     pod 'BugfenderSDK', '~> 0.3'
     pod 'AFNetworking', '2.6'
+    pod 'AFNetworking+AutoRetry'
     pod 'CRMediaPickerController'
 end
 
@@ -26,6 +26,7 @@ target 'aurorafilesaction' do
     pod 'Reachability', '~> 3.2'
     pod 'BugfenderSDK', '~> 0.3'
     pod 'AFNetworking', '2.6'
+    pod 'AFNetworking+AutoRetry'
     pod 'MagicalRecord','~> 2.3.0'
 end
 

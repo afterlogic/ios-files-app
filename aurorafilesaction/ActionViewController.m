@@ -22,14 +22,14 @@
 #import "NSString+URLEncode.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "MLNetworkLogger.h"
-#import "MBProgressHUD.h"
 #import "NSObject+PerformSelectorWithCallback.h"
 #import "NSString+transferedValues.h"
 #import "AFNetworking.h"
 #import "AFNetworkActivityLogger.h"
 #import "SessionProvider.h"
 #import "StorageManager.h"
-//#import
+
+#import "AuroraHUD.h"
 
 @interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
     NSString *fileExtension;
@@ -46,7 +46,7 @@
     UIAlertController * alertController;
     UIProgressView *pv;
     
-    MBProgressHUD *hud;
+    AuroraHUD *hud;
     
     NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
     
@@ -95,21 +95,19 @@
     BFLog(@"EXTENSION STARTED");
     self.uploadPathContainer.hidden = YES;
     [self setCurrentUploadFolder:@"" root:@""];
-    MBProgressHUD * connectionHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    connectionHud.mode = MBProgressHUDModeIndeterminate;
-    connectionHud.label.text = NSLocalizedString(@"Check connection...", @"");
     
+    AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [url scheme];
     if (scheme) {
         [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
         dispatch_async(dispatch_get_main_queue(), ^(){
-            [connectionHud hideAnimated:YES];
+            [connectionHud hideHUD];
         });
     }else{
         [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
             dispatch_async(dispatch_get_main_queue(), ^(){
-                [connectionHud hideAnimated:YES];
+                [connectionHud hideHUD];
             });
             if(domain && domain.length > 0){
                 [Settings setDomain:domain];
@@ -125,6 +123,9 @@
 -(void)setupInterfaceForP8:(BOOL)isP8 {
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [url scheme];
+    
+    AuroraHUD *folderHud = [AuroraHUD checkFileExistanceHUD:self];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (isP8){
         if (![Settings authToken] || !scheme) {
             [self hideLogoutView:NO];
@@ -134,8 +135,16 @@
             [self setupForUpload];
             [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
                 if (result) {
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [folderHud hideHUD];
+                        });
+                    [self.navigationController setNavigationBarHidden:NO animated:YES];
                     [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
                 }else{
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [folderHud hideHUD];
+                        });
+                    [self.navigationController setNavigationBarHidden:NO animated:YES];
                     [self setCurrentUploadFolder:@"" root:@"personal"];
                     [self showUploadFolders];
                 }
@@ -150,8 +159,16 @@
             [self setupForUpload];
             [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
                     if (result) {
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [folderHud hideHUD];
+                        });
+                        [self.navigationController setNavigationBarHidden:NO animated:YES];
                         [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
                     }else{
+                        dispatch_async(dispatch_get_main_queue(), ^(){
+                            [folderHud hideHUD];
+                        });
+                        [self.navigationController setNavigationBarHidden:NO animated:YES];
                         [self setCurrentUploadFolder:@"" root:@"personal"];
                         [self showUploadFolders];
                     }
@@ -420,9 +437,9 @@
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
     uploadStart = YES;
     if (!hud) {
-        hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeDeterminate;
-        [hud showAnimated:YES];
+        hud = [AuroraHUD uploadHUD:self.view];
+//        hud.mode = MBProgressHUDModeDeterminate;
+//        [hud showAnimated:YES];
     }
 
     [self requestLog:file.request];
@@ -454,11 +471,11 @@
             if (error)
             {
                 if (self.filesForUpload.count == 1) {
-                    hud.mode = MBProgressHUDModeCustomView;
-                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-                    hud.detailsLabel.text = @"";
-                    hud.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
-                    [hud hideAnimated:YES afterDelay:0.7f];
+                    hud.hudView.mode = MBProgressHUDModeCustomView;
+                    hud.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+                    hud.hudView.detailsLabel.text = @"";
+                    hud.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
+                    [hud hideHUDWithDelay:0.7f];
 //                    return ;
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
@@ -467,10 +484,10 @@
 
             }else{
                 if (self.filesForUpload.count == 1) {
-                    hud.mode = MBProgressHUDModeCustomView;
-                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
-                    hud.detailsLabel.text = @"";
-                    hud.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
+                    hud.hudView.mode = MBProgressHUDModeCustomView;
+                    hud.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
+                    hud.hudView.detailsLabel.text = @"";
+                    hud.hudView.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
                     [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
                     
                 }else{
@@ -494,11 +511,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     dispatch_async(dispatch_get_main_queue(), ^(){
         totalBytesForAllFilesSend +=bytesSent;
         float progress = (float)totalBytesForAllFilesSend / (float)uploadSize;
-        hud.progress = progress;
+        hud.hudView.progress = progress;
         NSString *uploadStatus = [NSString stringWithFormat:@"%@ %@",[NSString transformedValue:[NSNumber numberWithLongLong:totalBytesForAllFilesSend]],[NSString transformedValue:[NSNumber numberWithLongLong:uploadSize]]];
-        hud.detailsLabel.text = uploadStatus;
+        hud.hudView.detailsLabel.text = uploadStatus;
         NSLog(@"fileName is -> %@",fileName);
-        hud.label.text = fileName;
+        hud.hudView.label.text = fileName;
     });
 
     
@@ -530,7 +547,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 #pragma mark - HUD
 
 - (void)hideHud{
-    [hud hideAnimated:YES];
+    [hud hideHUD];
     [self done];
 }
 

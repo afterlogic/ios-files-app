@@ -10,6 +10,10 @@
 #import "Settings.h"
 #import "Folder.h"
 #import "AFNetworking.h"
+#import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
+
+static const int retryCount = 3;
+static const int retryInterval = 30;
 
 @import UIKit;
 
@@ -147,7 +151,7 @@ static NSString *folderInfo         = @"FileInfo";
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request  success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
         NSError *error;
         NSData *data = [NSData new];
@@ -182,7 +186,7 @@ static NSString *folderInfo         = @"FileInfo";
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil,error);
          });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
 
     [manager.operationQueue addOperation:operation];
 }
@@ -220,7 +224,7 @@ static NSString *folderInfo         = @"FileInfo";
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -282,7 +286,7 @@ static NSString *folderInfo         = @"FileInfo";
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 }
@@ -327,7 +331,7 @@ static NSString *folderInfo         = @"FileInfo";
             }
 
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -385,7 +389,7 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -445,7 +449,7 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -496,7 +500,7 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -546,7 +550,7 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -596,7 +600,7 @@ static NSString *folderInfo         = @"FileInfo";
                 return ;
             }
         });
-    }];
+    }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 

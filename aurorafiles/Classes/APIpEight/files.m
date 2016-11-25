@@ -13,6 +13,11 @@
 #import "NSURLRequest+requestGenerator.h"
 #import "StorageManager.h"
 
+#import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
+
+static const int retryCount = 3;
+static const int retryInterval = 30;
+
 @interface files(){
     AFHTTPRequestOperationManager *manager;
     NSMutableDictionary* operationsQueue;
@@ -124,7 +129,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 }
@@ -221,7 +226,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -308,7 +313,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
     [operationsQueue setObject:operation forKey:folder.name];
@@ -364,7 +369,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(NO);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -414,7 +419,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
     
@@ -464,7 +469,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 }

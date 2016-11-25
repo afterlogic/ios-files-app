@@ -12,6 +12,11 @@
 #import "Settings.h"
 #import "NSURLRequest+requestGenerator.h"
 
+#import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
+
+static const int retryCount = 3;
+static const int retryInterval = 30;
+
 @interface standardAuth(){
     AFHTTPRequestOperationManager *manager;
 }
@@ -89,7 +94,7 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
-    }];
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
     
