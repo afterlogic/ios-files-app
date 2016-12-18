@@ -11,8 +11,10 @@
 @interface Settings : NSObject
 
 + (NSString*)domain;
-
 + (void)setDomain:(NSString *)domain;
+
++ (NSString *)domainScheme;
++ (void)setDomainScheme:(NSString *)scheme;
 
 + (void)setToken:(NSString*)token;
 + (NSString*)token;
@@ -38,4 +40,5 @@
 + (void)saveLastUsedFolder:(NSDictionary *)folder;
 + (NSDictionary *)getLastUsedFolder;
 
++ (void)clearSettings;
 @end

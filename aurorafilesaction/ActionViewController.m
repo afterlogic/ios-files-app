@@ -87,7 +87,7 @@
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
     [[AFNetworkActivityLogger sharedLogger] startLogging];
     [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
-    [[StorageManager sharedManager]initCoreData];
+    [[[StorageManager sharedManager]DBProvider]setupCoreDataStack];
 }
 
 - (void)viewDidLoad {

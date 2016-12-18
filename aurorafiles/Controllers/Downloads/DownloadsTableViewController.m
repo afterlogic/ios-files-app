@@ -14,6 +14,10 @@
 #import "UIImage+Aurora.h"
 #import "FileDetailViewController.h"
 #import "FileGalleryCollectionViewController.h"
+#import "GalleryWrapperViewController.h"
+#import "Settings.h"
+#import "SessionProvider.h"
+
 @interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
@@ -29,7 +33,7 @@
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
+    self.managedObjectContext = [[[StorageManager sharedManager] DBProvider]defaultMOC];
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
 
     // Uncomment the following line to preserve selection between presentations.
@@ -42,6 +46,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [[SessionProvider sharedManager] cancelAllOperations];
 }
 
 #pragma mark - Table view data source
@@ -233,12 +241,20 @@
     if ([segue.identifier isEqualToString:@"OpenDownloadFileGallerySegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        FileGalleryCollectionViewController * vc = [segue destinationViewController];
-//        vc.folder = self.folder;
-        UIImage * snap = [self snapshot:self.navigationController.view];
-        vc.snapshot= snap;
+//        FileGalleryCollectionViewController * vc = [segue destinationViewController];
+//        UIImage * snap = [self snapshot:self.navigationController.view];
+//        vc.snapshot= snap;
+//        
+//        vc.currentItem = object;
+        NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        NSError * error = [NSError new];
+        NSArray *items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
         
-        vc.currentItem = object;
+        GalleryWrapperViewController * vc = [segue destinationViewController];
+        vc.itemsList = items;
+        vc.initialPageIndex = [items indexOfObject:object];
     }
 }
 

@@ -15,12 +15,14 @@
 
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static const int retryCount = 3;
-static const int retryInterval = 30;
+static int retryCount = 3;
+static const int retryInterval = 5;
 
 @interface files(){
     AFHTTPRequestOperationManager *manager;
     NSMutableDictionary* operationsQueue;
+    NSMutableArray <NSMutableDictionary *>* resultedFiles;
+    NSMutableArray <NSMutableDictionary *>* itemsForThumb;
 }
 
 @end
@@ -46,8 +48,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
         manager.securityPolicy.validatesDomainName = NO;
         manager.requestSerializer = [AFHTTPRequestSerializer serializer];
         [manager.requestSerializer setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-        
+        resultedFiles = [NSMutableArray new];
         operationsQueue = [NSMutableDictionary new];
+        
+        retryCount = 3;
     }
     return self;
 }
@@ -111,11 +115,20 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                 }else if([[module objectForKey:@"Items"] isKindOfClass:[NSDictionary class]]){
                     NSMutableArray *itemsTmp = [NSMutableArray new];
                     for (NSString *key in [module objectForKey:@"Items"]) {
-                        [itemsTmp addObject:[[module objectForKey:@"Items"] objectForKey:key]];
+                        NSDictionary *item = [[module objectForKey:@"Items"] objectForKey:key];
+                        [itemsTmp addObject:item.mutableCopy];
                     }
                     items = itemsTmp.copy;
                 }else{
-                    items = [[module objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [module objectForKey:@"Items"] : @[];
+                    NSMutableArray *itemsTmp = [NSMutableArray new];
+                    if ([[module objectForKey:@"Items"] isKindOfClass:[NSArray class]]) {
+                        for (NSDictionary *item in [module objectForKey:@"Items"]) {
+                            [itemsTmp addObject:item.mutableCopy];
+                        }
+                        items = itemsTmp.copy;
+                    }else{
+                        items =  @[];
+                    }
                 }
             }
             else
@@ -233,41 +246,87 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 }
 
 
-- (void)getThumbnailsForFiles:(NSArray <Folder *>*)files forContext:(NSManagedObjectContext *)ctx withCompletion:(void(^)(bool success))handler{
-    NSMutableArray <Folder *>* items = files.mutableCopy;
-    __block NSManagedObjectContext *localCtx = ctx;
-    if (!localCtx) {
-        localCtx = [StorageManager sharedManager].managedObjectContext;
-    }
-    NSMutableArray <Folder *>* itemsCopy = items.mutableCopy;
-    for (Folder *item in itemsCopy) {
-        if(!item.managedObjectContext){
-            [items removeObject:item];
-        }
-    }
-    if (items.count == 0) {
-        handler(YES);
+- (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler{
+    itemsForThumb = files.mutableCopy;
+    if (itemsForThumb.count == 0) {
+        handler(resultedFiles);
         return;
     }
 
-    Folder *currentItem = [items lastObject];
-    [[StorageManager sharedManager]updateFileThumbnail:currentItem type:currentItem.type context:localCtx complition:^(UIImage *thumbnail) {
-        if (thumbnail) {
-            [items removeObject:currentItem];
+    for (NSMutableDictionary *item in files) {
+        bool isFolder = [item[@"IsFolder"] boolValue];
+        bool isLink = [item[@"IsLink"] boolValue];
+        if (isFolder || isLink) {
+            [resultedFiles addObject:item];
+            [itemsForThumb removeObject:item];
         }
-        [self getThumbnailsForFiles:items forContext:localCtx withCompletion:^(bool success) {
-            handler(success);
+    }
+    
+    NSMutableDictionary *currentItem = [itemsForThumb lastObject];
+    if (itemsForThumb.count == 0) {
+        handler(resultedFiles);
+        return;
+    }else{
+        currentItem = [itemsForThumb lastObject];
+    }
+    
+    
+    [self updateFileThumbnail:currentItem type:currentItem[@"Type"] complition:^(NSMutableDictionary* itemRef) {
+        if (itemRef) {
+            [itemsForThumb removeObject:currentItem];
+            [resultedFiles addObject:itemRef];
+        }
+        [self getThumbnailsForFiles:itemsForThumb withCompletion:^(NSArray *items) {
+            handler(items);
         }];
     }];
 }
 
-- (void)getFileThumbnail:(Folder *)folder type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler{
+- (void)updateFileThumbnail:(NSMutableDictionary *)file type:(NSString*)type complition:(void (^)(NSMutableDictionary* itemRef))handler{
+    NSString * filepathPath = file ? file[@"FullPath"] : @"";
+    NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
+    NSString *fileName = file[@"Name"];
+    [pathArr removeObject:[pathArr lastObject]];
+    NSString *parentPath = pathArr.count >1 ? [pathArr componentsJoinedByString:@"/"] : @"";
+
+    [self getThumbnailForFileNamed:fileName type:type path:parentPath withCompletion:^(NSString *thumbnail) {
+        if (thumbnail) {
+            __block NSError *error = nil;
+            __block NSData *data;
+            __block UIImage *image;
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([thumbnail length] && [fileManager fileExistsAtPath:thumbnail]) {
+                data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+
+                file[@"ThumbnailLink"] = thumbnail;
+                if (error) {
+                    NSLog(@"save error -> %@", error.localizedFailureReason);
+                }
+                image = [UIImage imageWithData:data];
+            }else{
+                handler (nil);
+                return;
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error userInfo]);
+                handler (nil);
+                return;
+            }
+            handler(file);
+            return ;
+        }
+        handler (nil);
+    }];
+}
+
+- (void)getThumbnailForFileNamed:(NSString *)folderName type:(NSString *)type path:(NSString *)parentPath withCompletion:(void(^)(NSString *thumbnail))handler{
     NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileThumbail,
                                                                     @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":path,
-                                                                                    @"Name":folder.name}}];
+                                                                                    @"Path":parentPath,
+                                                                                    @"Name":folderName}}];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -288,8 +347,8 @@ static NSString *methodUploadFile = @"UploadFile"; //√
                         NSData *data = [[NSData alloc]initWithBase64EncodedString:thumbnail options:0];
                         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                         
-                        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-                        NSString *name = [NSString stringWithFormat:@"thumb_%@_%@",folderParentPath,folder.name];
+                        NSString *folderParentPath = [parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+                        NSString *name = [NSString stringWithFormat:@"thumb_%@_%@",folderParentPath,folderName];
                         
                         path = [[paths objectAtIndex:0] stringByAppendingPathComponent:name];
                         [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
@@ -313,10 +372,10 @@ static NSString *methodUploadFile = @"UploadFile"; //√
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil);
         });
-    } autoRetryOf:retryCount retryInterval:retryInterval];
+    }];
     
     [manager.operationQueue addOperation:operation];
-    [operationsQueue setObject:operation forKey:folder.name];
+    [operationsQueue setObject:operation forKey:folderName];
 
 }
 
@@ -571,7 +630,7 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }
     
     
-    NSString *existedPath = [self getExistedFile:folder];
+    NSString *existedPath = [Folder getExistedFile:folder];
     if (existedPath) {
         progressBlock(100.0f);
         handler(existedPath);
@@ -662,18 +721,18 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     }
 }
 
--(NSString *)getExistedFile:(Folder *)folder{
-    NSString *filePath = nil;
-    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
-    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
-    if ([fileManager fileExistsAtPath:fullURL.path]) {
-        filePath =  fullURL.path;
-    }
-    return filePath;
-}
+//-(NSString *)getExistedFile:(Folder *)folder{
+//    NSString *filePath = nil;
+//    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+//    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+//    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
+//    if ([fileManager fileExistsAtPath:fullURL.path]) {
+//        filePath =  fullURL.path;
+//    }
+//    return filePath;
+//}
 
 -(NSString *)getExistedThumbnailForFile:(Folder *)folder{
     NSString *filePath = nil;
@@ -690,6 +749,8 @@ static NSString *methodUploadFile = @"UploadFile"; //√
 
 
 -(void)cancelOperations{
+    retryCount = 0;
+    itemsForThumb = nil;
     [manager.operationQueue cancelAllOperations];
 }
 @end

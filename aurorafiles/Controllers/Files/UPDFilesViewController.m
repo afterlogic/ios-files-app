@@ -11,8 +11,11 @@
 #import "FileDetailViewController.h"
 #import "SessionProvider.h"
 #import "FileGalleryCollectionViewController.h"
+
+#import "GalleryWrapperViewController.h"
+
 #import "Settings.h"
-#import "API.h"
+#import "ApiP7.h"
 #import "ApiP8.h"
 #import "SignInViewController.h"
 #import "UIImage+Aurora.h"
@@ -32,9 +35,8 @@
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
-//@property (strong, nonatomic) IBOutlet UIView *activityView;
 @property (strong, nonatomic) STZPullToRefresh * pullToRefresh;
-@property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectContext * defaultMOC;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
@@ -45,6 +47,9 @@
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) NSDictionary * folderMOC;
+
+@property (strong, nonatomic) SessionProvider *sessionProvider;
+@property (strong, nonatomic) StorageManager *storageManager;
 @end
 
 @implementation UPDFilesViewController
@@ -65,6 +70,11 @@
 }
 
 -(void)setupView{
+    
+    self.sessionProvider = [SessionProvider sharedManager];
+    self.storageManager = [StorageManager sharedManager];
+    self.defaultMOC = [self.storageManager.DBProvider defaultMOC];
+    
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -81,7 +91,6 @@
     
     self.navigationController.navigationBar.hidden = NO;
     
-    self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
     [self.view addSubview:refreshView];
     
@@ -112,11 +121,7 @@
     self.tableView.backgroundView = noDataLabel;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    [self.pullToRefresh startRefresh];
-    [self updateFiles:^() {
-        [self.pullToRefresh finishRefresh];
-        [self reloadTableData];
-    }];
+    [self updateView];
 }
 
 - (void)updateView{
@@ -133,7 +138,6 @@
     if (_folder)
     {
         self.title = _folder.name;
-        self.folderMOC = [_folder folderMOC];
     }
 }
 
@@ -163,12 +167,25 @@
         self.navigationItem.title = [self.type capitalizedString];
 
     }
-    NSError * error = nil;
-    [self.fetchedResultsController performFetch:&error];
+    
     [self updateFiles:^{
         [self reloadTableData];
     }];
     
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    self.fetchedResultsController = nil;
+}
+
+- (void)fetchData{
+    NSError * error = [NSError new];
+    if([self.fetchedResultsController performFetch:&error]){
+        NSLog(@"✅ fetch success with items -> %@",self.fetchedResultsController.fetchedObjects);
+        [self.tableView reloadData];
+    }else{
+        NSLog(@"❌ fetch error desc -> %@",error.localizedDescription);
+    }
 }
 
 - (void)userWasSignedIn
@@ -189,15 +206,12 @@
 {
     [self.tabBarController setSelectedIndex:2];
     for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        NSLog(@"vc class is -> %@",[vc class] );
         [vc setEnabled:NO];
     };
 }
 
 -(void)unlockOnlineButtons{
-//    [self.tabBarController setSelectedIndex:1];
     for (UITabBarItem *vc in [[self.tabBarController tabBar]items]){
-//        NSLog(@"vc class is -> %@",[vc class] );
         [vc setEnabled:YES];
     };
 }
@@ -206,6 +220,13 @@
 {
     [super viewDidAppear:animated];
     
+    if (![Settings version] || ![Settings domain]){
+        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+        signIn.delegate = self;
+        [self presentViewController:signIn animated:YES completion:nil];
+        return;
+    }
+    
     if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
         SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
         signIn.delegate = self;
@@ -213,48 +234,22 @@
         return;
     }
     
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString *scheme = [url scheme];
-    if (!scheme) {
-        [[SessionProvider sharedManager] checkSSLConnection:^(NSString *domain) {
-            if(domain && domain.length > 0){
-                [Settings setDomain:domain];
-                [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-                    self.isP8 = isP8;
-                    if(authorised && offline){
-                        [self userWasSigneInOffline];
-                        return;
-                    }
-                    if (!authorised)
-                    {
-                        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-                        signIn.delegate = self;
-                        [self presentViewController:signIn animated:YES completion:nil];
-                    }
-                    [[ConnectionProvider sharedInstance]startNotification];
-                }];
-
-            }
-        }];
-    }else{
-        [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-            self.isP8 = isP8;
-            if(authorised && offline){
-                [self userWasSigneInOffline];
-                return;
-            }
-            if (!authorised)
-            {
-                SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-                signIn.delegate = self;
-                [self presentViewController:signIn animated:YES completion:nil];
-            }
-            [[ConnectionProvider sharedInstance]startNotification];
-        }];
-
-    }
-
+    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+        self.isP8 = isP8;
+        if(authorised && offline){
+            [self userWasSigneInOffline];
+            return;
+        }
+        if (!authorised)
+        {
+            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+            signIn.delegate = self;
+            [self presentViewController:signIn animated:YES completion:nil];
+        }
+        [[ConnectionProvider sharedInstance]startNotification];
+    }];
     
+    [self fetchData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -313,8 +308,7 @@
     }
     
     self.fetchedResultsController.fetchRequest.predicate = predicate;
-    NSError * error;
-    [self.fetchedResultsController performFetch:&error];
+    [self fetchData];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
     NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
     for (id obj in newItems)
@@ -329,48 +323,6 @@
 }
 
 
-#pragma mark - Navigation
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"UPDGoToFolderSegue"])
-    {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        UPDFilesViewController * vc = [segue destinationViewController];
-        vc.folder = object;
-        vc.isCorporate = self.isCorporate;
-    }
-    if ([segue.identifier isEqualToString:@"OpenFileSegue"])
-    {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        FileDetailViewController * vc = [segue destinationViewController];
-        NSString *viewLink = nil;
-        if ([[Settings version]isEqualToString:@"P8"]) {
-            vc.isP8 = YES;
-        }else{
-            viewLink = [NSString stringWithFormat:@"%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
-            if (object.isDownloaded.boolValue)
-            {
-                viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
-            }
-            vc.isP8 = NO;
-        }
-        vc.viewLink = viewLink;
-        vc.object = object;
-        vc.type = self.type;
-        
-
-    }
-    if ([segue.identifier isEqualToString:@"OpenFileGallerySegue"])
-    {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-        FileGalleryCollectionViewController * vc = [segue destinationViewController];
-        vc.folder = self.folder;
-        UIImage * snap = [self snapshot:self.navigationController.view];
-        vc.snapshot= snap;
-        vc.currentItem = object;
-    }
-}
 
 - (UIImage *)snapshot:(UIView *)view
 {
@@ -387,6 +339,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+    
+    [self.sessionProvider cancelAllOperations];
+    
     if ([object.isFolder boolValue] || [object.mainAction isEqualToString:@"list"])
     {
         [self performSegueWithIdentifier:@"UPDGoToFolderSegue" sender:self];
@@ -395,7 +350,9 @@
     {
         if ([object isImageContentType] && ![[object isLink] boolValue])
         {
+            
             [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
+//            [self.navigationController presentViewController:gallery animated:YES completion:nil];
         }
         else if([[object isLink] boolValue]){
             if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
@@ -462,7 +419,6 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-
         [self removeFileFromCloud:indexPath];
     }
 }
@@ -473,34 +429,11 @@
 }
 
 -(void)signOut{
-    
-    [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-        self.isP8 = isP8;
-        if (isP8) {
-            [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
-                if (succsess) {
-                    [Settings setCurrentAccount:nil];
-                    [Settings setToken:nil];
-                    [Settings setPassword:nil];
-                    SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-                    signIn.delegate = self;
-                    [self presentViewController:signIn animated:YES completion:^(){
-                        
-                    }];
-                }
-            }];
-        }else{
-//            if (authorised)
-//            {
-                [Settings setCurrentAccount:nil];
-                [Settings setToken:nil];
-                [Settings setPassword:nil];
-                SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-                signIn.delegate = self;
-                [self presentViewController:signIn animated:YES completion:^(){
-                    
-                }];
-//            }
+    [self.sessionProvider logout:^(BOOL succsess, NSError *error) {
+        if (succsess) {
+            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+            signIn.delegate = self;
+            [self presentViewController:signIn animated:YES completion:^(){}];
         }
     }];
 }
@@ -508,16 +441,19 @@
 
 - (void)updateFiles:(void (^)())handler
 {
-    [[StorageManager sharedManager] updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
-        if (handler)
-        {
-            handler();
-            id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
-            if ([info numberOfObjects]==0) {
-                noDataLabel.text = @"Folder is empty";
+    if ([Settings domain]) {
+        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
+            if (handler)
+            {
+                handler();
+                [self fetchData];
+                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
+                if ([info numberOfObjects]==0) {
+                    noDataLabel.text = @"Folder is empty";
+                }
             }
-        }
-    }];
+        }];
+    }
 }
 
 - (void)reloadTableData
@@ -553,7 +489,7 @@
             folder.content = thumbnail;
             if ([folder.thumb boolValue]) {
                 NSString *parentPath = folder.parentPath ? folder.parentPath : @"";
-                [[ApiP8 filesModule]getFileThumbnail:folder type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
+                [[ApiP8 filesModule]getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
                     folder.thumbnailLink = thumbnail;
                     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
                     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
@@ -593,7 +529,7 @@
             fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
             fetchDownloadRequest.fetchLimit = 1;
             NSError * error;
-            Folder * file = [[self.managedObjectContext executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
+            Folder * file = [[self.defaultMOC  executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
             if (file)
             {
                 NSIndexPath * indxPath = [self.fetchedResultsController indexPathForObject:file];
@@ -635,7 +571,7 @@
     
     fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
     fetchDownloadRequest.fetchLimit = 1;
-    Folder * file = [[self.managedObjectContext executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
+    Folder * file = [[self.defaultMOC  executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
@@ -704,7 +640,7 @@
     NSError * error;
     [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
     if (self.isP8){
-        [[StorageManager sharedManager]removeSavedFilesForItem:object];
+        [self.storageManager removeSavedFilesForItem:object];
     }
     object.isDownloaded = @NO;
     
@@ -713,7 +649,7 @@
         NSLog(@"%@",[error userInfo]);
     }
     
-    [self.managedObjectContext save:nil];
+    [self.defaultMOC  save:nil];
     
 }
 
@@ -723,14 +659,13 @@
     if ([[Settings version] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
             if (succsess) {
-//                NSLog(@"%@",handler);
-                [self.managedObjectContext save:nil];
+                [self.defaultMOC  save:nil];
             }
         }];
     }else{
-        [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
             NSLog(@"%@",handler);
-            [self.managedObjectContext save:nil];
+            [self.defaultMOC  save:nil];
         }];
     }
 }
@@ -738,32 +673,21 @@
 
 #pragma mark NSFetchedResultsController
 
-- (NSFetchedResultsController*)fetchedResultsController
-{
-    if (_fetchedResultsController != nil) {
+- (NSFetchedResultsController *)fetchedResultsController{
+    
+    if (_fetchedResultsController) {
         return _fetchedResultsController;
     }
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription
-                                   entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    NSSortDescriptor *isFolder = [[NSSortDescriptor alloc] initWithKey:@"isFolder" ascending:NO];
+    NSSortDescriptor *title = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSManagedObjectContext *moc = self.defaultMOC;
+    NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
     
-    NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
-                              initWithKey:@"isFolder" ascending:NO];
-    NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [fetchRequest setSortDescriptors:@[isFolder, title]];
-
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
-    
-    NSFetchedResultsController *theFetchedResultsController =
-    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                        managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
-                                                   cacheName:nil];
-    self.fetchedResultsController = theFetchedResultsController;
+    _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
-    NSError * error;
-    [_fetchedResultsController performFetch:&error];
+    
     return _fetchedResultsController;
 }
 
@@ -871,7 +795,7 @@
         {
             path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
         }
-        [[API sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
+        [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
             hud.progress = progress;
         } completion:^(NSDictionary * response){
             NSLog(@"%@",response);
@@ -901,7 +825,7 @@
 //        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
 //    }
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
+//    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
 //        NSLog(@"%@",response);
 //        [self updateFiles:^(){
 //            [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -914,8 +838,7 @@
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
 //        object.wasDeleted = @YES;
-        [[StorageManager sharedManager]deleteItem:object];
-//        [self.managedObjectContext save:nil];
+        [self.storageManager deleteItem:object];
         if ([[Settings version] isEqualToString:@"P8"]) {
             [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
@@ -925,7 +848,7 @@
                 }
             }];
         }else{
-            [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
                     [self.tableView reloadData];
                 }];
@@ -958,13 +881,13 @@
                                                                  
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                  
-                                                                 [[StorageManager sharedManager] renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                                 [self.storageManager  renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
                                                                      if (folder && !folder.isFault) {
                                                                          self.folderToOperate = folder;
                                                                          self.folder = folder;
                                                                          self.title = folder.name;
                                                                          NSError * error = nil;
-                                                                         [self.fetchedResultsController performFetch:&error];
+                                                                         [self fetchData];
                                                                          if (error)
                                                                          {
                                                                              NSLog(@"%@",[error userInfo]);
@@ -1006,7 +929,7 @@
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
-                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                                 [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
                                                                      if (success) {
                                                                          [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                          [self updateFiles:^(){
@@ -1027,6 +950,53 @@
                                                          }];
     return createFolder;
 }
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"UPDGoToFolderSegue"])
+    {
+        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        UPDFilesViewController * vc = [segue destinationViewController];
+        vc.folder = object;
+        vc.isCorporate = self.isCorporate;
+    }
+    if ([segue.identifier isEqualToString:@"OpenFileSegue"])
+    {
+        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        FileDetailViewController * vc = [segue destinationViewController];
+        NSString *viewLink = nil;
+        if ([[Settings version]isEqualToString:@"P8"]) {
+            vc.isP8 = YES;
+        }else{
+            viewLink = [NSString stringWithFormat:@"%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
+            if (object.isDownloaded.boolValue)
+            {
+                viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+            }
+            vc.isP8 = NO;
+        }
+        vc.viewLink = viewLink;
+        vc.object = object;
+        vc.type = self.type;
+    }
+    if ([segue.identifier isEqualToString:@"OpenFileGallerySegue"])
+    {
+        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        
+        NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+        fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.type, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        NSError * error = [NSError new];
+        NSArray *items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
+        
+        GalleryWrapperViewController * vc = [segue destinationViewController];
+        vc.itemsList = items;
+        vc.initialPageIndex = [items indexOfObject:object];
+    }
+}
+
 
 
 @end

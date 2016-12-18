@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BpF-Tw-5Vh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BpF-Tw-5Vh">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -186,21 +186,21 @@
         <scene sceneID="SeE-qT-3CO">
             <objects>
                 <collectionViewController id="7SC-KJ-w58" customClass="FileGalleryCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" dataMode="prototypes" id="Dol-kR-f60">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="573"/>
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" pagingEnabled="YES" dataMode="prototypes" id="Dol-kR-f60">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Sra-TI-gsu">
-                            <size key="itemSize" width="50" height="50"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="X9t-1n-L36">
+                            <size key="itemSize" width="373" height="279"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="5pU-vN-1WH">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" reuseIdentifier="Cell" id="5pU-vN-1WH">
+                                <rect key="frame" x="0.0" y="0.0" width="373" height="279"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="373" height="279"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </view>
                             </collectionViewCell>
@@ -222,7 +222,47 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2609" y="-220"/>
+            <point key="canvasLocation" x="2650" y="-128"/>
+        </scene>
+        <!--File Gallery Page View Controller-->
+        <scene sceneID="h4o-YS-WsV">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="5VP-6I-eah" customClass="FileGalleryPageViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xoz-j7-WDH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5070" y="-180"/>
+        </scene>
+        <!--Gallery Wrapper View Controller-->
+        <scene sceneID="vnY-FZ-oyD">
+            <objects>
+                <viewController id="t1z-0k-wxd" customClass="GalleryWrapperViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Isg-cD-atF"/>
+                        <viewControllerLayoutGuide type="bottom" id="ujB-qm-36x"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QuR-K7-IOR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="573"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cDY-PR-sE5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="573"/>
+                                <connections>
+                                    <segue destination="5VP-6I-eah" kind="embed" identifier="gallery_embed" id="UtY-9W-ajq"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ujB-qm-36x" firstAttribute="top" secondItem="cDY-PR-sE5" secondAttribute="bottom" id="46b-3R-iho"/>
+                            <constraint firstItem="cDY-PR-sE5" firstAttribute="leading" secondItem="QuR-K7-IOR" secondAttribute="leading" id="68C-Tv-hfX"/>
+                            <constraint firstItem="cDY-PR-sE5" firstAttribute="top" secondItem="Isg-cD-atF" secondAttribute="bottom" id="L6r-sA-eMu"/>
+                            <constraint firstAttribute="trailing" secondItem="cDY-PR-sE5" secondAttribute="trailing" id="hWU-Xz-FbK"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kjE-FJ-DF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4277.6000000000004" y="-180.35982008995504"/>
         </scene>
         <!--Personal-->
         <scene sceneID="FRd-Sg-sjM">
@@ -333,8 +373,8 @@
                         <outlet property="tableView" destination="uCb-HE-Oom" id="zjg-YY-xI6"/>
                         <outlet property="toolbar" destination="0Be-JD-In9" id="LJf-WO-zoc"/>
                         <outlet property="uploadButton" destination="P2e-5F-q5I" id="dgX-ab-H1X"/>
-                        <segue destination="7SC-KJ-w58" kind="show" identifier="OpenFileGallerySegue" id="8oa-sm-pPy"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="XCZ-oO-tnN"/>
+                        <segue destination="t1z-0k-wxd" kind="show" identifier="OpenFileGallerySegue" id="jAr-Pg-PJz"/>
                     </connections>
                 </viewController>
                 <view contentMode="scaleToFill" id="Pfc-z5-ZfQ">
@@ -568,8 +608,8 @@
                         <outlet property="tableView" destination="vjy-OQ-JZY" id="Bby-aD-k7u"/>
                         <outlet property="toolbar" destination="uS3-yH-1oq" id="nbt-vA-UYM"/>
                         <outlet property="uploadButton" destination="uHw-UU-5cI" id="01X-cr-QVe"/>
-                        <segue destination="7SC-KJ-w58" kind="show" identifier="OpenFileGallerySegue" id="F27-c8-0An"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="zyX-16-Tna"/>
+                        <segue destination="t1z-0k-wxd" kind="show" identifier="OpenFileGallerySegue" id="E0Q-Ap-UAA"/>
                     </connections>
                 </viewController>
                 <view contentMode="scaleToFill" id="Sg2-RF-Fws">
@@ -664,7 +704,7 @@
                         <outlet property="tableView" destination="5f7-VM-7rX" id="kyD-NB-JQn"/>
                         <outlet property="toolBar" destination="I2P-9f-nfI" id="bR8-yB-szV"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="Yce-Sr-ME5"/>
-                        <segue destination="7SC-KJ-w58" kind="show" identifier="OpenDownloadFileGallerySegue" id="DPW-qe-N7d"/>
+                        <segue destination="t1z-0k-wxd" kind="show" identifier="OpenDownloadFileGallerySegue" id="jBf-a1-8Po"/>
                     </connections>
                 </viewController>
                 <view contentMode="scaleToFill" id="UHg-qk-gCA">
@@ -693,10 +733,10 @@
         <image name="sigh_out" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="zyX-16-Tna"/>
-        <segue reference="Biu-mK-C6o"/>
         <segue reference="a5o-z2-Tyf"/>
+        <segue reference="Biu-mK-C6o"/>
         <segue reference="cQi-CL-Swj"/>
-        <segue reference="F27-c8-0An"/>
+        <segue reference="jBf-a1-8Po"/>
+        <segue reference="Yce-Sr-ME5"/>
     </inferredMetricsTieBreakers>
 </document>

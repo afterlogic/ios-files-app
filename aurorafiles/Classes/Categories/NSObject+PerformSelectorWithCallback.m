@@ -19,4 +19,27 @@
         });
     });
 }
+
+- (void)for:(NSInteger)times timesTryBlock:(void(^)(void(^)(BOOL success,NSError* error)))block;
+{
+    [self for:times timesTryBlock:block callback:^(BOOL success, NSError* error) {} ];
+}
+
+- (void)for:(NSInteger)times timesTryBlock:(void(^)(void(^)(BOOL success,NSError* error)))block callback:(void(^)(BOOL success,NSError* error))callback;
+{
+    block(^(BOOL success,NSError* error){
+        if (error != nil)
+        {
+            if (times > 1)
+                [self for:times - 1 timesTryBlock:block callback:callback];
+            else
+                callback(NO,error);
+            return;
+        }else{
+            callback(YES,nil);
+        }
+    });
+    
+
+}
 @end

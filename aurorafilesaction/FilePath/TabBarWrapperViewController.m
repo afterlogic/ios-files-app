@@ -11,7 +11,7 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "StorageManager.h"
 #import "Folder.h"
-#import "API.h"
+#import "ApiP7.h"
 #import "ApiP8.h"
 
 @interface TabBarWrapperViewController ()<UITabBarControllerDelegate, FolderDelegate>{
@@ -36,7 +36,7 @@
     self.tabBarController.delegate = self;
     self.views = [NSMutableArray new];
     folders = [NSMutableArray new];
-    [[API sharedInstance]cancelAllOperations];
+    [[ApiP7 sharedInstance]cancelAllOperations];
     [ApiP8 cancelAllOperations];
     [self.tabBarController.viewControllers makeObjectsPerformSelector:@selector(view)];
 //    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(Folder *result) {

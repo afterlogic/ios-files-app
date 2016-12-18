@@ -14,5 +14,6 @@
 @property (strong, nonatomic) UITapGestureRecognizer * doubleTap;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 + (NSString*)cellId;
-
++ (CGSize)cellSize;
++ (CGSize)cellSizeLandscape;
 @end

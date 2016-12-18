@@ -8,9 +8,11 @@
 
 #import "Folder.h"
 #import "Settings.h"
+#import <MagicalRecord/MagicalRecord.h>
 
 @implementation Folder
 
+#pragma mark - Folder Mapping
 + (FEMMapping*)renameMapping
 {
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
@@ -121,16 +123,6 @@
 
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
 
-
-    
-    
-
-
-//    "Path": "",
-//    "LastModified": 0,
-
-
-
     
     return mapping;
 }
@@ -141,30 +133,48 @@
     mapping.primaryKey = @"name";
     
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
-//    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
     [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
     [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
-    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
+    [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
+    [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
+    FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
+        if ([value isKindOfClass:[NSString class]]) {
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            NSNumber *myNumber = [f numberFromString:(NSString *)value];
+            return myNumber;
+        }
+        return value;
+    } reverseMap:NULL];
+    
+    [mapping addAttribute:linkType];
     [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
-    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
     [mapping addAttributesFromDictionary:@{@"thumb":@"Thumb"}];
     [mapping addAttributesFromDictionary:@{@"thumbnailLink":@"ThumbnailLink"}];
     [mapping addAttributesFromDictionary:@{@"oembedHtml":@"OembedHtml"}];
-    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
-    [mapping addAttributesFromDictionary:@{@"isShared": @"IsShared"}];
+    [mapping addAttributesFromDictionary:@{@"isShared": @"Shared"}];
     [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
-    [mapping addAttributesFromDictionary:@{@"actionName":@"MainAction"}];
+    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
+    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    
+    
+    //    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+    
+    
+    
+    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
     
     return mapping;
     
 }
 // Insert code here to add functionality to your managed object subclass
+#pragma mark - Folder Properties
 
 - (NSString*)embedThumbnailLink
 {
@@ -233,8 +243,6 @@
 - (BOOL)canEdit
 {
     return YES;
-//    NSLog(@"%@ %@ %@",self.owner,[Settings login],self.name);
-//    return [self.owner isEqualToString:[Settings login]];
 }
 
 + (NSArray*)imageContentTypes
@@ -273,6 +281,61 @@
     }
     
     return NO;
+}
+
+#pragma mark - Fetch
+
++(NSFetchRequest *)folderFetchRequestInContext:(NSManagedObjectContext *)ctx{
+    NSFetchRequest *newFetchReq = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
+//    return [Folder MR_createFetchRequestInContext:ctx];
+    return newFetchReq;
+}
+
++(NSFetchRequest *)getFetchRequestInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate{
+    NSFetchRequest * fetchRequest = [Folder folderFetchRequestInContext:context];
+    fetchRequest.sortDescriptors = descriptors;
+    fetchRequest.predicate = predicate;
+    return fetchRequest;
+}
+
++(NSArray *)fetchFoldersInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate{
+
+    return [context executeFetchRequest:[Folder getFetchRequestInContext:context descriptors:descriptors predicate:predicate] error:nil];
+}
+
+#pragma mark - Folder Operations
+
++(Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
+    Folder *item = [Folder findObjectByItemRef:itemRef context:context];
+    if (!item) {
+//        item = [Folder MR_createEntityInContext:context];
+//        [FEMDeserializer fillObject:item fromRepresentation:itemRef mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
+        item = [FEMDeserializer objectFromRepresentation:itemRef mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+        item.toRemove = [NSNumber numberWithBool:NO];
+        item.isP8 = [NSNumber numberWithBool:isP8];
+        item.parentPath = path;
+    }
+    return item;
+}
+
++(NSString *)getExistedFile:(Folder *)folder{
+    NSString *filePath = nil;
+    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
+    if ([fileManager fileExistsAtPath:fullURL.path]) {
+        filePath =  fullURL.path;
+    }
+    return filePath;
+}
+
++ (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx{
+    NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
+    NSMutableArray * result = [Folder fetchFoldersInContext:ctx descriptors:descriptors predicate:predicate].mutableCopy;
+    return result.lastObject;
 }
 
 @end

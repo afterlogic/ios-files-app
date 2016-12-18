@@ -26,6 +26,17 @@
     [[Settings sharedDefaults] synchronize];
 }
 
++ (NSString *)domainScheme{
+    NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
+    NSLog(@"⚠️ current domain Scheme is -> %@", sch);
+    return sch;
+}
+
++ (void)setDomainScheme:(NSString *)scheme{
+    [[Settings sharedDefaults] setValue:scheme forKey:@"domain_sсheme"];
+    [[Settings sharedDefaults] synchronize];
+}
+
 + (void)setAuthToken:(NSString *)authToken
 {
     [[Settings sharedDefaults] setValue:authToken forKey:@"auth_token"];
@@ -97,6 +108,7 @@
     [[Settings sharedDefaults] synchronize];
 }
 + (NSString *)version{
+    NSLog(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
     return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
 }
 
@@ -107,6 +119,15 @@
 
 +(NSDictionary *)getLastUsedFolder{
     return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
+}
+
++(void)clearSettings{
+    [Settings setLastLoginServerVersion:nil];
+    [Settings setCurrentAccount:nil];
+    [Settings setToken:nil];
+    [Settings setPassword:nil];
+    [Settings setAuthToken:nil];
+    [Settings setDomainScheme:nil];
 }
 
 @end

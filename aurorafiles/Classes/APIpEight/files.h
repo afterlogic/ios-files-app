@@ -14,8 +14,8 @@ typedef void (^UploadProgressBlock)(float progress);
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items))handler;
 - (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items))handler;
 
-- (void)getThumbnailsForFiles:(NSArray <Folder *>*)files forContext:(NSManagedObjectContext *)ctx withCompletion:(void(^)(bool success))handler;
-- (void)getFileThumbnail:(Folder *)folder type:(NSString *)type path:(NSString *)path withCompletion:(void(^)(NSString *thumbnail))handler;
+- (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler;
+- (void)getThumbnailForFileNamed:(NSString *)folderName type:(NSString *)type path:(NSString *)parentPath withCompletion:(void(^)(NSString *thumbnail))handler;
 - (void)stopFileThumb:(NSString *)folderName;
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler;
@@ -30,6 +30,5 @@ typedef void (^UploadProgressBlock)(float progress);
 - (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 - (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 
-- (NSString *)getExistedFile:(Folder *)folder;
 - (NSString *)getExistedThumbnailForFile:(Folder *)folder;
 @end

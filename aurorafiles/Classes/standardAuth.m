@@ -14,8 +14,8 @@
 
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static const int retryCount = 3;
-static const int retryInterval = 30;
+static int retryCount = 3;
+static const int retryInterval = 5;
 
 @interface standardAuth(){
     AFHTTPRequestOperationManager *manager;
@@ -35,6 +35,8 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
         manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
+        
+        retryCount = 3;
     }
     return self;
 }
@@ -102,6 +104,7 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
 }
 
 -(void)cancelOperations{
+    retryCount = 0;
     [manager.operationQueue cancelAllOperations];
 }
 

@@ -8,23 +8,27 @@
 
 #import "FileGalleryCollectionViewController.h"
 #import "FileGalleryCollectionViewCell.h"
+#import "GalleryCollectionFlowLayout.h"
 #import "StorageManager.h"
 #import "Settings.h"
 #import "ApiP8.h"
-#import "API.h"
+#import "ApiP7.h"
 #import <MagicalRecord/MagicalRecord.h>
 
 @interface FileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
 {
     CGPoint _lastTouch;
     UIImageView *snapshotView;
+    CGSize cellSize;
+    
 }
 @property (strong, nonatomic) NSArray * items;
 @property (strong, nonatomic) StorageManager * manager;
 @property (strong, nonatomic) UITapGestureRecognizer * tapGesture;
+@property (weak, nonatomic) UIBarButtonItem * moreButton;
 @property (weak, nonatomic) UIBarButtonItem * shareButton;
 @property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *panCollectionGesture;
-@property (weak, nonatomic) UIBarButtonItem * moreButton;
+
 @property (weak, nonatomic) UITextField * folderName;
 @property (weak, nonatomic) UIView * dragView;
 @property (weak, nonatomic) Folder *currentViewdItem;
@@ -53,19 +57,24 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.manager = [StorageManager sharedManager];
+    
     NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
     fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-    fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@",self.folder.fullpath,[Folder imageContentTypes],self.currentItem.type];
-    NSError * error = nil;
+    fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.currentItem.type, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSError * error = [NSError new];
+    self.items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
+    
+    
     self.panCollectionGesture.delegate = self;
     [self.collectionView addGestureRecognizer:self.panCollectionGesture];
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapsOnImage:)];
     self.tapGesture.delegate = self;
-    self.items = [self.manager.managedObjectContext executeFetchRequest:fetchImageFilesItemsRequest error:&error];
+    
     self.collectionView.pagingEnabled = YES;
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     [self.collectionView reloadData];
+    
     UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareFileAction:)];
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
     self.moreButton = moreItem;
@@ -89,6 +98,9 @@
     [snapshotView setCenter:self.view.center];
     [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
     snapshotView.alpha = 0.0f;
+    
+    
+    cellSize = self.collectionView.bounds.size;
     // Do any additional setup after loading the view.
     
 
@@ -97,12 +109,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.itemSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds));
+    GalleryCollectionFlowLayout * layout = [[GalleryCollectionFlowLayout alloc] init];
+//    layout.itemSize = self.view.bounds.size;
     layout.sectionInset = UIEdgeInsetsZero;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0;
     [self.collectionView setCollectionViewLayout:layout];
     [self.navigationController setToolbarHidden:YES animated:YES];
     
@@ -110,11 +120,7 @@
     NSInteger row = [self.items indexOfObject:self.currentItem];
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     
-    UIGraphicsBeginImageContext(self.view.bounds.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [snapshotView setImage:sourceImage];
+    [snapshotView setImage:[self getScreenSnapshot]];
     
 }
 
@@ -217,7 +223,7 @@
                 }
             }];
         }else{
-        [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+        [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
             object.wasDeleted = @YES;
             [object.managedObjectContext save:nil];
             [self.navigationController popViewControllerAnimated:YES];
@@ -262,7 +268,8 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.view.bounds.size;
+    
+    return cellSize;
 }
 
 - (void)didReceiveMemoryWarning
@@ -273,63 +280,62 @@
 
 #pragma mark - Rotation
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    CGFloat viewWidth = self.view.frame.size.width;
-    CGFloat viewHeight = self.view.frame.size.height;
-    
-    UIGraphicsBeginImageContext(self.view.bounds.size);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *sourceImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [snapshotView setImage:sourceImage];
-    
-    snapshotView.alpha =1.0f;
-    
-    if(viewWidth >= viewHeight){
-        [snapshotView setContentMode:UIViewContentModeScaleAspectFill];
-    }else{
-        [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
-    }
-
-    int currentPage;
-    float width;
-    self.collectionView.alpha = 0.0f;
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    
-    currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
-    width = self.collectionView.bounds.size.height;
-    
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
-        [snapshotView setFrame:self.collectionView.frame];
-     }
-    completion:^(id<UIViewControllerTransitionCoordinatorContext> context){
-        
-        [self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
-        [self.collectionView reloadData];
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentViewdItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-        [UIView animateWithDuration:0.25f animations:^{
-            self.collectionView.alpha = 1.0f;
-            snapshotView.alpha = 0.0;
-        }];
-
-     }];
-    
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+-(BOOL)shouldAutorotate{
+    return YES;
 }
 
-//-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//    
-//    int currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
-//    float width = self.collectionView.bounds.size.height;
-//    
-//    [UIView animateWithDuration:duration animations:^{
-//        [self.self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
-//        [[self.self.collectionView collectionViewLayout] invalidateLayout];
-//    }];
-//}
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskAll;
+}
 
-
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    CGSize collectionViewSize = self.collectionView.bounds.size;
+    CGFloat viewWidth = collectionViewSize.width;
+    CGFloat viewHeight = collectionViewSize.height;
+//
+//    [snapshotView setImage:[self getScreenSnapshot]];
+//    
+//    snapshotView.alpha = 1.0f;
+//    self.collectionView.alpha = 0.0f;
+//    
+    if(viewWidth >= viewHeight){
+//        [snapshotView setContentMode:UIViewContentModeScaleAspectFill];
+        cellSize = CGSizeMake(viewWidth, viewHeight);
+    }else{
+//        [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
+        cellSize = CGSizeMake(viewWidth, viewHeight);
+    }
+//
+//        [self.collectionView.collectionViewLayout invalidateLayout];
+//    [self.collectionView reloadData];
+//
+    
+        CGPoint currentOffset = [self.collectionView contentOffset];
+        int currentIndex = currentOffset.x / collectionViewSize.width;
+//
+//    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+//        
+//        
+//     }
+//    completion:^(id<UIViewControllerTransitionCoordinatorContext> context){
+//        
+        CGSize currentSize = size;
+        float offset = currentIndex * currentSize.width;
+//
+        [self.collectionView performBatchUpdates:^{
+                [self.collectionView setContentOffset:CGPointMake(offset, 0) animated:NO];
+        } completion:nil];
+//        self.collectionView.alpha = 1.0f;
+//        [UIView animateWithDuration:0.25f animations:^{
+//            snapshotView.alpha = 0.0;
+//        }];
+//
+//     }];
+//    [self.collectionView performBatchUpdates:nil completion:nil];
+//    [self.collectionView.collectionViewLayout invalidateLayout];
+}
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -421,5 +427,31 @@
         }
     }];
 
+}
+
+- (UIImage *)getScreenSnapshot{
+//    // create graphics context with screen size
+//    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    UIGraphicsBeginImageContext(screenRect.size);
+//    CGContextRef ctx = UIGraphicsGetCurrentContext();
+//    [[UIColor blackColor] set];
+//    CGContextFillRect(ctx, screenRect);
+//    
+//    // grab reference to our window
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    
+//    // transfer content into our context
+//    [window.layer renderInContext:ctx];
+//    UIImage *screengrab = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    
+    
+    UIGraphicsBeginImageContext(self.view.bounds.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *screengrab = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    
+    return screengrab;
 }
 @end

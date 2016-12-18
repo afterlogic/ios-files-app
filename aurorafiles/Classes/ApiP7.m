@@ -6,14 +6,14 @@
 //  Copyright (c) 2015 Michael Akopyants. All rights reserved.
 //
 
-#import "API.h"
+#import "ApiP7.h"
 #import "Settings.h"
 #import "Folder.h"
 #import "AFNetworking.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static const int retryCount = 3;
-static const int retryInterval = 30;
+static  int retryCount = 3;
+static  int retryInterval = 5;
 
 @import UIKit;
 
@@ -49,14 +49,14 @@ static const int retryInterval = 30;
 
 @end;
 
-@interface API (){
+@interface ApiP7 (){
 //    AFHTTPreqst *manager;
     AFHTTPRequestOperationManager *manager;
 }
 
 @end
 
-@implementation API
+@implementation ApiP7
 
 static NSString *appDataAction		= @"SystemGetAppData";
 static NSString *signInAction		= @"SystemLogin";
@@ -78,6 +78,8 @@ static NSString *folderInfo         = @"FileInfo";
         for (NSHTTPCookie *cookie in [storage cookies]) {
             [storage deleteCookie:cookie];
         }
+        
+        retryCount = 3;
     }
     return self;
 }
@@ -106,10 +108,10 @@ static NSString *folderInfo         = @"FileInfo";
 
 + (instancetype) sharedInstance
 {
-    static API *sharedInstance = nil;
+    static ApiP7 *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[API alloc] init];
+        sharedInstance = [[ApiP7 alloc] init];
     });
     return sharedInstance;
 }
@@ -118,9 +120,12 @@ static NSString *folderInfo         = @"FileInfo";
 {
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",scheme ? @"" : @"https://",[Settings domain]]]];
+    if (![Settings domainScheme]) {
+        [Settings setDomainScheme:scheme ? [NSString stringWithFormat:@"%@://",scheme]:@"https://"];
+    }
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?/Ajax/",[Settings domainScheme],[Settings domain]]]];
     NSMutableDictionary * newDict = [dict mutableCopy];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     
     NSMutableString *query = [[NSMutableString alloc] init];
     for (id obj in newDict)
@@ -159,7 +164,7 @@ static NSString *folderInfo         = @"FileInfo";
             data = responseObject;
         }
         id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-        if ([json isKindOfClass:[NSDictionary class]])
+        if (json && [json isKindOfClass:[NSDictionary class]])
         {
             if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
             {
@@ -186,7 +191,7 @@ static NSString *folderInfo         = @"FileInfo";
             NSLog(@"HTTP Request failed: %@", error);
             handler(nil,error);
          });
-    } autoRetryOf:retryCount retryInterval:retryInterval];
+    }];
 
     [manager.operationQueue addOperation:operation];
 }
@@ -342,7 +347,7 @@ static NSString *folderInfo         = @"FileInfo";
     
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:deleteFiles forKey:@"Action"];
     NSString * name = folder.name;
     if (folder.isLink.boolValue)
@@ -400,7 +405,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:renameFolder forKey:@"Action"];
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
     [newDict setObject:path forKey:@"Path"];
@@ -460,7 +465,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:createFolder forKey:@"Action"];
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
     [newDict setObject:path forKey:@"Path"];
@@ -510,7 +515,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:deleteFiles forKey:@"Action"];
     NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",[files objectForKey:@"Path"], [files objectForKey:@"Name"]];
     [newDict setObject:items forKey:@"Items"];
@@ -560,7 +565,7 @@ static NSString *folderInfo         = @"FileInfo";
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[API requestParams]];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:folderInfo forKey:@"Action"];
     
     [newDict setObject:type forKey:@"Type"];
@@ -669,6 +674,7 @@ static NSString *folderInfo         = @"FileInfo";
 
 -(void)cancelAllOperations{
     [manager.operationQueue cancelAllOperations];
+    retryCount = 0;
 }
 
 @end

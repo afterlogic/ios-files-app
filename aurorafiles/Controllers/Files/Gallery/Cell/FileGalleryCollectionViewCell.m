@@ -72,7 +72,7 @@
         self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
-            NSData *data = [NSData dataWithContentsOfFile:[[ApiP8 filesModule]getExistedFile:file]];
+            NSData *data = [NSData dataWithContentsOfFile:[Folder getExistedFile:file]];
             if(data && data.length > 0){
                 UIImage *image = [UIImage imageWithData:data];
                 [self.imageView setImage:image];
@@ -195,6 +195,16 @@
                                       withCenter:[recognizer locationInView:recognizer.view]];
         [self.scrollView zoomToRect:zoomRect animated:YES];
     }
+}
+
++(CGSize)cellSize{
+    CGSize size = [[UIScreen mainScreen]bounds].size;
+    return size;
+}
+
++(CGSize)cellSizeLandscape{
+    CGSize size = CGSizeMake(CGRectGetHeight([[UIScreen mainScreen]bounds]),CGRectGetWidth( [[UIScreen mainScreen]bounds]));
+    return size;
 }
 
 @end

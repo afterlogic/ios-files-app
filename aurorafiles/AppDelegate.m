@@ -12,9 +12,15 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "MLNetworkLogger.h"
 #import "AFNetworkActivityLogger.h"
-#import "StorageManager.h"
 
-@interface AppDelegate ()
+#import <MagicalRecord/MagicalRecord.h>
+
+#import "StorageManager.h"
+#import "DataBaseProvider.h"
+#import "FileOperationsProvider.h"
+
+@interface AppDelegate (){
+}
 
 @end
 
@@ -26,8 +32,12 @@
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
     [[AFNetworkActivityLogger sharedLogger] startLogging];
     [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
-    [[StorageManager sharedManager]initCoreData];
-
+    
+    [[DataBaseProvider sharedProvider] setupCoreDataStack];
+    [[StorageManager sharedManager]setupDBProvider:[DataBaseProvider sharedProvider]];
+    [[StorageManager sharedManager]setupFileOperationsProvider:[FileOperationsProvider sharedProvider]];
+    
+    
     return YES;
 }
 
@@ -52,6 +62,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    [[StorageManager sharedManager] saveContext];
+    [[DataBaseProvider sharedProvider] endWork];
+    
 }
 @end

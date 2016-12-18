@@ -9,7 +9,7 @@
 #import "FilesTableViewCell.h"
 #import "SessionProvider.h"
 #import "Settings.h"
-#import "API.h"
+#import "ApiP7.h"
 #import "UIImage+Aurora.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "StorageManager.h"
@@ -56,7 +56,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(unlockOnlineButtons) name:CPNotificationConnectionOnline object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lockOnlineButtons) name:CPNotificationConnectionLost object:nil];
     
-    self.managedObjectContext = [[StorageManager sharedManager] managedObjectContext];
+    self.managedObjectContext = [[[StorageManager sharedManager] DBProvider]defaultMOC];
     
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     
@@ -158,7 +158,7 @@
 {
     [super viewDidAppear:animated];
     
-    [[SessionProvider sharedManager] checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;
@@ -504,7 +504,7 @@
 //            }
 //        }];
     }else{
-        [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
             BFLog(@"%@",handler);
             [self.managedObjectContext save:nil];
         }];
@@ -605,7 +605,7 @@
 //        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
 //    }
 ////    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [[API sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
+//    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
 //        BFLog(@"%@",response);
 //        [self updateFiles:^(){
 ////            [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -629,7 +629,7 @@
                 }
             }];
         }else{
-            [[API sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
                     [self.tableView reloadData];
                 }];

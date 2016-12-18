@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (FEMMapping*)defaultMapping;
 + (FEMMapping*)renameMapping;
 + (FEMMapping*)P8DefaultMapping;
++ (FEMMapping*)P8RenameMapping;
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
 - (BOOL)isZippedFile;
@@ -29,6 +30,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString*)validContentType;
 - (NSURL*)downloadURL;
 - (NSDictionary *)folderMOC;
+
++ (Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
++ (NSFetchRequest *)getFetchRequestInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
++ (NSArray *)fetchFoldersInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
++ (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx;
+
++ (NSString *)getExistedFile:(Folder *)folder;
 @end
 
 NS_ASSUME_NONNULL_END

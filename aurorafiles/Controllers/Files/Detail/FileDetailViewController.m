@@ -8,7 +8,7 @@
 
 #import "FileDetailViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "API.h"
+#import "ApiP7.h"
 #import "Folder.h"
 #import "UIImage+Aurora.h"
 #import "Settings.h"
@@ -173,7 +173,7 @@
                 }
             }];
         }else{
-            [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
                 [self.object.managedObjectContext save:nil];
                 [self.navigationController popViewControllerAnimated:YES];
             }];

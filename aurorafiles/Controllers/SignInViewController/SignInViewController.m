@@ -8,18 +8,19 @@
 
 #import "SignInViewController.h"
 #import "Settings.h"
-#import "Api.h"
-#import "ApiP8.h"
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
 #import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "NSString+Validators.h"
+#import "UIAlertView+Errors.h"
+#import "StorageManager.h"
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
 {
 	UITextField *activeField;
+    BOOL alertViewIsShow;
 }
 @end
 
@@ -29,7 +30,6 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
-    [NSURL URLWithString:[Settings domain]];
 
     self.domainField.text = [[[NSURL URLWithString:[Settings domain]] resourceSpecifier]stringByReplacingOccurrencesOfString:@"//" withString:@""];
     self.emailField.text = [Settings login];
@@ -48,16 +48,16 @@
 	self.emailField.delegate = self;
 	self.passwordField.delegate = self;
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
+    
+    alertViewIsShow = NO;
     // Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [Settings setAuthToken:nil];
-    [Settings setToken:nil];
-    [[API sharedInstance]cancelAllOperations];
-    [ApiP8 cancelAllOperations];
+    [self clear];
+
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -89,90 +89,57 @@
     [activeField resignFirstResponder];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     if (self.emailField.text.length == 0) {
-        NSError *error;
-        NSString * text = NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"");
-        if ([error localizedDescription])
-        {
-            text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
-            BFLog(@"email error - > %@",text);
+        if (!alertViewIsShow) {
+            NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+            [UIAlertView generatePopupWithError:error forVC:self];
+            alertViewIsShow = YES;
         }
-        UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-        a.delegate = self;
-        [a show];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
     
     if (self.domainField.text.length == 0) {
-        NSError *error;
-        NSString * text = NSLocalizedString(@"Host field should not be empty. Please, enter the host url and try again", @"");
-        if ([error localizedDescription])
-        {
-            text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
-            BFLog(@"email error - > %@",text);
+        if(!alertViewIsShow){
+            NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
+            [UIAlertView generatePopupWithError:error forVC:self];
+            alertViewIsShow = YES;
         }
-        UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-        a.delegate = self;
-        [a show];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         return;
     }
     
 	[Settings setDomain:self.domainField.text];
     
-    [[SessionProvider sharedManager] checkSSLConnection:^(NSString *domain) {
-        NSLog(@"domain is -> %@", domain);
-        if(domain && domain.length > 0){
-            [Settings setDomain:domain];
-            [[SessionProvider sharedManager] authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if (authorized)
-                {
-                    [Settings setLogin:self.emailField.text];
-                    [Settings setPassword:self.passwordField.text];
-                    [self dismissViewControllerAnimated:YES completion:^(){
-                        [self.delegate userWasSignedIn];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-                    }];
-                }
-                else
-                {
-                    NSLog(@"%@",error);
-                    NSString * text = NSLocalizedString(@"The e-mail or password you entered is incorrect", @"");
-                    if ([error localizedDescription])
-                    {
-                        text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
-                        BFLog(@"login error - > %@",text);
-                    }
-                    UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-                    a.delegate = self;
-                    [a show];
-                }
-            }];
-
-        }else{
-            NSError *error;
-            NSString * text = NSLocalizedString(@"The host is not responding. Try connecting again later", @"");
-            if ([error localizedDescription])
-            {
-                text = [NSString stringWithFormat:@"%@",[error localizedDescription]];
-                BFLog(@"email error - > %@",text);
-            }
-            UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-            a.delegate = self;
-            [a show];
+    [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+        if (domain && domain.length) {
+        [[SessionProvider sharedManager]loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
-            return;
-
+            if (error){
+                [UIAlertView generatePopupWithError:error forVC:self];
+            }else{
+                [Settings setLogin:self.emailField.text];
+                [Settings setPassword:self.passwordField.text];
+                [self dismissViewControllerAnimated:YES completion:^(){
+                    [self.delegate userWasSignedIn];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
+                }];
+            }
+        }];
+        }else{
+            if (!alertViewIsShow) {
+                NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
+                [UIAlertView generatePopupWithError:error forVC:self];
+                [self clear];
+                alertViewIsShow = YES;
+            }
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
         }
     }];
-    
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == [alertView cancelButtonIndex]) {
-//        [self offlineAuth];
+        alertViewIsShow = NO;
     }
 }
 
@@ -235,6 +202,12 @@
 											 selector:@selector(keyboardWillBeHidden:)
              name:UIKeyboardWillHideNotification object:nil];
  
+}
+
+-(void)clear{
+    [Settings clearSettings];
+    [[StorageManager sharedManager]clear];
+    [[SessionProvider sharedManager]clear];
 }
 
 @end

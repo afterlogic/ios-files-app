@@ -11,11 +11,10 @@
 #import "AFNetworking.h"
 #import "Settings.h"
 #import "NSURLRequest+requestGenerator.h"
-
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static const int retryCount = 3;
-static const int retryInterval = 30;
+static int retryCount = 3;
+static const int retryInterval = 5;
 
 @interface core(){
     AFHTTPRequestOperationManager *manager;
@@ -38,6 +37,8 @@ static NSString *methodGetUser = @"GetUser";
         manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
+        
+        retryCount = 3;
     }
     return self;
 }
@@ -125,7 +126,7 @@ static NSString *methodGetUser = @"GetUser";
                 data = responseObject;
             }
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-            if ([json isKindOfClass:[NSDictionary class]])
+            if (json && [json isKindOfClass:[NSDictionary class]])
             {
                 if ([[json valueForKey:@"Result"] isKindOfClass:[NSArray class]])
                 {
@@ -160,7 +161,7 @@ static NSString *methodGetUser = @"GetUser";
             }
             handler(nil,error);
         });
-    } autoRetryOf:retryCount retryInterval:retryInterval];
+    }];
     
     [manager.operationQueue addOperation:operation];
 }
@@ -298,6 +299,7 @@ static NSString *methodGetUser = @"GetUser";
 }
 
 -(void)cancelOperations{
+    retryCount = 0;
     [manager.operationQueue cancelAllOperations];
 }
 

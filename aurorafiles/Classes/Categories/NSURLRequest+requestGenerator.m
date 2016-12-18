@@ -16,7 +16,10 @@
     
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?Api=",scheme ? @"" : @"https://",[Settings domain]]]];
+    if (![Settings domainScheme]) {
+        [Settings setDomainScheme:scheme ? [NSString stringWithFormat:@"%@://",scheme]:@"https://"];
+    }
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/?Api=",[Settings domainScheme],[Settings domain]]]];
     
     NSMutableDictionary * newDict = [dict mutableCopy];
     if (!isLogin) {
