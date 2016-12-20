@@ -68,8 +68,12 @@
     }];
 }
 
+//MARK: важная функция для работы экстеншена
 -(void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL))complitionHandler{
     [self setupNetworkManager];
+    [self.networkManager checkItemExistanceonServerByName:name path:path type:type completion:^(BOOL exist) {
+        complitionHandler(exist);
+    }];
     
 }
 

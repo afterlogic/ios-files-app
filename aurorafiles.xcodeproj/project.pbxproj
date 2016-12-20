@@ -105,8 +105,6 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
-		FF92048C1DEF34730089A97F /* XXXProbeIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		FF92048D1DEF34870089A97F /* XXXProbeIOS.framework in Resources */ = {isa = PBXBuildFile; fileRef = FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */; };
 		FFAD03E61DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
 		FFAD03E71DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
 		FFAD03EB1DEC6E6C000C4AFF /* P7Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EA1DEC6E6C000C4AFF /* P7Manager.m */; };
@@ -284,7 +282,6 @@
 		FF42B1E51DB77F88005A2B0C /* files.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = files.m; path = APIpEight/files.m; sourceTree = "<group>"; };
 		FF42B1E81DB77FDF005A2B0C /* AuroraModuleProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AuroraModuleProtocol.h; path = APIpEight/AuroraModuleProtocol.h; sourceTree = "<group>"; };
 		FF42B1EB1DB7CDA0005A2B0C /* aurorafiles 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "aurorafiles 3.xcdatamodel"; sourceTree = "<group>"; };
-		FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XXXProbeIOS.framework; sourceTree = "<group>"; };
 		FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = snapshotTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
 		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -385,7 +382,6 @@
 				FF64877B1DD9EA610063ACB0 /* libsqlite3.tbd in Frameworks */,
 				FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */,
 				231184308D0834E67342208D /* libPods-aurorafiles.a in Frameworks */,
-				FF92048C1DEF34730089A97F /* XXXProbeIOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,7 +509,6 @@
 			children = (
 				DAC1CA381D061D7500238EB5 /* main.m */,
 				FF8A21E31D53F1F7006EBE36 /* Constants.h */,
-				FF4301BB1DD9E08800D1ABF4 /* XXXProbeIOS.framework */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1243,7 +1238,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF92048D1DEF34870089A97F /* XXXProbeIOS.framework in Resources */,
 				DAC1CA761D061EF800238EB5 /* Images.xcassets in Resources */,
 				FFE6F0941E033FD9009141CA /* ImageViewController.xib in Resources */,
 				DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */,

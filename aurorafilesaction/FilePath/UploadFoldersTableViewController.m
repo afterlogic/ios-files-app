@@ -520,26 +520,38 @@
         return _fetchedResultsController;
     }
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription
-                                   entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+//    NSEntityDescription *entity = [NSEntityDescription
+//                                   entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
+//    [fetchRequest setEntity:entity];
     
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                                   initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    [fetchRequest setSortDescriptors:@[isFolder, title]];
+//    [fetchRequest setSortDescriptors:@[isFolder, title]];
     
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
-    [fetchRequest setReturnsObjectsAsFaults:NO];
-    NSFetchedResultsController *theFetchedResultsController =
-    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                        managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
-                                                   cacheName:nil];
-    self.fetchedResultsController = theFetchedResultsController;
-    _fetchedResultsController.delegate = self;
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+//    [fetchRequest setReturnsObjectsAsFaults:NO];
+    
+//    NSFetchedResultsController *theFetchedResultsController =
+//    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+//                                        managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
+//                                                   cacheName:nil];
+//    self.fetchedResultsController = theFetchedResultsController;
+//    _fetchedResultsController.delegate = self;
     NSError * error;
+
+    
+    
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
     [_fetchedResultsController performFetch:&error];
+    
     return _fetchedResultsController;
 }
 

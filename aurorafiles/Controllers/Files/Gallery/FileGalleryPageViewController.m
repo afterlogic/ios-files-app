@@ -149,15 +149,8 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 #pragma mark - Notification Handler
 
 - (void)handleDissmissNotification:(NSNotification *)notification {
-//    [self dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }
-
-//- (void)handleLongPressNotification:(NSNotification *)notification {
-//    if ([self.photoBrowserDelegate respondsToSelector:@selector(photoBrowser:didLongPressImage:)]) {
-//        [self.photoBrowserDelegate photoBrowser:self didLongPressImage:notification.object];
-//    }
-//}
 
 #pragma mark - Private method
 

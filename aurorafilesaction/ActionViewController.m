@@ -28,6 +28,8 @@
 #import "AFNetworkActivityLogger.h"
 #import "SessionProvider.h"
 #import "StorageManager.h"
+#import "DataBaseProvider.h"
+#import "FileOperationsProvider.h"
 
 #import "AuroraHUD.h"
 
@@ -87,7 +89,10 @@
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
     [[AFNetworkActivityLogger sharedLogger] startLogging];
     [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
-    [[[StorageManager sharedManager]DBProvider]setupCoreDataStack];
+    
+    [[DataBaseProvider sharedProvider] setupCoreDataStack];
+    [[StorageManager sharedManager]setupDBProvider:[DataBaseProvider sharedProvider]];
+    [[StorageManager sharedManager]setupFileOperationsProvider:[FileOperationsProvider sharedProvider]];
 }
 
 - (void)viewDidLoad {
@@ -97,8 +102,8 @@
     [self setCurrentUploadFolder:@"" root:@""];
     
     AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString *scheme = [url scheme];
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [Settings domainScheme];
     if (scheme) {
         [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -121,8 +126,8 @@
 }
 
 -(void)setupInterfaceForP8:(BOOL)isP8 {
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString *scheme = [url scheme];
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *scheme = [Settings domainScheme];
     
     AuroraHUD *folderHud = [AuroraHUD checkFileExistanceHUD:self];
     [self.navigationController setNavigationBarHidden:YES animated:YES];

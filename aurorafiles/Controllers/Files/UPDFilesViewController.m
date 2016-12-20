@@ -242,9 +242,9 @@
         }
         if (!authorised)
         {
-            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-            signIn.delegate = self;
-            [self presentViewController:signIn animated:YES completion:nil];
+//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//            signIn.delegate = self;
+//            [self presentViewController:signIn animated:YES completion:nil];
         }
         [[ConnectionProvider sharedInstance]startNotification];
     }];

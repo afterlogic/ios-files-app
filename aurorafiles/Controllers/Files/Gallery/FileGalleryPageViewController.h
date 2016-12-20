@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "GalleryPageDelegate.h"
 
-static NSString * const SYPhotoBrowserDismissNotification   = @"SYPhotoBrowserDismissNotification";
+static NSString * const SYPhotoBrowserHideNavbarNotification   = @"SYPhotoBrowserHideNavbarNotification";
 static NSString * const SYPhotoBrowserLongPressNotification = @"SYPhotoBrowserLongPressNotification";
-
+static NSString * const SYPhotoBrowserDismissNotification = @"SYPhotoBrowserDismissNotification";
 @class Folder;
 @interface FileGalleryPageViewController : UIPageViewController
 

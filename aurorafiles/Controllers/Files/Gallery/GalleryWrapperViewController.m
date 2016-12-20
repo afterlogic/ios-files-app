@@ -36,15 +36,35 @@
     self.moreButton = moreItem;
     self.shareButton = shareItem;
     self.navigationItem.rightBarButtonItems = @[self.shareButton, self.moreButton];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(hideNavBar) name:SYPhotoBrowserHideNavbarNotification object:nil];
     // Do any additional setup after loading the view.
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden: NO];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    
     // Dispose of any resources that can be recreated.
 }
 
+-(BOOL)prefersStatusBarHidden{
+    return YES;
+}
+
+
 #pragma mark - Actions
+
+-(void)hideNavBar{
+    BOOL isHidden = !self.navigationController.navigationBar.isHidden;
+    [UIView animateWithDuration:0.2f animations:^{
+        [self.navigationController setNavigationBarHidden: isHidden];
+    }];
+}
 
 - (IBAction)moreItemAction:(id)sender
 {

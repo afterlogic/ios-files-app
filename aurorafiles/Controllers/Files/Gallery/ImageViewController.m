@@ -230,7 +230,8 @@
 #pragma mark - GestureRecognizer Handler
 
 - (void)handleSingleTapGestureRecognizer:(UITapGestureRecognizer *)singleTapGestureRecognizer {
-    [self dismiss];
+//    [self dismiss];
+    [self hideNavBar];
 }
 
 - (void)handleDoubleTapGestureRecognizer:(UITapGestureRecognizer *)doubleTapGestureRecognizer {
@@ -344,16 +345,17 @@
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     if (file)
     {
-        hud.mode = MBProgressHUDModeDeterminate;
-        [hud setBackgroundColor:[UIColor clearColor]];
-        
-        hud.hidden = NO;
-        [hud showAnimated:YES];
+
         self.imageView.userInteractionEnabled = YES;
         self.imageView.alpha = 0.0f;
         self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
+            hud.mode = MBProgressHUDModeDeterminate;
+            [hud setBackgroundColor:[UIColor clearColor]];
+            
+            hud.hidden = NO;
+            [hud showAnimated:YES];
             NSData *data = [NSData dataWithContentsOfFile:[Folder getExistedFile:file]];
             if(data && data.length > 0){
                 UIImage *image = [UIImage imageWithData:data];
@@ -392,6 +394,11 @@
                 }];
             }
         }else{
+            hud.mode = MBProgressHUDModeIndeterminate;
+            [hud setBackgroundColor:[UIColor clearColor]];
+            
+            hud.hidden = NO;
+            [hud showAnimated:YES];
             NSLog(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
@@ -472,6 +479,10 @@
     self.imageView = [self createImageView];
 
     [self.scrollView addSubview:self.imageView];
+}
+
+-(void)hideNavBar{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserHideNavbarNotification object:nil];
 }
 
 - (void)dismiss {
