@@ -38,6 +38,7 @@ static NSString *methodGetFileThumbail = @"GetFileThumbnail"; //√
 static NSString *methodGetFileInfo = @"GetFileInfo"; //√
 static NSString *methodGetFileView = @"ViewFile"; //√
 static NSString *methodUploadFile = @"UploadFile"; //√
+static NSString *methodGetPublicLink = @"CreatePublicLink";
 
 -(id)init{
     self = [super init ];
@@ -481,8 +482,6 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     } autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
-    
-
 }
 ///
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL result))handler{
@@ -710,6 +709,64 @@ static NSString *methodUploadFile = @"UploadFile"; //√
     [downloadTask resume];
 }
 
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink))completion{
+    NSMutableArray *filePathComponents = [filePath componentsSeparatedByString:@"/"].mutableCopy;
+    NSLog(@"components -> %@", filePathComponents);
+    [filePathComponents removeLastObject];
+    filePath = [filePathComponents count] == 1 ? @"" : [filePathComponents componentsJoinedByString:@"/"];
+    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+            @"Method":methodGetPublicLink,
+            @"AuthToken":[Settings authToken],
+            @"Parameters":@{
+                    @"Type":type,
+                    @"Path":filePath,
+                    @"Name":name,
+                    @"Size":size,
+                    @"IsFolder":[NSNumber numberWithBool:isFolder].stringValue
+            }
+    }];
+
+
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            NSString *result = [NSString new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if ([json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSString class]])
+                {
+                    if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodGetPublicLink]) {
+                        result = [json valueForKey:@"Result"];
+                    }
+                }
+                else
+                {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"server is unavailable now", @"")}];
+                    completion(nil);
+                    return;
+                }
+            }else{
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:9 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Aurora version smaller than 8", @"")}];
+                completion(nil);
+                return;
+            }
+            completion(result);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSLog(@"HTTP Request failed: %@", error);
+            completion(nil);
+        });
+    } autoRetryOf:retryCount retryInterval:retryInterval];
+
+    [manager.operationQueue addOperation:operation];
+}
 
 
 - (void)removeFileAtPath:(NSURL *)filePath

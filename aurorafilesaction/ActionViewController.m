@@ -59,6 +59,8 @@
     BOOL uploadStart;
     
     AFHTTPRequestOperationManager *manager;
+    
+    NSMutableArray *localSaveFileLinks;
 }
 
 
@@ -203,6 +205,7 @@
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     totalBytesForAllFilesSend = 0;
     uploadStart = NO;
+    localSaveFileLinks = [[NSMutableArray alloc]init];
     [self searchFilesForUpload];
     
 }
@@ -230,16 +233,71 @@
                                 [self.filesForUpload addObject:file];
                             }
                             if ([image isKindOfClass:[UIImage class]]){
+//                                [NSFileManager defaultManager];
+//                                thumbnail = [json valueForKey:@"Result"];
+                                NSData *data = [[NSData alloc]initWithData:UIImageJPEGRepresentation(image, 10.0)];
+                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 
-//                                fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
-//                                mediaData = image;
-//                                UploadedFile *file = [UploadedFile new];
-//                                file.path = mediaData;
-//                                file.extension = fileExtension;
-//                                file.type = (NSString *)kUTTypeImage;
-//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-//                                [self.filesForUpload addObject:file];
+                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
+                                NSError *error = [NSError new];
+                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
+                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
+                                } //Create folder
+                                
+                                
+                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
+                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+//                                [localSaveFileLinks addObject:path];
+                                
+                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
+                                mediaData = [NSURL URLWithString:path];
+                                UploadedFile *file = [UploadedFile new];
+                                file.path = mediaData;
+                                file.extension = fileExtension;
+                                file.type = (NSString *)kUTTypeImage;
+                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+                                file.savedLocal = YES;
+                                
+//                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
+                                
+                                [self.filesForUpload addObject:file];
+                            }
+                            
+                            if([image isKindOfClass:[NSData class]]){
+                                
+//                                UIImage *currentImage =  [UIImage imageWithData:image];
+//                                NSLog(@"image is -> %@",currentImage);
+                                
+                                NSData *data = image;
+                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                
+                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
+                                NSError *error = [NSError new];
+                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
+                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
+                                } //Create folder
+                                
+                                
+                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
+                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+                                //                                [localSaveFileLinks addObject:path];
+                                
+                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
+                                mediaData = [NSURL URLWithString:path];
+                                UploadedFile *file = [UploadedFile new];
+                                file.path = mediaData;
+                                file.extension = fileExtension;
+                                file.type = (NSString *)kUTTypeImage;
+                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+                                file.savedLocal = YES;
+                                
+                                //                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
+                                
+                                [self.filesForUpload addObject:file];
                             }
                         }];
                     }
@@ -366,12 +424,12 @@
             file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
         }
         if ([[Settings version]isEqualToString:@"P8"]) {
-            file.request = [self generateP8RequestWithFile:file.path mime:file.MIMEType toFolderPath:uploadFolderPath withName:file.name rootPath:uploadRootPath];
+            file.request = [self generateP8RequestWithFile:file.path mime:file.MIMEType toFolderPath:uploadFolderPath withName:file.name rootPath:uploadRootPath savedLocal:file.savedLocal];
         }else{
             NSURL * url = [NSURL URLWithString:[Settings domain]];
             NSString * scheme = [url scheme];
             urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
-            file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path];
+            file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path savedLocal:file.savedLocal];
         }
         
         if(!uploadStart){
@@ -398,7 +456,7 @@
 //    }
 }
 
--(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url data:(NSURL *)data
+-(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url data:(NSURL *)data savedLocal:(BOOL) isLocal
 {
     
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
@@ -409,7 +467,7 @@
     NSString *authToken = [defaults valueForKey:@"auth_token"];
     [request setValue:authToken forHTTPHeaderField:@"Auth-Token"];
 
-    [request setHTTPBodyStream:[[NSInputStream alloc]initWithURL:data]];
+    [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:data.absoluteString] :[[NSInputStream alloc]initWithURL:data]];
     
     [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
     [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
@@ -418,7 +476,7 @@
     return request;
 }
 
--(NSMutableURLRequest *)generateP8RequestWithFile:(NSURL *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name rootPath:(NSString *)rootPath
+-(NSMutableURLRequest *)generateP8RequestWithFile:(NSURL *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name rootPath:(NSString *)rootPath savedLocal:(BOOL) isLocal
 {
     
     NSString *storageType = [NSString stringWithString:rootPath];
@@ -432,7 +490,7 @@
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:testUrl];
     [request setHTTPMethod:@"POST"];
     [request setAllHTTPHeaderFields:headers];
-    [request setHTTPBodyStream:[NSInputStream inputStreamWithURL:file]];
+    [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:file.absoluteString] : [NSInputStream inputStreamWithURL:file]];
     
     return request;
 }

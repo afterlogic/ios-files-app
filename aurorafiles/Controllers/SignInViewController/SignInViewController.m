@@ -50,7 +50,7 @@
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
     
     alertViewIsShow = NO;
-    // Do any additional setup after loading the view.
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

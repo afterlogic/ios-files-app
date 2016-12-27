@@ -180,13 +180,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7MJ-gt-R4d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2609" y="-1005"/>
+            <point key="canvasLocation" x="5020" y="-38"/>
         </scene>
         <!--File Gallery Collection View Controller-->
         <scene sceneID="SeE-qT-3CO">
             <objects>
                 <collectionViewController id="7SC-KJ-w58" customClass="FileGalleryCollectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" pagingEnabled="YES" dataMode="prototypes" id="Dol-kR-f60">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" dataMode="prototypes" id="Dol-kR-f60">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="X9t-1n-L36">
@@ -222,7 +222,7 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2650" y="-128"/>
+            <point key="canvasLocation" x="5618" y="774"/>
         </scene>
         <!--File Gallery Page View Controller-->
         <scene sceneID="h4o-YS-WsV">
@@ -230,7 +230,7 @@
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="5VP-6I-eah" customClass="FileGalleryPageViewController" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xoz-j7-WDH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5070" y="-180"/>
+            <point key="canvasLocation" x="4450" y="949"/>
         </scene>
         <!--Gallery Wrapper View Controller-->
         <scene sceneID="vnY-FZ-oyD">
@@ -262,7 +262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kjE-FJ-DF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4277.6000000000004" y="-180.35982008995504"/>
+            <point key="canvasLocation" x="3658" y="949"/>
         </scene>
         <!--Personal-->
         <scene sceneID="FRd-Sg-sjM">
@@ -286,7 +286,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u1R-AV-YeO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="516" y="-794"/>
+            <point key="canvasLocation" x="516" y="-175"/>
         </scene>
         <!--UPDCorporate-->
         <scene sceneID="9hT-e1-EyC">
@@ -317,7 +317,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="abN-ri-677" id="XQQ-BZ-ABY">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -375,6 +375,7 @@
                         <outlet property="uploadButton" destination="P2e-5F-q5I" id="dgX-ab-H1X"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="XCZ-oO-tnN"/>
                         <segue destination="t1z-0k-wxd" kind="show" identifier="OpenFileGallerySegue" id="jAr-Pg-PJz"/>
+                        <segue destination="RBX-VW-ZeT" kind="show" identifier="ShowDownloadsSegue" id="cxU-mB-ke1"/>
                     </connections>
                 </viewController>
                 <view contentMode="scaleToFill" id="Pfc-z5-ZfQ">
@@ -394,7 +395,7 @@
                 </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fbG-jJ-Y1Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1445.5999999999999" y="50.824587706146929"/>
+            <point key="canvasLocation" x="1446" y="671"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qVS-5Q-E1q">
@@ -411,7 +412,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xbV-zR-LhY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="516" y="-1469"/>
+            <point key="canvasLocation" x="3625" y="-1255"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="AYN-y5-2ha">
@@ -464,7 +465,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oSo-7J-qLu" userLabel="Downloads">
                                 <rect key="frame" x="0.0" y="30" width="375" height="573"/>
                                 <connections>
-                                    <segue destination="RBX-VW-ZeT" kind="embed" id="a5o-z2-Tyf"/>
+                                    <segue destination="RBX-VW-ZeT" kind="embed" id="yxt-vk-y8D"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -519,7 +520,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3FK-qm-KPp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="516" y="51"/>
+            <point key="canvasLocation" x="516" y="671"/>
         </scene>
         <!--UPDPersonal-->
         <scene sceneID="66E-KM-LjH">
@@ -550,7 +551,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LA9-0n-g7i" id="TCT-ON-tVo">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -610,6 +611,7 @@
                         <outlet property="uploadButton" destination="uHw-UU-5cI" id="01X-cr-QVe"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="zyX-16-Tna"/>
                         <segue destination="t1z-0k-wxd" kind="show" identifier="OpenFileGallerySegue" id="E0Q-Ap-UAA"/>
+                        <segue destination="RBX-VW-ZeT" kind="show" identifier="ShowDownloadsSegue" id="QeM-NP-GfP"/>
                     </connections>
                 </viewController>
                 <view contentMode="scaleToFill" id="Sg2-RF-Fws">
@@ -629,12 +631,12 @@
                 </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="daS-kZ-K8g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1445.5999999999999" y="-793.8530734632684"/>
+            <point key="canvasLocation" x="1538" y="-175"/>
         </scene>
         <!--UPDDownloads-->
         <scene sceneID="PQI-6w-YC0">
             <objects>
-                <viewController id="RBX-VW-ZeT" userLabel="UPDDownloads" customClass="DownloadsTableViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DownloadsTableViewController" id="RBX-VW-ZeT" userLabel="UPDDownloads" customClass="DownloadsTableViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1mv-5Y-4wz"/>
                         <viewControllerLayoutGuide type="bottom" id="Dux-7D-W7T"/>
@@ -660,7 +662,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qlx-6B-RdI" id="7F1-y6-CbJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -697,9 +699,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="Jab-Qu-uFV">
-                        <barButtonItem key="leftBarButtonItem" image="sigh_out" id="00i-AV-bx6"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="Jab-Qu-uFV"/>
                     <connections>
                         <outlet property="tableView" destination="5f7-VM-7rX" id="kyD-NB-JQn"/>
                         <outlet property="toolBar" destination="I2P-9f-nfI" id="bR8-yB-szV"/>
@@ -724,7 +724,7 @@
                 </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Syy-87-c9e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1445.5999999999999" y="-1469.4152923538231"/>
+            <point key="canvasLocation" x="3657" y="-501"/>
         </scene>
     </scenes>
     <resources>
@@ -733,9 +733,9 @@
         <image name="sigh_out" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="a5o-z2-Tyf"/>
         <segue reference="Biu-mK-C6o"/>
         <segue reference="cQi-CL-Swj"/>
+        <segue reference="yxt-vk-y8D"/>
         <segue reference="jBf-a1-8Po"/>
         <segue reference="Yce-Sr-ME5"/>
     </inferredMetricsTieBreakers>

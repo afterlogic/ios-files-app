@@ -221,6 +221,12 @@
     }];
 }
 
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completionHandler{
+    [self.apiManager getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink) {
+        completionHandler(publicLink);
+    }];
+}
+
 -(void)cancelAllOperations{
     [self.apiManager cancelAllOperations];
 }

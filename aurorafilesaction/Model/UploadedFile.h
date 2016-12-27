@@ -17,6 +17,6 @@
 @property (assign, nonatomic) unsigned long long size;
 @property (strong, nonatomic) NSURLRequest *request;
 @property (weak, nonatomic) NSString *MIMEType;
-
+@property (assign, nonatomic) BOOL savedLocal;
 
 @end

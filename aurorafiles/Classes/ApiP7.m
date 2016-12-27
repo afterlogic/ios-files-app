@@ -66,6 +66,7 @@ static NSString *deleteFiles        = @"FilesDelete";
 static NSString *createFolder       = @"FilesFolderCreate";
 static NSString *renameFolder       = @"FilesRename";
 static NSString *folderInfo         = @"FileInfo";
+static NSString *publicLink         = @"FilesCreatePublicLink";
 
 -(id)init{
     self=[super init];
@@ -669,6 +670,66 @@ static NSString *folderInfo         = @"FileInfo";
     
     [manager.operationQueue addOperation:operation];
 
+
+}
+
+
+-(void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completion{
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
+    [newDict setObject:publicLink forKey:@"Action"];
+    
+    [newDict setObject:type forKey:@"Type"];
+    [newDict setObject:filePath forKey:@"Path"];
+    [newDict setObject:name forKey:@"Name"];
+    [newDict setObject:size forKey:@"Size"];
+    [newDict setObject:[NSNumber numberWithBool:isFolder].stringValue forKey:@"IsFolder"];
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            NSString *result = [NSString new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if ([json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json objectForKey:@"Result"] isKindOfClass:[NSString class]]) {
+                    result = [json objectForKey:@"Result"];
+                }else{
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
+            }else{
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                completion(nil);
+                return ;
+            }
+
+            completion(result);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                NSLog(@"%@",[error localizedDescription]);
+                completion(nil);
+                return ;
+            }
+        });
+    }autoRetryOf:retryCount retryInterval:retryInterval];
+    
+    [manager.operationQueue addOperation:operation];
+    
 
 }
 

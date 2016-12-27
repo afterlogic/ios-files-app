@@ -116,6 +116,12 @@
     }];
 
 }
+
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completionHandler{
+    [[ApiP8 filesModule]getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink) {
+        completionHandler(publicLink);
+    }];
+}
 #pragma mark - Helpers
 
 -(void)checkConnection:(void (^)(BOOL, NSError *, NSString *, id<ApiProtocol>))complitionHandler{

@@ -150,21 +150,60 @@
     Folder * object = self.currentPage.item;
 //    [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
 //    FileGalleryCollectionViewCell * cell = (FileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:[self.collectionView.indexPathsForVisibleItems firstObject]];
-    UIImage * image = self.currentPage.imageView.image;
-    NSURL *myWebsite = [NSURL URLWithString:[object viewLink]];
-    if (!myWebsite)
-    {
-        return;
+    if ([[Settings version] isEqualToString:@"P8"]) {
+        [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
+            NSLog(@"link is -> %@", publicLink);
+            NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
+            NSLog(@"link components -> %@",publicLinkComponents);
+            [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/?",[Settings domain]]];
+            [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
+            publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
+            UIImage * image = self.currentPage.imageView.image;
+            NSURL *myWebsite = [NSURL URLWithString:publicLink];
+            if (!myWebsite)
+            {
+                return;
+            }
+            NSArray *objectsToShare = @[myWebsite];
+            if (image)
+            {
+                objectsToShare = @[myWebsite,image];
+            }
+            
+            UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+            
+            [self presentViewController:activityVC animated:YES completion:nil];
+        }];
+    }else{
+        [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
+            NSLog(@"link is -> %@", publicLink);
+            NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
+            NSLog(@"link components -> %@",publicLinkComponents);
+            [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/share",[Settings domain]]];
+//            [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
+            publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
+            UIImage * image = self.currentPage.imageView.image;
+            NSURL *myWebsite = [NSURL URLWithString:publicLink];
+            if (!myWebsite)
+            {
+                return;
+            }
+            NSArray *objectsToShare = @[myWebsite];
+            if (image)
+            {
+                objectsToShare = @[myWebsite,image];
+            }
+            
+            UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+            
+            [self presentViewController:activityVC animated:YES completion:nil];
+        }];
     }
-    NSArray *objectsToShare = @[myWebsite];
-    if (image)
-    {
-        objectsToShare = @[myWebsite,image];
-    }
+
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+
     
-    [self presentViewController:activityVC animated:YES completion:nil];
+
 }
 
 #pragma mark - Page Delegate

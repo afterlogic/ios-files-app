@@ -11,6 +11,7 @@
 #import "FileDetailViewController.h"
 #import "SessionProvider.h"
 #import "FileGalleryCollectionViewController.h"
+#import "DownloadsTableViewController.h"
 
 #import "GalleryWrapperViewController.h"
 
@@ -439,6 +440,10 @@
 }
 
 
+-(void)showDownloadedFiles{
+    [self performSegueWithIdentifier:@"ShowDownloadsSegue" sender:nil];
+}
+
 - (void)updateFiles:(void (^)())handler
 {
     if ([Settings domain]) {
@@ -743,9 +748,18 @@
     {
         [alert addAction:[self renameCurrentFolderAction]];
     }
+    [alert addAction:[self savedFiles]];
     [alert addAction:[self logout]];
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (UIAlertAction*)savedFiles{
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Downloads", @"") style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action) {
+                                                       [self showDownloadedFiles];
+                                                   }];
+    return logout;
 }
 
 - (UIAlertAction*)logout
@@ -754,7 +768,6 @@
                                                        handler:^(UIAlertAction * action) {
                                                            [self signOut];
                                                        }];
-    
     return logout;
 }
 
