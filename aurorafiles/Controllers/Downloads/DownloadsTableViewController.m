@@ -44,8 +44,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self.navigationController.navigationBar setHidden:NO];
-    [self.navigationController setTitle:@"Downloads"];
+    if ([self.loadType isEqualToString:loadTypeView]) {
+        [self.navigationController.navigationBar setHidden:NO];
+        [self.navigationController setTitle:@""];
+    }else{
+        [self.navigationController.navigationBar setHidden:YES];
+        [self.navigationController setTitle:@"Downloads"];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,6 +60,10 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [[SessionProvider sharedManager] cancelAllOperations];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    self.loadType = loadTypeContainer;
 }
 
 #pragma mark - Table view data source

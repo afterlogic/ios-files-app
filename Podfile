@@ -18,6 +18,9 @@ target 'aurorafiles' do
     pod 'AFNetworking', '2.6'
     pod 'AFNetworking+AutoRetry'
     pod 'CRMediaPickerController'
+    
+    pod 'DZNEmptyDataSet'
+    
 end
 
 target 'aurorafilesaction' do

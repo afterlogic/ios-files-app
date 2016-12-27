@@ -9,6 +9,7 @@
 #import "ARootViewController.h"
 #import "Constants.h"
 #import "UPDFilesViewController.h"
+#import "DownloadsTableViewController.h"
 
 @interface ARootViewController ()
 {
@@ -128,7 +129,9 @@
         
     }
     if([segue.identifier isEqualToString:@"downloads_embed"]){
-        
+        DownloadsTableViewController *vc = [segue destinationViewController];
+        vc.loadType = loadTypeContainer;
+        NSLog(@"%@",vc);
     }
 }
 

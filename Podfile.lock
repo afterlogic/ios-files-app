@@ -27,6 +27,7 @@ PODS:
   - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
   - CRMediaPickerController (0.0.1)
+  - DZNEmptyDataSet (1.8.1)
   - Fabric (1.6.7)
   - FastEasyMapping (1.0.2)
   - MagicalRecord (2.3.2):
@@ -49,6 +50,7 @@ DEPENDENCIES:
   - BugfenderSDK (~> 0.3)
   - Crashlytics
   - CRMediaPickerController
+  - DZNEmptyDataSet
   - Fabric
   - FastEasyMapping (~> 1.0)
   - MagicalRecord (~> 2.3.0)
@@ -61,6 +63,7 @@ SPEC CHECKSUMS:
   BugfenderSDK: 05a168bd3a494528b41ec729d579724bffb84e7c
   Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
   CRMediaPickerController: 65e1f968dea26a7759bb1fb4a1518f5b8cd6fba9
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FastEasyMapping: 77d566a817ca73304af3e7fbed130850238f1cb4
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
@@ -68,6 +71,6 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 
-PODFILE CHECKSUM: 95a1eaa9ebd4236e56d629a5149c9f0cf1742f9f
+PODFILE CHECKSUM: ca6b357ed2435fb89fbf0f6e7f6bda17fdf3a9de
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

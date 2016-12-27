@@ -1008,6 +1008,11 @@
         vc.itemsList = items;
         vc.initialPageIndex = [items indexOfObject:object];
     }
+    
+    if([segue.identifier isEqualToString:@"ShowDownloadsSegue"]){
+        DownloadsTableViewController *vc = [segue destinationViewController];
+        vc.loadType = loadTypeView;
+    }
 }
 
 
