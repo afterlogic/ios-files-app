@@ -188,29 +188,33 @@
     if (!context) {
         context = [self.DBProvider defaultMOC];
     }
+    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:items];
+    items = [orderedSet array];
     NSMutableArray * existItems = [NSMutableArray new];
     NSString * folderPath = folder ? folder.fullpath : @"";
     if (items.count)
     {
-        NSMutableArray * existIds = [[NSMutableArray alloc] init];
+        NSMutableArray * existIds = [NSMutableArray new];
         for (NSDictionary * itemRef in items)
         {
             Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderPath InContext:context];
-            [existIds addObject:childFolder.name];
+            [existIds addObject:itemRef[@"Name"]];
             if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
                 [existItems addObject:childFolder];
             }
         }
         
         NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,folder.fullpath,type];
+        NSString *currentFolderFullPath = folder ? folder.fullpath : @"";
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT identifier in (%@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
         
         for (Folder* fold in oldFolders)
         {
             if (!fold.isDownloaded.boolValue)
             {
-                [context deleteObject:[context objectWithID:fold.objectID]];
+                [self deleteOldThumbsAndViews:fold];
+                [self.DBProvider deleteObject:fold fromContext:context];
             }
             else
             {

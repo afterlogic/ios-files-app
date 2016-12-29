@@ -115,6 +115,16 @@
         self.containerPerson.alpha = 0.0f;
         self.containerCorporate.alpha = 0.0f;
         self.containerDownloads.alpha = 1.0f;
+
+        NSArray *arr = self.childViewControllers;
+        for (id vc in arr) {
+            if ([vc isKindOfClass:[DownloadsTableViewController class]]) {
+//                if ([(DownloadsTableViewController *)vc isCorporate]) {
+//                    [(UPDFilesViewController *)vc updateView];
+//                }
+                [(DownloadsTableViewController *) vc setLoadType:loadTypeContainer];
+            }
+        }
     }];
 }
 
@@ -128,10 +138,11 @@
     if([segue.identifier isEqualToString:@"corp_embed"]){
         
     }
+
     if([segue.identifier isEqualToString:@"downloads_embed"]){
-        DownloadsTableViewController *vc = [segue destinationViewController];
-        vc.loadType = loadTypeContainer;
-        NSLog(@"%@",vc);
+//        DownloadsTableViewController *vc = [segue destinationViewController];
+//        vc.loadType = loadTypeContainer;
+//        NSLog(@"%@",vc);
     }
 }
 

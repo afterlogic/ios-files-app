@@ -13,7 +13,7 @@ typedef void (^UploadProgressBlock)(float progress);
 - (NSString *)moduleName;
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items))handler;
 - (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items))handler;
-
+- (void)prepareForThumbUpdate;
 - (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler;
 - (void)getThumbnailForFileNamed:(NSString *)folderName type:(NSString *)type path:(NSString *)parentPath withCompletion:(void(^)(NSString *thumbnail))handler;
 - (void)stopFileThumb:(NSString *)folderName;

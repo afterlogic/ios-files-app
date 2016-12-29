@@ -46,10 +46,14 @@
 -(void)viewWillAppear:(BOOL)animated{
     if ([self.loadType isEqualToString:loadTypeView]) {
         [self.navigationController.navigationBar setHidden:NO];
-        [self.navigationController setTitle:@""];
+//        [self.navigationController.navigationItem setTitle:@""];
+        self.navigationItem.title = @"";
+//        [self.navigationController setToolbarHidden:YES];
     }else{
         [self.navigationController.navigationBar setHidden:YES];
-        [self.navigationController setTitle:@"Downloads"];
+//        self.navigationItem.title =  @"Downloads";
+        self.navigationController.navigationItem.title = @"Downloads";
+//        [self.navigationController setToolbarHidden:YES];
     }
 }
 
@@ -63,7 +67,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-    self.loadType = loadTypeContainer;
+//    self.loadType = loadTypeContainer;
 }
 
 #pragma mark - Table view data source

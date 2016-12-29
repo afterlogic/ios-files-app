@@ -105,6 +105,7 @@
     }];
 }
 -(void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *))complitionHandler{
+    [[ApiP8 filesModule] prepareForThumbUpdate];
     [[ApiP8 filesModule]getFilesForFolder:folderPath withType:type completion:^(NSArray *items){
         if (items.count>0) {
             [[ApiP8 filesModule]getThumbnailsForFiles:items withCompletion:^(NSArray *resultedItems) {

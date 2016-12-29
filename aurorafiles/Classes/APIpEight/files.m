@@ -246,7 +246,10 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 
 }
 
-
+- (void)prepareForThumbUpdate {
+    itemsForThumb = [NSMutableArray new];
+    resultedFiles = [NSMutableArray  new];
+}
 - (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler{
     itemsForThumb = files.mutableCopy;
     if (itemsForThumb.count == 0) {
@@ -275,6 +278,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     [self updateFileThumbnail:currentItem type:currentItem[@"Type"] complition:^(NSMutableDictionary* itemRef) {
         if (itemRef) {
             [itemsForThumb removeObject:currentItem];
+//TODO: - resultedFiles не обнуляются, что приводит к огромным массивам!! пофиксить!!!
             [resultedFiles addObject:itemRef];
         }
         [self getThumbnailsForFiles:itemsForThumb withCompletion:^(NSArray *items) {
