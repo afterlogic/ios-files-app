@@ -11,8 +11,8 @@ typedef void (^UploadProgressBlock)(float progress);
 #import "Folder.h"
 @interface files : NSObject <AuroraModuleProtocol>
 - (NSString *)moduleName;
-- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items))handler;
-- (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items))handler;
+- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items, NSError * error))handler;
+- (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items, NSError *error))handler;
 - (void)prepareForThumbUpdate;
 - (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler;
 - (void)getThumbnailForFileNamed:(NSString *)folderName type:(NSString *)type path:(NSString *)parentPath withCompletion:(void(^)(NSString *thumbnail))handler;

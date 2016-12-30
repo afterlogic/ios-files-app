@@ -44,16 +44,12 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+
+    [self.toolBar setHidden:YES];
     if ([self.loadType isEqualToString:loadTypeView]) {
         [self.navigationController.navigationBar setHidden:NO];
-//        [self.navigationController.navigationItem setTitle:@""];
-        self.navigationItem.title = @"";
-//        [self.navigationController setToolbarHidden:YES];
     }else{
         [self.navigationController.navigationBar setHidden:YES];
-//        self.navigationItem.title =  @"Downloads";
-        self.navigationController.navigationItem.title = @"Downloads";
-//        [self.navigationController setToolbarHidden:YES];
     }
 }
 

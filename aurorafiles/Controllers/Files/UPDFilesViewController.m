@@ -126,6 +126,7 @@
 }
 
 - (void)updateView{
+    noDataLabel.text             = @"Folder is loading...";
     [self.pullToRefresh startRefresh];
     [self updateFiles:^() {
         [self.pullToRefresh finishRefresh];
@@ -144,6 +145,7 @@
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
+    noDataLabel.text             = @"Folder is loading...";
     [self updateFiles:^(){
         [self.refreshControl endRefreshing];
         [self reloadTableData];

@@ -72,15 +72,15 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 ///
-- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items))handler{
+- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSArray *items, NSError * error))handler{
     [self getFilesForFolder:folderName withType:type searchPattern:@"" completion:handler];
 }
 
-- (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items))handler{
+- (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items, NSError *error))handler{
     [self getFilesForFolder:folderName withType:type searchPattern:fileName completion:handler];
 }
 
-- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type searchPattern:(NSString *)pattern completion:(void (^)(NSArray *items))handler{
+- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type searchPattern:(NSString *)pattern completion:(void (^)(NSArray *items, NSError *error))handler{
     NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFiles,
                                                                     @"AuthToken":[Settings authToken],
@@ -104,7 +104,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             if (error)
             {
                 NSLog(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
             NSArray * items;
@@ -136,19 +136,19 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             {
                 items = @[];
             }
-            handler(items);
+            handler(items,nil);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             NSLog(@"HTTP Request failed: %@", error);
-            handler(nil);
+            handler(nil,error);
         });
-    } autoRetryOf:retryCount retryInterval:retryInterval];
+    }];
     
     [manager.operationQueue addOperation:operation];
 }
 
-///
+//TODO: закоментирован метод для проверки доступного пользователю места на файлохранилище. Раскоментировать при необходимости
 //- (void)getUserFilestorageQoutaWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
 //    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
 //                                                                    @"Method":methodQuota,
@@ -193,7 +193,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 //    [manager.operationQueue addOperation:operation];
 //
 //}
-///
+//
 
 - (void)deleteFile:(Folder *)file isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
     [self deleteFiles:@[file] isCorporate:corporate completion:handler];
@@ -247,8 +247,8 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 - (void)prepareForThumbUpdate {
-    itemsForThumb = [NSMutableArray new];
-    resultedFiles = [NSMutableArray  new];
+    [itemsForThumb removeAllObjects];
+    [resultedFiles removeAllObjects];
 }
 - (void)getThumbnailsForFiles:(NSArray <NSMutableDictionary *>*)files withCompletion:(void(^)(NSArray * resultedItems))handler{
     itemsForThumb = files.mutableCopy;
@@ -273,18 +273,18 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     }else{
         currentItem = [itemsForThumb lastObject];
     }
-    
-    
+
+    //TODO: где-то в этом методе происходит потеря итемов
     [self updateFileThumbnail:currentItem type:currentItem[@"Type"] complition:^(NSMutableDictionary* itemRef) {
         if (itemRef) {
             [itemsForThumb removeObject:currentItem];
-//TODO: - resultedFiles не обнуляются, что приводит к огромным массивам!! пофиксить!!!
             [resultedFiles addObject:itemRef];
         }
         [self getThumbnailsForFiles:itemsForThumb withCompletion:^(NSArray *items) {
             handler(items);
         }];
     }];
+
 }
 
 - (void)updateFileThumbnail:(NSMutableDictionary *)file type:(NSString*)type complition:(void (^)(NSMutableDictionary* itemRef))handler{
@@ -615,7 +615,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 - (void)getFileView:(Folder *)folder type:(NSString *)type withProgress:(void (^)(float progress))progressBlock withCompletion:(void(^)(NSString *thumbnail))handler{
     
     NSString * filepathPath;
-    
+    float  fileSize;
     NSString *path;
     NSString *name;
     if (folder.isZippedFile) {
@@ -624,12 +624,14 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         NSLog(@"%@",pathPrtsArr);
         path = [pathPrtsArr firstObject];
         name = [pathPrtsArr lastObject];
+        fileSize = [folder.size floatValue];
     }else{
         filepathPath = folder ? folder.fullpath : @"";
         NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
         [pathArr removeObject:[pathArr lastObject]];
         path = [pathArr componentsJoinedByString:@"/"];
         name = folder.name;
+        fileSize = [folder.size floatValue];
     }
     
     
@@ -657,14 +659,14 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     
     [downloadManager setDownloadTaskDidWriteDataBlock:^(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite){
         float written = totalBytesWritten;
-        float percentageCompleted = written/[folder.size floatValue];
+        float percentageCompleted = written/fileSize;
         progressBlock(percentageCompleted);
     }];
     
     //Start the download
     NSURLSessionDownloadTask *downloadTask = [downloadManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         //Getting the path of the document directory
-        if (![[response suggestedFilename] isEqualToString:folder.name]) {
+        if (![[response suggestedFilename] isEqualToString:name]) {
             return nil;
         }
         NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];

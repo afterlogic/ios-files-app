@@ -167,6 +167,7 @@
                     [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
                 }
                 dispatch_async(dispatch_get_main_queue(), ^(){
+                    [[SessionProvider sharedManager] cancelAllOperations];
                     if (handler) {
                         handler();
                     }
@@ -177,7 +178,7 @@
 }
 
 - (void)saveItemsIntoDB:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type isP8:(BOOL)isP8{
-    [self removeDuplicatesForItems:items];
+//    [self removeDuplicatesForItems:items];
     __block NSArray *blockItems = items.copy;
     [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
         [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
@@ -188,9 +189,9 @@
     if (!context) {
         context = [self.DBProvider defaultMOC];
     }
-    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:items];
-    items = [orderedSet array];
-    NSMutableArray * existItems = [NSMutableArray new];
+//    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:items];
+//    items = [orderedSet array];
+//    NSMutableArray * existItems = [NSMutableArray new];
     NSString * folderPath = folder ? folder.fullpath : @"";
     if (items.count)
     {
@@ -198,15 +199,15 @@
         for (NSDictionary * itemRef in items)
         {
             Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderPath InContext:context];
-            [existIds addObject:itemRef[@"Name"]];
-            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
-                [existItems addObject:childFolder];
-            }
+            [existIds addObject:childFolder.name];
+//            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
+//                [existItems addObject:childFolder];
+//            }
         }
         
         NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
         NSString *currentFolderFullPath = folder ? folder.fullpath : @"";
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT identifier in (%@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
         
         for (Folder* fold in oldFolders)

@@ -26,6 +26,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.containerPerson.alpha = 1;
+    self.containerCorporate.alpha = 1;
+    self.containerDownloads.alpha = 1;
+    self.containerPerson.hidden = YES;
+    self.containerCorporate.hidden = YES;
+    self.containerDownloads.hidden = YES;
+
     [self.segmentedCotnroller addTarget:self action:@selector(onSegmentedControlTap:) forControlEvents:UIControlEventValueChanged];
     [self showOnlineButtons];
     [self.childViewControllers makeObjectsPerformSelector:@selector(viewDidLoad)];
@@ -78,15 +85,15 @@
 
 -(void)showPersonal{
     [UIView animateWithDuration:0.4f animations:^{
-        self.containerPerson.alpha = 1.0f;
-        self.containerCorporate.alpha = 0.0f;
-        self.containerDownloads.alpha = 0.0f;
+        self.containerPerson.hidden = NO;
+        self.containerCorporate.hidden = YES;
+        self.containerDownloads.hidden = YES;
         
         NSArray *arr = self.childViewControllers;
         for (id vc in arr) {
             if ([vc isKindOfClass:[UPDFilesViewController class]]) {
                 if (![(UPDFilesViewController *)vc isCorporate]) {
-                    [(UPDFilesViewController *)vc updateView];
+//                    [(UPDFilesViewController *)vc updateView];
                 }
             }
         }
@@ -95,15 +102,15 @@
 
 -(void)showCorporate{
     [UIView animateWithDuration:0.4f animations:^{
-        self.containerPerson.alpha = 0.0f;
-        self.containerCorporate.alpha = 1.0f;
-        self.containerDownloads.alpha = 0.0f;
+        self.containerPerson.hidden = YES;
+        self.containerCorporate.hidden = NO;
+        self.containerDownloads.hidden = YES;
         
         NSArray *arr = self.childViewControllers;
         for (id vc in arr) {
             if ([vc isKindOfClass:[UPDFilesViewController class]]) {
                 if ([(UPDFilesViewController *)vc isCorporate]) {
-                    [(UPDFilesViewController *)vc updateView];
+//                    [(UPDFilesViewController *)vc updateView];
                 }
             }
         }
