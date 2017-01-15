@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Folder" representedClassName="Folder" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="contentType" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,6 +24,7 @@
         <attribute name="oembedHtml" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="parentPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prKey" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="thumb" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="thumbnailLink" optional="YES" attributeType="String" syncable="YES"/>
@@ -32,6 +33,6 @@
         <attribute name="wasDeleted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Folder" positionX="-63" positionY="-18" width="128" height="480"/>
+        <element name="Folder" positionX="-63" positionY="-18" width="128" height="495"/>
     </elements>
 </model>

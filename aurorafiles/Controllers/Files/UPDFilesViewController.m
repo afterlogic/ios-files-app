@@ -19,7 +19,6 @@
 #import "ApiP7.h"
 #import "ApiP8.h"
 #import "SignInViewController.h"
-#import "UIImage+Aurora.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "STZPullToRefresh.h"
 #import "StorageManager.h"
@@ -36,24 +35,25 @@
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
-@property (strong, nonatomic) STZPullToRefresh * pullToRefresh;
+@property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
 @property (strong, nonatomic) NSManagedObjectContext * defaultMOC;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) Folder * folderToOperate;
-@property (strong, nonatomic) Folder * downloadedItem;
 @property (strong, nonatomic) CRMediaPickerController *pickerController;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolbar;
-@property (strong, nonatomic) UIRefreshControl *refreshControl;
-@property (strong, nonatomic) NSDictionary * folderMOC;
+@property (strong, nonatomic) UIRefreshControl *spinnerRefreshController;
 
 @property (strong, nonatomic) SessionProvider *sessionProvider;
 @property (strong, nonatomic) StorageManager *storageManager;
 @end
 
 @implementation UPDFilesViewController
+
+
+#pragma mark - LifeCycle
 
 - (void)awakeFromNib
 {
@@ -66,9 +66,73 @@
 {
     [super viewDidLoad];
     [self setupView];
-
-    // Do any additional setup after loading the view.
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    if (self.folder)
+    {
+
+        self.title = self.folder.name;
+        UILabel * titleLabel = [[UILabel alloc] init];
+        titleLabel.text = self.folder.name;
+
+        self.navigationItem.title = self.folder.name;
+        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+    }
+    else
+    {
+        self.navigationItem.title = [self.type capitalizedString];
+
+    }
+    if(!self.isRootFolder){
+        [self updateView];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    if (![Settings version] || ![Settings domain]){
+        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+        signIn.delegate = self;
+        [self presentViewController:signIn animated:YES completion:nil];
+        return;
+    }
+
+    if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
+        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+        signIn.delegate = self;
+        [self presentViewController:signIn animated:YES completion:nil];
+        return;
+    }
+
+    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+        self.isP8 = isP8;
+        if(authorised && offline){
+            [self userWasSigneInOffline];
+            return;
+        }
+        if (!authorised)
+        {
+//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//            signIn.delegate = self;
+//            [self presentViewController:signIn animated:YES completion:nil];
+        }
+        [[ConnectionProvider sharedInstance]startNotification];
+    }];
+
+    [self fetchData];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    self.fetchedResultsController = nil;
+}
+
+#pragma mark -
 
 -(void)setupView{
     
@@ -94,11 +158,8 @@
     
     STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
     [self.view addSubview:refreshView];
-    
-    //    // Setup PullToRefresh
-    self.pullToRefresh = [[STZPullToRefresh alloc] initWithTableView:nil
-                                                         refreshView:refreshView
-                                                   tableViewDelegate:self];
+    self.lineRefreshController = [[STZPullToRefresh alloc] initWithTableView:nil refreshView:refreshView tableViewDelegate:self];
+
     //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
@@ -107,9 +168,9 @@
     
     self.signOutButton.tintColor = refreshView.progressColor;
     self.editButton.tintColor = refreshView.progressColor;
-    self.refreshControl = [[UIRefreshControl alloc]init];
-    [self.refreshControl addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
-    self.tableView.refreshControl = self.refreshControl;
+    self.spinnerRefreshController = [[UIRefreshControl alloc]init];
+    [self.spinnerRefreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.refreshControl = self.spinnerRefreshController;
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
@@ -121,17 +182,17 @@
     noDataLabel.font             = [UIFont fontWithName:@"System" size:22.0f];
     self.tableView.backgroundView = noDataLabel;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    [self updateView];
 }
 
 - (void)updateView{
-    noDataLabel.text             = @"Folder is loading...";
-    [self.pullToRefresh startRefresh];
-    [self updateFiles:^() {
-        [self.pullToRefresh finishRefresh];
-        [self reloadTableData];
-    }];
+    if(![self.view isHidden]) {
+        noDataLabel.text = @"Folder is loading...";
+        [self.lineRefreshController startRefresh];
+        [self updateFiles:^() {
+            [self stopRefresh];
+            [self reloadTableData];
+        }];
+    }
 }
 
 - (void)setFolder:(Folder *)folder
@@ -146,39 +207,10 @@
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
     noDataLabel.text             = @"Folder is loading...";
-    [self updateFiles:^(){
-        [self.refreshControl endRefreshing];
+    [self updateFiles:^() {
+        [self stopRefresh];
         [self reloadTableData];
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    if (self.folder)
-    {
-        
-        self.title = self.folder.name;
-        UILabel * titleLabel = [[UILabel alloc] init];
-        titleLabel.text = self.folder.name;
-        
-        self.navigationItem.title = self.folder.name;
-        self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-    }
-    else
-    {
-        self.navigationItem.title = [self.type capitalizedString];
-
-    }
-    
-    [self updateFiles:^{
-        [self reloadTableData];
-    }];
-    
-}
-
--(void)viewDidDisappear:(BOOL)animated{
-    self.fetchedResultsController = nil;
 }
 
 - (void)fetchData{
@@ -193,11 +225,7 @@
 
 - (void)userWasSignedIn
 {
-    [self.pullToRefresh startRefresh];
-    [self updateFiles:^(){
-        [self.pullToRefresh finishRefresh];
-        [self reloadTableData];
-    }];
+    [self updateView];
 }
 
 -(void)userWasSigneInOffline
@@ -219,51 +247,16 @@
     };
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    if (![Settings version] || ![Settings domain]){
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
-        return;
-    }
-    
-    if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
-        return;
-    }
-    
-    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
-        self.isP8 = isP8;
-        if(authorised && offline){
-            [self userWasSigneInOffline];
-            return;
-        }
-        if (!authorised)
-        {
-//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-//            signIn.delegate = self;
-//            [self presentViewController:signIn animated:YES completion:nil];
-        }
-        [[ConnectionProvider sharedInstance]startNotification];
-    }];
-    
-    [self fetchData];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 - (void)pullToRefreshDidStart
 {
     [self updateFiles:^(){
-        [self.pullToRefresh finishRefresh];
+        [self stopRefresh];
         [self reloadTableData];
     }];
 }
@@ -303,7 +296,6 @@
     if (text && text.length)
     {
          predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath,text];
-    
     }
     else
     {
@@ -323,18 +315,6 @@
     [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
-}
-
-
-
-- (UIImage *)snapshot:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 
 #pragma mark TableView
@@ -436,6 +416,7 @@
         if (succsess) {
             SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
             signIn.delegate = self;
+            [self.navigationController popToRootViewControllerAnimated:YES];
             [self presentViewController:signIn animated:YES completion:^(){}];
         }
     }];
@@ -446,19 +427,19 @@
     [self performSegueWithIdentifier:@"ShowDownloadsSegue" sender:nil];
 }
 
-- (void)updateFiles:(void (^)())handler
+- (void)updateFiles:(void (^)())completionHandler
 {
     if ([Settings domain]) {
         [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
-            if (handler)
+            if (completionHandler)
             {
-                handler();
                 [self fetchData];
                 id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
                 if ([info numberOfObjects]==0) {
                     noDataLabel.text = @"Folder is empty";
                 }
             }
+            completionHandler();
         }];
     }
 }
@@ -466,6 +447,18 @@
 - (void)reloadTableData
 {
     [self.tableView reloadData];
+}
+
+- (void)stopRefresh{
+    if([self.spinnerRefreshController isRefreshing]){
+        [self.spinnerRefreshController endRefreshing];
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^(){
+        [self.lineRefreshController finishRefresh];
+    });
+
+
 }
 
 #pragma mark FilesTableViewCellDelegate
@@ -490,36 +483,49 @@
     [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
     [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
     if (self.isP8) {
-        [[ApiP8 filesModule]getFileView:folder type:self.type withProgress:^(float progress) {
+        [[self.storageManager DBProvider] saveWithBlock:^(NSManagedObjectContext *context) {
+            [[(FilesTableViewCell *) cell downloadActivity] startAnimating];
+            [[ApiP8 filesModule]getFileView:folder type:self.type withProgress:^(float progress) {
             
-        } withCompletion:^(NSString *thumbnail) {
-            folder.content = thumbnail;
-            if ([folder.thumb boolValue]) {
-                NSString *parentPath = folder.parentPath ? folder.parentPath : @"";
-                [[ApiP8 filesModule]getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
-                    folder.thumbnailLink = thumbnail;
-                    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-                    NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-                    NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-                    NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-                    folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-                    NSError * error;
-                    [folder.managedObjectContext save:&error];
-                    [downloadTask resume];
-                }];
-            }
-            
+            } withCompletion:^(NSString *thumbnail) {
+                folder.content = thumbnail;
+                if ([folder.thumb boolValue]) {
+                    NSString *parentPath = folder.parentPath ? folder.parentPath : @"";
+                    [[ApiP8 filesModule]getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
+                        folder.thumbnailLink = thumbnail;
+                        folder.isDownloaded = [NSNumber numberWithBool:YES];
+//                        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
+//                        NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+//                        NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+//                        NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
+//                        folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+                        NSError * error;
+                        [folder.managedObjectContext save:&error];
+//                        [downloadTask resume];
+                    }];
+                    [[(FilesTableViewCell *) cell downloadActivity] stopAnimating];
+                    [(FilesTableViewCell*)cell disclosureButton].hidden = YES;
+                }
+            }];
         }];
     }else{
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-        NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-        NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-        NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-        folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-        NSError * error;
-        [folder.managedObjectContext save:&error];
-        self.downloadedItem = folder;
-        [downloadTask resume];
+//        [[self.storageManager DBProvider] saveWithBlock:^(NSManagedObjectContext *context) {
+            NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
+            NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+            NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+            NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
+            NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+            folder.downloadIdentifier = downloadIdetifier;
+            NSError * error;
+            if ([folder.managedObjectContext save:&error]){
+                [downloadTask resume];
+            };
+
+//        }];
+
+
+//        self.downloadedItem = folder;
+
     }
 }
 
@@ -528,8 +534,6 @@
 }
 
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
-    
-        
         [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
             NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
             fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO",[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
@@ -572,41 +576,42 @@
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
     NSError * error;
-    
+
     NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-    fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO",[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
-    
+    NSNumber * taskIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+    fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO", taskIdentifier];
     fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
     fetchDownloadRequest.fetchLimit = 1;
-    Folder * file = [[self.defaultMOC  executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
-    
+    NSArray * fetchedFiles = [[[[StorageManager sharedManager] DBProvider] defaultMOC] executeFetchRequest:fetchDownloadRequest error:&error];
+    Folder *file = [fetchedFiles lastObject];
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
+//TODO: валится destinationFilename. Судя по всему не приходит итем из базы (fault), в результате чего destinationFileName становится ниловым и крашит всё к черту. Добавить проверку на нил и проверить получение файла.
     NSString *destinationFilename = file.name;
-    
+
     NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
     destinationURL = [NSURL fileURLWithPath:[destinationURL absoluteString]];
     NSLog(@"%@",[self downloadURL]);
     NSLog(@"%@",destinationURL);
-    
+
     if ([fileManager fileExistsAtPath:[destinationURL path]])
     {
         [fileManager removeItemAtURL:destinationURL error:nil];
     }
-    
+
     BOOL success = [fileManager copyItemAtURL:location
                                         toURL:destinationURL
                                         error:&error];
-    
 
-    
+
+
     [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
 
         if (!success)
         {
             NSLog(@"failed to download %@", [error userInfo]);
         }
-        
+
         file.downloadIdentifier = [NSNumber numberWithInt:-1];
         file.isDownloaded = [NSNumber numberWithBool:success];
         if(success)
@@ -688,7 +693,7 @@
     
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc] initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
     NSManagedObjectContext *moc = self.defaultMOC;
     NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
     
@@ -1016,7 +1021,4 @@
         vc.loadType = loadTypeView;
     }
 }
-
-
-
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "DataBaseProvider.h"
-#import <MagicalRecord/MagicalRecord.h>
+#import "Folder.h"
 
 @interface DataBaseProvider(){
     
@@ -20,6 +20,7 @@
 @implementation DataBaseProvider
 
 @synthesize defaultMOC = _defaultMOC;
+@synthesize operationsMOC = _operationsMOC;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
@@ -43,14 +44,15 @@
          object:nil
          queue:nil
          usingBlock:^(NSNotification* note) {
-             NSManagedObjectContext *moc = self.defaultMOC;
-             if (note.object != moc)
+             NSManagedObjectContext *moc = _defaultMOC;
+             if (note && note.object != moc)
+//             if (note)
              {
                  [moc performBlock:^(){
                      [moc mergeChangesFromContextDidSaveNotification:note];
                  }];
              }
-             
+
          }];
     }
     return self;
@@ -58,8 +60,6 @@
 
 
 -(void)setupCoreDataStack{
-//    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreAtURL:[[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"aurorafiles.sqlite"]];
-//    [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelOff];
     _managedObjectModel = [self managedObjectModel];
     _persistentStoreCoordinator = [self persistentStoreCoordinator];
     _defaultMOC = [self defaultMOC];
@@ -67,51 +67,71 @@
     
 }
 
-#pragma mark - Core Data
-
-
-#pragma mark - Magical Record
-
--(void)saveToPersistentStore{
-    [[NSManagedObjectContext MR_defaultContext]MR_saveToPersistentStoreAndWait];
-}
-
--(void)cleanUP{
-    [MagicalRecord cleanUp];
-}
-
--(void)endWork{
-    [self saveToPersistentStore];
-    [self cleanUP];
-}
 #pragma mark - Managed Object Operations
 
+-(void)saveWithBlockUsingTmpContext:(void(^)(NSManagedObjectContext *context))block{
+    NSManagedObjectContext *tmpContext = self.operationsMOC;
+    [tmpContext performBlock:^{
+        if (block){
+            block(tmpContext);
+        }
+
+        NSError *error = [NSError new];
+        if (![tmpContext save:&error])
+        {
+            //handle error
+            NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+        }
+
+        [self.defaultMOC performBlock:^{
+            NSError *error = [NSError new];
+            if ([self.defaultMOC save:&error]) {
+                NSLog(@"context saved -> ✅");
+            }else{
+                NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+            }
+        }];
+
+    }];
+}
+
 -(void)saveWithBlock:(void(^)(NSManagedObjectContext *context))block{
-//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+
+//    [self.defaultMOC performBlock:^{
 //        if (block) {
-//            block(localContext);
+//            block(self.defaultMOC);
 //        }
-//    } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
-//        if (!error && contextDidSave) {
-//            [[NSManagedObjectContext MR_defaultContext]MR_saveToPersistentStoreAndWait];
-//            NSLog(@"context saved -> %@",contextDidSave ? @"✅" : @"❌");
+//        NSError *error = [NSError new];
+//        if ([self.defaultMOC save:&error]) {
+//            NSLog(@"context saved -> ✅");
 //        }else{
-//            NSLog(@"context saved - %@. Error is -> %@",contextDidSave ? @"✅" : @"❌" , error);
+//            NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
 //        }
 //    }];
-    
-    [_defaultMOC performBlockAndWait:^{
-        if (block) {
-            block(_defaultMOC);
+
+
+    NSManagedObjectContext *tmpContext = self.operationsMOC;
+    [tmpContext performBlock:^{
+        if (block){
+            block(tmpContext);
+        }
+
+        NSError *error = [NSError new];
+        if (![tmpContext save:&error])
+        {
+            //handle error
+            NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+        }else{
+            [self.defaultMOC performBlock:^{
+                NSError *error = [NSError new];
+                if ([self.defaultMOC save:&error]) {
+                    NSLog(@"context saved -> ✅");
+                }else{
+                    NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+                }
+            }];
         }
     }];
-    NSError *error = [NSError new];
-    if ([_defaultMOC save:&error]) {
-        NSLog(@"context saved -> ✅");
-    }else{
-        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
-    }
-
 }
 
 -(void)deleteObject:(id)object fromContext:(NSManagedObjectContext *)context{
@@ -128,22 +148,20 @@
 
 }
 
+- (void)saveToPersistentStore {
+    NSError *error = [NSError new];
+    if ([self.defaultMOC save:&error]) {
+        NSLog(@"context saved before App close");
+    }else{
+        NSLog(@"context wasn't save. Error is -> %@",error.localizedDescription);
+    }
+}
+
+- (void)endWork {
+    [self saveToPersistentStore];
+}
+
 #pragma mark - Properties
-
-
-//- (NSURL *)applicationDocumentsDirectory {
-//    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.makopyants.aurorafiles" in the application's documents directory.
-//    return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.afterlogic.aurorafiles"];
-//}
-//
-//- (NSManagedObjectContext *)defaultMOC{
-//    if (_defaultMOC) {
-//        return _defaultMOC;
-//    }
-//    _defaultMOC = [NSManagedObjectContext MR_defaultContext];
-//    
-//    return _defaultMOC;
-//}
 
 - (NSURL *)applicationDocumentsDirectory {
     // The directory the application uses to store the Core Data store file. This code uses a directory named "com.makopyants.aurorafiles" in the application's documents directory.
@@ -165,9 +183,9 @@
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
-    
+
     // Create the coordinator and store
-    
+
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"aurorafiles.sqlite"];
     NSError *error = nil;
@@ -183,7 +201,7 @@
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
     }
-    
+
     return _persistentStoreCoordinator;
 }
 
@@ -192,29 +210,31 @@
     if (_defaultMOC != nil) {
         return _defaultMOC;
     }
-    
+
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (!coordinator) {
         return nil;
     }
+
     _defaultMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     [_defaultMOC setPersistentStoreCoordinator:coordinator];
+    [_defaultMOC setName:@"DefaultMOC"];
     return _defaultMOC;
+}
+
+- (NSManagedObjectContext *)operationsMOC {
+
+    NSManagedObjectContext *operationsContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [operationsContext setParentContext:_defaultMOC];
+    [operationsContext setName:@"TemporaryMOC"];
+    return operationsContext;
 }
 
 
 #pragma mark - Debug
 -(void)removeAll{
-    
-//    NSArray *allEntities = _managedObjectModel.entities;
-//    [allEntities enumerateObjectsUsingBlock:^(NSEntityDescription *entityDescription, NSUInteger idx, BOOL *stop) {
-//        [NSClassFromString([entityDescription managedObjectClassName]) MR_truncateAll];
-//    }];
-//    [self saveToPersistentStore];
-    
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Folder"];
     NSBatchDeleteRequest *delete = [[NSBatchDeleteRequest alloc] initWithFetchRequest:request];
-    
     NSError *deleteError = nil;
     [_persistentStoreCoordinator executeRequest:delete withContext:_defaultMOC error:&deleteError];
 }

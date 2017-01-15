@@ -1,23 +1,23 @@
 //
-//  Folder.m
-//  aurorafiles
-//
-//  Created by Michael Akopyants on 15/03/16.
-//  Copyright © 2016 Michael Akopyants. All rights reserved.
+// Created by Cheshire on 11.01.17.
+// Copyright (c) 2017 afterlogic. All rights reserved.
 //
 
-#import "Folder.h"
+#import "Item.h"
 #import "Settings.h"
-#import <MagicalRecord/MagicalRecord.h>
+#import <CoreData/CoreData.h>
 
-@implementation Folder
+@implementation Item {
+
+
+}
 
 #pragma mark - Folder Mapping
 + (FEMMapping*)renameMapping
 {
-    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
+    FEMMapping * mapping = [[FEMMapping alloc] initWithObjectClass:[Item class]];
     mapping.primaryKey = @"name";
-    
+
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
@@ -36,17 +36,17 @@
     [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
-    
-    
+
+
     return mapping;
 
 }
 
 + (FEMMapping*)defaultMapping
 {
-    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
+    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:[Item class]];
     mapping.primaryKey = @"name";
-    
+
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
 //    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
@@ -77,7 +77,7 @@
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
 
-    
+
     return mapping;
 }
 
@@ -85,7 +85,7 @@
 {
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"name";
-    
+
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
@@ -102,7 +102,7 @@
         }
         return value;
     } reverseMap:NULL];
-    
+
     [mapping addAttribute:linkType];
     [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
     [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
@@ -115,15 +115,15 @@
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
-    
-    
+
+
 //    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
 
-    
+
 
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
 
-    
+
     return mapping;
 }
 
@@ -131,7 +131,7 @@
 {
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"name";
-    
+
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
@@ -148,7 +148,7 @@
         }
         return value;
     } reverseMap:NULL];
-    
+
     [mapping addAttribute:linkType];
     [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
     [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
@@ -161,17 +161,17 @@
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
-    
-    
+
+
     //    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
-    
-    
-    
+
+
+
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
-    
-    
+
+
     return mapping;
-    
+
 }
 // Insert code here to add functionality to your managed object subclass
 #pragma mark - Folder Properties
@@ -187,10 +187,10 @@
         NSURL * url = [NSURL URLWithString:[Settings domain]];
         NSString * scheme = [url scheme];
         NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
-        
+
         return viewLink;
     }
-    
+
     return nil;
 }
 
@@ -199,7 +199,7 @@
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
     NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
-    
+
     return viewLink;
 }
 
@@ -230,13 +230,13 @@
 
 - (NSString*)urlScheme
 {
-    
+
     NSURL * url = [NSURL URLWithString:self.linkUrl];
     if ([[url host] isEqualToString:@"docs.google.com"])
     {
         return @"googledrive";
     }
-    
+
     return nil;
 }
 
@@ -262,16 +262,16 @@
 
 - (BOOL)isImageContentType
 {
-    NSArray * mimeTypes = [Folder imageContentTypes];
+    NSArray * mimeTypes = [Item imageContentTypes];
     if ([mimeTypes containsObject:self.contentType]) {
         return YES;
     }
-    
+
     return NO;
 }
 
 -(NSDictionary *)folderMOC{
-    return [FEMSerializer serializeObject:self usingMapping:self.isP8 ? [Folder P8DefaultMapping] : [Folder defaultMapping]];
+    return [FEMSerializer serializeObject:self usingMapping:self.isP8 ? [Item P8DefaultMapping] : [Item defaultMapping]];
 }
 
 -(BOOL)isZippedFile
@@ -279,7 +279,7 @@
     if ([self.fullpath containsString:@".zip$ZIP:"]) {
         return YES;
     }
-    
+
     return NO;
 }
 
@@ -292,7 +292,7 @@
 }
 
 +(NSFetchRequest *)getFetchRequestInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate{
-    NSFetchRequest * fetchRequest = [Folder folderFetchRequestInContext:context];
+    NSFetchRequest * fetchRequest = [Item folderFetchRequestInContext:context];
     fetchRequest.sortDescriptors = descriptors;
     fetchRequest.predicate = predicate;
     return fetchRequest;
@@ -300,42 +300,44 @@
 
 +(NSArray *)fetchFoldersInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate{
 
-    return [context executeFetchRequest:[Folder getFetchRequestInContext:context descriptors:descriptors predicate:predicate] error:nil];
+    return [context executeFetchRequest:[Item getFetchRequestInContext:context descriptors:descriptors predicate:predicate] error:nil];
 }
 
 #pragma mark - Folder Operations
 
-+(Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
-    Folder *item = [Folder findObjectByItemRef:itemRef context:context];
-    if (!item) {
-//        item = [Folder MR_createEntityInContext:context];
-//        [FEMDeserializer fillObject:item fromRepresentation:itemRef mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping]];
-        item = [FEMDeserializer objectFromRepresentation:itemRef mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-        item.toRemove = [NSNumber numberWithBool:NO];
-        item.isP8 = [NSNumber numberWithBool:isP8];
-        item.parentPath = path;
-    }
-    return item;
-}
-
-+(NSString *)getExistedFile:(Folder *)folder{
-    NSString *filePath = nil;
-    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
-    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
-    if ([fileManager fileExistsAtPath:fullURL.path]) {
-        filePath =  fullURL.path;
-    }
-    return filePath;
-}
-
-+ (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx{
-    NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
-    NSMutableArray * result = [Folder fetchFoldersInContext:ctx descriptors:descriptors predicate:predicate].mutableCopy;
-    return result.lastObject;
-}
+//+(id<ItemInterface> *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
+//    Item *item = [Item findObjectByItemRef:itemRef context:context];
+//    if (!item) {
+////        item = [Folder MR_createEntityInContext:context];
+////
+//        item = [Item new];
+//        item = [FEMDeserializer fillObject:item fromRepresentation:itemRef mapping:isP8 ? [Item P8DefaultMapping]:[Item defaultMapping]];
+////                [FEMDeserializer objectFromRepresentation:itemRef mapping:isP8 ? [Item P8DefaultMapping]:[Item defaultMapping] context:context];
+//        item.toRemove = [NSNumber numberWithBool:NO];
+//        item.isP8 = [NSNumber numberWithBool:isP8];
+//        item.parentPath = path;
+//    }
+//    return item;
+//}
+//
+//+(NSString *)getExistedFile:(id<ItemInterface> *)folder{
+//    NSString *filePath = nil;
+//    NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSString *folderParentPath = [[folder parentPath] stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+//    NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,[folder name]]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
+//    NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
+//    if ([fileManager fileExistsAtPath:fullURL.path]) {
+//        filePath =  fullURL.path;
+//    }
+//    return filePath;
+//}
+//
+//+ (id<ItemInterface> *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx{
+//    NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
+//    NSMutableArray * result = [Item fetchFoldersInContext:ctx descriptors:descriptors predicate:predicate].mutableCopy;
+//    return result.lastObject;
+//}
 
 @end

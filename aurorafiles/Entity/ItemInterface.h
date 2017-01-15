@@ -1,20 +1,13 @@
 //
-//  Folder+CoreDataProperties.h
-//  aurorafiles
-//
-//  Created by Michael Akopyants on 15/03/16.
-//  Copyright © 2016 Michael Akopyants. All rights reserved.
-//
-//  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
-//  to delete and recreate this implementation file for your updated model.
+// Created by Cheshire on 11.01.17.
+// Copyright (c) 2017 afterlogic. All rights reserved.
 //
 
-#import "Folder.h"
+#import <Foundation/Foundation.h>
+#import "FastEasyMapping.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface Folder (CoreDataProperties)
-
+@protocol ItemInterface <NSObject>
+//@required
 @property (nullable, nonatomic, retain) NSNumber *wasDeleted;
 @property (nullable, nonatomic, retain) NSNumber *isLastUsedUploadFolder;
 @property (nullable, nonatomic, retain) NSString *downloadedName;
@@ -44,11 +37,30 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSNumber *isP8;
 @property (nullable, nonatomic, retain) NSString *parentPath;
 @property (nullable, nonatomic, retain) NSString *mainAction;
+//@end
+
+//@protocol ItemMethodsInterface <NSObject>
++ (FEMMapping*)defaultMapping;
++ (FEMMapping*)renameMapping;
++ (FEMMapping*)P8DefaultMapping;
++ (FEMMapping*)P8RenameMapping;
+- (BOOL)canEdit;
+- (BOOL)isImageContentType;
+- (BOOL)isZippedFile;
++ (NSArray*)imageContentTypes;
+- (NSString*)embedThumbnailLink;
+- (NSString*)viewLink;
+- (NSString*)downloadLink;
+- (NSString*)urlScheme;
+- (NSString*)validContentType;
+- (NSURL*)downloadURL;
+- (NSDictionary *)folderMOC;
+
++ (id <ItemInterface> *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
++ (NSFetchRequest *)getFetchRequestInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
++ (NSArray *)fetchFoldersInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
++ (id <ItemInterface> *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx;
+
++ (NSString *)getExistedFile:(id<ItemInterface> *)folder;
 
 @end
-
-@interface Folder (CoreDataGeneratedAccessors)
-
-@end
-
-NS_ASSUME_NONNULL_END

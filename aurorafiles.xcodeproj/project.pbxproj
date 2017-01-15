@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		231184308D0834E67342208D /* libPods-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F1B41B1DE75AD14F8DFC9F /* libPods-aurorafiles.a */; };
+		5C7B53292721A01C4C8F54DE /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
+		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
+		5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
+		5C7B55D38C4C54085FEC8DE0 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
+		5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
+		5C7B569238FB61688ABDE377 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
+		5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
+		5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		6705CC7AF0730C85A80D7FA3 /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */; };
 		B58C5283746F9C1CBC0FA082 /* libPods-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC9B7C5F92AD71B8DC3A960 /* libPods-aurorafilesaction.a */; };
 		B9625021EAA93E0A0537A454 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */; };
@@ -36,8 +44,6 @@
 		DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA9E1D061F1200238EB5 /* ViewImageController.m */; };
 		DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA11D061F1200238EB5 /* SignInViewController.m */; };
 		DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA41D061F1200238EB5 /* ALTableViewController.m */; };
-		DAC1CAC11D061F1200238EB5 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA71D061F1200238EB5 /* Folder+CoreDataProperties.m */; };
-		DAC1CAC21D061F1200238EB5 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA91D061F1200238EB5 /* Folder.m */; };
 		DAC1CAC31D061F1200238EB5 /* STZPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */; };
 		DAC1CAC41D061F1200238EB5 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
 		DAC1CAC91D061F6200238EB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAC81D061F6200238EB5 /* LaunchScreen.storyboard */; };
@@ -94,8 +100,6 @@
 		FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */; };
 		FF90530C1D9BDCCD00A09A44 /* CurrentFilePathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF90530B1D9BDCCD00A09A44 /* CurrentFilePathViewController.m */; };
 		FF90530E1D9BE53400A09A44 /* aurorafiles.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA431D061D7500238EB5 /* aurorafiles.xcdatamodeld */; };
-		FF90530F1D9BE55800A09A44 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA71D061F1200238EB5 /* Folder+CoreDataProperties.m */; };
-		FF9053101D9BE55800A09A44 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA91D061F1200238EB5 /* Folder.m */; };
 		FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF90536E1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m */; };
 		FF9053701D9BFC9900A09A44 /* FilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA8E1D061F1200238EB5 /* FilesTableViewCell.m */; };
 		FF9053711D9BFCAA00A09A44 /* FilesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */; };
@@ -190,6 +194,15 @@
 /* Begin PBXFileReference section */
 		0EC9B7C5F92AD71B8DC3A960 /* libPods-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B835F02F7C822DF64B167D /* Pods-aurorafiles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.debug.xcconfig"; sourceTree = "<group>"; };
+		5C7B543D016454AD9418B53D /* Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Folder.h; sourceTree = "<group>"; };
+		5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInterface.h; sourceTree = "<group>"; };
+		5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDataBaseProvider.m; sourceTree = "<group>"; };
+		5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Folder+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
+		5C7B5AFC49B3E804A3971C34 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
+		5C7B5BA3A303C3D0423B3656 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
+		5C7B5D8394754DE8EFDADEC0 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
 		63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		84A85DBE2F43D9A7108DF1C4 /* Pods-aurorafilesaction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesaction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.debug.xcconfig"; sourceTree = "<group>"; };
@@ -247,10 +260,6 @@
 		DAC1CAA11D061F1200238EB5 /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		DAC1CAA31D061F1200238EB5 /* ALTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALTableViewController.h; sourceTree = "<group>"; };
 		DAC1CAA41D061F1200238EB5 /* ALTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALTableViewController.m; sourceTree = "<group>"; };
-		DAC1CAA61D061F1200238EB5 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
-		DAC1CAA71D061F1200238EB5 /* Folder+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Folder+CoreDataProperties.m"; sourceTree = "<group>"; };
-		DAC1CAA81D061F1200238EB5 /* Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Folder.h; sourceTree = "<group>"; };
-		DAC1CAA91D061F1200238EB5 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
 		DAC1CAAC1D061F1200238EB5 /* STZPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STZPullToRefresh.h; sourceTree = "<group>"; };
 		DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STZPullToRefresh.m; sourceTree = "<group>"; };
 		DAC1CAAE1D061F1200238EB5 /* STZPullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STZPullToRefreshView.h; sourceTree = "<group>"; };
@@ -435,6 +444,26 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5C7B56E700ED2B15EBE5B058 /* Folder */ = {
+			isa = PBXGroup;
+			children = (
+				5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */,
+				5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */,
+				5C7B543D016454AD9418B53D /* Folder.h */,
+				5C7B5AFC49B3E804A3971C34 /* Folder.m */,
+			);
+			path = Folder;
+			sourceTree = "<group>";
+		};
+		5C7B585372D3E136D324F39D /* NonCDFolder */ = {
+			isa = PBXGroup;
+			children = (
+				5C7B5D8394754DE8EFDADEC0 /* Item.h */,
+				5C7B5BA3A303C3D0423B3656 /* Item.m */,
+			);
+			path = NonCDFolder;
+			sourceTree = "<group>";
+		};
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -586,6 +615,8 @@
 				FF2773DE1DF198EB0061C210 /* IDataBaseProtocol.h */,
 				FF2773DA1DF191000061C210 /* DataBaseProvider.h */,
 				FF2773DB1DF191000061C210 /* DataBaseProvider.m */,
+				5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */,
+				5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */,
 			);
 			path = StorageManager;
 			sourceTree = "<group>";
@@ -694,10 +725,9 @@
 		DAC1CAA51D061F1200238EB5 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				DAC1CAA61D061F1200238EB5 /* Folder+CoreDataProperties.h */,
-				DAC1CAA71D061F1200238EB5 /* Folder+CoreDataProperties.m */,
-				DAC1CAA81D061F1200238EB5 /* Folder.h */,
-				DAC1CAA91D061F1200238EB5 /* Folder.m */,
+				5C7B56E700ED2B15EBE5B058 /* Folder */,
+				5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */,
+				5C7B585372D3E136D324F39D /* NonCDFolder */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1504,7 +1534,6 @@
 				FFE6F0971E04BD46009141CA /* GalleryWrapperViewController.m in Sources */,
 				FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */,
-				DAC1CAC11D061F1200238EB5 /* Folder+CoreDataProperties.m in Sources */,
 				DAC1CAB01D061F1200238EB5 /* ApiP7.m in Sources */,
 				DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */,
 				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
@@ -1535,8 +1564,11 @@
 				DAC1CAB41D061F1200238EB5 /* Settings.m in Sources */,
 				FF6A94B91DB666BE00543269 /* ApiP8.m in Sources */,
 				DAC1CAB31D061F1200238EB5 /* SessionProvider.m in Sources */,
-				DAC1CAC21D061F1200238EB5 /* Folder.m in Sources */,
 				FF71D48A1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
+				5C7B55D38C4C54085FEC8DE0 /* Folder+CoreDataProperties.m in Sources */,
+				5C7B569238FB61688ABDE377 /* Folder.m in Sources */,
+				5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */,
+				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1589,8 +1621,6 @@
 				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
 				FF6A94BF1DB666FC00543269 /* standardAuth.m in Sources */,
-				FF9053101D9BE55800A09A44 /* Folder.m in Sources */,
-				FF90530F1D9BE55800A09A44 /* Folder+CoreDataProperties.m in Sources */,
 				FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */,
 				FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */,
 				FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */,
@@ -1605,6 +1635,10 @@
 				FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */,
 				FFAD03F81DECA388000C4AFF /* FileOperationsProvider.m in Sources */,
 				FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */,
+				5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */,
+				5C7B53F65754E0763E85B7BA /* Folder.m in Sources */,
+				5C7B53292721A01C4C8F54DE /* Item.m in Sources */,
+				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

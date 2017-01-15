@@ -18,7 +18,8 @@ target 'aurorafiles' do
     pod 'AFNetworking', '2.6'
     pod 'AFNetworking+AutoRetry'
     pod 'CRMediaPickerController'
-    
+
+    #этот под не используется. Нужно согласовать его использование (текст и картинка-плейсхолдер для пустого датасета)
     pod 'DZNEmptyDataSet'
     
 end

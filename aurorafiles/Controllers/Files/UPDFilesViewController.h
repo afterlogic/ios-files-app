@@ -18,6 +18,7 @@
 @property (strong, nonatomic) Folder * folder;
 @property (nonatomic, assign) BOOL isCorporate;
 @property (nonatomic, assign) BOOL isP8;
+@property (nonatomic, assign) BOOL isRootFolder;
 
 
 - (IBAction)editAction:(id)sender;
@@ -25,5 +26,6 @@
 - (IBAction)uploadAction:(id)sender;
 
 - (void)updateView;
+- (void)stopRefresh;
 
 @end

@@ -55,7 +55,7 @@
 }
 
 #pragma mark -
-- (void)renameFile:(Folder *)file toNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
+- (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
     NSString * oldName = file.name;
     NSString * type = file.type;
     NSString * parentPath = file.parentPath ? file.parentPath : @"";
@@ -180,15 +180,18 @@
 - (void)saveItemsIntoDB:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type isP8:(BOOL)isP8{
 //    [self removeDuplicatesForItems:items];
     __block NSArray *blockItems = items.copy;
-    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
-        [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
-    }];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0),^{
+        [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+            [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
+        }];
+//    });
+
 }
 
 - (void)prepareItemsForSave:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
-    if (!context) {
-        context = [self.DBProvider defaultMOC];
-    }
+//    if (!context) {
+//        context = [self.DBProvider operationsMOC];
+//    }
 //    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:items];
 //    items = [orderedSet array];
 //    NSMutableArray * existItems = [NSMutableArray new];
@@ -199,17 +202,18 @@
         for (NSDictionary * itemRef in items)
         {
             Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderPath InContext:context];
-            [existIds addObject:childFolder.name];
+            [existIds addObject:childFolder.prKey];
 //            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
 //                [existItems addObject:childFolder];
 //            }
         }
         
-        NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+        NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
         NSString *currentFolderFullPath = folder ? folder.fullpath : @"";
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"NOT name in (%@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@" NOT (name IN %@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@" NOT (prKey IN %@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
-        
+
         for (Folder* fold in oldFolders)
         {
             if (!fold.isDownloaded.boolValue)
@@ -223,11 +227,12 @@
             }
             
         }
-    }else{
+    }
+    else{
         NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND type=%@",folder.fullpath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
-        
+
         for (Folder* fold in oldFolders)
         {
             if (!fold.isDownloaded.boolValue)
@@ -239,7 +244,7 @@
             {
                 fold.wasDeleted = @YES;
             }
-            
+
         }
     }
 }
@@ -285,54 +290,54 @@
 
 
 #pragma mark -
-- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path{
-    return [self getObjectWithName:name type:type fullPath:path isFolder:YES];
-}
+//- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path{
+//    return [self getObjectWithName:name type:type fullPath:path isFolder:YES];
+//}
 
-- (Folder *)getObjectWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path isFolder:(BOOL) isFolder{
-    NSManagedObjectContext* context = [self.DBProvider defaultMOC];
-   __block NSArray * items;
-    NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isFolder = %@ AND fullpath = %@ AND name = %@ AND type = %@",[NSNumber numberWithBool:isFolder],path,name,type];
-    items = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
-    return [items lastObject];
-}
+//- (Folder *)getObjectWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path isFolder:(BOOL) isFolder{
+//    NSManagedObjectContext* context = [self.DBProvider defaultMOC];
+//   __block NSArray * items;
+//    NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isFolder = %@ AND fullpath = %@ AND name = %@ AND type = %@",[NSNumber numberWithBool:isFolder],path,name,type];
+//    items = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
+//    return [items lastObject];
+//}
 
 
 
 #pragma mark -
-- (void)removeDuplicatesForItems:(NSArray *)items{
-    for (NSDictionary *folder in items) {
-        NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
-                                      initWithKey:@"isFolder" ascending:NO];
-        NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND wasDeleted= NO",folder[@"Id"]];
+//- (void)removeDuplicatesForItems:(NSArray *)items{
+//    for (NSDictionary *folder in items) {
+//        NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
+//                                      initWithKey:@"isFolder" ascending:NO];
+//        NSSortDescriptor *title = [[NSSortDescriptor alloc]initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+//
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND wasDeleted= NO",folder[@"Id"]];
+//
+//        NSMutableArray * result = [Folder fetchFoldersInContext:[self.DBProvider defaultMOC] descriptors:@[isFolder, title] predicate:predicate].mutableCopy;;
+//        if (result.count > 1) {
+//           result = [self removeDuplicatesFromOneItemFetch:result withParentPath:folder[@"Path"]].mutableCopy;
+//        }
+//        NSLog(@"%@",result);
+//    }
+//};
 
-        NSMutableArray * result = [Folder fetchFoldersInContext:[self.DBProvider defaultMOC] descriptors:@[isFolder, title] predicate:predicate].mutableCopy;;
-        if (result.count > 1) {
-           result = [self removeDuplicatesFromOneItemFetch:result withParentPath:folder[@"Path"]].mutableCopy;
-        }
-        NSLog(@"%@",result);
-    }
-};
-
-- (NSArray *)removeDuplicatesFromOneItemFetch:(NSMutableArray *)fetchResult  withParentPath:(NSString *)parentPath{
-    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
-        Folder *originalFolder;
-        for (Folder *item in fetchResult) {
-            if ([item.parentPath isEqualToString:parentPath]) {
-                originalFolder = item;
-            }
-        }
-        for (Folder *item in fetchResult) {
-            if (![item isEqual:originalFolder]) {
-                [self.DBProvider deleteObject:item fromContext:[self.DBProvider defaultMOC]];
-            }
-        }
-    }];
-    return fetchResult;
-}
+//- (NSArray *)removeDuplicatesFromOneItemFetch:(NSMutableArray *)fetchResult  withParentPath:(NSString *)parentPath{
+//    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+//        Folder *originalFolder;
+//        for (Folder *item in fetchResult) {
+//            if ([item.parentPath isEqualToString:parentPath]) {
+//                originalFolder = item;
+//            }
+//        }
+//        for (Folder *item in fetchResult) {
+//            if (![item isEqual:originalFolder]) {
+//                [self.DBProvider deleteObject:item fromContext:[self.DBProvider defaultMOC]];
+//            }
+//        }
+//    }];
+//    return fetchResult;
+//}
 
 - (void)deleteItem:(Folder *)item{
     [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {

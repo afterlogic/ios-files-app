@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "UPDFilesViewController.h"
 #import "DownloadsTableViewController.h"
+#import "UploadFoldersTableViewController.h"
 
 @interface ARootViewController ()
 {
@@ -93,7 +94,12 @@
         for (id vc in arr) {
             if ([vc isKindOfClass:[UPDFilesViewController class]]) {
                 if (![(UPDFilesViewController *)vc isCorporate]) {
-//                    [(UPDFilesViewController *)vc updateView];
+                    [[(UPDFilesViewController *)vc view] setHidden:NO];
+                    [(UPDFilesViewController *)vc setIsRootFolder:YES];
+                    [(UPDFilesViewController *)vc updateView];
+                }else{
+                    [[(UPDFilesViewController *) vc view] setHidden:YES];
+                    [(UPDFilesViewController *)vc  stopRefresh];
                 }
             }
         }
@@ -110,7 +116,12 @@
         for (id vc in arr) {
             if ([vc isKindOfClass:[UPDFilesViewController class]]) {
                 if ([(UPDFilesViewController *)vc isCorporate]) {
-//                    [(UPDFilesViewController *)vc updateView];
+                    [[(UPDFilesViewController *)vc view] setHidden:NO];
+                    [(UPDFilesViewController *)vc setIsRootFolder:YES];
+                    [(UPDFilesViewController *)vc updateView];
+                }else{
+                    [[(UPDFilesViewController *) vc view] setHidden:YES];
+                    [(UPDFilesViewController *)vc stopRefresh];
                 }
             }
         }

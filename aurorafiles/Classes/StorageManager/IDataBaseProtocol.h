@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
 @protocol IDataBaseProtocol <NSObject>
 
 @property (nonatomic, readonly, strong) NSManagedObjectContext *defaultMOC;
+@property (nonatomic, readonly, strong) NSManagedObjectContext *operationsMOC;
 
 #pragma mark - Init
 + (instancetype)sharedProvider;
@@ -23,6 +25,7 @@
 
 #pragma mark - Managed Object Operations
 - (void)saveWithBlock:(void(^)(NSManagedObjectContext *context))block;
+- (void)saveWithBlockUsingTmpContext:(void(^)(NSManagedObjectContext *context))block;
 - (void)deleteObject:(id)object fromContext:(NSManagedObjectContext *)context;
 
 
