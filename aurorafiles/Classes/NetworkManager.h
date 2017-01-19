@@ -17,4 +17,7 @@
 - (id<ApiProtocol>)getNetworkManager;
 - (void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler;
 
+#pragma mark - Debug Methods
+
+
 @end

@@ -27,7 +27,7 @@
 - (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler;
 - (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler;
-- (void)updateFilesWithType:(NSString*)type forFolder:(Folder*)folder withCompletion:(void (^)())handler;
+- (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount))handler;
 - (void)stopGettingFileThumb:(NSString *)file;
 - (void)deleteAllObjects: (NSString *) entityDescription ;
 - (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef;

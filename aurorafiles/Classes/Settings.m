@@ -128,6 +128,15 @@
     [Settings setPassword:nil];
     [Settings setAuthToken:nil];
     [Settings setDomainScheme:nil];
+
+    NSString * lastLoginServerVersion = [Settings version];
+    NSString * currentAccount = [Settings currentAccount];
+    NSString * token = [Settings token];
+    NSString * password = [Settings password];
+    NSString * authToken = [Settings authToken];
+    NSString * domainScheme = [Settings domainScheme];
+
+    NSLog(@"%@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
 }
 
 @end

@@ -12,5 +12,9 @@
 static  NSString * CPNotificationConnectionOnline = @"CPNotificationConnectionOnline";
 static  NSString * CPNotificationConnectionLost = @"CPNotificationConnectionLost";
 
-
 static NSString * youTubeSheme = @"youtube";
+
+
+#pragma mark - Navigation Notification Name
+
+static NSString * NNotificationUserSignOut = @"NNotificationUserSignOut";

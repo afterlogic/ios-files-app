@@ -38,6 +38,7 @@
     [self showOnlineButtons];
     [self.childViewControllers makeObjectsPerformSelector:@selector(viewDidLoad)];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOfflineButtons) name:CPNotificationConnectionLost object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(signOutAction) name:NNotificationUserSignOut object:nil];
     
     // Do any additional setup after loading the view.
 }
@@ -144,6 +145,11 @@
             }
         }
     }];
+}
+
+-(void)signOutAction{
+    [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
+
 }
 
 #pragma mark - Navigation

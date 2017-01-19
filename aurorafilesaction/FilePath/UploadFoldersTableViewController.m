@@ -19,8 +19,9 @@
 #import "UploadFoldersTableViewController.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "ApiP8.h"
+#import "STZPullToRefresh.h"
 
-@interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
+@interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
@@ -30,7 +31,7 @@
 @property (strong, nonatomic) Folder * folderToOperate;
 @property (strong, nonatomic) Folder * folderToNavigate;
 @property (weak, nonatomic) IBOutlet UIRefreshControl *refreshController;
-
+@property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
 
 @end
 
@@ -63,13 +64,23 @@
     [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL * url){
         return [url absoluteString];
     }];
+
+    STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
+    [self.view addSubview:refreshView];
+    self.lineRefreshController = [[STZPullToRefresh alloc] initWithTableView:nil refreshView:refreshView tableViewDelegate:self];
     
     [self.refreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
     [self.tableView setContentInset:UIEdgeInsetsMake(self.tableView.contentInset.top, self.tableView.contentInset.left, 50, self.tableView.contentInset.right)];
+
+}
+
+- (void)startUpdate{
+    [self.lineRefreshController startRefresh];
     [self updateFiles:^{
+        [self.lineRefreshController finishRefresh];
         [self.refreshController endRefreshing];
     }];
 }
@@ -102,9 +113,11 @@
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
-    [self updateFiles:^(){
-        [self.refreshController endRefreshing];
-    }];
+//    [self updateFiles:^(){
+//        [self.refreshController endRefreshing];
+//    }];
+
+    [self startUpdate];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -132,10 +145,8 @@
     }
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
-    
-    [self updateFiles:^(){
-        
-    }];
+
+    [self startUpdate];
 }
 
 - (void)userWasSignedIn{
@@ -173,7 +184,7 @@
 }
 
 - (void)pullToRefreshDidStart{
-
+    [self startUpdate];
 }
 
 
@@ -243,32 +254,6 @@
 }
 
 
-#pragma mark - Navigation
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"GoToFolderSegue"])
-    {
-        Folder * object = self.folderToNavigate;
-        UploadFoldersTableViewController * vc = [segue destinationViewController];
-        vc.delegate = self.delegate;
-        vc.folder = object;
-        vc.isCorporate = self.isCorporate;
-        vc.doneButton = self.doneButton;
-        [self.foldersStack removeObject:[self.foldersStack lastObject]];
-        vc.foldersStack = self.foldersStack;
-    }
-}
-
-- (UIImage *)snapshot:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
 
 #pragma mark TableView
 
@@ -326,12 +311,11 @@
 
 - (void)updateFiles:(void (^)())handler
 {
-    [self reloadTableData];
-    
-    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(){
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
         if (handler)
         {
             handler();
+            [self reloadTableData];
             
         }
     }];
@@ -533,7 +517,7 @@
 //    [fetchRequest setSortDescriptors:@[isFolder, title]];
     
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
 //    [fetchRequest setReturnsObjectsAsFaults:NO];
     
 //    NSFetchedResultsController *theFetchedResultsController =
@@ -723,13 +707,29 @@
                                                                  [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
                                                                      if (success) {
                                                                          [self updateFiles:^(){
-                                                                             [self.tableView reloadData];
+//                                                                             [self.tableView reloadData];
                                                                              __strong typeof(self)self = weakSelf;
+                                                                             [weakSelf.fetchedResultsController performFetch:nil];
                                                                              NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
                                                                              NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
                                                                              NSLog(@"%@", filteredArray);
-                                                                             self.folderToNavigate = [filteredArray lastObject];
-                                                                             [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+                                                                             if (filteredArray.count > 0){
+                                                                                 self.folderToNavigate = [filteredArray lastObject];
+                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+                                                                             }else{
+                                                                                 self.folderToNavigate = [[Folder alloc]initWithContext:self.managedObjectContext];
+                                                                                 [self.folderToNavigate setName:weakSelf.folderName.text];
+                                                                                 [self.folderToNavigate setParentPath:weakSelf.folder.fullpath ? weakSelf.folder.fullpath : @""];
+                                                                                 [self.folderToNavigate setIsLink:[NSNumber numberWithBool:NO]];
+                                                                                 [self.folderToNavigate setIsFolder:[NSNumber numberWithBool:YES]];
+                                                                                 [self.folderToNavigate setFullpath:[NSString stringWithFormat:@"%@/%@",self.folderToNavigate.parentPath,weakSelf.folderName.text]];
+                                                                                 [self.folderToNavigate setIsP8:[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+                                                                                 [self.folderToNavigate setType:self.isCorporate ? @"corporate": @"personal"];
+                                                                                 
+                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+                                                                             }
+                                                                             
+
                                                                          }];
                                                                      }
                                                                  }];
@@ -744,4 +744,32 @@
                                                          }];
     return createFolder;
 }
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"GoToFolderSegue"])
+    {
+        Folder * object = self.folderToNavigate;
+        UploadFoldersTableViewController * vc = [segue destinationViewController];
+        vc.delegate = self.delegate;
+        vc.folder = object;
+        vc.isCorporate = self.isCorporate;
+        vc.doneButton = self.doneButton;
+        [self.foldersStack removeObject:[self.foldersStack lastObject]];
+        vc.foldersStack = self.foldersStack;
+    }
+}
+
+- (UIImage *)snapshot:(UIView *)view
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 @end

@@ -19,6 +19,7 @@
 @interface StorageManager()
 @property (readwrite, strong, nonatomic) id<IDataBaseProtocol>DBProvider;
 @property (strong, nonatomic) id<IFileOperationsProtocol>fileOperationsProvider;
+@property (nonatomic, strong) NSOperationQueue *filesOperationsQueue;
 @end
 
 @implementation StorageManager
@@ -40,7 +41,8 @@
     self = [super init];
     if (self)
     {
-        
+        self.filesOperationsQueue = [[NSOperationQueue alloc]init];
+        [self.filesOperationsQueue setName:@"com.AuroraFiles.FilesOperationsQueue"];
     }
     
     return self;
@@ -111,16 +113,16 @@
         if (result) {
             [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
                 folder.name = newName;
-                Folder * object = [FEMDeserializer objectFromRepresentation:result mapping:folder.isP8 ? [Folder P8RenameMapping]:[Folder renameMapping] context:context];
-                
+                Folder *object = [FEMDeserializer objectFromRepresentation:result mapping:folder.isP8 ? [Folder P8RenameMapping] : [Folder renameMapping] context:context];
+
                 NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",folder.type, oldPath];
-                NSArray * fetched = [Folder fetchFoldersInContext:context descriptors:@[title] predicate:predicate];
-                for(Folder * childFolder in fetched){
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@", folder.type, oldPath];
+                NSArray *fetched = [Folder fetchFoldersInContext:context descriptors:@[title] predicate:predicate];
+                for (Folder *childFolder in fetched) {
                     childFolder.parentPath = object.fullpath;
                 }
                 [self.DBProvider deleteObject:folder fromContext:context];
-                dispatch_async(dispatch_get_main_queue(), ^(){
+                dispatch_async(dispatch_get_main_queue(), ^() {
                     if (handler) {
                         handler(object);
                     }
@@ -154,36 +156,40 @@
     [self.fileOperationsProvider stopDownloadigThumbForFile:fileName];
 }
 
-- (void)updateFilesWithType:(NSString*)type forFolder:(Folder*)folder withCompletion:(void (^)())handler{
+- (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount))handler{
     if (folder.isFault) {
-        handler();
+        handler(0);
         return;
     }
     NSString * folderPath = folder ? folder.fullpath : @"";
-    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
-        if (authorised) {
-            [self.fileOperationsProvider getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items) {
-                if (items) {
-                    [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
-                }
-                dispatch_async(dispatch_get_main_queue(), ^(){
-                    [[SessionProvider sharedManager] cancelAllOperations];
-                    if (handler) {
-                        handler();
+//    NSBlockOperation *filesUpdateOperation = [NSBlockOperation blockOperationWithBlock:^{
+        [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
+            if (authorised) {
+                [self.fileOperationsProvider getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items) {
+                    if (items) {
+                        [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
                     }
-                });
-            }];
-        }
-    }];
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [[SessionProvider sharedManager] cancelAllOperations];
+                        if (handler) {
+                            handler(items.count);
+                        }
+                    });
+                }];
+            }
+        }];
+//    }];
+//    [self.filesOperationsQueue addOperation:filesUpdateOperation];
+
 }
 
 - (void)saveItemsIntoDB:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type isP8:(BOOL)isP8{
 //    [self removeDuplicatesForItems:items];
     __block NSArray *blockItems = items.copy;
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0),^{
-        [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
-            [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
-        }];
+    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+        [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
+    }];
 //    });
 
 }
@@ -377,7 +383,7 @@
         [self.DBProvider deleteObject:managedObject fromContext:context];
         NSLog(@"%@ object deleted",entityDescription);
     }
-         [context save:&error];
+        [context save:&error];
     if (error) {
         NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
     }}];

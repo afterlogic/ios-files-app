@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,9 +23,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9ga-4F-77Z">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fPb-qk-Zg5" userLabel="video View">
+                                <rect key="frame" x="0.0" y="64" width="375" height="483"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u6Q-UF-4QB" userLabel="login error view">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qAT-hu-Ow0">
+                                        <rect key="frame" x="20" y="8" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Phc-Dp-pCG"/>
+                                            <constraint firstAttribute="width" constant="40" id="sVs-yX-3Dn"/>
+                                        </constraints>
+                                        <state key="normal" image="error"/>
+                                        <connections>
+                                            <action selector="logoutCloseButton:" destination="ObA-dk-sSI" eventType="touchUpInside" id="chn-li-zCw"/>
+                                        </connections>
+                                    </button>
                                     <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="Rfj-ID-T0e">
                                         <rect key="frame" x="92" y="206" width="191" height="191"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -60,18 +78,13 @@
                                     <constraint firstItem="Yz6-my-ir0" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="2br-NH-KRC"/>
                                     <constraint firstItem="Yz6-my-ir0" firstAttribute="top" secondItem="s6v-eV-8q6" secondAttribute="bottom" constant="8" id="9lb-Vt-iwF"/>
                                     <constraint firstItem="s6v-eV-8q6" firstAttribute="top" relation="lessThanOrEqual" secondItem="Rfj-ID-T0e" secondAttribute="bottom" constant="114" id="G7g-bY-jrh"/>
+                                    <constraint firstItem="qAT-hu-Ow0" firstAttribute="leading" secondItem="u6Q-UF-4QB" secondAttribute="leading" constant="20" id="VAu-Ly-FeW"/>
                                     <constraint firstAttribute="bottom" secondItem="Yz6-my-ir0" secondAttribute="bottom" constant="27" id="ak1-vy-5QC"/>
                                     <constraint firstItem="Rfj-ID-T0e" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="h5f-2x-uHg"/>
                                     <constraint firstItem="Rfj-ID-T0e" firstAttribute="centerY" secondItem="u6Q-UF-4QB" secondAttribute="centerY" constant="-0.5" id="kFD-Ll-arP"/>
                                     <constraint firstItem="s6v-eV-8q6" firstAttribute="centerX" secondItem="u6Q-UF-4QB" secondAttribute="centerX" id="lR9-rx-OUX"/>
+                                    <constraint firstItem="qAT-hu-Ow0" firstAttribute="top" secondItem="u6Q-UF-4QB" secondAttribute="top" constant="8" id="lmR-HP-fIx"/>
                                 </constraints>
-                            </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9ga-4F-77Z">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                            </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fPb-qk-Zg5" userLabel="video View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="483"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32w-4m-AXY" userLabel="Gallery Container">
                                 <rect key="frame" x="0.0" y="100" width="375" height="447"/>
@@ -149,7 +162,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X47-rx-isc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="397" y="-104"/>
+            <point key="canvasLocation" x="396.5" y="-104.5"/>
         </scene>
         <!--File Gallery Collection View Controller-->
         <scene sceneID="PeW-Qs-9RT">
@@ -394,7 +407,7 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3EV-WD-A9i" id="5IH-mU-Wdd">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -426,10 +439,6 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
-                    <refreshControl key="spinnerRefreshController" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ys2-3m-ULA">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </refreshControl>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="personal"/>
                     </userDefinedRuntimeAttributes>
@@ -438,7 +447,6 @@
                         <outlet property="activityView" destination="D7j-gU-6tL" id="thb-9H-7tD"/>
                         <outlet property="backButton" destination="drg-oh-tJj" id="5nm-Fi-hCi"/>
                         <outlet property="doneButton" destination="T6f-RQ-OkT" id="ttt-qX-CjN"/>
-                        <outlet property="refreshController" destination="ys2-3m-ULA" id="9fN-G5-MHE"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKR-bn-oJu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -446,8 +454,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0zg-zD-nJg">
-                            <rect key="frame" x="111" y="53" width="20" height="20"/>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0zg-zD-nJg">
+                            <rect key="frame" x="110" y="54" width="20" height="20"/>
                             <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </activityIndicatorView>
                     </subviews>
@@ -482,7 +490,7 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ezx-qF-xzj" id="6gw-Dl-pWD">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -516,10 +524,6 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <refreshControl key="spinnerRefreshController" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="VGG-wh-EDv">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </refreshControl>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="corporate"/>
                     </userDefinedRuntimeAttributes>
@@ -528,7 +532,6 @@
                         <outlet property="activityView" destination="D7j-gU-6tL" id="pia-RU-j3F"/>
                         <outlet property="backButton" destination="2EC-o2-eyC" id="oFV-qz-KN8"/>
                         <outlet property="doneButton" destination="ApG-Pq-3FI" id="KTH-LH-Ch9"/>
-                        <outlet property="refreshController" destination="VGG-wh-EDv" id="pc4-ew-atw"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xHp-N4-7ff" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -536,8 +539,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3mI-yw-GUe">
-                            <rect key="frame" x="111" y="53" width="20" height="20"/>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3mI-yw-GUe">
+                            <rect key="frame" x="110" y="54" width="20" height="20"/>
                             <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </activityIndicatorView>
                     </subviews>
@@ -555,6 +558,7 @@
         <image name="appLogo" width="55" height="55"/>
         <image name="corporate" width="22" height="22"/>
         <image name="edit" width="18" height="18"/>
+        <image name="error" width="28" height="28"/>
         <image name="personal" width="22" height="22"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

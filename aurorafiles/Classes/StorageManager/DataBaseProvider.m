@@ -15,6 +15,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *defaultMOC;
+@property (nonatomic, retain) NSOperationQueue *dataBaseOperationsQueue;
 @end
 
 @implementation DataBaseProvider
@@ -54,6 +55,8 @@
              }
 
          }];
+        self.dataBaseOperationsQueue = [[NSOperationQueue alloc]init];
+        [self.dataBaseOperationsQueue setName:@"com.AuroraFiles.ClearCoreDataOperationsQueue"];
     }
     return self;
 }
@@ -95,7 +98,7 @@
     }];
 }
 
--(void)saveWithBlock:(void(^)(NSManagedObjectContext *context))block{
+- (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block {
 
 //    [self.defaultMOC performBlock:^{
 //        if (block) {
@@ -108,30 +111,36 @@
 //            NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
 //        }
 //    }];
+    NSBlockOperation *saveOperation = [NSBlockOperation blockOperationWithBlock:^{
+        NSManagedObjectContext *tmpContext = self.operationsMOC;
+        [tmpContext performBlock:^{
+            if (block){
+                block(tmpContext);
+            }
 
-
-    NSManagedObjectContext *tmpContext = self.operationsMOC;
-    [tmpContext performBlock:^{
-        if (block){
-            block(tmpContext);
-        }
-
-        NSError *error = [NSError new];
-        if (![tmpContext save:&error])
-        {
-            //handle error
-            NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
-        }else{
-            [self.defaultMOC performBlock:^{
-                NSError *error = [NSError new];
-                if ([self.defaultMOC save:&error]) {
-                    NSLog(@"context saved -> ✅");
-                }else{
-                    NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
-                }
-            }];
-        }
+            NSError *error = [NSError new];
+            if (![tmpContext save:&error])
+            {
+                //handle error
+                NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+            }else{
+                [self.defaultMOC performBlock:^{
+                    NSError *error = [NSError new];
+                    if ([self.defaultMOC save:&error]) {
+                        NSLog(@"context saved -> ✅");
+                    }else{
+                        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+                    }
+                }];
+            }
+        }];
     }];
+
+    [saveOperation setCompletionBlock:^{
+
+    }];
+
+    [self.dataBaseOperationsQueue addOperation:saveOperation];
 }
 
 -(void)deleteObject:(id)object fromContext:(NSManagedObjectContext *)context{
@@ -166,7 +175,9 @@
 - (NSURL *)applicationDocumentsDirectory {
     // The directory the application uses to store the Core Data store file. This code uses a directory named "com.makopyants.aurorafiles" in the application's documents directory.
     return [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.afterlogic.aurorafiles"];
+//    return [[NSFileManager defaultManager] ]
 }
+
 
 - (NSManagedObjectModel *)managedObjectModel {
     // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
@@ -183,9 +194,7 @@
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
-
     // Create the coordinator and store
-
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"aurorafiles.sqlite"];
     NSError *error = nil;

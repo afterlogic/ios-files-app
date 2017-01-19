@@ -130,13 +130,18 @@
 -(void)setupInterfaceForP8:(BOOL)isP8 {
 //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [Settings domainScheme];
+    NSString *authToken = [Settings authToken];
+    NSString *token = [Settings token];
     
     AuroraHUD *folderHud = [AuroraHUD checkFileExistanceHUD:self];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (isP8){
-        if (![Settings authToken] || !scheme) {
+        if (authToken.length==0 || !scheme) {
             [self hideLogoutView:NO];
             [self hideContainers:YES];
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [folderHud hideHUD];
+            });
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
@@ -144,13 +149,13 @@
                 if (result) {
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         [folderHud hideHUD];
-                        });
+                    });
                     [self.navigationController setNavigationBarHidden:NO animated:YES];
                     [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
                 }else{
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         [folderHud hideHUD];
-                        });
+                    });
                     [self.navigationController setNavigationBarHidden:NO animated:YES];
                     [self setCurrentUploadFolder:@"" root:@"personal"];
                     [self showUploadFolders];
@@ -158,7 +163,7 @@
             }];
         }
     }else{
-        if (![Settings token] || !scheme) {
+        if (!token || !scheme) {
             [self hideLogoutView:NO];
             [self hideContainers:YES];
         }else{
@@ -336,7 +341,15 @@
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             if ([fileURLItem isKindOfClass:[NSURL class]]) {
                                 fileExtension = @"url";
-                                NSString *tmpFileName = [NSString stringWithFormat:@"InternetShortcut_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+                                NSMutableArray *urlParts = [[(NSURL *) fileURLItem absoluteString] componentsSeparatedByString:@"/"].mutableCopy;
+                                NSMutableArray *urlPartsTmp = urlParts.mutableCopy;
+                                for (NSString *part in urlPartsTmp) {
+                                    if ([part isEqualToString:@""]) {
+                                        [urlParts removeObject:part];
+                                    }
+                                }
+//                                NSString *tmpFileName = [NSString stringWithFormat:@"InternetShortcut_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+                                NSString *tmpFileName = [urlParts lastObject];
                                 mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
                                 
                                 UploadedFile *file = [UploadedFile new];
@@ -345,6 +358,7 @@
                                 file.type = (NSString *)kUTTypeURL;
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+                                file.name = tmpFileName.copy;
                                 [self.filesForUpload addObject:file];
                             }
                         }];
@@ -401,6 +415,9 @@
 -(void)showUploadFolders{
     [self performSegueWithIdentifier:@"push_files" sender:self];
 }
+- (IBAction)logoutCloseButton:(id)sender {
+    [self done];
+}
 
 - (IBAction)done
 {
@@ -419,7 +436,9 @@
     
     for (UploadedFile *file in self.filesForUpload){
         if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
-            file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
+            NSString *lastPathComponent = [file.path lastPathComponent];
+//            file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
+            file.name = lastPathComponent;
         }else{
             file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
         }
@@ -598,6 +617,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     
     NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]] componentsJoinedByString:@"\n"];
 
+//    NSString *fixedName = [[name stringByRemovingPercentEncoding] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"?!&"]];
     NSString *shortcutName = [NSString stringWithFormat:@"%@.%@",name,extension];
     NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutName];
     [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];

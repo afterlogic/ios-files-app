@@ -11,9 +11,11 @@
 		5C7B53292721A01C4C8F54DE /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
 		5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
+		5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */; };
 		5C7B55D38C4C54085FEC8DE0 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
 		5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
 		5C7B569238FB61688ABDE377 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
+		5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */; };
 		5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
 		5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		6705CC7AF0730C85A80D7FA3 /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */; };
@@ -125,6 +127,8 @@
 		FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */; };
 		FFB959391DAF96D8008031B3 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
 		FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
+		FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */; };
+		FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
 		FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */; };
 		FFE6F0931E033FD9009141CA /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F0911E033FD9009141CA /* ImageViewController.m */; };
 		FFE6F0941E033FD9009141CA /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFE6F0921E033FD9009141CA /* ImageViewController.xib */; };
@@ -198,9 +202,11 @@
 		5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInterface.h; sourceTree = "<group>"; };
 		5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDataBaseProvider.m; sourceTree = "<group>"; };
 		5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Folder+CoreDataProperties.m"; sourceTree = "<group>"; };
+		5C7B585E359719D9DF9927ED /* SplashScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenController.h; sourceTree = "<group>"; };
 		5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
 		5C7B5AFC49B3E804A3971C34 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
 		5C7B5BA3A303C3D0423B3656 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenController.m; sourceTree = "<group>"; };
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
 		5C7B5D8394754DE8EFDADEC0 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
 		63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -640,6 +646,8 @@
 				DAC1CA9F1D061F1200238EB5 /* SignInViewController */,
 				DAC1CAA21D061F1200238EB5 /* TableController */,
 				FF6A1D0E1DAD026F005CBA76 /* RootController */,
+				5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */,
+				5C7B585E359719D9DF9927ED /* SplashScreenController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1569,6 +1577,7 @@
 				5C7B569238FB61688ABDE377 /* Folder.m in Sources */,
 				5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */,
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
+				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1596,6 +1605,7 @@
 				FF42B1E71DB77F88005A2B0C /* files.m in Sources */,
 				FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
 				FF6A94BA1DB666BE00543269 /* ApiP8.m in Sources */,
+				FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */,
 				FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */,
 				DAC1CAD21D06216400238EB5 /* ActionViewController.m in Sources */,
 				FFB959361DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
@@ -1637,8 +1647,10 @@
 				FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */,
 				5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */,
 				5C7B53F65754E0763E85B7BA /* Folder.m in Sources */,
+				FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */,
 				5C7B53292721A01C4C8F54DE /* Item.m in Sources */,
 				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
+				5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,7 @@ static int const kNUMBER_OF_RETRIES = 6;
 }
 
 @property (strong, nonatomic) id<ApiProtocol> currentNetworkManager;
+@property (strong, nonatomic) NSOperationQueue *checkHostOperations;
 
 
 @end
@@ -40,6 +41,9 @@ static int const kNUMBER_OF_RETRIES = 6;
     self = [super init];
     if (self) {
         operationCounter = kNUMBER_OF_RETRIES;
+        self.checkHostOperations = [[NSOperationQueue alloc]init];
+        [self.checkHostOperations setName:@"com.AuroraFilesApp.checkSSLandHostVersion"];
+        self.checkHostOperations.maxConcurrentOperationCount = 1;
     }
     return self;
 }
@@ -56,26 +60,33 @@ static int const kNUMBER_OF_RETRIES = 6;
 }
 
 -(void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler{
-    
+
+//    [self checkConnectionUsingSerialQueue];
+
+
+//TODO: раскоментировать код ниже после произведения отладки и магии над очередями
     id<ApiProtocol>sameManager;
-    
+
     if (!managers) {
         managers = [[NSMutableArray alloc]init];
         [managers addObjectsFromArray:@[[P8Manager new],[P8Manager new],[P7Manager new],[P7Manager new]]];
     }
-    
+
     if (managers.count == 0) {
         managers = nil;
         handler(nil,nil);
         return;
     }
-    
+
     if (managers.count >= 1) {
         sameManager = [managers lastObject];
     }
-    
+
+
+
     [sameManager checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
             if (success) {
                 self.currentNetworkManager = sameManager;
                 handler(version,[Settings domain]);
@@ -100,11 +111,10 @@ static int const kNUMBER_OF_RETRIES = 6;
             }
         });
     }];
-    
+
     if (managers.count > 0) {
         [managers removeLastObject];
     }
-
 }
 
 -(void)checkConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler forManager:(id<ApiProtocol>)currentManaget{
@@ -233,5 +243,70 @@ static int const kNUMBER_OF_RETRIES = 6;
 //}
 
 
+#pragma mark - Debug Methods
+
+-(void)checkConnectionUsingSerialQueue{
+
+    id<ApiProtocol>sameManager;
+
+    if (!managers) {
+        managers = [[NSMutableArray alloc]init];
+        [managers addObjectsFromArray:@[[P8Manager new],[P8Manager new],[P7Manager new],[P7Manager new]]];
+    }
+//
+//    if (managers.count == 0) {
+//        managers = nil;
+//        handler(nil,nil);
+//        return;
+//    }
+
+//    if (managers.count >= 1) {
+//        sameManager = [managers lastObject];
+//    }
+
+    for (sameManager in managers) {
+        NSOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(operationBody:) object:sameManager];
+        [self.checkHostOperations addOperation:operation];
+    }
+    
+    managers = @[].mutableCopy;
+    
+ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+    NSOperation *firstOperation = [[self.checkHostOperations operations] firstObject];
+    if (!firstOperation.isExecuting) {
+        [firstOperation start];
+    }
+ });
+}
+
+
+-(void)operationBody:(id<ApiProtocol>) sameManager{
+    [sameManager checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
+       
+            if (success) {
+                self.currentNetworkManager = sameManager;
+//                handler(version,[Settings domain]);
+            }else{
+                if (managers.count > 0) {
+                    [self updateDomain];
+//                    [self checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
+//                        if (domainVersion && correctHostURL) {
+////                            handler(domainVersion,correctHostURL);
+//                            return;
+//                        }
+//                        if(managers.count == 0) {
+//                            managers = nil;
+////                            handler(domainVersion,correctHostURL);
+//                            return;
+//                        }
+//                    }];
+                }else{
+                    managers = nil;
+//                    handler(nil,nil);
+                }
+            }
+//        });
+    }];
+}
 
 @end

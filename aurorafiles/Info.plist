@@ -38,6 +38,8 @@
 	</dict>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>googledrive</string>

@@ -414,10 +414,12 @@
 -(void)signOut{
     [self.sessionProvider logout:^(BOOL succsess, NSError *error) {
         if (succsess) {
-            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-            signIn.delegate = self;
+//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//            signIn.delegate = self;
             [self.navigationController popToRootViewControllerAnimated:YES];
-            [self presentViewController:signIn animated:YES completion:^(){}];
+//            [self presentViewController:signIn animated:YES completion:^(){}];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
+
         }
     }];
 }
@@ -430,12 +432,12 @@
 - (void)updateFiles:(void (^)())completionHandler
 {
     if ([Settings domain]) {
-        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(){
+        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
             if (completionHandler)
             {
                 [self fetchData];
-                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
-                if ([info numberOfObjects]==0) {
+//                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
+                if (itemsCount==0) {
                     noDataLabel.text = @"Folder is empty";
                 }
             }
@@ -485,26 +487,26 @@
     if (self.isP8) {
         [[self.storageManager DBProvider] saveWithBlock:^(NSManagedObjectContext *context) {
             [[(FilesTableViewCell *) cell downloadActivity] startAnimating];
-            [[ApiP8 filesModule]getFileView:folder type:self.type withProgress:^(float progress) {
-            
-            } withCompletion:^(NSString *thumbnail) {
+            [[ApiP8 filesModule] getFileView:folder type:self.type withProgress:^(float progress) {
+
+            }                 withCompletion:^(NSString *thumbnail) {
                 folder.content = thumbnail;
                 if ([folder.thumb boolValue]) {
                     NSString *parentPath = folder.parentPath ? folder.parentPath : @"";
-                    [[ApiP8 filesModule]getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
+                    [[ApiP8 filesModule] getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
                         folder.thumbnailLink = thumbnail;
                         folder.isDownloaded = [NSNumber numberWithBool:YES];
-//                        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-//                        NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-//                        NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-//                        NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-//                        folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-                        NSError * error;
+                        //                        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
+                        //                        NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+                        //                        NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+                        //                        NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
+                        //                        folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+                        NSError *error;
                         [folder.managedObjectContext save:&error];
-//                        [downloadTask resume];
+                        //                        [downloadTask resume];
                     }];
                     [[(FilesTableViewCell *) cell downloadActivity] stopAnimating];
-                    [(FilesTableViewCell*)cell disclosureButton].hidden = YES;
+                    [(FilesTableViewCell *) cell disclosureButton].hidden = YES;
                 }
             }];
         }];

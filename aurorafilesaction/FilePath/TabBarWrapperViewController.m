@@ -56,6 +56,7 @@
             self.currentFolderController.delegate = self;
             self.selectedFolderPath = @"";
             self.selectedRootPath = self.currentFolderController.type;
+            
 //        }
 //    }];
 
@@ -89,7 +90,8 @@
     
     [self.navigationItem.backBarButtonItem setTarget:self.currentFolderController];
     [self.navigationItem.backBarButtonItem setAction:@selector(backAction:)];
-    
+    [self.navigationController.navigationController setTitle:self.selectedRootPath];
+
     self.currentFolderController.doneButton = self.navRightButton;
     
     [self currentFolder:self.currentFolderController.folder root:self.currentFolderController.type];
@@ -133,6 +135,7 @@
         self.currentFolderController.backButton = self.backButton;
         self.selectedRootPath = self.currentFolderController.type;
         self.selectedFolderPath = @"";
+//        [self.navigationController setTitle:self.selectedRootPath];
     }
 }
 

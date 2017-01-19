@@ -50,7 +50,7 @@
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
     
     alertViewIsShow = NO;
-    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -119,10 +119,12 @@
             }else{
                 [Settings setLogin:self.emailField.text];
                 [Settings setPassword:self.passwordField.text];
-                [self dismissViewControllerAnimated:YES completion:^(){
-                    [self.delegate userWasSignedIn];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-                }];
+
+                [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+//                [self dismissViewControllerAnimated:YES completion:^(){
+//                    [self.delegate userWasSignedIn];
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
+//                }];
             }
         }];
         }else{
@@ -144,10 +146,10 @@
 }
 
 -(void)offlineAuth{
-    [self dismissViewControllerAnimated:YES completion:^(){
-        [self.delegate userWasSigneInOffline];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignInOffline" object:self];
-    }];
+//    [self dismissViewControllerAnimated:YES completion:^(){
+//        [self.delegate userWasSigneInOffline];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignInOffline" object:self];
+//    }];
 }
 
 - (void)didReceiveMemoryWarning {
