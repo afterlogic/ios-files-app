@@ -170,7 +170,6 @@
                         [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
                     }
                     dispatch_async(dispatch_get_main_queue(), ^(){
-                        [[SessionProvider sharedManager] cancelAllOperations];
                         if (handler) {
                             handler(items.count);
                         }

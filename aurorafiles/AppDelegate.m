@@ -35,7 +35,7 @@
     [Fabric with:@[[Crashlytics class]]];
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
     [[AFNetworkActivityLogger sharedLogger] startLogging];
-//    [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
+    [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
 
     self.dbProvider = [DataBaseProvider sharedProvider];
     

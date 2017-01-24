@@ -134,7 +134,9 @@
                 [self clear];
                 alertViewIsShow = YES;
             }
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
         }
     }];
 }

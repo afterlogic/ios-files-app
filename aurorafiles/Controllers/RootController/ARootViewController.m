@@ -72,7 +72,7 @@
     [self.segmentedCotnroller insertSegmentWithTitle:@"Personal" atIndex:0 animated:YES];
     [self.segmentedCotnroller insertSegmentWithTitle:@"Corporate" atIndex:1 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
-    [self showPersonal];
+    [self showPersonalWithoutUpdate];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:CPNotificationConnectionOnline object:nil];
 }
 
@@ -83,6 +83,27 @@
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
     [self showDownloads];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOnlineButtons) name:CPNotificationConnectionOnline object:nil];
+}
+
+-(void)showPersonalWithoutUpdate{
+    [UIView animateWithDuration:0.4f animations:^{
+        self.containerPerson.hidden = NO;
+        self.containerCorporate.hidden = YES;
+        self.containerDownloads.hidden = YES;
+        
+        NSArray *arr = self.childViewControllers;
+        for (id vc in arr) {
+            if ([vc isKindOfClass:[UPDFilesViewController class]]) {
+                if (![(UPDFilesViewController *)vc isCorporate]) {
+                    [[(UPDFilesViewController *)vc view] setHidden:NO];
+                    [(UPDFilesViewController *)vc setIsRootFolder:YES];
+                }else{
+                    [[(UPDFilesViewController *) vc view] setHidden:YES];
+                    [(UPDFilesViewController *)vc  stopRefresh];
+                }
+            }
+        }
+    }];
 }
 
 -(void)showPersonal{
@@ -141,7 +162,9 @@
 //                if ([(DownloadsTableViewController *)vc isCorporate]) {
 //                    [(UPDFilesViewController *)vc updateView];
 //                }
+
                 [(DownloadsTableViewController *) vc setLoadType:loadTypeContainer];
+                [(DownloadsTableViewController *) vc stopTasks];
             }
         }
     }];

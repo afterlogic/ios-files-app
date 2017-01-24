@@ -87,9 +87,10 @@
         self.navigationItem.title = [self.type capitalizedString];
 
     }
-    if(!self.isRootFolder){
+    
+//    if(!self.isRootFolder){
         [self updateView];
-    }
+//    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -295,17 +296,20 @@
     NSPredicate * predicate;
     if (text && text.length)
     {
-         predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath,text];
+         predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"",text, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
     }
     else
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
     }
     
     self.fetchedResultsController.fetchRequest.predicate = predicate;
-    [self fetchData];
+    [self.fetchedResultsController performFetch:nil];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
+
     NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
+    
+    indexPathsToInsert = [[NSMutableArray alloc] init];
     for (id obj in newItems)
     {
         [indexPathsToInsert addObject:[self.fetchedResultsController indexPathForObject:obj]];
@@ -313,7 +317,9 @@
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+//    if (indexPathsToInsert.count > 0) {
+        [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+//    }
     [self.tableView endUpdates];
 }
 
@@ -419,13 +425,13 @@
             [self.navigationController popToRootViewControllerAnimated:YES];
 //            [self presentViewController:signIn animated:YES completion:^(){}];
             [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
-
         }
     }];
 }
 
 
 -(void)showDownloadedFiles{
+//    [[SessionProvider sharedManager]cancelAllOperations];
     [self performSegueWithIdentifier:@"ShowDownloadsSegue" sender:nil];
 }
 

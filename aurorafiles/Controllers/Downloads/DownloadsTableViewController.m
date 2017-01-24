@@ -59,11 +59,16 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    [[SessionProvider sharedManager] cancelAllOperations];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
 //    self.loadType = loadTypeContainer;
+    
+}
+
+- (void)stopTasks{
+//    [[SessionProvider sharedManager] cancelAllOperations];
 }
 
 #pragma mark - Table view data source
