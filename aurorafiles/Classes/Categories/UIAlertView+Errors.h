@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface UIAlertView (Errors)
-+(void)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc;
++(UIAlertView *)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc;
 @end

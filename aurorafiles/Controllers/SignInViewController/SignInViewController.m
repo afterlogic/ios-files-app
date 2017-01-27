@@ -87,24 +87,33 @@
 - (IBAction)auth:(UIButton*)sender
 {
     [activeField resignFirstResponder];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
     if (self.emailField.text.length == 0) {
-        if (!alertViewIsShow) {
-            NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
-            [UIAlertView generatePopupWithError:error forVC:self];
-            alertViewIsShow = YES;
-        }
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        return;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!alertViewIsShow) {
+                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                [av show];
+                alertViewIsShow = YES;
+            }
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            return;
+        });
     }
     
     if (self.domainField.text.length == 0) {
-        if(!alertViewIsShow){
-            NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
-            [UIAlertView generatePopupWithError:error forVC:self];
-            alertViewIsShow = YES;
-        }
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(!alertViewIsShow){
+                
+                NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
+                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                [av show];
+                alertViewIsShow = YES;
+            }
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
         return;
     }
     
@@ -113,29 +122,34 @@
     [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
         if (domain && domain.length) {
         [[SessionProvider sharedManager]loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
-            if (error){
-                [UIAlertView generatePopupWithError:error forVC:self];
-            }else{
-                [Settings setLogin:self.emailField.text];
-                [Settings setPassword:self.passwordField.text];
-
-                [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-//                [self dismissViewControllerAnimated:YES completion:^(){
-//                    [self.delegate userWasSignedIn];
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-//                }];
-            }
-        }];
-        }else{
-            if (!alertViewIsShow) {
-                NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
-                [UIAlertView generatePopupWithError:error forVC:self];
-                [self clear];
-                alertViewIsShow = YES;
-            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                if (error){
+                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                    [av show];
+                    alertViewIsShow = YES;
+                }else{
+                    [Settings setLogin:self.emailField.text];
+                    [Settings setPassword:self.passwordField.text];
+
+                    [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+    //                [self dismissViewControllerAnimated:YES completion:^(){
+    //                    [self.delegate userWasSignedIn];
+    //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
+    //                }];
+                }
+            });
+        }];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!alertViewIsShow) {
+                    NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
+                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                    [av show];
+                    [self clear];
+                    alertViewIsShow = YES;
+                }
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
             });
         }
     }];

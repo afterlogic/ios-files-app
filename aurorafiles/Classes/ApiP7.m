@@ -151,7 +151,6 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     return request;
 }
 
-
 - (void)getAppDataCompletionHandler:(void (^)(NSDictionary * data, NSError * error)) handler
 {
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];

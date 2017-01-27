@@ -21,6 +21,8 @@
 #import "FileOperationsProvider.h"
 #import "IDataBaseProtocol.h"
 
+#import "SessionProvider.h"
+
 @interface AppDelegate (){
 
 }

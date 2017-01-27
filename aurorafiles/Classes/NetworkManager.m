@@ -8,9 +8,11 @@
 
 #import "NetworkManager.h"
 #import "P7Manager.h"
+#import "CheckConnectionOperation.h"
 #import "P8Manager.h"
 #import "Settings.h"
 #import "NSObject+PerformSelectorWithCallback.h"
+#import "AFNetworking.h"
 
 static int const kNUMBER_OF_RETRIES = 6;
 
@@ -44,174 +46,84 @@ static int const kNUMBER_OF_RETRIES = 6;
         self.checkHostOperations = [[NSOperationQueue alloc]init];
         [self.checkHostOperations setName:@"com.AuroraFilesApp.checkSSLandHostVersion"];
         self.checkHostOperations.maxConcurrentOperationCount = 1;
+
     }
     return self;
 }
 
 -(id<ApiProtocol>)getNetworkManager{
-    if (!self.currentNetworkManager) {
+//    if (!self.currentNetworkManager) {
         if ([[Settings version]isEqualToString:@"P8"]) {
             self.currentNetworkManager = [[P8Manager alloc]init];
         }else if ([[Settings version]isEqualToString:@"P7"]) {
             self.currentNetworkManager = [[P7Manager alloc]init];
         }
-    }
+//    }
     return self.currentNetworkManager;
 }
 
--(void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler{
-
-//    [self checkConnectionUsingSerialQueue];
-
-
-//TODO: раскоментировать код ниже после произведения отладки и магии над очередями
-    id<ApiProtocol>sameManager;
-
+-(void)prepareForCheck{
     if (!managers) {
         managers = [[NSMutableArray alloc]init];
         [managers addObjectsFromArray:@[[P8Manager new],[P8Manager new],[P7Manager new],[P7Manager new]]];
     }
-
-    if (managers.count == 0) {
-        managers = nil;
-        handler(nil,nil);
-        return;
-    }
-
-    if (managers.count >= 1) {
-        sameManager = [managers lastObject];
-    }
-
-
-
-    [sameManager checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-            if (success) {
-                self.currentNetworkManager = sameManager;
-                handler(version,[Settings domain]);
-            }else{
-                if (managers.count > 0) {
-                    [self updateDomain];
-                    [self checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
-                        if (domainVersion && correctHostURL) {
-                            handler(domainVersion,correctHostURL);
-                            return;
-                        }
-                        if(managers.count == 0) {
-                            managers = nil;
-                            handler(domainVersion,correctHostURL);
-                            return;
-                        }
-                    }];
-                }else{
-                    managers = nil;
-                    handler(nil,nil);
-                }
-            }
-        });
-    }];
-
-    if (managers.count > 0) {
-        [managers removeLastObject];
-    }
 }
 
--(void)checkConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler forManager:(id<ApiProtocol>)currentManaget{
-    
-//    P8Manager *theP8Manager = [[P8Manager alloc]init];
-//    P7Manager *theP7Manager = [[P7Manager alloc]init];
-//    
-//    
-//    [theP8Manager checkConnection:^(BOOL success, NSError *error) {
-//        if (success) {
-//            NSString *domainVersion = @"P8";
-//            handler(domainVersion,[Settings domain]);
-//            return;
-//        }
-//        if (!success || error) {
-//            [theP7Manager checkConnection:^(BOOL success, NSError *error) {
-//                if (success) {
-//                    NSString *domainVersion = @"P7";
-//                    handler(domainVersion,[Settings domain]);
-//                    return;
-//                }
-//                if (!success || error) {
-//                    if (operationCounter > 0) {
-//                        operationCounter -=1;
-//                        [self updateDomain];
-//                        [self checkConnection:^(NSString *domainVersion, NSString *correctHostURL) {}];
-//                    }else{
-//                        handler(nil,nil);
-//                        return;
-//                    }
-//                }
-//            }];
-//        }
-//    }];
-    
-//        __weak NetworkManager * weakSelf = self;
-//
-//        [currentManaget checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
-//            NetworkManager *strongSelf = weakSelf;
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//
-//                if (success) {
-//                        handler(version,[Settings domain]);
-//                }else{
-//
-//                    [strongSelf updateDomain];
-//
-//                    [strongSelf checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
-//
-//                    }];
-//                    
-//                }
-//            });
-//        }];
-}
+-(void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler{
 
-//- (void)checkSSLConnection:(void (^)(NSString *))handler{
-//    NSLog(@"⚠️ start checking SSL");
-//    __block NSError *p8Error = [NSError new];
-//    operationCounter += 1;
-//    if (operationCounter >= kNUMBER_OF_RETRIES) {
-//        operationCounter = 0;
-//        handler(nil);
-//    }else{
-//        
-//        [[ApiP8 coreModule] pingHostWithCompletion:^(BOOL isP8, NSError *error){
-//            p8Error = error;
-//            if (isP8){
-//                [self saveDomainVersion:@"P8"];
-//                handler([Settings domain]);
-//                operationCounter = 0;
-//                return;
-//            }else if(!isP8 || error){
-//                [[ApiP7 sharedInstance]getAppDataCompletionHandler:^(NSDictionary *data, NSError *error) {
-//                    if (error && p8Error) {
-//                        [self updateDomain];
-//                        [self checkSSLConnection:^(NSString *domain) {
-//                            handler(domain);
-//                        }];
-//                    }
-//                    if(data){
-//                        [self saveDomainVersion:@"P7"];
-//                        handler([Settings domain]);
-//                        operationCounter = 0;
-//                        return;
-//                    }
-//                }];
-//            }else{
-//                [self saveDomainVersion:nil];
-//                handler([Settings domain]);
-//                operationCounter = 0;
-//                return;
-//            }
-//        }];
+    [self checkConnectionUsingSerialQueue:handler];
+
+
+//TODO: раскоментировать код ниже после произведения отладки и магии над очередями
+//    id<ApiProtocol>sameManager;
+//
+//
+//
+//    if (managers.count == 0) {
+//        managers = nil;
+//        handler(nil,nil);
+//        return;
 //    }
-//}
 //
+//    if (managers.count >= 1) {
+//        sameManager = [managers lastObject];
+//    }
+//
+//
+//
+//    [sameManager checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
+//
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
+//            if (success) {
+//                self.currentNetworkManager = sameManager;
+//                handler(version,[Settings domain]);
+//            }else{
+//                if (managers.count > 0) {
+//                    [self updateDomain];
+//                    [self checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
+//                        if (domainVersion && correctHostURL) {
+//                            handler(domainVersion,correctHostURL);
+//                            return;
+//                        }
+//                        if(managers.count == 0) {
+//                            managers = nil;
+//                            handler(domainVersion,correctHostURL);
+//                            return;
+//                        }
+//                    }];
+//                }else{
+//                    managers = nil;
+//                    handler(nil,nil);
+//                }
+//            }
+//        });
+//    }];
+//
+//    if (managers.count > 0) {
+//        [managers removeLastObject];
+//    }
+}
+
 
 
 -(void)updateDomain{
@@ -245,68 +157,61 @@ static int const kNUMBER_OF_RETRIES = 6;
 
 #pragma mark - Debug Methods
 
--(void)checkConnectionUsingSerialQueue{
-
-    id<ApiProtocol>sameManager;
-
-    if (!managers) {
-        managers = [[NSMutableArray alloc]init];
-        [managers addObjectsFromArray:@[[P8Manager new],[P8Manager new],[P7Manager new],[P7Manager new]]];
-    }
-//
-//    if (managers.count == 0) {
-//        managers = nil;
-//        handler(nil,nil);
-//        return;
-//    }
-
-//    if (managers.count >= 1) {
-//        sameManager = [managers lastObject];
-//    }
-
-    for (sameManager in managers) {
-        NSOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(operationBody:) object:sameManager];
-        [self.checkHostOperations addOperation:operation];
-    }
+-(void)checkConnectionUsingSerialQueue:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler{
     
-    managers = @[].mutableCopy;
+
+    CheckConnectionOperation *checkAPIv8operation = [[CheckConnectionOperation alloc]initWithManager:[P8Manager new] Completion:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
+        if (success) {
+            handler(version,[Settings domain]);
+            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+        }
+        
+        if (error || !success) {
+            handler(nil,nil);
+            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+        }
+    }];
     
- dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0), ^{
-    NSOperation *firstOperation = [[self.checkHostOperations operations] firstObject];
-    if (!firstOperation.isExecuting) {
-        [firstOperation start];
+    CheckConnectionOperation *checkAPIv7operation = [[CheckConnectionOperation alloc]initWithManager:[P7Manager new] Completion:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
+        if (success) {
+            handler(version,[Settings domain]);
+            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+        }
+        
+        if (error || !success) {
+            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+            [self.checkHostOperations addOperation:checkAPIv8operation];
+        }
+    }];
+
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+    manager.securityPolicy.allowInvalidCertificates = YES;
+    manager.securityPolicy.validatesDomainName = NO;
+    [manager setResponseSerializer:[AFJSONResponseSerializer serializer]];
+    
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString *resourceSpec = [[url resourceSpecifier] stringByReplacingOccurrencesOfString:@"//" withString:@""];
+    NSString *scheme = @"";
+    if (![url scheme]) {
+        scheme = @"http://";
     }
- });
-}
-
-
--(void)operationBody:(id<ApiProtocol>) sameManager{
-    [sameManager checkConnection:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
-       
-            if (success) {
-                self.currentNetworkManager = sameManager;
-//                handler(version,[Settings domain]);
-            }else{
-                if (managers.count > 0) {
-                    [self updateDomain];
-//                    [self checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
-//                        if (domainVersion && correctHostURL) {
-////                            handler(domainVersion,correctHostURL);
-//                            return;
-//                        }
-//                        if(managers.count == 0) {
-//                            managers = nil;
-////                            handler(domainVersion,correctHostURL);
-//                            return;
-//                        }
-//                    }];
-                }else{
-                    managers = nil;
-//                    handler(nil,nil);
-                }
-            }
-//        });
+    NSString *domain = [NSString stringWithFormat:@"%@%@",scheme,resourceSpec];
+    
+//    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    
+    [manager HEAD:domain parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation) {
+        NSURL *responseURL = [operation.response URL];
+        NSString *responseScheme = [NSString stringWithFormat:@"%@://",[responseURL scheme]];
+        [Settings setDomainScheme:responseScheme];
+        NSLog(@"%@",[Settings domainScheme]);
+        [self.checkHostOperations addOperation:checkAPIv7operation];
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        NSDictionary *headers = [operation.response allHeaderFields];
+        NSLog(@"%@ %@",headers,error);
+        handler(nil,nil);
     }];
 }
+
 
 @end

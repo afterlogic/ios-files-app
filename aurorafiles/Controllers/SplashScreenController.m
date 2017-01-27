@@ -6,6 +6,7 @@
 #import "SplashScreenController.h"
 #import "SignInViewController.h"
 #import "Settings.h"
+#import "SessionProvider.h"
 
 
 @interface SplashScreenController(){
@@ -43,6 +44,7 @@
 }
 
 - (void)checkAppState{
+    
     if (![Settings version] || ![Settings domain]){
         [self showSignInScreen];
         return;
@@ -51,8 +53,18 @@
         [self showSignInScreen];
         return;
     }
+    
+    [[SessionProvider sharedManager]checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+        if (authorised) {
+            [self showFilesScreen];
+        }else{
+            [self showSignInScreen];
+        }
+    }];
+    
+    
 
-    [self showFilesScreen];
+    
 }
 
 - (void)didReceiveMemoryWarning {

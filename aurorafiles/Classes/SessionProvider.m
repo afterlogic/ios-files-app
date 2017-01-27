@@ -119,10 +119,12 @@
         handler([Settings domain]);
         return;
     }
-    
+    [[NetworkManager sharedManager] prepareForCheck];
     [[NetworkManager sharedManager] checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
         if (domainVersion && correctHostURL) {
             [self saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
+        }else{
+            [self clearDomainInfo];
         }
         handler(correctHostURL);
     }];
@@ -145,6 +147,11 @@
         self.actualApiManager = [networkManager getNetworkManager];
     }
 }
+
+-(void)clearDomainInfo{
+    [Settings setDomainScheme:nil];
+}
+
 
 -(void)clear{
     [self cancelAllOperations];

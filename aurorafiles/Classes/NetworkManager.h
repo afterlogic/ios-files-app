@@ -16,6 +16,7 @@
 + (instancetype)sharedManager;
 - (id<ApiProtocol>)getNetworkManager;
 - (void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler;
+- (void)prepareForCheck;
 
 #pragma mark - Debug Methods
 

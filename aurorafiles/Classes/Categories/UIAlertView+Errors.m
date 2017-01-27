@@ -10,12 +10,11 @@
 
 @implementation UIAlertView (Errors)
 
-+(void)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc{
++(UIAlertView *)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc{
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
     NSString *text = [[UIAlertView getErrorList] valueForKey:errorCode];
     UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-    a.delegate = vc;
-    [a show];
+    return a;
 }
 
 +(NSDictionary *)getErrorList{

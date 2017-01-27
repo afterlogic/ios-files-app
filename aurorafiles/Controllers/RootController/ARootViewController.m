@@ -11,6 +11,7 @@
 #import "UPDFilesViewController.h"
 #import "DownloadsTableViewController.h"
 #import "UploadFoldersTableViewController.h"
+#import "SessionProvider.h"
 
 @interface ARootViewController ()
 {
@@ -44,7 +45,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    self.navigationController.navigationBar.hidden = YES;
+//    self.navigationController.navigationBar.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -78,6 +79,7 @@
 
 
 -(void)showOfflineButtons{
+    [[SessionProvider sharedManager]cancelAllOperations];
     [self.segmentedCotnroller removeAllSegments];
     [self.segmentedCotnroller insertSegmentWithTitle:@"Downloads" atIndex:0 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
@@ -152,9 +154,9 @@
 
 -(void)showDownloads{
     [UIView animateWithDuration:0.4f animations:^{
-        self.containerPerson.alpha = 0.0f;
-        self.containerCorporate.alpha = 0.0f;
-        self.containerDownloads.alpha = 1.0f;
+        self.containerPerson.hidden = YES;
+        self.containerCorporate.hidden = YES;
+        self.containerDownloads.hidden = NO;
 
         NSArray *arr = self.childViewControllers;
         for (id vc in arr) {
@@ -162,7 +164,6 @@
 //                if ([(DownloadsTableViewController *)vc isCorporate]) {
 //                    [(UPDFilesViewController *)vc updateView];
 //                }
-
                 [(DownloadsTableViewController *) vc setLoadType:loadTypeContainer];
                 [(DownloadsTableViewController *) vc stopTasks];
             }

@@ -18,10 +18,11 @@
 #import "Settings.h"
 #import "SessionProvider.h"
 
-@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource,UISearchBarDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) NSManagedObjectContext * managedObjectContext;
 @end
 
@@ -35,6 +36,8 @@
     self.tableView.dataSource = self;
     self.managedObjectContext = [[[StorageManager sharedManager] DBProvider]defaultMOC];
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
+    
+    self.searchBar.delegate = self;
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -70,6 +73,68 @@
 - (void)stopTasks{
 //    [[SessionProvider sharedManager] cancelAllOperations];
 }
+
+#pragma mark - Search Bar
+
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    return YES;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    [self updateSearchResultsWithQuery:searchText];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [self updateSearchResultsWithQuery:nil];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+}
+
+- (void)updateSearchResultsWithQuery:(NSString*)text
+{
+    NSArray * existItems = self.fetchedResultsController.fetchedObjects;
+    NSMutableArray * indexPathsToDelete = [[NSMutableArray alloc] init];
+    
+    for (id obj in existItems)
+    {
+        [indexPathsToDelete addObject:[self.fetchedResultsController indexPathForObject:obj]];
+    }
+    NSPredicate * predicate;
+    if (text && text.length)
+    {
+        predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ AND isP8 = %@ AND isDownloaded = YES",text, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    }
+    else
+    {
+        predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    }
+    
+    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    [self.fetchedResultsController performFetch:nil];
+    NSArray * newItems = self.fetchedResultsController.fetchedObjects;
+    
+    NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
+    
+    indexPathsToInsert = [[NSMutableArray alloc] init];
+    for (id obj in newItems)
+    {
+        [indexPathsToInsert addObject:[self.fetchedResultsController indexPathForObject:obj]];
+    }
+    
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
+    //    if (indexPathsToInsert.count > 0) {
+    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+    //    }
+    [self.tableView endUpdates];
+}
+
 
 #pragma mark - Table view data source
 
@@ -177,7 +242,7 @@
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [fetchRequest setSortDescriptors:@[isFolder, title]];
     
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES"];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
     
     NSFetchedResultsController *theFetchedResultsController =
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest

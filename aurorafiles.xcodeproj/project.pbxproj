@@ -67,6 +67,10 @@
 		FF4C764D1DA7F24100AA5576 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */; };
 		FF5C01341DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
 		FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
+		FF6360011E3A6237002ABF7C /* ApiOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360001E3A6235002ABF7C /* ApiOperation.m */; };
+		FF6360021E3A6238002ABF7C /* ApiOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360001E3A6235002ABF7C /* ApiOperation.m */; };
+		FF6360051E3A7918002ABF7C /* CheckConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */; };
+		FF6360061E3A7918002ABF7C /* CheckConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */; };
 		FF64877B1DD9EA610063ACB0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FF64877A1DD9EA610063ACB0 /* libsqlite3.tbd */; };
 		FF64877C1DD9EA6B0063ACB0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FF64877A1DD9EA610063ACB0 /* libsqlite3.tbd */; };
 		FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */; };
@@ -304,6 +308,10 @@
 		FF5927021E05DA3F00E4C58E /* GalleryPageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryPageDelegate.h; sourceTree = "<group>"; };
 		FF5C01321DC87CAC00FDA424 /* NSString+Validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Validators.h"; sourceTree = "<group>"; };
 		FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Validators.m"; sourceTree = "<group>"; };
+		FF635FFF1E3A6235002ABF7C /* ApiOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiOperation.h; sourceTree = "<group>"; };
+		FF6360001E3A6235002ABF7C /* ApiOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiOperation.m; sourceTree = "<group>"; };
+		FF6360031E3A7918002ABF7C /* CheckConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckConnectionOperation.h; sourceTree = "<group>"; };
+		FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckConnectionOperation.m; sourceTree = "<group>"; };
 		FF64877A1DD9EA610063ACB0 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		FF6A1D0B1DAD0265005CBA76 /* ARootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARootViewController.h; path = RootController/ARootViewController.h; sourceTree = "<group>"; };
 		FF6A1D0C1DAD0265005CBA76 /* ARootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARootViewController.m; path = RootController/ARootViewController.m; sourceTree = "<group>"; };
@@ -1037,6 +1045,10 @@
 				FFAD03E21DEC5DBB000C4AFF /* ApiProtocol.h */,
 				FFAD03ED1DEC727A000C4AFF /* NetworkManager.h */,
 				FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */,
+				FF635FFF1E3A6235002ABF7C /* ApiOperation.h */,
+				FF6360001E3A6235002ABF7C /* ApiOperation.m */,
+				FF6360031E3A7918002ABF7C /* CheckConnectionOperation.h */,
+				FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */,
 				FFE2C61F1DE321AF001F798D /* ApiP7 */,
 				FF6A94BB1DB666CA00543269 /* ApiP8 */,
 			);
@@ -1533,6 +1545,7 @@
 				FFB959351DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
+				FF6360051E3A7918002ABF7C /* CheckConnectionOperation.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
 				FF3F12351E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m in Sources */,
 				FF71D4901DA33162008690D5 /* MLNetworkLogger.m in Sources */,
@@ -1543,6 +1556,7 @@
 				FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */,
 				DAC1CAB01D061F1200238EB5 /* ApiP7.m in Sources */,
+				FF6360011E3A6237002ABF7C /* ApiOperation.m in Sources */,
 				DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */,
 				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
 				FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */,
@@ -1619,8 +1633,10 @@
 				FF2773DD1DF191000061C210 /* DataBaseProvider.m in Sources */,
 				FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */,
 				FF71D4D91DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
+				FF6360021E3A6238002ABF7C /* ApiOperation.m in Sources */,
 				FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
 				FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
+				FF6360061E3A7918002ABF7C /* CheckConnectionOperation.m in Sources */,
 				FF9053701D9BFC9900A09A44 /* FilesTableViewCell.m in Sources */,
 				FFAD03E71DEC6B2A000C4AFF /* P8Manager.m in Sources */,
 				FF9053731D9C012D00A09A44 /* ApiP7.m in Sources */,

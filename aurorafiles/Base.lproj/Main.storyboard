@@ -114,7 +114,7 @@
                         <outlet property="passwordField" destination="l28-wP-U8W" id="AzM-CA-Jlu"/>
                         <outlet property="scrollView" destination="cWj-pv-6kf" id="M71-WD-XPx"/>
                         <outlet property="signInButton" destination="8Vv-6p-Vpd" id="6MI-km-4gB"/>
-                        <segue destination="BpF-Tw-5Vh" kind="show" identifier="succeedLogin" id="ZXj-3e-dBQ"/>
+                        <segue destination="5Ps-Gh-DS5" kind="show" identifier="succeedLogin" id="6nU-wd-HxJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="goW-XZ-iGM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -458,7 +458,7 @@
                         <outlet property="filledAppLogo" destination="sO8-np-Roi" id="MLV-p6-ynI"/>
                         <outlet property="simpleAppLogo" destination="dXm-Ci-mso" id="9ke-qq-CeN"/>
                         <segue destination="wtl-X5-eZg" kind="show" identifier="showSignInView" id="6ZH-Aa-Irc"/>
-                        <segue destination="BpF-Tw-5Vh" kind="show" identifier="showFilesView" id="Yin-la-6a2"/>
+                        <segue destination="5Ps-Gh-DS5" kind="show" identifier="showFilesView" id="3wf-We-1Hi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XzJ-EM-vt0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -466,20 +466,20 @@
             <point key="canvasLocation" x="-3551" y="-61"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="AYN-y5-2ha">
+        <scene sceneID="3Ze-Je-ypQ">
             <objects>
-                <navigationController id="BpF-Tw-5Vh" customClass="ANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="7hN-Bg-RtB">
+                <navigationController id="5Ps-Gh-DS5" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EG1-cW-hpJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="5Vn-9D-zYz" kind="relationship" relationship="rootViewController" id="CsO-dn-OAp"/>
+                        <segue destination="5Vn-9D-zYz" kind="relationship" relationship="rootViewController" id="PK7-mi-7lP"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="nFI-zp-XI9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9tt-OJ-Z7E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1814" y="-60"/>
+            <point key="canvasLocation" x="-2383" y="-450"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="1Ua-3O-QN5">
@@ -490,11 +490,11 @@
                         <viewControllerLayoutGuide type="bottom" id="CzC-Y6-eZG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="tbH-XZ-m9X">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZVu-8x-Df1">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="29"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="29"/>
                                 <segments>
                                     <segment title="Personal"/>
                                     <segment title="Corporate"/>
@@ -502,19 +502,19 @@
                                 </segments>
                             </segmentedControl>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PhN-zE-3as" userLabel="Person">
-                                <rect key="frame" x="0.0" y="30" width="375" height="573"/>
+                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <connections>
                                     <segue destination="xJY-fn-EiU" kind="embed" identifier="personal_embed" id="Biu-mK-C6o"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iuX-5E-bj0" userLabel="Corporate">
-                                <rect key="frame" x="0.0" y="30" width="375" height="573"/>
+                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <connections>
                                     <segue destination="MNN-ji-1w7" kind="embed" identifier="corp_embed" id="cQi-CL-Swj"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oSo-7J-qLu" userLabel="Downloads">
-                                <rect key="frame" x="0.0" y="30" width="375" height="573"/>
+                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <connections>
                                     <segue destination="RBX-VW-ZeT" kind="embed" identifier="downloads_embed" id="yxt-vk-y8D"/>
                                 </connections>
@@ -753,6 +753,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="Jab-Qu-uFV"/>
                     <connections>
+                        <outlet property="searchBar" destination="hmS-Jm-ybf" id="a0L-ma-AK4"/>
                         <outlet property="tableView" destination="5f7-VM-7rX" id="kyD-NB-JQn"/>
                         <outlet property="toolBar" destination="I2P-9f-nfI" id="bR8-yB-szV"/>
                         <segue destination="V9W-Nb-QKc" kind="show" identifier="OpenFileSegue" id="Yce-Sr-ME5"/>
@@ -788,10 +789,10 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Yce-Sr-ME5"/>
-        <segue reference="yxt-vk-y8D"/>
-        <segue reference="ZXj-3e-dBQ"/>
-        <segue reference="hay-3m-SKe"/>
+        <segue reference="QeM-NP-GfP"/>
         <segue reference="Biu-mK-C6o"/>
+        <segue reference="6nU-wd-HxJ"/>
+        <segue reference="6ZH-Aa-Irc"/>
         <segue reference="cQi-CL-Swj"/>
         <segue reference="jBf-a1-8Po"/>
     </inferredMetricsTieBreakers>

@@ -258,12 +258,30 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     }
 
     for (NSMutableDictionary *item in files) {
-        bool isFolder = [item[@"IsFolder"] boolValue];
-        bool isLink = [item[@"IsLink"] boolValue];
+        NSNumber *isFolderNum = item[@"IsFolder"];
+        NSNumber *isLinkNum = item[@"IsLink"];
+        bool isFolder = [isFolderNum boolValue];
+        bool isLink = [isLinkNum boolValue];
         if (isFolder || isLink) {
             [resultedFiles addObject:item];
             [itemsForThumb removeObject:item];
         }
+        
+        NSString *itemFullPath = item[@"FullPath"];
+        if ([itemFullPath containsString:@"$ZIP:"]) {
+            [resultedFiles addObject:item];
+            [itemsForThumb removeObject:item];
+        }
+        
+//        if (!isFolder && !isLink) {
+
+//        }
+        
+        
+        
+        
+        
+        
     }
     
     NSMutableDictionary *currentItem = [itemsForThumb lastObject];
@@ -274,7 +292,6 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         currentItem = [itemsForThumb lastObject];
     }
 
-    //TODO: где-то в этом методе происходит потеря итемов
     [self updateFileThumbnail:currentItem type:currentItem[@"Type"] complition:^(NSMutableDictionary* itemRef) {
         if (itemRef) {
             [itemsForThumb removeObject:currentItem];
@@ -618,6 +635,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     float  fileSize;
     NSString *path;
     NSString *name;
+    NSString *suggestedFilename;
     if (folder.isZippedFile) {
         filepathPath = folder ? folder.fullpath : @"";
         NSMutableArray *pathPrtsArr = [filepathPath componentsSeparatedByString:@"$ZIP:"].mutableCopy;
@@ -625,6 +643,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         path = [pathPrtsArr firstObject];
         name = [pathPrtsArr lastObject];
         fileSize = [folder.size floatValue];
+        suggestedFilename = [name lastPathComponent];
     }else{
         filepathPath = folder ? folder.fullpath : @"";
         NSMutableArray *pathArr = [filepathPath componentsSeparatedByString:@"/"].mutableCopy;
@@ -632,6 +651,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         path = [pathArr componentsJoinedByString:@"/"];
         name = folder.name;
         fileSize = [folder.size floatValue];
+        suggestedFilename = folder.name;
     }
     
     
@@ -666,7 +686,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     //Start the download
     NSURLSessionDownloadTask *downloadTask = [downloadManager downloadTaskWithRequest:request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         //Getting the path of the document directory
-        if (![[response suggestedFilename] isEqualToString:name]) {
+        if (![[response suggestedFilename] isEqualToString:suggestedFilename]) {
             return nil;
         }
         NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
