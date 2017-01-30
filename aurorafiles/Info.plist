@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>72</string>
+	<string>73</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -73,5 +73,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>FASTLANE_XCODE_LIST_TIMEOUT</key>
+	<string>0</string>
 </dict>
 </plist>

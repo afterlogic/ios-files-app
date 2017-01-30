@@ -2,31 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiOperation.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiOperation.m" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafiles/Classes/CheckConnectionOperation.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafiles/Classes/CheckConnectionOperation.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Aurora-git.iml" afterPath="$PROJECT_DIR$/.idea/Aurora-git.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/AppDelegate.m" afterPath="$PROJECT_DIR$/aurorafiles/AppDelegate.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Base.lproj/Main.storyboard" afterPath="$PROJECT_DIR$/aurorafiles/Base.lproj/Main.storyboard" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/View/ANavigationController.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/View/ANavigationController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Info.plist" afterPath="$PROJECT_DIR$/aurorafiles/Info.plist" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Info.plist" afterPath="$PROJECT_DIR$/aurorafilesaction/Info.plist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fastlane/README.md" afterPath="$PROJECT_DIR$/fastlane/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fastlane/Snapfile" afterPath="$PROJECT_DIR$/fastlane/Snapfile" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snapshotTest/snapshotTest.swift" afterPath="$PROJECT_DIR$/snapshotTest/snapshotTest.swift" />
     </list>
     <ignored path="Aurora-git.iws" />
@@ -125,8 +105,8 @@
       <file leaf-file-name="snapshotTest.swift" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/snapshotTest/snapshotTest.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="84" column="21" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
+            <state relative-caret-position="795">
+              <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -226,10 +206,9 @@
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1920" />
-    <option name="y" value="-106" />
-    <option name="width" value="1920" />
-    <option name="height" value="1080" />
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="777" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -335,7 +314,6 @@
     <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v7.0.0/bin/node" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="OBJC.PRESERVED_TARGET_SELECTION" value="aurorafiles,,,aurorafilesaction" />
-    <property name="FullScreen" value="true" />
   </component>
   <component name="RestClientSettings">
     <option name="REQUEST_HISTORY">
@@ -573,7 +551,7 @@
       <workItem from="1484211683705" duration="76599000" />
       <workItem from="1484821834976" duration="17600000" />
       <workItem from="1485163337721" duration="502000" />
-      <workItem from="1485457411468" duration="1697000" />
+      <workItem from="1485457411468" duration="2137000" />
     </task>
     <servers />
   </component>
@@ -583,7 +561,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="195671000" />
+    <option name="totallyTimeSpent" value="196111000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -595,17 +573,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1920" y="-106" width="1920" height="1080" extended-state="0" />
-    <editor active="false" />
+    <frame x="0" y="23" width="1280" height="777" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11448349" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1736672" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15752032" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25426137" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25609756" sideWeight="0.51597446" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36102235" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5476575" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3739903" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
@@ -1056,8 +1034,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/snapshotTest/snapshotTest.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="84" column="21" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
+        <state relative-caret-position="795">
+          <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
           <folding />
         </state>
       </provider>

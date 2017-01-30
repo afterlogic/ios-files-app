@@ -20,6 +20,7 @@
 @interface SignInViewController () <UIAlertViewDelegate>
 {
 	UITextField *activeField;
+    UITapGestureRecognizer *tapRecognizer;
     BOOL alertViewIsShow;
 }
 @end
@@ -30,6 +31,9 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
+    
+    tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideKeyboard)];
+    [self.scrollView addGestureRecognizer:tapRecognizer];
 
     self.domainField.text = [[[NSURL URLWithString:[Settings domain]] resourceSpecifier]stringByReplacingOccurrencesOfString:@"//" withString:@""];
     self.emailField.text = [Settings login];
@@ -58,6 +62,10 @@
     [super viewWillAppear:animated];
     [self clear];
 
+}
+
+-(void)hideKeyboard{
+    [activeField endEditing:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

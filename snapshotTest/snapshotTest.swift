@@ -40,11 +40,11 @@ class snapshotTest: XCTestCase {
         let deleteKey = app.keys["delete"]
         deleteKey.tap()
         deleteKey.tap()
-        deleteKey.press(forDuration: 2.0);
+        deleteKey.press(forDuration: 5.0);
         
         let emailTextField = elementsQuery.textFields["Email"]
         emailTextField.tap()
-        deleteKey.press(forDuration: 2.8);
+        deleteKey.press(forDuration: 5);
         hostTextField.tap()
         hostTextField.typeText("aurora")
         
@@ -68,35 +68,35 @@ class snapshotTest: XCTestCase {
         passwordSecureTextField.tap()
         passwordSecureTextField.typeText("qwezxc")
         
+        let scrollViewsQuery = app.scrollViews
+        scrollViewsQuery.otherElements.containing(.textField, identifier:"Host").element.tap()
+        
         
         snapshot("01LoginScreen")
         
-        
-        //        let elementsQuery = app.scrollViews.otherElements
-        //        let hostTextField = elementsQuery.textFields["Host"]
         hostTextField.tap()
         
         //        let deleteKey = app.keys["delete"]
-        deleteKey.press(forDuration: 2.6);
-        hostTextField.typeText("p")
+        deleteKey.press(forDuration: 5);
+        hostTextField.typeText("p7.afterlogic.com")
         
-        //        let moreKey = app.keys["more"]
-        moreKey.tap()
-        moreKey.tap()
-        hostTextField.typeText("7.")
-        
-        //        let moreKey2 = app.keys["more"]
-        moreKey2.tap()
-        moreKey2.tap()
-        hostTextField.typeText("afterlogic")
-        moreKey.tap()
-        hostTextField.typeText(".")
-        moreKey2.tap()
-        hostTextField.typeText("com")
+//        //        let moreKey = app.keys["more"]
+//        moreKey.tap()
+//        moreKey.tap()
+//        hostTextField.typeText("7.")
+//        
+//        //        let moreKey2 = app.keys["more"]
+//        moreKey2.tap()
+//        moreKey2.tap()
+//        hostTextField.typeText("afterlogic")
+//        moreKey.tap()
+//        hostTextField.typeText(".")
+//        moreKey2.tap()
+//        hostTextField.typeText("com")
         
         //        let emailTextField = elementsQuery.textFields["Email"]
         emailTextField.tap()
-        deleteKey.press(forDuration: 2.5);
+        deleteKey.press(forDuration: 5);
         emailTextField.typeText("a.kovalev@afterlogic.com")
         
         //        let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
@@ -105,6 +105,19 @@ class snapshotTest: XCTestCase {
         deleteKey.press(forDuration: 0.6);
         passwordSecureTextField.typeText("starwars1992")
         elementsQuery.buttons["Sign In"].tap()
+        
+        
+        let tablesQuery = XCUIApplication().tables
+        
+        let needfulCell = app.tables.cells.element(boundBy: 5)
+        let existPredicate = NSPredicate (format:"exists == true")
+        
+        expectation(for: existPredicate, evaluatedWith: needfulCell, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil);
+        
+        tablesQuery.cells.containing(.staticText, identifier:"IMG_0667.JPG").buttons["download"].tap()
+        tablesQuery.cells.containing(.staticText, identifier:"InternetShortcut1475497935").buttons["download"].tap()
+        
         
         snapshot("02Personal")
         
