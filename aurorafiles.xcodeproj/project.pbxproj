@@ -115,6 +115,7 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
+		FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA9B7381E41F65C00CBDF46 /* Main-iPad.storyboard */; };
 		FFAD03E61DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
 		FFAD03E71DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
 		FFAD03EB1DEC6E6C000C4AFF /* P7Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EA1DEC6E6C000C4AFF /* P7Manager.m */; };
@@ -359,6 +360,7 @@
 		FF90536E1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadFoldersTableViewController.m; path = FilePath/UploadFoldersTableViewController.m; sourceTree = "<group>"; };
 		FF9053771D9C313C00A09A44 /* TabBarWrapperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabBarWrapperViewController.h; path = FilePath/TabBarWrapperViewController.h; sourceTree = "<group>"; };
 		FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabBarWrapperViewController.m; path = FilePath/TabBarWrapperViewController.m; sourceTree = "<group>"; };
+		FFA9B7381E41F65C00CBDF46 /* Main-iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main-iPad.storyboard"; sourceTree = "<group>"; };
 		FFAD03E21DEC5DBB000C4AFF /* ApiProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApiProtocol.h; sourceTree = "<group>"; };
 		FFAD03E41DEC6B2A000C4AFF /* P8Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = P8Manager.h; path = APIpEight/P8Manager.h; sourceTree = "<group>"; };
 		FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = P8Manager.m; path = APIpEight/P8Manager.m; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 				DAC1CA3A1D061D7500238EB5 /* AppDelegate.h */,
 				DAC1CA3B1D061D7500238EB5 /* AppDelegate.m */,
 				DAC1CA401D061D7500238EB5 /* Main.storyboard */,
+				FFA9B7381E41F65C00CBDF46 /* Main-iPad.storyboard */,
 				DAC1CA461D061D7500238EB5 /* Assets.xcassets */,
 				DAC1CA771D061F1200238EB5 /* Classes */,
 				DAC1CA8A1D061F1200238EB5 /* Controllers */,
@@ -1291,6 +1294,7 @@
 				DAC1CA761D061EF800238EB5 /* Images.xcassets in Resources */,
 				FFE6F0941E033FD9009141CA /* ImageViewController.xib in Resources */,
 				DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */,
+				FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */,
 				DAC1CA471D061D7500238EB5 /* Assets.xcassets in Resources */,
 				DAC1CAC91D061F6200238EB5 /* LaunchScreen.storyboard in Resources */,
 				DAC1CAB81D061F1200238EB5 /* FilesTableViewCell.xib in Resources */,
@@ -1832,6 +1836,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1855,6 +1860,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1929,6 +1935,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1952,6 +1959,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

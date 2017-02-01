@@ -50,8 +50,13 @@
     self.moreButton = moreItem;
     self.shareButton = shareItem;
     
-    [self prepareImageToShow];
+   
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+     [self prepareImageToShow];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,6 +95,13 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     [self.dynamicAnimator removeAllBehaviors];
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    self.imageView.image = nil;
+    self.loadedImage = nil;
+    
 }
 
 #pragma mark - Actions

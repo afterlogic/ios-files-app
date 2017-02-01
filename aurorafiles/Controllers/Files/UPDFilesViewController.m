@@ -339,8 +339,9 @@
     {
         if ([object isImageContentType] && ![[object isLink] boolValue])
         {
-            
-            [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
+//            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone){
+             [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
+//            }
 //            [self.navigationController presentViewController:gallery animated:YES completion:nil];
         }
         else if([[object isLink] boolValue]){
@@ -358,7 +359,9 @@
         }
         else
         {
-            [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+//            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone){
+                [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+//            }
         }
         
     }
@@ -766,6 +769,12 @@
     [alert addAction:[self savedFiles]];
     [alert addAction:[self logout]];
     [alert addAction:defaultAction];
+    
+
+    if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        alert.popoverPresentationController.barButtonItem = self.editButton;
+    }
+    
     [self presentViewController:alert animated:YES completion:nil];
 }
 
