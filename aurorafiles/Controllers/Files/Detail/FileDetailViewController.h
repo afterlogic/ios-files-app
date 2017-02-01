@@ -11,7 +11,9 @@
 @interface FileDetailViewController : UIViewController
 
 @property (strong, nonatomic) NSString * viewLink;
+@property (strong, nonatomic) NSString * type;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (strong, nonatomic) Folder * object;
+@property (nonatomic) BOOL isP8;
 
 @end

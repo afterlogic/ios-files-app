@@ -10,10 +10,22 @@
 
 @interface SessionProvider : NSObject
 
-+ (void) checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline ))handler;
+//- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler;
+//
+//- (void)authroizeEmail:(NSString*)email withPassword:(NSString*)password completion:(void (^)(BOOL authorized, NSError* error)) handler;
+//
+- (void)checkSSLConnection:(void (^)(NSString *domain)) handler;
 
-+ (void) authroizeEmail:(NSString*)email withPassword:(NSString*)password completion:(void (^)(BOOL authorized, NSError* error)) handler;
+- (void)loginEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler;
 
-+ (void) deathorizeWithCompletion:(void (^)(BOOL success)) handler;
+- (void)logout:(void (^)(BOOL succsess, NSError *error))handler;
+
+- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler;
+
+- (void)cancelAllOperations;
+
+- (void)clear;
+
++ (instancetype)sharedManager;
 
 @end

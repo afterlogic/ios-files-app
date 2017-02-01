@@ -8,16 +8,20 @@
 
 #import "SignInViewController.h"
 #import "Settings.h"
-#import "Api.h"
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
-#import <MBProgressHUD/MBProgressHUD.h>
+#import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
+#import "NSString+Validators.h"
+#import "UIAlertView+Errors.h"
+#import "StorageManager.h"
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
 {
 	UITextField *activeField;
+    UITapGestureRecognizer *tapRecognizer;
+    BOOL alertViewIsShow;
 }
 @end
 
@@ -27,7 +31,11 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
-	self.domainField.text = [Settings domain];
+    
+    tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideKeyboard)];
+    [self.scrollView addGestureRecognizer:tapRecognizer];
+
+    self.domainField.text = [[[NSURL URLWithString:[Settings domain]] resourceSpecifier]stringByReplacingOccurrencesOfString:@"//" withString:@""];
     self.emailField.text = [Settings login];
     UIColor *borderColor = [UIColor colorWithWhite:243/255.0f alpha:1.0f];
     
@@ -44,7 +52,20 @@
 	self.emailField.delegate = self;
 	self.passwordField.delegate = self;
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
-    // Do any additional setup after loading the view.
+    
+    alertViewIsShow = NO;
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self clear];
+
+}
+
+-(void)hideKeyboard{
+    [activeField endEditing:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -74,47 +95,85 @@
 - (IBAction)auth:(UIButton*)sender
 {
     [activeField resignFirstResponder];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-	[Settings setDomain:self.domainField.text];
-	[SessionProvider authroizeEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL authorized, NSError * error) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-		if (authorized)
-		{
-            [Settings setLogin:self.emailField.text];
-            [Settings setPassword:self.passwordField.text];
-			[self dismissViewControllerAnimated:YES completion:^(){
-                [self.delegate userWasSignedIn];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-			}];
-		}
-		else
-		{
-            NSLog(@"%@",error);
-            NSString * text = NSLocalizedString(@"The username or password you entered is incorrect", @"");
-            if ([error localizedDescription])
-            {
-                text = [NSString stringWithFormat:@"%@ %@",[error localizedDescription], NSLocalizedString(@"Application work in offline mode",nil)];
-                BFLog(@"login error - > %@",text);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
+    if (self.emailField.text.length == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!alertViewIsShow) {
+                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                [av show];
+                alertViewIsShow = YES;
             }
-			UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"") message:text delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-//            a ca
-            a.delegate = self;
-			[a show];
-		}
-	}];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            return;
+        });
+    }
+    
+    if (self.domainField.text.length == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(!alertViewIsShow){
+                
+                NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
+                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                [av show];
+                alertViewIsShow = YES;
+            }
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        return;
+    }
+    
+	[Settings setDomain:self.domainField.text];
+    
+    [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+        if (domain && domain.length) {
+        [[SessionProvider sharedManager]loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                if (error){
+                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                    [av show];
+                    alertViewIsShow = YES;
+                }else{
+                    [Settings setLogin:self.emailField.text];
+                    [Settings setPassword:self.passwordField.text];
+
+                    [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+    //                [self dismissViewControllerAnimated:YES completion:^(){
+    //                    [self.delegate userWasSignedIn];
+    //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
+    //                }];
+                }
+            });
+        }];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (!alertViewIsShow) {
+                    NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
+                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
+                    [av show];
+                    [self clear];
+                    alertViewIsShow = YES;
+                }
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
+        }
+    }];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == [alertView cancelButtonIndex]) {
-//        [self offlineAuth];
+        alertViewIsShow = NO;
     }
 }
 
 -(void)offlineAuth{
-    [self dismissViewControllerAnimated:YES completion:^(){
-        [self.delegate userWasSigneInOffline];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignInOffline" object:self];
-    }];
+//    [self dismissViewControllerAnimated:YES completion:^(){
+//        [self.delegate userWasSigneInOffline];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignInOffline" object:self];
+//    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -169,6 +228,12 @@
 											 selector:@selector(keyboardWillBeHidden:)
              name:UIKeyboardWillHideNotification object:nil];
  
+}
+
+-(void)clear{
+    [Settings clearSettings];
+    [[StorageManager sharedManager]clear];
+    [[SessionProvider sharedManager]clear];
 }
 
 @end

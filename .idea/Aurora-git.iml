@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CIDR_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libsqlite3.tbd">
+      <sourceFolder url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libsqlite3.tbd" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesUITests/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesUITests/aurorafilesUITests.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesTests/aurorafilesTests.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesTests/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Podfile" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/snapshotTest/SnapshotHelper.swift" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/snapshotTest/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/snapshotTest/snapshotTest.swift" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/aurorafiles.xcdatamodeld/aurorafiles 3.xcdatamodel" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/aurorafiles.xcdatamodeld/aurorafiles.xcdatamodel" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/aurorafiles.xcdatamodeld/aurorafiles 2.xcdatamodel" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/AppDelegate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/main.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Constants.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/CheckConnectionOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Settings.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/MRDataBaseProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/IDataBaseProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/StorageManager/MRDataBaseProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ConnectionProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/CheckConnectionOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Settings.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/SessionProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/SessionProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Keychain/KeychainWrapper.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Keychain/KeychainWrapper.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiP8.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/FileOperationsProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiP8.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/FileOperationsProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/core.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/NetworkManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiP7.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/standardAuth.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiP7.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/standardAuth.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/P7Manager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/View/UITextFieldCustomEdges.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/View/ANavigationController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/View/UITextFieldCustomEdges.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/View/ANavigationController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/P7Manager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/APIpEight/AuroraModuleProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/APIpEight/P8Manager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/APIpEight/P8Manager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/APIpEight/files.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/APIpEight/files.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Protocol/MLLoggingProtocol.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Protocol/MLLoggingProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Filters/By hostname/MLHostnameRequestFilter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Filters/By hostname/MLHostnameRequestFilter.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Filters/MLRequestFilter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/MLNetworkLogger.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/Factory/MLNetworkLogFactory.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/Factory/MLNetworkLogFactory.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/Base/MLNetworkTrafficDescriptionProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/Base/MLNetworkTrafficProcessor.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/HTTP(s)/MLHTTPTrafficDescriptionProvider.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Loggers/HTTP(s)/MLHTTPTrafficDescriptionProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/MLNetworkLogger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Adapters/AFNetworking/MLAFNetworkingAdapter.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Adapters/AFNetworking/MLAFNetworkingAdapter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Adapters/Base/MLNetworkLoggingAdapter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Classes/Adapters/Base/MLNetworkLoggingAdapter.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSObject+PerformSelectorWithCallback.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UIImage+Aurora.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UIImage+Aurora.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+transferedValues.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSURLRequest+requestGenerator.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UICollectionViewFlowLayout+NoFade.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UICollectionViewFlowLayout+NoFade.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+transferedValues.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSURLRequest+requestGenerator.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+Validators.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/UIAlertView+Errors.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+Validators.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+URLEncode.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSString+URLEncode.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/Categories/NSObject+PerformSelectorWithCallback.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/IFileOperationsProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/core.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ApiOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/NetworkManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Classes/ConnectionProvider.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Assets.xcassets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/SplashScreenController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/TableController/ALTableViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/TableController/ALTableViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/SplashScreenController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/RootController/ARootViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/ViewImage/ViewImageController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/ViewImage/ViewImageController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Cell/FilesTableViewCell.xib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Cell/FilesTableViewCell.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Cell/FilesTableViewCell.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryCollectionFlowLayout.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/ImageViewController.xib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryWrapperViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryWrapperViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/FileGalleryPageViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryCollectionFlowLayout.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/Cell/FileGalleryCollectionViewCell.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/Cell/FileGalleryCollectionViewCell.xib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/Cell/FileGalleryCollectionViewCell.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/FileGalleryCollectionViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/ImageViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryPageDelegate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/FileGalleryPageViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/ImageViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Files/Gallery/FileGalleryCollectionViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Images.xcassets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/Folder/Folder.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/Folder/Folder.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/Folder/Folder+CoreDataProperties.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/Folder/Folder+CoreDataProperties.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/NonCDFolder/Item.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/NonCDFolder/Item.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Entity/ItemInterface.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/aurorafiles.entitlements" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/Base.lproj/Main.storyboard" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/MBProgressHUD.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/STZPullToRefresh/STZPullToRefresh.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/STZPullToRefresh/STZPullToRefreshView.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/STZPullToRefresh/STZPullToRefreshView.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/STZPullToRefresh/STZPullToRefresh.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/AFNetworkActivityLogger/AFNetworkActivityLogger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/AFNetworkActivityLogger/AFNetworkActivityLogger.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/vendor/MBProgressHUD.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/LaunchScreen.storyboard" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafiles/AppDelegate.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/NSObject+ScreenOrientation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/ActionViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/ActionViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/NSObject+ScreenOrientation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Model/UploadedFile.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Model/UploadedFile.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Info.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/EXConstants.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/aurorafilesaction.entitlements" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/EXPreviewFileGalleryCollectionViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/UIImage+ImageCompress.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXFileGalleryCollectionViewCell.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXPreviewFileGalleryCollectionViewCell.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXFileGalleryCollectionViewCell.xib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXFileGalleryCollectionViewCell.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXPreviewFileGalleryCollectionViewCell.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/Cell/EXPreviewFileGalleryCollectionViewCell.xib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/UIImage+ImageCompress.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/EXFileGalleryCollectionViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/EXPreviewFileGalleryCollectionViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Gallery/EXFileGalleryCollectionViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/Base.lproj/MainInterface.storyboard" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/CurrentFilePathViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aurorafilesaction/FilePath/CurrentFilePathViewController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.debug.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-acknowledgements.markdown" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-acknowledgements.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-resources.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.release.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests-frameworks.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests-acknowledgements.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.release.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests-resources.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests-acknowledgements.markdown" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking+AutoRetry/AFNetworking+AutoRetry-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking+AutoRetry/AFNetworking+AutoRetry.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking+AutoRetry/AFNetworking+AutoRetry-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking/AFNetworking.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking/AFNetworking-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/AFNetworking/AFNetworking-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/SDWebImage/SDWebImage-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/SDWebImage/SDWebImage-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/SDWebImage/SDWebImage.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/CRMediaPickerController/CRMediaPickerController-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/CRMediaPickerController/CRMediaPickerController-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/CRMediaPickerController/CRMediaPickerController.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-acknowledgements.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-acknowledgements.markdown" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-frameworks.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.debug.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.release.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-resources.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.debug.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-acknowledgements.markdown" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-acknowledgements.plist" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-frameworks.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-resources.sh" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/FastEasyMapping/FastEasyMapping.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/FastEasyMapping/FastEasyMapping-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/FastEasyMapping/FastEasyMapping-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Reachability/Reachability-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Reachability/Reachability-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/Reachability/Reachability.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/MagicalRecord/MagicalRecord-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/MagicalRecord/MagicalRecord-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/MagicalRecord/MagicalRecord.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/DZNEmptyDataSet/DZNEmptyDataSet.xcconfig" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/DZNEmptyDataSet/DZNEmptyDataSet-prefix.pch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Target Support Files/DZNEmptyDataSet/DZNEmptyDataSet-dummy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Assignment Policy/FEMAssignmentPolicy.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Assignment Policy/FEMRelationshipAssignmentContext.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Assignment Policy/FEMRelationshipAssignmentContext+Internal.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Assignment Policy/FEMRelationshipAssignmentContext.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Assignment Policy/FEMAssignmentPolicy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Cache/FEMManagedObjectCache.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Cache/FEMManagedObjectCache.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Deserializer/FEMObjectDeserializer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Deserializer/FEMDeserializer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Deserializer/FEMManagedObjectDeserializer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Deserializer/FEMDeserializer.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMAttribute.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMObjectMapping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMRelationship.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMMapping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMProperty.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMRelationship.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMAttribute.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMMapping.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Mapping/FEMManagedObjectMapping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Serializer/FEMSerializer.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Serializer/FEMSerializer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Store/FEMManagedObjectStore.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Store/FEMObjectStore.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Store/FEMManagedObjectStore.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Core/Store/FEMObjectStore.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/FastEasyMapping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Collection/FEMExcludableCollection.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Collection/FEMMergeableCollection.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Collection/FEMMergeableCollection.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Collection/FEMExcludableCollection.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Foundation/NSObject+FEMKVCExtension.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Foundation/NSObject+FEMKVCExtension.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Foundation/NSArray+FEMPropertyRepresentation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Extensions/Foundation/NSArray+FEMPropertyRepresentation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMTypes.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMTypeIntrospection.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMMappingUtility.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMRepresentationUtility.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMMappingUtility.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMTypeIntrospection.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/FastEasyMapping/FastEasyMapping/Source/Utility/FEMRepresentationUtility.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Reachability/Reachability.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Reachability/Reachability.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers/NSObject+AssociatedDictionary.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/ObjcAssociatedObjectHelpers/ObjcAssociatedObjectHelpers/NSObject+AssociatedDictionary.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPSessionManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFNetworkReachabilityManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLResponseSerialization.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLConnectionOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLResponseSerialization.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLConnectionOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLRequestSerialization.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPSessionManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFSecurityPolicy.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLSessionManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFSecurityPolicy.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLSessionManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFURLRequestSerialization.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIAlertView+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIButton+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIKit+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIWebView+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIRefreshControl+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIImage+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/AFNetworkActivityIndicatorManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIButton+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIRefreshControl+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIProgressView+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIImageView+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIProgressView+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIWebView+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIImageView+AFNetworking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking/UIKit+AFNetworking/UIAlertView+AFNetworking.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+iCloud.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Options.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+iCloud.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecordDeprecationMacros.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecordInternal.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecordInternal.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+ErrorHandling.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Setup.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecordLogging.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecordXcode7CompatibilityMacros.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+ErrorHandling.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Setup.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+ShorthandMethods.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Actions.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+ShorthandMethods.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Actions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Core/MagicalRecord+Options.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSPersistentStoreCoordinator+MagicalRecord.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectModel+MagicalRecord.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalChainSave.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalObserving.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalChainSave.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalRecord.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalObserving.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalThreading.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalSaves.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalThreading.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectContext/NSManagedObjectContext+MagicalSaves.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSPersistentStore+MagicalRecord.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSPersistentStoreCoordinator+MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSPersistentStore+MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalRequests.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalAggregation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalFinders.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalFinders.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalRequests.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalRecord.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObject/NSManagedObject+MagicalAggregation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSEntityDescription+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSObject+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSRelationshipDescription+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/MagicalImportFunctions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSAttributeDescription+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSNumber+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSAttributeDescription+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSNumber+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSObject+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSRelationshipDescription+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSString+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/MagicalImportFunctions.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSString+MagicalDataImport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/DataImport/NSEntityDescription+MagicalDataImport.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/MagicalRecord/MagicalRecord/Categories/NSManagedObjectModel+MagicalRecord.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIView+WebCacheOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImageView+WebCache.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImage+GIF.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageManager.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImageView+HighlightedWebCache.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloaderOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImage+GIF.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImageView+HighlightedWebCache.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/NSData+ImageContentType.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImage+MultiFormat.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImage+MultiFormat.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIButton+WebCache.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/NSData+ImageContentType.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImagePrefetcher.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIButton+WebCache.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDecoder.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImagePrefetcher.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloader.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDImageCache.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDImageCache.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDecoder.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIImageView+WebCache.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/UIView+WebCacheOperation.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageCompat.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloaderOperation.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageCompat.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/Crashlytics.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/CLSStackFrame.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/CLSReport.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/Answers.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/CLSAttributes.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/CLSLogging.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/Crashlytics/iOS/Crashlytics.framework/Headers/ANSCompatibility.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking+AutoRetry/AFHTTPSessionManager+AutoRetry.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/AFNetworking+AutoRetry/AFHTTPSessionManager+AutoRetry.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/DZNEmptyDataSet/Source/UIScrollView+EmptyDataSet.m" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/DZNEmptyDataSet/Source/UIScrollView+EmptyDataSet.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/CRMediaPickerController/CRMediaPickerController/CRMediaPickerController.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Pods/CRMediaPickerController/CRMediaPickerController/CRMediaPickerController.m" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Intermediates/aurorafiles.build/Debug-iphoneos/aurorafiles.build/DerivedSources" />
+    <content url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafiles.a">
+      <sourceFolder url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafiles.a" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesTests.a">
+      <sourceFolder url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesTests.a" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesUITests.a">
+      <sourceFolder url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesUITests.a" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesaction.a">
+      <sourceFolder url="file://$USER_HOME$/Library/Caches/AppCode2016.2/DerivedData/aurorafiles-brwltflxcwcwmhepalbldadtnwgq/Build/Products/Debug-iphoneos/libPods-aurorafilesaction.a" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/XcodeKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/InterfaceBuilderKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/DTPerformanceSession.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CallKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HealthKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PassKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/StoreKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreAudioKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MultipeerConnectivity.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AssetsLibrary.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WatchConnectivity.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/IntentsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreVideo.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Messages.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SceneKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/OpenGLES.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CFNetwork.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AddressBookUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/EventKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WatchKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GSS.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AudioUnit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreSpotlight.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/LocalAuthentication.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HealthKitUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Metal.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/VideoToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Contacts.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/QuickLook.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SafariServices.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameplayKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CloudKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreImage.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/EventKitUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Photos.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaPlayer.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVFoundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVFoundation.framework/Frameworks/AVFAudio.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Intents.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PushKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreTelephony.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UserNotificationsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreText.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Speech.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ReplayKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SpriteKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Twitter.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NetworkExtension.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreAudio.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreData.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MapKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ContactsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMedia.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaAccessibility.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UserNotifications.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ExternalAccessory.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ModelIO.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GLKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MetalKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HomeKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameController.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreBluetooth.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AdSupport.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMIDI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/VideoSubscriberAccount.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Social.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SystemConfiguration.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accounts.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/OpenAL.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NotificationCenter.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/JavaScriptCore.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ImageIO.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MobileCoreServices.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AddressBook.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NewsstandKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MessageUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreLocation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/QuartzCore.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/iAd.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.0.0/include" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/XcodeKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/InterfaceBuilderKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Frameworks/DTPerformanceSession.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CallKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HealthKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PassKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/StoreKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreAudioKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MultipeerConnectivity.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AssetsLibrary.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WatchConnectivity.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/IntentsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreVideo.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Messages.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SceneKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/OpenGLES.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CFNetwork.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AddressBookUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/EventKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WatchKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GSS.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AudioUnit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreSpotlight.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/LocalAuthentication.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HealthKitUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Metal.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/VideoToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Contacts.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/QuickLook.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SafariServices.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameplayKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CloudKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreImage.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/EventKitUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Photos.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MetalPerformanceShaders.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaPlayer.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVFoundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVFoundation.framework/Frameworks/AVFAudio.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Intents.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PushKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreTelephony.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UserNotificationsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreText.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Speech.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ReplayKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SpriteKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Twitter.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NetworkExtension.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreAudio.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreData.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MapKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ContactsUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMedia.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MediaAccessibility.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UserNotifications.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ExternalAccessory.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ModelIO.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GLKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MetalKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/HomeKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameController.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AVKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreBluetooth.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AdSupport.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMIDI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/VideoSubscriberAccount.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Social.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/SystemConfiguration.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accounts.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/OpenAL.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NotificationCenter.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/JavaScriptCore.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/ImageIO.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/PhotosUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MobileCoreServices.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/AddressBook.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/NewsstandKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/MessageUI.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/GameKit.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreLocation.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/QuartzCore.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/iAd.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework/Headers" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.0.0/include" />
+          <root url="file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

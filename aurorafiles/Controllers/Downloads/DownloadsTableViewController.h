@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DownloadsTableViewController : UITableViewController
+static  NSString *loadTypeContainer = @"container";
+static  NSString *loadTypeView = @"view";
 
+@interface DownloadsTableViewController : UIViewController
+@property (nonatomic, strong) NSString *loadType;
+
+-(void)stopTasks;
 @end

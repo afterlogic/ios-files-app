@@ -15,6 +15,7 @@
 @synthesize extension;
 @synthesize size;
 @synthesize name;
+@synthesize savedLocal;
 
 
 -(void)setRequest:(NSURLRequest *)request{

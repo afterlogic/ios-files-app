@@ -11,8 +11,10 @@
 @interface Settings : NSObject
 
 + (NSString*)domain;
-
 + (void)setDomain:(NSString *)domain;
+
++ (NSString *)domainScheme;
++ (void)setDomainScheme:(NSString *)scheme;
 
 + (void)setToken:(NSString*)token;
 + (NSString*)token;
@@ -29,6 +31,14 @@
 + (void)setPassword:(NSString*)password;
 + (NSString*)password;
 
++ (void)setFirstRun:(NSString *)isFirstRun;
++ (NSString *)isFirstRun;
 
++ (void)setLastLoginServerVersion:(NSString *)version;
++ (NSString *)version;
 
++ (void)saveLastUsedFolder:(NSDictionary *)folder;
++ (NSDictionary *)getLastUsedFolder;
+
++ (void)clearSettings;
 @end

@@ -7,8 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
+//#import "UPDFilesViewController.h"
+//#import "SessionProvider.h"
 
-@interface aurorafilesTests : XCTestCase
+@interface aurorafilesTests : XCTestCase{
+    
+}
+//@property (nonatomic) UPDFilesViewController * vcToTest;
 
 @end
 
@@ -16,6 +21,7 @@
 
 - (void)setUp {
     [super setUp];
+//    self.vcToTest = [[UPDFilesViewController alloc]init];
     // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
@@ -29,11 +35,16 @@
     // Use XCTAssert and related functions to verify your tests produce the correct results.
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testCheckAuthorizeWithCompletion{
+//    XCTestExpectation *copletionExpectation = [self expectationWithDescription:@""];
+//    [SessionProvider checkAuthorizeWithCompletion]
 }
+
+//- (void)testPerformanceExample {
+//    // This is an example of a performance test case.
+//    [self measureBlock:^{
+//        // Put the code you want to measure the time of here.
+//    }];
+//}
 
 @end

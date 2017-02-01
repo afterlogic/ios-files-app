@@ -26,6 +26,17 @@
     [[Settings sharedDefaults] synchronize];
 }
 
++ (NSString *)domainScheme{
+    NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
+    NSLog(@"⚠️ current domain Scheme is -> %@", sch);
+    return sch;
+}
+
++ (void)setDomainScheme:(NSString *)scheme{
+    [[Settings sharedDefaults] setValue:scheme forKey:@"domain_sсheme"];
+    [[Settings sharedDefaults] synchronize];
+}
+
 + (void)setAuthToken:(NSString *)authToken
 {
     [[Settings sharedDefaults] setValue:authToken forKey:@"auth_token"];
@@ -34,7 +45,9 @@
 
 + (NSString*)authToken
 {
-    return [[Settings sharedDefaults] valueForKey:@"auth_token"];
+    NSString *token = [[Settings sharedDefaults] valueForKey:@"auth_token"];
+    
+    return token ? token :@"";
 }
 
 + (void)setLogin:(NSString*)login
@@ -81,5 +94,49 @@
     return [[Settings sharedDefaults] valueForKey:@"current_account"];
 }
 
++ (void)setFirstRun:(NSString *)isFirstRun{
+    [[Settings sharedDefaults] setValue:isFirstRun forKey:@"first_run"];
+    [[Settings sharedDefaults] synchronize];
+}
+
++ (NSString *)isFirstRun{
+    return [[Settings sharedDefaults] valueForKey:@"first_run"];
+}
+
++ (void)setLastLoginServerVersion:(NSString *)version{
+    [[Settings sharedDefaults] setValue:version forKey:@"hostVersion"];
+    [[Settings sharedDefaults] synchronize];
+}
++ (NSString *)version{
+    NSLog(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
+    return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
+}
+
++ (void)saveLastUsedFolder:(NSDictionary *)folder{
+    [[Settings sharedDefaults]setValue:folder forKey:@"lastUsedFolder"];
+    [[Settings sharedDefaults]synchronize];
+}
+
++(NSDictionary *)getLastUsedFolder{
+    return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
+}
+
++(void)clearSettings{
+    [Settings setLastLoginServerVersion:nil];
+    [Settings setCurrentAccount:nil];
+    [Settings setToken:nil];
+    [Settings setPassword:nil];
+    [Settings setAuthToken:nil];
+    [Settings setDomainScheme:nil];
+
+    NSString * lastLoginServerVersion = [Settings version];
+    NSString * currentAccount = [Settings currentAccount];
+    NSString * token = [Settings token];
+    NSString * password = [Settings password];
+    NSString * authToken = [Settings authToken];
+    NSString * domainScheme = [Settings domainScheme];
+
+    NSLog(@"%@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
+}
 
 @end

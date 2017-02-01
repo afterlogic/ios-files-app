@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -26,26 +26,23 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ej-nI-gGr">
+                    <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ej-nI-gGr">
                         <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="2" id="Igq-aZ-GmO"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZZJ-ha-57p">
+                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZZJ-ha-57p">
                         <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCa-hf-4CO"/>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AnI-EA-Enk">
                                 <state key="normal" image="download"/>
-                                <connections>
-                                    <action selector="downloadAction:" destination="rxa-tF-cnd" eventType="touchUpInside" id="DQa-YR-9UA"/>
-                                </connections>
                             </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="sCa-hf-4CO"/>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="AnI-EA-Enk" firstAttribute="top" secondItem="ZZJ-ha-57p" secondAttribute="top" id="Qla-xC-oog"/>
-                            <constraint firstItem="sCa-hf-4CO" firstAttribute="centerY" secondItem="ZZJ-ha-57p" secondAttribute="centerY" id="WyY-fF-LVm"/>
+                            <constraint firstItem="sCa-hf-4CO" firstAttribute="centerY" secondItem="ZZJ-ha-57p" secondAttribute="centerY" constant="-0.5" id="WyY-fF-LVm"/>
                             <constraint firstAttribute="trailing" secondItem="AnI-EA-Enk" secondAttribute="trailing" id="bah-lQ-yCD"/>
                             <constraint firstItem="sCa-hf-4CO" firstAttribute="centerX" secondItem="ZZJ-ha-57p" secondAttribute="centerX" id="gWX-sf-vlU"/>
                             <constraint firstAttribute="bottom" secondItem="AnI-EA-Enk" secondAttribute="bottom" id="jeo-sS-pG3"/>
@@ -53,27 +50,32 @@
                             <constraint firstAttribute="width" constant="39" id="rVe-Fo-iL5"/>
                         </constraints>
                     </view>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="H7P-KM-aGP"/>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="bKL-kh-8PS" secondAttribute="bottom" constant="2" id="A0u-nt-vkF"/>
                     <constraint firstItem="7Fs-FB-24I" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="10" id="I7o-Ws-h5y"/>
-                    <constraint firstItem="5Ej-nI-gGr" firstAttribute="top" secondItem="ZZJ-ha-57p" secondAttribute="bottom" constant="10" id="IpS-qj-X9U"/>
+                    <constraint firstItem="5Ej-nI-gGr" firstAttribute="top" secondItem="ZZJ-ha-57p" secondAttribute="bottom" constant="-0.5" id="IpS-qj-X9U"/>
                     <constraint firstItem="5Ej-nI-gGr" firstAttribute="leading" secondItem="r6U-hu-xyM" secondAttribute="leading" id="N0u-Ge-wQO"/>
                     <constraint firstItem="bKL-kh-8PS" firstAttribute="leading" secondItem="r6U-hu-xyM" secondAttribute="leading" constant="8" id="RXE-SU-IJh"/>
                     <constraint firstAttribute="trailing" secondItem="5Ej-nI-gGr" secondAttribute="trailing" id="ZJA-eP-sfW"/>
                     <constraint firstAttribute="bottom" secondItem="7Fs-FB-24I" secondAttribute="bottom" constant="10" id="afw-Vy-3pC"/>
                     <constraint firstItem="ZZJ-ha-57p" firstAttribute="leading" secondItem="7Fs-FB-24I" secondAttribute="trailing" id="ayy-mR-deZ"/>
                     <constraint firstAttribute="trailing" secondItem="ZZJ-ha-57p" secondAttribute="trailing" id="cZK-rS-5Nv"/>
-                    <constraint firstItem="ZZJ-ha-57p" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="10" id="kkY-4J-Cw9"/>
+                    <constraint firstItem="ZZJ-ha-57p" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" id="kkY-4J-Cw9"/>
                     <constraint firstItem="7Fs-FB-24I" firstAttribute="leading" secondItem="bKL-kh-8PS" secondAttribute="trailing" constant="8" id="rvX-9o-Yuq"/>
+                    <constraint firstItem="H7P-KM-aGP" firstAttribute="centerY" secondItem="bKL-kh-8PS" secondAttribute="centerY" id="skw-PP-Pe3"/>
                     <constraint firstItem="bKL-kh-8PS" firstAttribute="top" secondItem="r6U-hu-xyM" secondAttribute="top" constant="2" id="vpw-9U-JWN"/>
+                    <constraint firstItem="H7P-KM-aGP" firstAttribute="centerX" secondItem="bKL-kh-8PS" secondAttribute="centerX" id="xPu-Yk-OK7"/>
                     <constraint firstAttribute="bottom" secondItem="5Ej-nI-gGr" secondAttribute="bottom" id="zLz-Bg-J3o"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="disclosureBox" destination="ZZJ-ha-57p" id="mEu-4u-cd6"/>
                 <outlet property="disclosureButton" destination="AnI-EA-Enk" id="xVC-96-AuY"/>
                 <outlet property="downloadActivity" destination="sCa-hf-4CO" id="k8E-of-9yD"/>
                 <outlet property="fileImageView" destination="bKL-kh-8PS" id="2Eh-ee-hX0"/>
+                <outlet property="indicator" destination="H7P-KM-aGP" id="0uG-zB-or4"/>
                 <outlet property="separatorHeight" destination="Igq-aZ-GmO" id="wmZ-lV-NGc"/>
                 <outlet property="separatorView" destination="5Ej-nI-gGr" id="MuI-P7-foI"/>
                 <outlet property="titileLabel" destination="7Fs-FB-24I" id="8Ge-nf-8la"/>

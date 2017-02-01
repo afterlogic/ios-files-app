@@ -13,104 +13,6 @@ class snapshotTest: XCTestCase {
         
     override func setUp() {
         super.setUp()
-        let app = XCUIApplication()
-        setupSnapshot(app)
-        app.launch()
-        
-        XCUIDevice.shared().orientation = .faceUp
-        XCUIDevice.shared().orientation = .faceUp
-        XCUIDevice.shared().orientation = .faceUp
-        
-        let elementsQuery = app.scrollViews.otherElements
-        let deleteKey = app.keys["delete"]
-        let hostTextField = elementsQuery.textFields["Host"]
-        hostTextField.tap()
-        XCUIDevice.shared().orientation = .portrait
-        
-        hostTextField.typeText("aurora.afterlogic.com")
-        
-        let moreKey = app.keys["more"]
-        let emailTextField = elementsQuery.textFields["Email"]
-        emailTextField.tap()
-        emailTextField.typeText("st")
-        
-        deleteKey.tap()
-        deleteKey.tap()
-        deleteKey.tap()
-        emailTextField.typeText("aurora@afterlogic.com")
-        
-
-        let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
-        passwordSecureTextField.tap()
-        passwordSecureTextField.typeText("starwarrs")
-        moreKey.tap()
-        passwordSecureTextField.typeText("1992")
-        
-        snapshot("01LoginScreen")
-        
-        let signInButton = elementsQuery.buttons["Sign In"]
-        
-        hostTextField.tap()
-        deleteKey.press(forDuration: 3.6);
-        hostTextField.typeText("p7.afterlogic.com")
-        
-        emailTextField.tap()
-        deleteKey.press(forDuration: 3.6);
-        emailTextField.typeText("a.kovalev@afterlogic.com")
-        
-        passwordSecureTextField.tap()
-        
-        deleteKey.press(forDuration: 3.6);
-        
-        passwordSecureTextField.typeText("starwars1992")
-        signInButton.tap()
-        
-        let tablesQuery2 = app.tables
-        let img0667JpgStaticText = tablesQuery2.staticTexts["IMG_0667.JPG"]
-        
-        let tablesQuery = tablesQuery2
-        img0667JpgStaticText.tap()
-        let back = app.navigationBars.buttons["Personal"]
-        back.tap()
-        
-        tablesQuery2.cells.containing(.staticText, identifier:"IMG_0667.JPG").children(matching: .staticText).matching(identifier: "IMG_0667.JPG").element(boundBy: 0).swipeUp()
-        tablesQuery.cells.containing(.staticText, identifier:"IMG_0667.JPG").buttons["download"].tap()
-        tablesQuery.cells.containing(.staticText, identifier:"InternetShortcut1475497935").buttons["download"].tap()
-        snapshot("02Personal")
-
-        let tabBarsQuery = app.tabBars
-        let corporateButton = tabBarsQuery.buttons["Corporate"]
-        corporateButton.tap()
-        tablesQuery.staticTexts["ios client test"].swipeUp()
-        snapshot("03Corporate")
-        tablesQuery.staticTexts["AfterLogic Corporate Docs"].tap()
-        app.navigationBars["AfterLogic Corporate Docs"].buttons["Corporate"].tap()
-
-        tabBarsQuery.buttons["Downloads"].tap()
-        snapshot("06Downloads")
-        corporateButton.tap()
-        app.navigationBars["Corporate"].buttons["more"].tap()
-        
-        let chooseOptionSheet = app.sheets["Choose option"]
-        snapshot("04Options")
-        
-        let cancelButton = chooseOptionSheet.buttons["Cancel"]
-        cancelButton.tap()
-        tabBarsQuery.buttons["Personal"].tap()
-        
-        let moreButton = app.navigationBars["Personal"].buttons["more"]
-        moreButton.tap()
-        chooseOptionSheet.buttons["Create Folder"].tap()
-        
-        let enterNameAlert = app.alerts["Enter Name"]
-        let folderNameTextField = enterNameAlert.collectionViews.textFields["Folder Name"]
-        snapshot("05CreateFolder")
-        folderNameTextField.typeText("s")
-        folderNameTextField.typeText("a")
-        folderNameTextField.typeText("me f")
-        folderNameTextField.typeText("old")
-        folderNameTextField.typeText("er")
-        enterNameAlert.buttons["Create"].press(forDuration: 0.8);
 
     }
     
@@ -122,6 +24,114 @@ class snapshotTest: XCTestCase {
     func testExample() {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCUIDevice.shared().orientation = .faceUp
+        XCUIDevice.shared().orientation = .faceUp
+        
+        let app = XCUIApplication()
+        setupSnapshot(app)
+        app.launch()
+        XCUIDevice.shared().orientation = .faceUp
+        XCUIDevice.shared().orientation = .faceUp
+        
+        let elementsQuery = app.scrollViews.otherElements
+        let hostTextField = elementsQuery.textFields["Host"]
+        hostTextField.tap()
+        
+        let deleteKey = app.keys["delete"]
+        deleteKey.tap()
+        deleteKey.tap()
+        deleteKey.press(forDuration: 5.0);
+        
+        let emailTextField = elementsQuery.textFields["Email"]
+        emailTextField.tap()
+        deleteKey.press(forDuration: 5);
+        hostTextField.tap()
+        hostTextField.typeText("aurora")
+        
+        let moreKey = app.keys["more"]
+        moreKey.tap()
+        moreKey.tap()
+        hostTextField.typeText(".")
+        
+        let moreKey2 = app.keys["more"]
+        moreKey2.tap()
+        moreKey2.tap()
+        hostTextField.typeText("afterlogic")
+        moreKey.tap()
+        hostTextField.typeText(".")
+        moreKey2.tap()
+        hostTextField.typeText("com")
+        emailTextField.tap()
+        emailTextField.typeText("aurora@afterlogic.com")
+        
+        let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
+        passwordSecureTextField.tap()
+        passwordSecureTextField.typeText("qwezxc")
+        
+        let scrollViewsQuery = app.scrollViews
+        scrollViewsQuery.otherElements.containing(.textField, identifier:"Host").element.tap()
+        
+        
+        snapshot("01LoginScreen")
+        
+        hostTextField.tap()
+        
+        //        let deleteKey = app.keys["delete"]
+        deleteKey.press(forDuration: 5);
+        hostTextField.typeText("p7.afterlogic.com")
+        
+//        //        let moreKey = app.keys["more"]
+//        moreKey.tap()
+//        moreKey.tap()
+//        hostTextField.typeText("7.")
+//        
+//        //        let moreKey2 = app.keys["more"]
+//        moreKey2.tap()
+//        moreKey2.tap()
+//        hostTextField.typeText("afterlogic")
+//        moreKey.tap()
+//        hostTextField.typeText(".")
+//        moreKey2.tap()
+//        hostTextField.typeText("com")
+        
+        //        let emailTextField = elementsQuery.textFields["Email"]
+        emailTextField.tap()
+        deleteKey.press(forDuration: 5);
+        emailTextField.typeText("a.kovalev@afterlogic.com")
+        
+        //        let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
+        passwordSecureTextField.tap()
+        deleteKey.press(forDuration: 0.6);
+        deleteKey.press(forDuration: 0.6);
+        passwordSecureTextField.typeText("starwars1992")
+        elementsQuery.buttons["Sign In"].tap()
+        
+        
+        let tablesQuery = XCUIApplication().tables
+        
+        let needfulCell = app.tables.cells.element(boundBy: 5)
+        let existPredicate = NSPredicate (format:"exists == true")
+        
+        expectation(for: existPredicate, evaluatedWith: needfulCell, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil);
+        
+        tablesQuery.cells.containing(.staticText, identifier:"IMG_0667.JPG").buttons["download"].tap()
+        tablesQuery.cells.containing(.staticText, identifier:"InternetShortcut1475497935").buttons["download"].tap()
+        
+        
+        snapshot("02Personal")
+        
+        XCUIApplication().buttons["Corporate"].tap()
+        
+        snapshot("03Corporate")
+        
+        XCUIApplication().toolbars.buttons["more"].tap()
+        
+        snapshot("04Options")
+        
+        XCUIApplication().sheets["Choose option"].buttons["Downloads"].tap()
+        
+        snapshot("05Downloads")
         
     }
 }

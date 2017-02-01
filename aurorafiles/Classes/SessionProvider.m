@@ -7,101 +7,155 @@
 //
 
 #import "SessionProvider.h"
-#import "API.h"
+#import "ApiP7.h"
 #import "Settings.h"
 #import "KeychainWrapper.h"
+#import "ApiP8.h"
+#import "StorageManager.h"
+#import "ApiProtocol.h"
+#import "NetworkManager.h"
 
+@interface SessionProvider(){
+    int operationCounter;
+    NetworkManager *networkManager;
+}
+
+@property (nonatomic, strong) id<ApiProtocol> actualApiManager; //
+@end
 @implementation SessionProvider
 
-+ (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline ))handler
++ (instancetype)sharedManager
 {
-    [[API sharedInstance] checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
-        if (!error)
-        {
-            if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
-            {
-                if (data[@"Result"][@"offlineMod"]) {
-                    handler (YES,YES);
-                }
-                handler (YES,NO);
-            }
-            else
-            {
-                if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
-                    NSNumber *errorCode = data[@"ErrorCode"];
-                    if (errorCode.longValue == 101) {
-                        NSString * email = [Settings login];
-                        NSString * password = [Settings password];
-                        if (email.length && password.length)
-                        {
-                            [SessionProvider authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                                handler(isAuthorised,NO);
-                            }];
-                            return;
-                        }else{
-                            handler(NO,NO);
-                            return;
-                        }
-                    }
-                    
+    static SessionProvider *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[SessionProvider alloc] init];
+    });
+    return sharedInstance;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self)
+    {
+        operationCounter = 0;
+        networkManager = [NetworkManager sharedManager];
+        [self setupActualApiManager];
+    }
+    return self;
+}
+
+- (void)loginEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler{
+        if([Settings domain] && [Settings domain].length > 0){
+            [self authroizeEmail:email withPassword:password completion:^(BOOL authorized, NSError * error) {
+                if (authorized)
+                {
+                    handler(authorized,nil);
                 }
                 else
                 {
-                    handler(NO,NO);
+                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
+                    handler(NO,error);
                 }
-            }
-            return ;
+            }];
+            
+        }else{
+            NSError *error = [[NSError alloc]initWithDomain:@"" code:500 userInfo:@{}];
+            handler(NO,error);
         }
-        else
-        {
-            NSString * email = [Settings login];
-            NSString * password = [Settings password];
-            if (email.length && password.length)
-            {
-                [SessionProvider authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                    handler(isAuthorised,NO);
-                }];
-                return;
-            }
-            else
-            {
-                handler (NO,NO);
-                return;
-            }
-        }
+}
+
+- (void)logout:(void (^)(BOOL succsess, NSError *error))handler{
+    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+        [self.actualApiManager logoutWithCompletion:^(BOOL succsess, NSError *error) {
+            handler(succsess,error);
+        }];
     }];
-    
+}
 
+- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler{
+    NSString *scheme = [Settings domainScheme];
+    if (!scheme) {
+        [self checkSSLConnection:^(NSString *domain) {
+            if(domain && domain.length > 0){
+                [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+                    handler(authorised,offline,isP8);
+                }];
+            }else{
+                handler(NO, NO, NO);
+            }
+        }];
+    }else{
+        if (!self.actualApiManager) {
+            [self setupActualApiManager];
+        }
+        [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+            handler(authorised,offline,isP8);
+        }];
+    }
+}
 
-	
-	
+- (void)cancelAllOperations{
+    [self.actualApiManager cancelAllOperations];
+}
+
+- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler
+{
+    [self.actualApiManager checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline, BOOL isP8) {
+        handler(authorised,offline,isP8);
+    }];
+}
+
+- (void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
+{
+    [self.actualApiManager authroizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
+        handler(success,error);
+    }];
+}
+
+- (void)checkSSLConnection:(void (^)(NSString *))handler{
+    if ([Settings domainScheme] && [Settings domain]) {
+        handler([Settings domain]);
+        return;
+    }
+    [[NetworkManager sharedManager] prepareForCheck];
+    [[NetworkManager sharedManager] checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
+        if (domainVersion && correctHostURL) {
+            [self saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
+        }else{
+            [self clearDomainInfo];
+        }
+        handler(correctHostURL);
+    }];
+}
+
+- (void)saveDomainVersion:(NSString *)domainVersion domainCorrectHostUrl:(NSString *)correctURL{
+    if (domainVersion) {
+        if (![[Settings version] isEqualToString:domainVersion]) {
+            [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
+        }
+        [Settings setLastLoginServerVersion:domainVersion];
+        self.actualApiManager =  [networkManager getNetworkManager];
+    }
+    NSLog(@"ℹ️ host version is %@",[Settings version]);
+    NSLog(@"ℹ️ host is %@",[Settings domain]);
+}
+
+-(void)setupActualApiManager{
+    if ([Settings version]) {
+        self.actualApiManager = [networkManager getNetworkManager];
+    }
+}
+
+-(void)clearDomainInfo{
+    [Settings setDomainScheme:nil];
 }
 
 
-+ (void) authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
-{
-	[[API sharedInstance] getAppDataCompletionHandler:^(NSDictionary *result, NSError *error) {
-		if (error)
-		{
-			handler (NO,error);
-			return ;
-		}
-		
-		[[API sharedInstance] signInWithEmail:email andPassword:password completion:^(NSDictionary *result, NSError *error) {
-            if (error)
-			{
-				handler(NO,error);
-				return;
-			}
-			handler(YES,error);
-			}];
-	}];
-
-}
-
-+ (void)deathorizeWithCompletion:(void (^)(BOOL))handler
-{
-	
+-(void)clear{
+    [self cancelAllOperations];
+    self.actualApiManager = nil;
 }
 
 @end

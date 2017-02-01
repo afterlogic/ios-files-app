@@ -32,14 +32,9 @@
 }
 
 -(void)startNotification{
-    // Allocate a reachability object
     reach = [Reachability reachabilityWithHostname:@"www.google.com"];
-    
-    // Tell the reachability that we DON'T want to be reachable on 3G/EDGE/CDMA
     reach.reachableOnWWAN = YES;
     
-    // Here we set up a NSNotification observer. The Reachability that caused the notification
-    // is passed in the object parameter
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
                                                  name:kReachabilityChangedNotification
@@ -55,27 +50,26 @@
 }
 
 -(void)reachabilityChanged:(NSNotification *)notify{
-//    NSLog(@"sender is -> %@", notify);
     if ([notify.object isKindOfClass:[Reachability class]]) {
         Reachability* tmpReach = notify.object;
         NetworkStatus status = [tmpReach currentReachabilityStatus];
         switch (status) {
             case ReachableViaWiFi:
             case ReachableViaWWAN:{
-//                if (!_isOnline) {
-//                    _isOnline = YES;
-                [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionOnline object:nil];
-//                BFLog(@"");
-//                }
-            }
+                    if (!_isOnline) {
+                        [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionOnline object:nil];
+                        _isOnline = YES;
+                    }
+                }
                 break;
                 
             default:{
-//                _isOnline = NO;
-                [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionLost object:nil];
-                BFLog(@"connection lost");
-                
-            }
+                    if (_isOnline) {
+                        [[NSNotificationCenter defaultCenter]postNotificationName:CPNotificationConnectionLost object:nil];
+                        BFLog(@"connection lost");
+                        _isOnline = NO;
+                    }
+                }
                 break;
         }
     }

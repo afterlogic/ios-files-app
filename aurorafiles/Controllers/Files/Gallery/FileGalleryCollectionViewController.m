@@ -1,4 +1,4 @@
-//
+
 //  FileGalleryCollectionViewController.m
 //  aurorafiles
 //
@@ -8,21 +8,30 @@
 
 #import "FileGalleryCollectionViewController.h"
 #import "FileGalleryCollectionViewCell.h"
+#import "GalleryCollectionFlowLayout.h"
 #import "StorageManager.h"
-#import "API.h"
+#import "Settings.h"
+#import "ApiP8.h"
+#import "ApiP7.h"
+#import <MagicalRecord/MagicalRecord.h>
 
 @interface FileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
 {
     CGPoint _lastTouch;
+    UIImageView *snapshotView;
+    CGSize cellSize;
+    
 }
 @property (strong, nonatomic) NSArray * items;
 @property (strong, nonatomic) StorageManager * manager;
 @property (strong, nonatomic) UITapGestureRecognizer * tapGesture;
+@property (weak, nonatomic) UIBarButtonItem * moreButton;
 @property (weak, nonatomic) UIBarButtonItem * shareButton;
 @property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *panCollectionGesture;
-@property (weak, nonatomic) UIBarButtonItem * moreButton;
+
 @property (weak, nonatomic) UITextField * folderName;
 @property (weak, nonatomic) UIView * dragView;
+@property (weak, nonatomic) Folder *currentViewdItem;
 - (IBAction)panCollectionToBack:(id)sender;
 @end
 
@@ -48,19 +57,24 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.manager = [StorageManager sharedManager];
+    
     NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
     fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-    fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@",self.folder.fullpath,[Folder imageContentTypes],self.currentItem.type];
-    NSError * error = nil;
+    fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.currentItem.type, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSError * error = [NSError new];
+    self.items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
+    
+    
     self.panCollectionGesture.delegate = self;
     [self.collectionView addGestureRecognizer:self.panCollectionGesture];
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapsOnImage:)];
     self.tapGesture.delegate = self;
-    self.items = [self.manager.managedObjectContext executeFetchRequest:fetchImageFilesItemsRequest error:&error];
+    
     self.collectionView.pagingEnabled = YES;
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     [self.collectionView reloadData];
+    
     UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareFileAction:)];
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
     self.moreButton = moreItem;
@@ -71,21 +85,52 @@
     // Register cell classes
     [self.collectionView registerNib:[UINib nibWithNibName:@"FileGalleryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:[FileGalleryCollectionViewCell cellId]];
     [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:self.panCollectionGesture];
+//    self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
+    
+    
+    self.navigationController.navigationBar.hidden = NO;
+    self.title = self.currentItem.name;
+    self.currentViewdItem = self.currentItem;
+    
+    snapshotView = [UIImageView new];
+    [self.view addSubview:snapshotView];
+    [snapshotView setFrame:self.collectionView.frame];
+    [snapshotView setCenter:self.view.center];
+    [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
+    snapshotView.alpha = 0.0f;
+    
+    
+    cellSize = self.collectionView.bounds.size;
     // Do any additional setup after loading the view.
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.itemSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight([UIScreen mainScreen].bounds));
+    GalleryCollectionFlowLayout * layout = [[GalleryCollectionFlowLayout alloc] init];
+//    layout.itemSize = self.view.bounds.size;
     layout.sectionInset = UIEdgeInsetsZero;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0;
     [self.collectionView setCollectionViewLayout:layout];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     [self.navigationController setToolbarHidden:YES animated:YES];
+    
+    [self.view layoutIfNeeded];
+    NSInteger row = [self.items indexOfObject:self.currentItem];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    
+    [snapshotView setImage:[self getScreenSnapshot]];
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -94,28 +139,8 @@
 //    [self.navigationController setToolbarHidden:NO animated:YES];
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [super viewWillTransitionToSize:size
-          withTransitionCoordinator:coordinator];
-    self.collectionView.alpha = 0.0f;
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context)
-     {
-         [self.collectionView.collectionViewLayout invalidateLayout];
-         
-     }
-        completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
-     {
-         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-         self.collectionView.alpha = 1.0f;
-     }];
-}
+- (void)viewWillLayoutSubviews{
 
-#pragma mark <UICollectionViewLayoutDelegate>
-
-- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
-{
-    return YES;
 }
 
 
@@ -165,20 +190,13 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                 
                                                                  Folder * file = [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-                                                                 if (!file)
-                                                                 {
-                                                                     return ;
-                                                                 }
-                                                                 NSString * oldName = file.name;
-                                                                 
-                                                                 file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
-                                                                 self.title = file.name;
-                                                                 [[API sharedInstance] renameFolderFromName:oldName toName:[self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]] isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                     
-                                                                     [file.managedObjectContext save:nil];
+                                                                 [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                     if (updatedFile) {
+                                                                         self.title = updatedFile.name;
+                                                                     }
                                                                  }];
-                                                                 
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
@@ -197,12 +215,20 @@
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        
-        [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+        if ([[Settings version] isEqualToString:@"P8"]) {
+            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
+                if (succsess) {
+                    [object.managedObjectContext save:nil];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+        }else{
+        [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
             object.wasDeleted = @YES;
             [object.managedObjectContext save:nil];
             [self.navigationController popViewControllerAnimated:YES];
         }];
+        }
     }];
     
     return deleteFolder;
@@ -242,24 +268,73 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.view.bounds.size;
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
-    int currentPage = self.collectionView.contentOffset.x / self.collectionView.bounds.size.width;
-    float width = self.collectionView.bounds.size.height;
-    
-    [UIView animateWithDuration:duration animations:^{
-        [self.self.collectionView setContentOffset:CGPointMake(width * currentPage, 0.0) animated:NO];
-        [[self.self.collectionView collectionViewLayout] invalidateLayout];
-    }];
+    return cellSize;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Rotation
+
+-(BOOL)shouldAutorotate{
+    return YES;
+}
+
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    CGSize collectionViewSize = self.collectionView.bounds.size;
+    CGFloat viewWidth = collectionViewSize.width;
+    CGFloat viewHeight = collectionViewSize.height;
+//
+//    [snapshotView setImage:[self getScreenSnapshot]];
+//    
+//    snapshotView.alpha = 1.0f;
+//    self.collectionView.alpha = 0.0f;
+//    
+    if(viewWidth >= viewHeight){
+//        [snapshotView setContentMode:UIViewContentModeScaleAspectFill];
+        cellSize = CGSizeMake(viewWidth, viewHeight);
+    }else{
+//        [snapshotView setContentMode:UIViewContentModeScaleAspectFit];
+        cellSize = CGSizeMake(viewWidth, viewHeight);
+    }
+//
+//        [self.collectionView.collectionViewLayout invalidateLayout];
+//    [self.collectionView reloadData];
+//
+    
+        CGPoint currentOffset = [self.collectionView contentOffset];
+        int currentIndex = currentOffset.x / collectionViewSize.width;
+//
+//    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
+//        
+//        
+//     }
+//    completion:^(id<UIViewControllerTransitionCoordinatorContext> context){
+//        
+        CGSize currentSize = size;
+        float offset = currentIndex * currentSize.width;
+//
+        [self.collectionView performBatchUpdates:^{
+                [self.collectionView setContentOffset:CGPointMake(offset, 0) animated:NO];
+        } completion:nil];
+//        self.collectionView.alpha = 1.0f;
+//        [UIView animateWithDuration:0.25f animations:^{
+//            snapshotView.alpha = 0.0;
+//        }];
+//
+//     }];
+//    [self.collectionView performBatchUpdates:nil completion:nil];
+//    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -279,14 +354,18 @@
 {
     FileGalleryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[FileGalleryCollectionViewCell cellId] forIndexPath:indexPath];
     Folder * item = [self.items objectAtIndex:indexPath.row];
-    
-    self.title = item.name;
-    // Configure the cell
-  
     cell.file = item;
     [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
+    
     return cell;
 }
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    FileGalleryCollectionViewCell *sameCell = [self.collectionView.visibleCells lastObject];
+    self.title = sameCell.file.name;
+    self.currentViewdItem = sameCell.file;
+}
+
 
 - (IBAction)panCollectionToBack:(UIPanGestureRecognizer*)recognizer
 {
@@ -348,5 +427,31 @@
         }
     }];
 
+}
+
+- (UIImage *)getScreenSnapshot{
+//    // create graphics context with screen size
+//    CGRect screenRect = [[UIScreen mainScreen] bounds];
+//    UIGraphicsBeginImageContext(screenRect.size);
+//    CGContextRef ctx = UIGraphicsGetCurrentContext();
+//    [[UIColor blackColor] set];
+//    CGContextFillRect(ctx, screenRect);
+//    
+//    // grab reference to our window
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    
+//    // transfer content into our context
+//    [window.layer renderInContext:ctx];
+//    UIImage *screengrab = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    
+    
+    UIGraphicsBeginImageContext(self.view.bounds.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *screengrab = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    
+    return screengrab;
 }
 @end

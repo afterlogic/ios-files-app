@@ -17,15 +17,17 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>38</string>
+	<string>74</string>
+	<key>FASTLANE_XCODE_LIST_TIMEOUT</key>
+	<string>0</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
-		<string>ba601ee7366919ae0abcc405cadd53843bb04d41</string>
+		<string>dff0667f90c6c8ce2fb6166ff4ca58f1f096bce3</string>
 		<key>Kits</key>
 		<array>
 			<dict>
@@ -71,5 +73,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

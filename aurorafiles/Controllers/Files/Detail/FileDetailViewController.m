@@ -8,11 +8,18 @@
 
 #import "FileDetailViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "API.h"
+#import "ApiP7.h"
 #import "Folder.h"
 #import "UIImage+Aurora.h"
+#import "Settings.h"
+#import "ApiP8.h"
+#import "StorageManager.h"
+#import "MBProgressHUD.h"
 
-@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>
+
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>{
+    MBProgressHUD *hud;
+}
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
@@ -36,7 +43,6 @@
 
 - (IBAction)shareFileAction:(id)sender
 {
-
     NSURL *myWebsite = [NSURL URLWithString:self.viewLink];
     
     NSArray *objectsToShare = @[myWebsite];
@@ -50,6 +56,10 @@
 {
     [super viewDidLoad];
     self.webView.alpha = 0;
+    
+    hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeDeterminate;
+    
     UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
     zoomOn.numberOfTapsRequired = 2;
     zoomOn.numberOfTouchesRequired = 1;
@@ -60,29 +70,44 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-//        if (self.object.urlScheme && [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://",self.object.urlScheme]]])
-//        {
-//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",self.object.urlScheme,self.object.linkUrl]]];
-//            
-//            return;
-//        }
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
         return;
         
     }
     
-    NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    if (self.isP8 && !self.viewLink) {
+        [[ApiP8 filesModule] getFileView:self.object type:self.type withProgress:^(float progress) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                hud.progress = progress;
+                NSLog(@"%@ progress -> %f",self.object.name, progress);
+            });
+        } withCompletion:^(NSString *thumbnail) {
+            NSURL *url = [NSURL URLWithString:[thumbnail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+            self.webView.delegate = self;
+            [self.webView loadRequest:request];
+            [hud hideAnimated:YES];
+        }];
         
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-    self.webView.delegate = self;
-    [self.webView loadRequest:request];
+    }else{
+        NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+        self.webView.delegate = self;
+        [self.webView loadRequest:request];
+        [hud hideAnimated:YES];
+    }
 
     self.title = self.object.name;
     
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
     self.moreItem = moreItem;
     self.navigationItem.rightBarButtonItems = @[self.shareItem, self.moreItem];
+    self.navigationController.navigationBar.hidden = NO;
 }
+
+//-(void)setViewLink:(NSString *)viewLink{
+//    NSLog(@"link");
+//}
 
 - (IBAction)moreItemAction:(id)sender
 {
@@ -114,28 +139,12 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 Folder * file = self.object;
-                                                                 if (!file)
-                                                                 {
-                                                                     return ;
-                                                                 }
-                                                                 NSString * oldName = file.name;
-                                                                 NSString * ex = [oldName pathExtension];
-                                                                 if ([ex length])
-                                                                 {
-                                                                     file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
-                                                                 }
-                                                                 else
-                                                                 {
-                                                                     file.name = self.folderName.text;
-                                                                 }
-                                                                 NSLog(@"%@",file.name);
-                                                                 [[API sharedInstance] renameFolderFromName:oldName toName:file.name isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.object.parentPath ? self.object.parentPath : @"" isLink:self.object.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                     self.title = file.name;
-                                                                     self.object = file;
-                                                                     [file.managedObjectContext save:nil];
+                                                                 [[StorageManager sharedManager] renameToFile:self.object newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                     if (updatedFile) {
+                                                                         self.title = updatedFile.name;
+                                                                         self.object = updatedFile;
+                                                                     }
                                                                  }];
-                                                                 
                                                              }];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
@@ -156,11 +165,19 @@
         Folder * object = self.object;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
         object.wasDeleted = @YES;
-        
-        [[API sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-            [self.object.managedObjectContext save:nil];
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
+        if ([[Settings version] isEqualToString:@"P8"]) {
+            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
+                if (succsess) {
+                    [self.object.managedObjectContext save:nil];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+        }else{
+            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
+                [self.object.managedObjectContext save:nil];
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+        }
     }];
     
     return deleteFolder;

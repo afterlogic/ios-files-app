@@ -1,0 +1,1055 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Info.plist" afterPath="$PROJECT_DIR$/aurorafiles/Info.plist" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Info.plist" afterPath="$PROJECT_DIR$/aurorafilesaction/Info.plist" />
+    </list>
+    <ignored path="Aurora-git.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos" />
+  <component name="FavoritesManager">
+    <favorites_list name="aurorafiles" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="DataBaseProvider.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="28" column="71" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
+              <folding>
+                <element signature="e#140#173#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSOperation.h" pinned="false" current-in-tab="false">
+        <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSOperation.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1650">
+              <caret line="110" column="11" selection-start-line="110" selection-start-column="11" selection-end-line="110" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StorageManager.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2655">
+              <caret line="180" column="11" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="11" />
+              <folding>
+                <element signature="e#154#180#0" expanded="true" />
+                <element signature="e#7084#9770#0" expanded="false" />
+                <element signature="e#9886#10683#0" expanded="false" />
+                <element signature="e#10685#11050#0" expanded="false" />
+                <element signature="e#13454#13602#0" expanded="false" />
+                <element signature="e#13632#14403#0" expanded="false" />
+                <element signature="e#14405#15222#0" expanded="false" />
+                <element signature="e#15224#15334#0" expanded="false" />
+                <element signature="e#15365#15651#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActionViewController.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafilesaction/ActionViewController.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="27" column="35" selection-start-line="27" selection-start-column="35" selection-end-line="27" selection-end-column="35" />
+              <folding>
+                <element signature="e#8576#14801#0" expanded="false" />
+                <element signature="e#15180#16437#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CheckConnectionOperation.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/CheckConnectionOperation.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NetworkManager.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="346">
+              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="snapshotTest.swift" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/snapshotTest/snapshotTest.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="795">
+              <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSURL.h" pinned="false" current-in-tab="false">
+        <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="8100">
+              <caret line="540" column="23" selection-start-line="540" selection-start-column="23" selection-end-line="540" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StorageManager.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="78" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="78" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppDelegate.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafiles/AppDelegate.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="38" column="58" selection-start-line="38" selection-start-column="58" selection-end-line="38" selection-end-column="58" />
+              <folding>
+                <element signature="e#153#176#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/IFileOperationsProtocol.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/ApiProtocol.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/P8Manager.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" />
+        <option value="$PROJECT_DIR$/Podfile" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder.h" />
+        <option value="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/NonCDFolder/Item.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/ItemInterface.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/NonCDFolder/Item.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/MRDataBaseProvider.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/MRDataBaseProvider.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/IDataBaseProtocol.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder+CoreDataProperties.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/Settings.m" />
+        <option value="$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Constants.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/AppDelegate.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/View/ANavigationController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" />
+        <option value="$PROJECT_DIR$/aurorafilesaction/ActionViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/P7CheckConnectionOperation.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/CheckConnectionOperation.h" />
+        <option value="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m" />
+        <option value="$PROJECT_DIR$/snapshotTest/snapshotTest.swift" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="777" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Cidr.FilesView" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pods" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="snapshotTest" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aurorafiles" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Classes" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="js-jscs-nodeInterpreter" value="$USER_HOME$/.nvm/versions/node/v7.0.0/bin/node" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v7.0.0/bin/node" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="OBJC.PRESERVED_TARGET_SELECTION" value="aurorafiles,,,aurorafilesaction" />
+  </component>
+  <component name="RestClientSettings">
+    <option name="REQUEST_HISTORY">
+      <list>
+        <RestClientRequest>
+          <option name="biscuits">
+            <list>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7lang" />
+                <option name="path" value="/" />
+                <option name="value" value="English" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7tenantHash" />
+                <option name="path" value="/" />
+                <option name="value" value="aef90136" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="1485094449000" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7token" />
+                <option name="path" value="/" />
+                <option name="value" value="63835a8445e34be5d946c21264e95d18" />
+              </Biscuit>
+            </list>
+          </option>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Action" />
+                <option name="value" value="FilesCreatePublicLink" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Account" />
+                <option name="value" value="382" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Type" />
+                <option name="value" value="personal" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Path" />
+                <option name="value" value="" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Name" />
+                <option name="value" value="santa_claus_like_icon_metal_ornament-r0235ca4c36d04a178304f935a35ce8d1_x7s2s_8byvr_512.jpg" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Size" />
+                <option name="value" value="31056" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="IsFolder" />
+                <option name="value" value="0" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="AccountID" />
+                <option name="value" value="382" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Token" />
+                <option name="value" value="1101906eee18df9ed0183e4dcf3c0cf7" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Action" />
+                <option name="value" value="FilesCreatePublicLink" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Account" />
+                <option name="value" value="382" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Type" />
+                <option name="value" value="personal" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Path" />
+                <option name="value" value="" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Name" />
+                <option name="value" value="santa_claus_like_icon_metal_ornament-r0235ca4c36d04a178304f935a35ce8d1_x7s2s_8byvr_512.jpg" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Size" />
+                <option name="value" value="31056" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="IsFolder" />
+                <option name="value" value="0" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="AccountID" />
+                <option name="value" value="382" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Token" />
+                <option name="value" value="1101906eee18df9ed0183e4dcf3c0cf7" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="XCTest/Kiwi.-[snapshotTest testExample]">
+    <configuration default="false" name="-[snapshotTest testExample]" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" temporary="true" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafilesTests" CONFIG_NAME="Debug" SCHEME_NAME="-[snapshotTest testExample]" TEST_CLASS="snapshotTest" TEST_METHOD="testExample" TEST_MODE="SUITE_TEST" XCODE_SKIPPED_TESTS_HASH_CODE="18428234">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="AppleRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafiles" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="aurorafiles" RUN_TARGET_NAME="aurorafiles" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="OCGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafiles" CONFIG_NAME="Debug" TEST_MODE="SUITE_TEST">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafilesTests" CONFIG_NAME="Debug" TEST_MODE="SUITE_TEST">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="aurorafiles" type="AppleRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-com.apple.CoreData.SQLDebug 3" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafiles" CONFIG_NAME="Debug" SCHEME_NAME="aurorafiles" RUN_TARGET_PROJECT_NAME="aurorafiles" RUN_TARGET_NAME="aurorafiles" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <configuration default="false" name="aurorafilesaction" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="aurorafiles" TARGET_NAME="aurorafilesaction" CONFIG_NAME="Debug" SCHEME_NAME="aurorafilesaction" RUN_TARGET_PROJECT_NAME="aurorafiles" RUN_TARGET_NAME="aurorafiles" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <method />
+    </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="Application.aurorafiles" />
+      <item index="1" class="java.lang.String" itemvalue="Application.aurorafilesaction" />
+      <item index="2" class="java.lang.String" itemvalue="XCTest/Kiwi.-[snapshotTest testExample]" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="XCTest/Kiwi.-[snapshotTest testExample]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="" />
+      <created>1482498360870</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1482498360870</updated>
+      <workItem from="1482498374110" duration="5106000" />
+      <workItem from="1482701836337" duration="23000" />
+      <workItem from="1483006259577" duration="22072000" />
+      <workItem from="1483090497062" duration="18659000" />
+      <workItem from="1483948266921" duration="207000" />
+      <workItem from="1483949657241" duration="17831000" />
+      <workItem from="1483989069579" duration="35375000" />
+      <workItem from="1484211683705" duration="76599000" />
+      <workItem from="1484821834976" duration="17600000" />
+      <workItem from="1485163337721" duration="502000" />
+      <workItem from="1485457411468" duration="2137000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="-[snapshotTest_testExample] - 2017.01.27 at 12h 09m 50s.xml">
+      <configuration name="-[snapshotTest testExample]" configurationId="OCUnitRunConfiguration" />
+    </history-entry>
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="196111000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1280" height="777" extended-state="1" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1736672" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15752032" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25426137" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25609756" sideWeight="0.51597446" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5476575" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3739903" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3974152" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="-1308" y="-71" width="695" height="1010" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3148515" sideWeight="0.49604222" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328125" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/aurorafilesaction/ActionViewController.m</url>
+          <line>621</line>
+          <option name="timeStamp" value="113" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <default-breakpoints>
+        <breakpoint enabled="true" log-message="true" type="CidrExceptionBreakpoint">
+          <properties caught="ANY_EXCEPTION">
+            <option name="whenCaught" value="ANY_EXCEPTION" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+      <option name="time" value="114" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="aurorafiles" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="Aurora-git" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+      </PATH_ELEMENT>
+    </PATH>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/Model/UploadedFile.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/CurrentFilePathViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="723">
+          <caret line="181" column="46" selection-start-line="181" selection-start-column="46" selection-end-line="181" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="315" column="0" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ApiProtocol.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="80" column="1" selection-start-line="80" selection-start-column="1" selection-end-line="80" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/standardAuth.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/APIpEight/P8Manager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/Settings.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="99" column="1" selection-start-line="99" selection-start-column="1" selection-end-line="99" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/APIpEight/AuroraModuleProtocol.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ApiP8.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ApiP8.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/core.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="83" column="37" selection-start-line="83" selection-start-column="37" selection-end-line="83" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1474">
+          <caret line="146" column="104" selection-start-line="146" selection-start-column="104" selection-end-line="146" selection-end-column="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/Categories/NSString+transferedValues.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/Categories/NSString+URLEncode.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/Categories/NSString+Validators.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/core.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3360">
+          <caret line="224" column="71" selection-start-line="224" selection-start-column="71" selection-end-line="224" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ConnectionProvider.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1050">
+          <caret line="70" column="44" selection-start-line="70" selection-start-column="44" selection-end-line="70" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/Categories/NSURLRequest+requestGenerator.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="39" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/main.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/APIpEight/P8Manager.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="132" column="7" selection-start-line="132" selection-start-column="7" selection-end-line="132" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="64" column="119" selection-start-line="64" selection-start-column="119" selection-end-line="64" selection-end-column="119" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Constants.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="73" selection-start-line="19" selection-start-column="73" selection-end-line="19" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSNotification.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="27" column="69" selection-start-line="27" selection-start-column="63" selection-end-line="27" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/AppDelegate.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIApplication.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="443" column="152" selection-start-line="443" selection-start-column="130" selection-end-line="443" selection-end-column="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="261" column="36" selection-start-line="261" selection-start-column="36" selection-end-line="261" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/View/ANavigationController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="98" column="8" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6720">
+          <caret line="448" column="13" selection-start-line="448" selection-start-column="13" selection-end-line="448" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4815">
+          <caret line="321" column="1" selection-start-line="321" selection-start-column="1" selection-end-line="321" selection-end-column="1" />
+          <folding>
+            <element signature="e#156#186#0" expanded="true" />
+            <marker date="1484865451000" expanded="true" signature="4970:5005" ph="@[...]" />
+            <marker date="1484865451000" expanded="true" signature="5229:5263" ph="@[...]" />
+            <marker date="1484865451000" expanded="true" signature="5657:5877" ph="^(BOOL authorised, BOOL offline,BOOL isP8){...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1515">
+          <caret line="101" column="0" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+          <folding>
+            <element signature="e#140#168#0" expanded="true" />
+            <element signature="e#597#634#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/DataBaseProvider.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="71" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
+          <folding>
+            <element signature="e#140#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSOperation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1650">
+          <caret line="110" column="11" selection-start-line="110" selection-start-column="11" selection-end-line="110" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2655">
+          <caret line="180" column="11" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="11" />
+          <folding>
+            <element signature="e#154#180#0" expanded="true" />
+            <element signature="e#7084#9770#0" expanded="false" />
+            <element signature="e#9886#10683#0" expanded="false" />
+            <element signature="e#10685#11050#0" expanded="false" />
+            <element signature="e#13454#13602#0" expanded="false" />
+            <element signature="e#13632#14403#0" expanded="false" />
+            <element signature="e#14405#15222#0" expanded="false" />
+            <element signature="e#15224#15334#0" expanded="false" />
+            <element signature="e#15365#15651#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/ActionViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="27" column="35" selection-start-line="27" selection-start-column="35" selection-end-line="27" selection-end-column="35" />
+          <folding>
+            <element signature="e#8576#14801#0" expanded="false" />
+            <element signature="e#15180#16437#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8100">
+          <caret line="540" column="23" selection-start-line="540" selection-start-column="23" selection-end-line="540" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="78" selection-start-line="29" selection-start-column="78" selection-end-line="29" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/AppDelegate.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="38" column="58" selection-start-line="38" selection-start-column="58" selection-end-line="38" selection-end-column="58" />
+          <folding>
+            <element signature="e#153#176#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/CheckConnectionOperation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/snapshotTest/snapshotTest.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="795">
+          <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
