@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Info.plist" afterPath="$PROJECT_DIR$/aurorafiles/Info.plist" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Info.plist" afterPath="$PROJECT_DIR$/aurorafilesaction/Info.plist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fastlane/Snapfile" afterPath="$PROJECT_DIR$/fastlane/Snapfile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snapshotTest/snapshotTest.swift" afterPath="$PROJECT_DIR$/snapshotTest/snapshotTest.swift" />
     </list>
     <ignored path="Aurora-git.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -21,7 +17,7 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos_2f63d0723dc2bac8c04b8cf260546a0b344ef627" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos" />
   <component name="FavoritesManager">
     <favorites_list name="aurorafiles" />
   </component>
