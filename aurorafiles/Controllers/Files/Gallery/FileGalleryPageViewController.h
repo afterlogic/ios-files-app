@@ -12,6 +12,7 @@
 static NSString * const SYPhotoBrowserHideNavbarNotification   = @"SYPhotoBrowserHideNavbarNotification";
 static NSString * const SYPhotoBrowserLongPressNotification = @"SYPhotoBrowserLongPressNotification";
 static NSString * const SYPhotoBrowserDismissNotification = @"SYPhotoBrowserDismissNotification";
+static NSString * const SYPhotoBrowserDeletePageNotification = @"SYPhotoBrowserDeletePageNotification";
 @class Folder;
 @interface FileGalleryPageViewController : UIPageViewController
 

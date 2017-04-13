@@ -13,6 +13,10 @@
 @property (strong, nonatomic) UploadedFile * file;
 @property (strong, nonatomic) UITapGestureRecognizer * doubleTap;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIView *webContainerView;
+@property (weak, nonatomic) IBOutlet UILabel *pageName;
+@property (weak, nonatomic) IBOutlet UILabel *pageLink;
+@property (weak, nonatomic) IBOutlet UIWebView *wevView;
 + (NSString*)cellId;
 
 @end

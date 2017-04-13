@@ -144,7 +144,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 - (NSMutableURLRequest*)requestWithUploadUrl:(NSString*)url
 {
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    NSURL *requestUrl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:requestUrl];
     [request setHTTPMethod:@"PUT"];
     [request setValue:[Settings authToken] forHTTPHeaderField:@"Auth-Token"];
 

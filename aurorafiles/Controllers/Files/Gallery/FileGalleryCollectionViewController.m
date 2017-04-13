@@ -172,6 +172,11 @@
     [alert addAction:[self renameCurrentFileAction]];
     [alert addAction:[self deleteFolderAction]];
     [alert addAction:defaultAction];
+
+    if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        alert.popoverPresentationController.barButtonItem = self.moreButton;
+    }
+
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -250,8 +255,14 @@
         objectsToShare = @[myWebsite,image];
     }
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
+                                                                             applicationActivities:nil];
+
+    if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        activityVC.popoverPresentationController.barButtonItem = self.shareButton;
+        activityVC.modalInPopover = YES;
+    }
+
     [self presentViewController:activityVC animated:YES completion:nil];
 }
 

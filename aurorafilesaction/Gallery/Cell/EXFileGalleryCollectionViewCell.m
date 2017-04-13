@@ -10,8 +10,9 @@
 #import "UploadedFile.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImage+ImageCompress.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface EXFileGalleryCollectionViewCell () <UIScrollViewDelegate>
+@interface EXFileGalleryCollectionViewCell () <UIScrollViewDelegate,UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -27,7 +28,12 @@
     self.scrollView.minimumZoomScale = 1;
     self.scrollView.maximumZoomScale = 5;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.wevView.contentMode = UIViewContentModeScaleAspectFit;
+    self.pageLink.text = @"";
+    self.pageName.text = @"";
+    self.webContainerView.alpha = 0.0f;
     self.scrollView.delegate = self;
+    self.wevView.delegate = self;
     // Initialization code
 }
 
@@ -45,33 +51,39 @@
     if (file)
     {
         [self.activityView startAnimating];
-        UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
+        if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
+            self.pageName.text = file.name;
+            self.pageLink.text = [file.webPageLink absoluteString];
+            [self.wevView loadRequest:[NSURLRequest requestWithURL:file.webPageLink]];
+        }else
+        {
+            UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
 
-        zoomOn.numberOfTapsRequired = 2;
-        zoomOn.numberOfTouchesRequired = 1;
-        self.doubleTap = zoomOn;
-        [self.imageView addGestureRecognizer:self.doubleTap];
-        self.imageView.userInteractionEnabled = YES;
-        self.imageView.alpha = 0.0f;
-        
-        NSLog(@"%@",[file path]);
-        self.imageView.image = nil;
-        UIImage * image = nil;
-        
-        NSString *path = file.path.absoluteString;
-        image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
-        self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
-        image = nil;
-        self.imageView.alpha = 1.0f;
-        [self.activityView stopAnimating];
-        CGFloat minScale = 1;
-        self.scrollView.minimumZoomScale = minScale;
-        
-        // 5
-        self.scrollView.maximumZoomScale = 5.0f;
-        self.scrollView.zoomScale = minScale;
-        self.activityView.alpha = 0.0f;
-
+            zoomOn.numberOfTapsRequired = 2;
+            zoomOn.numberOfTouchesRequired = 1;
+            self.doubleTap = zoomOn;
+            [self.imageView addGestureRecognizer:self.doubleTap];
+            self.imageView.userInteractionEnabled = YES;
+            self.imageView.alpha = 0.0f;
+            
+            NSLog(@"%@",[file path]);
+            self.imageView.image = nil;
+            UIImage * image = nil;
+            
+            NSString *path = file.path.absoluteString;
+            image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
+            self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
+            image = nil;
+            self.imageView.alpha = 1.0f;
+            [self.activityView stopAnimating];
+            CGFloat minScale = 1;
+            self.scrollView.minimumZoomScale = minScale;
+            
+            // 5
+            self.scrollView.maximumZoomScale = 5.0f;
+            self.scrollView.zoomScale = minScale;
+            self.activityView.alpha = 0.0f;
+        }
         
     }
 }
@@ -115,6 +127,19 @@
                                       withCenter:[recognizer locationInView:recognizer.view]];
         [self.scrollView zoomToRect:zoomRect animated:YES];
     }
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    self.webContainerView.alpha = 1.0f;
+    [self.activityView stopAnimating];
+    self.activityView.alpha = 0.0f;
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+    self.wevView.alpha = 0.0f;
+    self.webContainerView.alpha = 1.0f;
+    [self.activityView stopAnimating];
+    self.activityView.alpha = 0.0f;
 }
 
 @end

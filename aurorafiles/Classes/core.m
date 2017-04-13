@@ -58,9 +58,12 @@ static NSString *methodGetUser = @"GetUser";
 }
 
 - (void)getUserWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetUser,
-                                                                    @"AuthToken":[Settings authToken]}];
+//                                                                    @"AuthToken":[Settings authToken]
+                                                                           }].mutableCopy;
+    
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -167,9 +170,12 @@ static NSString *methodGetUser = @"GetUser";
 }
 
 -(void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodLogout,
-                                                                    @"AuthToken":[Settings authToken]}];
+//                                                                    @"AuthToken":[Settings authToken]
+                                                                           }].mutableCopy;
+    
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {

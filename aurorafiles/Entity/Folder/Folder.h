@@ -12,6 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef enum ActionType: int {
+    viewActionType,
+    downloadActionType,
+    listActionType,
+    openActionType
+}MainActionType;
+
 @interface Folder : NSManagedObject
 
 // Insert code here to declare functionality of your managed object subclass
@@ -22,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
 - (BOOL)isZippedFile;
+- (BOOL)isZipArchive;
 + (NSArray*)imageContentTypes;
 - (NSString*)embedThumbnailLink;
 - (NSString*)viewLink;

@@ -127,6 +127,10 @@
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
 
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
+    
+    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
 
     
     return mapping;
@@ -174,6 +178,9 @@
     
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
+    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
     
     return mapping;
     
@@ -183,16 +190,20 @@
 
 - (NSString*)embedThumbnailLink
 {
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSString * viewLink = @"";
     if ([self isImageContentType])
     {
-        if ([self.linkUrl length])
-        {
-            return self.linkUrl;
+        if ([self.isP8 boolValue]) {
+            viewLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.thumbnailUrl];
+        }else{
+            if ([self.linkUrl length])
+            {
+                return self.linkUrl;
+            }
+            viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
         }
-        NSURL * url = [NSURL URLWithString:[Settings domain]];
-        NSString * scheme = [url scheme];
-        NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
-        
         return viewLink;
     }
     
@@ -201,18 +212,29 @@
 
 - (NSString*)viewLink
 {
+    NSString * viewLink = @"";
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    if ([self.isP8 boolValue]) {
+        viewLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.viewUrl];
+    }else{
+        viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    }
     
     return viewLink;
 }
 
 - (NSString*)downloadLink
 {
+    NSString * downloadLink = @"";
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSString * downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    if ([self.isP8 boolValue]) {
+        downloadLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.downloadedUrl];
+    }else{
+        downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    }
+    
     return downloadLink;
 }
 

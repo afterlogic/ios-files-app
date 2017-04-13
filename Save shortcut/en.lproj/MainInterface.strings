@@ -1,0 +1,39 @@
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "1Bo-1j-vPp"; */
+"1Bo-1j-vPp.title" = "Back";
+
+/* Class = "UILabel"; text = "To continue, click Aurora.Files app and sign in"; ObjectID = "Bll-ea-evg"; */
+"Bll-ea-evg.text" = "To continue, click Aurora.Files app and sign in";
+
+/* Class = "UITabBarItem"; title = "Personal"; ObjectID = "GZc-YN-Y5f"; */
+"GZc-YN-Y5f.title" = "Personal";
+
+/* Class = "UISearchBar"; Mz1-yk-OVS.scopeButtonTitles[0] = "Title"; ObjectID = "Mz1-yk-OVS"; */
+"Mz1-yk-OVS.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; Mz1-yk-OVS.scopeButtonTitles[1] = "Title"; ObjectID = "Mz1-yk-OVS"; */
+"Mz1-yk-OVS.scopeButtonTitles[1]" = "Title";
+
+/* Class = "UILabel"; text = "Save to:"; ObjectID = "OJn-7X-hZl"; */
+"OJn-7X-hZl.text" = "Save to:";
+
+/* Class = "UILabel"; text = "Sign in Aurora.Files"; ObjectID = "Qql-ir-6ry"; */
+"Qql-ir-6ry.text" = "Sign in Aurora.Files";
+
+/* Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "WQB-hQ-B9I"; */
+"WQB-hQ-B9I.title" = "Upload";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "hc8-A1-dza"; */
+"hc8-A1-dza.title" = "Back";
+
+/* Class = "UITabBarItem"; title = "Corporate"; ObjectID = "mtV-4j-PAw"; */
+"mtV-4j-PAw.title" = "Corporate";
+
+/* Class = "UILabel"; text = "filePath"; ObjectID = "u0V-mm-duL"; */
+"u0V-mm-duL.text" = "filePath";
+
+/* Class = "UISearchBar"; ye3-22-MwR.scopeButtonTitles[0] = "Title"; ObjectID = "ye3-22-MwR"; */
+"ye3-22-MwR.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; ye3-22-MwR.scopeButtonTitles[1] = "Title"; ObjectID = "ye3-22-MwR"; */
+"ye3-22-MwR.scopeButtonTitles[1]" = "Title";

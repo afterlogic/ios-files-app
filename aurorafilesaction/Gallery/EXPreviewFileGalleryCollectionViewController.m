@@ -128,7 +128,9 @@
 -(void)setItems:(NSArray *)items{
     _items = items;
     NSLog(@"preview items is -> %@", _items);
-    self.currentItem = [_items objectAtIndex:0];
+    if (_items.count > 0){
+        self.currentItem = [_items objectAtIndex:0];
+    }
     [self.collectionView reloadData];
 }
 

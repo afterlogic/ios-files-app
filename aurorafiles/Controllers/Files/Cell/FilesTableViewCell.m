@@ -10,12 +10,15 @@
 #import "Folder.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/UIImage+MultiFormat.h>
+#import "SDWebImageDownloader.h"
 #import "UIImage+Aurora.h"
 #import "MBProgressHUD.h"
 #import "StorageManager.h"
 #import "ApiP8.h"
+#import "Settings.h"
 @interface FilesTableViewCell (){
-       MBProgressHUD *hud;
+    MBProgressHUD *hud;
+//    SDWebImageDownloader *p8ImageDownloader;
 //    UIActivityIndicatorView *indicator;
 //    UIActivityIndicatorView *hudView;
 }
@@ -35,6 +38,7 @@
     [super awakeFromNib];
     self.separatorHeight.constant = 0.5f;
     self.fileImageView.image = nil;
+    
     [self.disclosureButton addTarget:self action:@selector(downloadAction) forControlEvents:UIControlEventTouchUpInside];
 //    [self.indicator hidesWhenStopped];
     [self.indicator setHidesWhenStopped:YES];
@@ -80,51 +84,34 @@
         
         self.accessoryType = UITableViewCellAccessoryNone;
         
-
         if ([folder.isP8 boolValue]) {
-            NSData *data = [NSData dataWithContentsOfFile:[[ApiP8 filesModule]getExistedThumbnailForFile:folder]];
-            if(data && data.length!=0){
-                UIImage *image = [UIImage imageWithData:data];
-                [self.fileImageView setImage:image];
-                [self stopHUD];
-            }else{
-                if ([folder.thumb boolValue] && !folder.isLink.boolValue) {
-
-                }else{
-                    UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
-                    if (folder.isLink.boolValue && ![folder isImageContentType])
-                    {
-                        placeholder = [UIImage imageNamed:@"shotcut"];
-                        if (folder.thumbnailLink) {
-                            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:folder.thumbnailLink] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                [self stopHUD];
-                            }];
-                        }else{
-                            self.fileImageView.image =placeholder;
-                            [self stopHUD];
-                        }
-                    }else{
-                        self.fileImageView.image =placeholder;
-                        [self stopHUD];
-                    }
-                }
-            }
+            [[SDWebImageDownloader sharedDownloader] setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
         }else{
-            NSString * thumb = [folder embedThumbnailLink];
-            UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
-            if (thumb)
-            {
-                [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                    [self stopHUD];
-                }];
-            }else{
-                if (folder.isLink.boolValue && ![folder isImageContentType])
-                {
-                    placeholder = [UIImage imageNamed:@"shotcut"];
-                }
-                self.fileImageView.image =placeholder;
-                [self stopHUD];
+            NSString *authHeaderValue = [[SDWebImageDownloader sharedDownloader] valueForHTTPHeaderField:@"Authorization"];
+            if (authHeaderValue) {
+                [[SDWebImageDownloader sharedDownloader] setValue:nil forHTTPHeaderField:@"Authorization"];
             }
+        }
+    
+        NSString * thumb = [folder embedThumbnailLink];
+        UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
+        if (thumb)
+        {
+            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    if(!image){
+                        [self.fileImageView setImage:[UIImage assetImageForContentType:[folder validContentType]]];
+                    }
+                    [self stopHUD];
+                });
+            }];
+        }else{
+            if (folder.isLink.boolValue && ![folder isImageContentType])
+            {
+                placeholder = [UIImage imageNamed:@"shotcut"];
+            }
+            self.fileImageView.image =placeholder;
+            [self stopHUD];
         }
     }
     

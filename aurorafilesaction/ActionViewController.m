@@ -145,22 +145,10 @@
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-            [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
-                if (result) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        [folderHud hideHUD];
-                    });
-                    [self.navigationController setNavigationBarHidden:NO animated:YES];
-                    [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
-                }else{
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        [folderHud hideHUD];
-                    });
-                    [self.navigationController setNavigationBarHidden:NO animated:YES];
-                    [self setCurrentUploadFolder:@"" root:@"personal"];
-                    [self showUploadFolders];
-                }
-            }];
+//            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
+            [self getLastUsedFolder:folderHud];
+//            }];
+            
         }
     }else{
         if (!token || !scheme) {
@@ -169,25 +157,32 @@
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-            [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
-                    if (result) {
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            [folderHud hideHUD];
-                        });
-                        [self.navigationController setNavigationBarHidden:NO animated:YES];
-                        [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
-                    }else{
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            [folderHud hideHUD];
-                        });
-                        [self.navigationController setNavigationBarHidden:NO animated:YES];
-                        [self setCurrentUploadFolder:@"" root:@"personal"];
-                        [self showUploadFolders];
-                    }
-            }];
+//            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
+            [self getLastUsedFolder:folderHud];
+//            }];
         }
     }
     
+}
+
+- (void)getLastUsedFolder:(AuroraHUD *)folderHud{
+    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
+        if (result) {
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [folderHud hideHUD];
+            });
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [folderHud hideHUD];
+            });
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [self setCurrentUploadFolder:@"" root:@"personal"];
+            [self showUploadFolders];
+        }
+    }];
+
 }
 
 -(void)hideContainers:(BOOL) hide{
@@ -212,7 +207,6 @@
     uploadStart = NO;
     localSaveFileLinks = [[NSMutableArray alloc]init];
     [self searchFilesForUpload];
-    
 }
 
 -(void)searchFilesForUpload{
@@ -221,125 +215,155 @@
     BFLog(@"input items is -> %@",imputItems);
     for (NSExtensionItem *item in imputItems) {
         for (NSItemProvider *itemProvider in item.attachments) {
-            //image
-            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage options:nil completionHandler:^(id image, NSError *error) {
-                    if(image) {
+            mediaData = nil;
+            
+//TODO:Раскомментировать, если понадобятся картинки и видео.
+//            //image
+//            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+//                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage options:nil completionHandler:^(id image, NSError *error) {
+//                    if(image) {
+//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//                            if([image isKindOfClass:[NSURL class]]) {
+//                                fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
+//                                mediaData = image;
+//                                UploadedFile *file = [UploadedFile new];
+//                                file.path = mediaData;
+//                                file.extension = fileExtension;
+//                                file.type = (NSString *)kUTTypeImage;
+//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+//                                [self.filesForUpload addObject:file];
+//                                return ;
+//                            }
+//                            if ([image isKindOfClass:[UIImage class]]){
+////                                [NSFileManager defaultManager];
+////                                thumbnail = [json valueForKey:@"Result"];
+//                                NSData *data = [[NSData alloc]initWithData:UIImageJPEGRepresentation(image, 10.0)];
+//                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                                
+//                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
+//                                NSError *error = [NSError new];
+//                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
+//                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
+//                                } //Create folder
+//                                
+//                                
+//                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+//                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
+//                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+////                                [localSaveFileLinks addObject:path];
+//                                
+//                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
+//                                mediaData = [NSURL URLWithString:path];
+//                                UploadedFile *file = [UploadedFile new];
+//                                file.path = mediaData;
+//                                file.extension = fileExtension;
+//                                file.type = (NSString *)kUTTypeImage;
+//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+//                                file.savedLocal = YES;
+//                                
+////                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
+//                                
+//                                [self.filesForUpload addObject:file];
+//                                return ;
+//                            }
+//                            
+//                            if([image isKindOfClass:[NSData class]]){
+//                                
+////                                UIImage *currentImage =  [UIImage imageWithData:image];
+////                                NSLog(@"image is -> %@",currentImage);
+//                                
+//                                NSData *data = image;
+//                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                                
+//                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
+//                                NSError *error = [NSError new];
+//                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
+//                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
+//                                } //Create folder
+//                                
+//                                
+//                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
+//                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
+//                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
+//                                //                                [localSaveFileLinks addObject:path];
+//                                
+//                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
+//                                mediaData = [[NSURL alloc ]initWithString:path];
+//                                UploadedFile *file = [UploadedFile new];
+//                                file.path = mediaData;
+//                                file.extension = fileExtension;
+//                                file.type = (NSString *)kUTTypeImage;
+//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+//                                file.savedLocal = YES;
+//                                [self.filesForUpload addObject:file];
+//                                return ;
+//                            }
+//                        }];
+//                    }
+//                }];
+//            }
+//            //video
+//            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
+//                __weak AVPlayerViewController *player = self.playerViewController;
+//                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie options:nil completionHandler:^(id videoItem, NSError *error) {
+//                    if(videoItem) {
+//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//                            if ([videoItem isKindOfClass:[NSURL class]]) {
+//                                fileExtension = [[[(NSURL *)videoItem absoluteString] componentsSeparatedByString:@"."]lastObject];
+//                                mediaData = videoItem;
+//                                player.player  = [AVPlayer playerWithURL:(NSURL *)videoItem];
+//                                player.view.alpha = 0.0f;
+//                                
+//                                UploadedFile *file = [UploadedFile new];
+//                                file.path = mediaData;
+//                                file.extension = fileExtension;
+//                                file.type = (NSString *)kUTTypeMovie;
+//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
+//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
+//                                [self.filesForUpload addObject:file];
+//                            }
+//                        }];
+//                    }
+//                }];
+//            }
+            
+            //internet shortcut from webPage
+            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePropertyList]) {
+                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypePropertyList options:nil completionHandler:^(id fileURLItem, NSError *error) {
+                    if(fileURLItem) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            if([image isKindOfClass:[NSURL class]]) {
-                                fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
-                                mediaData = image;
+                            if ([fileURLItem isKindOfClass:[NSDictionary class]]) {
+                                NSDictionary *pageInfo = [fileURLItem objectForKey:NSExtensionJavaScriptPreprocessingResultsKey];
+                                NSURL *pageLink = [NSURL URLWithString:[pageInfo objectForKey:@"link"]];
+                                NSString *webPageTitle = [pageInfo objectForKey:@"title"];
+                                NSLog(@"%@",webPageTitle);
+                                
+                                fileExtension = @"url";
+                                mediaData = [self createInternetShortcutFile:webPageTitle ext:fileExtension link:pageLink];
+                                
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
                                 file.extension = fileExtension;
-                                file.type = (NSString *)kUTTypeImage;
+                                file.type = (NSString *)kUTTypeURL;
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-                                [self.filesForUpload addObject:file];
-                            }
-                            if ([image isKindOfClass:[UIImage class]]){
-//                                [NSFileManager defaultManager];
-//                                thumbnail = [json valueForKey:@"Result"];
-                                NSData *data = [[NSData alloc]initWithData:UIImageJPEGRepresentation(image, 10.0)];
-                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                                
-                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
-                                NSError *error = [NSError new];
-                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
-                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
-                                } //Create folder
-                                
-                                
-                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
-                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
-                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-//                                [localSaveFileLinks addObject:path];
-                                
-                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
-                                mediaData = [NSURL URLWithString:path];
-                                UploadedFile *file = [UploadedFile new];
-                                file.path = mediaData;
-                                file.extension = fileExtension;
-                                file.type = (NSString *)kUTTypeImage;
-                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-                                file.savedLocal = YES;
-                                
-//                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
-                                
-                                [self.filesForUpload addObject:file];
-                            }
-                            
-                            if([image isKindOfClass:[NSData class]]){
-                                
-//                                UIImage *currentImage =  [UIImage imageWithData:image];
-//                                NSLog(@"image is -> %@",currentImage);
-                                
-                                NSData *data = image;
-                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                                
-                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
-                                NSError *error = [NSError new];
-                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
-                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
-                                } //Create folder
-                                
-                                
-                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
-                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
-                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-                                //                                [localSaveFileLinks addObject:path];
-                                
-                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
-                                mediaData = [NSURL URLWithString:path];
-                                UploadedFile *file = [UploadedFile new];
-                                file.path = mediaData;
-                                file.extension = fileExtension;
-                                file.type = (NSString *)kUTTypeImage;
-                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-                                file.savedLocal = YES;
-                                
-                                //                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
-                                
+                                file.name = webPageTitle.copy;
+                                file.webPageLink = pageLink;
                                 [self.filesForUpload addObject:file];
                             }
                         }];
                     }
                 }];
             }
-            
-            //video
-            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
-                __weak AVPlayerViewController *player = self.playerViewController;
-                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie options:nil completionHandler:^(id videoItem, NSError *error) {
-                    if(videoItem) {
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            if ([videoItem isKindOfClass:[NSURL class]]) {
-                                fileExtension = [[[(NSURL *)videoItem absoluteString] componentsSeparatedByString:@"."]lastObject];
-                                mediaData = videoItem;
-                                player.player  = [AVPlayer playerWithURL:(NSURL *)videoItem];
-                                player.view.alpha = 0.0f;
-                                
-                                UploadedFile *file = [UploadedFile new];
-                                file.path = mediaData;
-                                file.extension = fileExtension;
-                                file.type = (NSString *)kUTTypeMovie;
-                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-                                [self.filesForUpload addObject:file];
-                            }
-                        }];
-                    }
-                }];
-            }
-            
-            //internet shortcut
-            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
+            else if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeURL options:nil completionHandler:^(id fileURLItem, NSError *error) {
                     if(fileURLItem) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             if ([fileURLItem isKindOfClass:[NSURL class]]) {
+                                
                                 fileExtension = @"url";
                                 NSMutableArray *urlParts = [[(NSURL *) fileURLItem absoluteString] componentsSeparatedByString:@"/"].mutableCopy;
                                 NSMutableArray *urlPartsTmp = urlParts.mutableCopy;
@@ -348,8 +372,8 @@
                                         [urlParts removeObject:part];
                                     }
                                 }
-//                                NSString *tmpFileName = [NSString stringWithFormat:@"InternetShortcut_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
                                 NSString *tmpFileName = [urlParts lastObject];
+                                
                                 mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
                                 
                                 UploadedFile *file = [UploadedFile new];
@@ -359,6 +383,7 @@
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
                                 file.name = tmpFileName.copy;
+                                file.webPageLink = fileURLItem;
                                 [self.filesForUpload addObject:file];
                             }
                         }];
@@ -448,7 +473,7 @@
             NSURL * url = [NSURL URLWithString:[Settings domain]];
             NSString * scheme = [url scheme];
             urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
-            file.request = [self generateRequestWithUrl:[NSURL URLWithString:urlString]data:file.path savedLocal:file.savedLocal];
+            file.request = [self generateRequestWithUrl:urlString data:file.path savedLocal:file.savedLocal];
         }
         
         if(!uploadStart){
@@ -475,10 +500,11 @@
 //    }
 }
 
--(NSMutableURLRequest *)generateRequestWithUrl:(NSURL *)url data:(NSURL *)data savedLocal:(BOOL) isLocal
+-(NSMutableURLRequest *)generateRequestWithUrl:(NSString *)linkString data:(NSURL *)data savedLocal:(BOOL) isLocal
 {
     
     NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
+    NSURL *url = [NSURL URLWithString:[linkString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
     
     [request setHTTPMethod:@"PUT"];
@@ -617,7 +643,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
     
     NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]] componentsJoinedByString:@"\n"];
 
-//    NSString *fixedName = [[name stringByRemovingPercentEncoding] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"?!&"]];
     NSString *shortcutName = [NSString stringWithFormat:@"%@.%@",name,extension];
     NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutName];
     [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];

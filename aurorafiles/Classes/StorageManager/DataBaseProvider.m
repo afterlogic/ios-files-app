@@ -143,9 +143,11 @@
     [self.dataBaseOperationsQueue addOperation:saveOperation];
 }
 
--(void)deleteObject:(id)object fromContext:(NSManagedObjectContext *)context{
+-(void)deleteObject:(NSManagedObject *)object fromContext:(NSManagedObjectContext *)context{
     if ([object isKindOfClass:[NSManagedObject class]]) {
-        [context deleteObject:(NSManagedObject *)object];
+//        if ([context objectWithID:object.objectID]) {
+            [context deleteObject:[context objectWithID:object.objectID]];
+//        }
     }
     NSError *error = [NSError new];
     
@@ -243,9 +245,18 @@
 #pragma mark - Debug
 -(void)removeAll{
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Folder"];
-    NSBatchDeleteRequest *delete = [[NSBatchDeleteRequest alloc] initWithFetchRequest:request];
-    NSError *deleteError = nil;
-    [_persistentStoreCoordinator executeRequest:delete withContext:_defaultMOC error:&deleteError];
+    [request setIncludesPropertyValues:NO];
+    NSError *fetchError = [NSError new];
+    NSArray * result = [_defaultMOC executeFetchRequest:request error:&fetchError];
+    [self saveWithBlock:^(NSManagedObjectContext *context) {
+        for (NSManagedObject *object in result) {
+            [_defaultMOC deleteObject:object];
+        }
+    }];
+
+//    NSBatchDeleteRequest *delete = [[NSBatchDeleteRequest alloc] initWithFetchRequest:request];
+//    NSError *deleteError = nil;
+//    [_persistentStoreCoordinator executeRequest:delete withContext:_defaultMOC error:&deleteError];
 }
 
 @end

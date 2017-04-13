@@ -113,7 +113,10 @@
         if (result) {
             [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
                 folder.name = newName;
-                Folder *object = [FEMDeserializer objectFromRepresentation:result mapping:folder.isP8 ? [Folder P8RenameMapping] : [Folder renameMapping] context:context];
+                NSMutableDictionary * itemRefWithPrKey = result.mutableCopy;
+                NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",result[@"Type"],result[@"FullPath"]];
+                [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
+                Folder *object = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:folder.isP8 ? [Folder P8RenameMapping] : [Folder renameMapping] context:context];
 
                 NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@", folder.type, oldPath];
@@ -121,7 +124,15 @@
                 for (Folder *childFolder in fetched) {
                     childFolder.parentPath = object.fullpath;
                 }
-                [self.DBProvider deleteObject:folder fromContext:context];
+                
+                NSManagedObjectID *folderID = [folder objectID];
+                if ([context objectWithID:folderID]) {
+                    [self.DBProvider deleteObject:folder fromContext:context];
+                }
+                //TODO: 03.04.2017 - по неизвестным причинам в контексте нет удаляемого объекта. Приложуха падает, так как объекта нет к контексте.
+                NSManagedObjectContext *folderContext = folder.managedObjectContext;
+                NSLog(@"%@",folderContext);
+                
                 dispatch_async(dispatch_get_main_queue(), ^() {
                     if (handler) {
                         handler(object);

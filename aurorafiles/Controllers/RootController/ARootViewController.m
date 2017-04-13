@@ -70,8 +70,8 @@
 
 -(void)showOnlineButtons{
     [self.segmentedCotnroller removeAllSegments];
-    [self.segmentedCotnroller insertSegmentWithTitle:@"Personal" atIndex:0 animated:YES];
-    [self.segmentedCotnroller insertSegmentWithTitle:@"Corporate" atIndex:1 animated:YES];
+    [self.segmentedCotnroller insertSegmentWithTitle:NSLocalizedString(@"Personal", @"personal tab title") atIndex:0 animated:YES];
+    [self.segmentedCotnroller insertSegmentWithTitle:NSLocalizedString(@"Corporate",@"corporate tab title") atIndex:1 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
     [self showPersonalWithoutUpdate];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:CPNotificationConnectionOnline object:nil];
@@ -81,7 +81,7 @@
 -(void)showOfflineButtons{
     [[SessionProvider sharedManager]cancelAllOperations];
     [self.segmentedCotnroller removeAllSegments];
-    [self.segmentedCotnroller insertSegmentWithTitle:@"Downloads" atIndex:0 animated:YES];
+    [self.segmentedCotnroller insertSegmentWithTitle:NSLocalizedString(@"Downloads",@"download tab title") atIndex:0 animated:YES];
     [self.segmentedCotnroller setSelectedSegmentIndex:0];
     [self showDownloads];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOnlineButtons) name:CPNotificationConnectionOnline object:nil];

@@ -8,6 +8,7 @@
 
 #import "EXFileGalleryCollectionViewController.h"
 #import "EXFileGalleryCollectionViewCell.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 //#import "StorageManager.h"
 //#import "API.h"
 
@@ -256,7 +257,7 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.view.bounds.size;
+    return self.collectionView.bounds.size;
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -297,7 +298,9 @@
     // Configure the cell
   
     cell.file = item;
-    [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
+    if (![item.type isEqualToString:(NSString *)kUTTypeURL]) {
+        [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
+    }
     return cell;
 }
 
@@ -364,17 +367,21 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    CGFloat pageWidth = self.collectionView.frame.size.width;
-    int pageNum = self.collectionView.contentOffset.x/ pageWidth;
-//    NSLog(@"curent media num -> %i",pageNum);
-    [self.delegate selectGalleryItem:[_items objectAtIndex:pageNum]];
+    
+    if (self.items.count > 1) {
+        CGFloat pageWidth = self.collectionView.frame.size.width;
+        int pageNum = self.collectionView.contentOffset.x/ pageWidth;
+        [self.delegate selectGalleryItem:[_items objectAtIndex:pageNum]];
+    }
+    
 }
 
 #pragma mark - Setters
 -(void)setItems:(NSArray *)items{
     _items = items;
-//    NSLog(@"items is -> %@", _items);
-    self.currentItem = [_items objectAtIndex:0];
+    if (_items.count > 0) {
+        self.currentItem = [_items objectAtIndex:0];
+    }
     [self.collectionView reloadData];
 }
 @end

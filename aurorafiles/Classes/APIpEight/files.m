@@ -81,12 +81,14 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type searchPattern:(NSString *)pattern completion:(void (^)(NSArray *items, NSError *error))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFiles,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":folderName,
-                                                                                    @"Pattern":pattern}}];
+                                                                                    @"Pattern":pattern}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+    
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -200,12 +202,12 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 - (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodDelete,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":corporate ? @"corporate" : @"personal",
-                                                                                    @"Items":files}}];
-    
+                                                                                    @"Items":files}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -273,15 +275,6 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             [itemsForThumb removeObject:item];
         }
         
-//        if (!isFolder && !isLink) {
-
-//        }
-        
-        
-        
-        
-        
-        
     }
     
     NSMutableDictionary *currentItem = [itemsForThumb lastObject];
@@ -343,12 +336,15 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 - (void)getThumbnailForFileNamed:(NSString *)folderName type:(NSString *)type path:(NSString *)parentPath withCompletion:(void(^)(NSString *thumbnail))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileThumbail,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":parentPath,
-                                                                                    @"Name":folderName}}];
+                                                                                    @"Name":folderName}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+    request.HTTPMethod = @"GET";
+    
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -408,14 +404,15 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 ///
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodRename,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name,
                                                                                     @"NewName":newName,
-                                                                                    @"IsLink":isLink ? @"true" : @"false"}}];
+                                                                                    @"IsLink":isLink ? @"true" : @"false"}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -457,13 +454,14 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 ///
 - (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(NSDictionary *result))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileInfo,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name,
-                                                                                    @"UserID":[Settings currentAccount]}}];
+                                                                                    @"UserID":[Settings currentAccount]}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -506,12 +504,13 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 ///
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL result))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodCreateFolder,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":corporate ? @"corporate" : @"personal",
                                                                                     @"Path":path.length ? path : @"",
-                                                                                    @"FolderName":name}}];
+                                                                                    @"FolderName":name}}].mutableCopy;
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -563,8 +562,10 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? @"" : @"https://",[Settings domain],storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
+    
     NSDictionary *headers = @{ @"auth-token": [Settings authToken],
-                               @"cache-control": @"no-cache"};
+                               @"cache-control": @"no-cache",
+                               @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]]};
     
     NSData *postData = file;
     
@@ -663,15 +664,16 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     }
     
     
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileView,
-                                                                    @"AuthToken":[Settings authToken],
+//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Format":@"Raw",
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name}
-                                                                    }];
+                                                                    }].mutableCopy;
     
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     AFURLSessionManager *downloadManager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
@@ -740,9 +742,9 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     NSLog(@"components -> %@", filePathComponents);
     [filePathComponents removeLastObject];
     filePath = [filePathComponents count] == 1 ? @"" : [filePathComponents componentsJoinedByString:@"/"];
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
             @"Method":methodGetPublicLink,
-            @"AuthToken":[Settings authToken],
+//            @"AuthToken":[Settings authToken],
             @"Parameters":@{
                     @"Type":type,
                     @"Path":filePath,
@@ -750,8 +752,9 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
                     @"Size":size,
                     @"IsFolder":[NSNumber numberWithBool:isFolder].stringValue
             }
-    }];
-
+    }].mutableCopy;
+    
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {

@@ -74,6 +74,7 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
     self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     self.enableStatusBarHidden = NO;
+    [self.view setBackgroundColor:[UIColor blackColor]];
 //    self.navigationController.navigationBarHidden = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDissmissNotification:) name:SYPhotoBrowserDismissNotification object:nil];
     
@@ -158,10 +159,10 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
     for (NSUInteger index = 0; index < self.imageSourceArray.count; index++) {
         id imageSource = self.imageSourceArray[index];
         ImageViewController *photoViewController = [[ImageViewController alloc]initWithNibName:@"ImageViewController" bundle:[NSBundle mainBundle]];
+
+//        ImageViewController *photoViewController = [[ImageViewController alloc]initWithItemSouce:imageSource pageIndex:index];
         photoViewController.item = imageSource;
         photoViewController.pageIndex = index;
-//        photoViewController setnavi
-//        ImageViewController *photoViewController = [[SYPhotoViewController alloc] initWithImageSouce:imageSource pageIndex:index];
         [self.photoViewControllerArray addObject:photoViewController];
     }
 

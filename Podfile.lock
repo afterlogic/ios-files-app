@@ -30,6 +30,9 @@ PODS:
   - DZNEmptyDataSet (1.8.1)
   - Fabric (1.6.7)
   - FastEasyMapping (1.0.2)
+  - HTMLReader (2.0.5)
+  - LinkPreviewKit (0.4.1):
+    - HTMLReader
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
@@ -53,6 +56,7 @@ DEPENDENCIES:
   - DZNEmptyDataSet
   - Fabric
   - FastEasyMapping (~> 1.0)
+  - LinkPreviewKit
   - MagicalRecord (~> 2.3.0)
   - Reachability (~> 3.2)
   - SDWebImage (= 3.7.3)
@@ -66,11 +70,13 @@ SPEC CHECKSUMS:
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FastEasyMapping: 77d566a817ca73304af3e7fbed130850238f1cb4
+  HTMLReader: 979c66cd2b23c67e0b45a4b3e0ab8ce933a3e71a
+  LinkPreviewKit: d16933bdb90ad21bde386285abcb9dc207fabfdb
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   ObjcAssociatedObjectHelpers: 686c291f292c26a49b9b1fa7d58130a8d35d59d2
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 
-PODFILE CHECKSUM: ca6b357ed2435fb89fbf0f6e7f6bda17fdf3a9de
+PODFILE CHECKSUM: 28f236967f1a6d9e66569037ed83f23fb4cb214f
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0

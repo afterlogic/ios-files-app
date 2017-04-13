@@ -47,6 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSString *parentPath;
 @property (nullable, nonatomic, retain) NSString *mainAction;
 
+@property (nullable, nonatomic, retain) NSString *thumbnailUrl;
+@property (nullable, nonatomic, retain) NSString *viewUrl;
+@property (nullable, nonatomic, retain) NSString *downloadedUrl;
+
 @end
 
 @interface Folder (CoreDataGeneratedAccessors)

@@ -29,7 +29,12 @@
 #import "CRMediaPickerController.h"
 #import <MagicalRecord/MagicalRecord.h>
 
-@interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>{
+#import <AFNetworking/AFNetworking.h>
+
+@interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
+        STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
+        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
+{
     UILabel *noDataLabel;
 }
 
@@ -761,13 +766,14 @@
     
     self.folderToOperate = _folder;
     [alert addAction:[self createFolderAction]];
+    [alert addAction:[self createShortcutAction]];
     
     if (self.folder)
     {
         [alert addAction:[self renameCurrentFolderAction]];
     }
-    [alert addAction:[self savedFiles]];
-    [alert addAction:[self logout]];
+    [alert addAction:[self savedFilesAction]];
+    [alert addAction:[self logoutAction]];
     [alert addAction:defaultAction];
     
 
@@ -778,24 +784,198 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (UIAlertAction*)savedFiles{
-    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Downloads", @"") style:UIAlertActionStyleDefault
+-(UIAlertAction *)createShortcutAction{
+    UIAlertAction * action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Shortcut", @"")
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction *action) {
+                [self createShortcut];
+
+            }];
+    return action;
+}
+
+- (UIAlertAction*)savedFilesAction{
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Downloads", @"")
+                                                     style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action) {
                                                        [self showDownloadedFiles];
                                                    }];
     return logout;
 }
 
-- (UIAlertAction*)logout
+- (UIAlertAction*)logoutAction
 {
-    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Logout", @"") style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * action) {
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Logout", @"")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action) {
                                                            [self signOut];
-                                                       }];
+                                                   }];
     return logout;
 }
 
+-(void)createShortcut{
+    UIAlertController * createShortcut = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter URL", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [createShortcut addTextFieldWithConfigurationHandler:^(UITextField * textField){
+        textField.placeholder = NSLocalizedString(@"URL", @"");
+    }];
 
+    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        
+        _fetchedResultsController.delegate = nil;
+        _fetchedResultsController = nil;
+
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [hud setMode:MBProgressHUDModeIndeterminate];
+        hud.label.text = [NSString stringWithFormat:@"Checking URL..."];
+//        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+        NSString *urlString = [(UITextField *)createShortcut.textFields.lastObject text];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSString *fullUrl = urlString;
+        if (![url scheme]) {
+            fullUrl = [NSString stringWithFormat:@"https://%@",urlString];
+        }
+        
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager new];
+        [manager setResponseSerializer:[AFHTTPResponseSerializer serializer]];
+        [manager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+        
+        [manager GET:fullUrl
+          parameters:nil
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                 hud.label.text = [NSString stringWithFormat:@"Creating shortuct..."];
+                 NSLog(@"%@",responseObject);
+                 NSData *data = [NSData new];
+                 if ([responseObject isKindOfClass:[NSData class]]){
+                     data = responseObject;
+                 }
+                 
+                 NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//                 NSLog(@"%@",htmlString);
+                 NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
+                 NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : urlString;
+                 NSString *shortcutName = tmpShortcutName;
+                 if(![tmpShortcutName isEqualToString:urlString]){
+                     NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
+                     shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
+                 }
+                 
+                 NSURL *resourceUrl = task.originalRequest.URL;
+                 NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
+                 NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];
+                 NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutFileName];
+                 NSError * error = [NSError new];
+                 [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+                 NSURL *resultPath = [NSURL fileURLWithPath:filePath];
+                 NSString *MIMEType = [self mimeTypeForFileAtPath:resultPath.absoluteString];
+                 NSData * fileData = [[NSData alloc] initWithContentsOfURL:resultPath];
+
+                 [hud setMode:MBProgressHUDModeDeterminate];
+                 hud.label.text = [NSString stringWithFormat:@"%@ uploading", shortcutFileName];
+                 if ([[Settings version]isEqualToString:@"P8"]) {
+                     [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:shortcutFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
+                         hud.progress = progress;
+                     } completion:^(BOOL result) {
+                         if (result) {
+                             [hud setMode:MBProgressHUDModeIndeterminate];
+                             hud.label.text = [NSString stringWithFormat:@"Updating files..."];
+                             [self updateFiles:^(){
+                                 [hud hideAnimated:YES];
+                                 [self reloadTableData];
+                                 [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
+                             }];
+                         }else{
+                             [hud hideAnimated:YES];
+                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
+                         }
+
+                     }];
+                 }else{
+                     NSString * path = self.isCorporate ? @"corporate" : @"personal";
+                     if (self.folder.fullpath)
+                     {
+                         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
+                     }
+                     [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:shortcutFileName uploadProgressBlock:^(float progress) {
+                         hud.progress = progress;
+                     } completion:^(NSDictionary * response){
+                         NSLog(@"%@",response);
+                         [hud setMode:MBProgressHUDModeIndeterminate];
+                         hud.label.text = [NSString stringWithFormat:@"Updating files..."];
+                         [self updateFiles:^(){
+                             [hud hideAnimated:YES];
+                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
+                         }];
+                     }];
+                 }
+        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+            NSLog(@"%@",error);
+            hud.mode = MBProgressHUDModeCustomView;
+            hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+            hud.detailsLabel.text = @"";
+            hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"");
+            [hud hideAnimated:YES afterDelay:0.7f];
+        }];
+
+    }];
+
+    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+
+    }];
+    [createShortcut addAction:defaultAction];
+    [createShortcut addAction:cancelAction];
+    [self presentViewController:createShortcut animated:YES completion:nil];
+}
+
+- (NSString *)scanString:(NSString *)string
+                startTag:(NSString *)startTag
+                  endTag:(NSString *)endTag
+{
+    
+    NSString* scanString = @"";
+    
+    if (string.length > 0) {
+        
+        NSScanner* scanner = [[NSScanner alloc] initWithString:string];
+        
+        @try {
+            [scanner scanUpToString:startTag intoString:nil];
+            scanner.scanLocation += [startTag length];
+            [scanner scanUpToString:endTag intoString:&scanString];
+        }
+        @catch (NSException *exception) {
+            return nil;
+        }
+        @finally {
+            return scanString;
+        }
+        
+    }
+    
+    return scanString;
+    
+}
+
+- (NSString*)mimeTypeForFileAtPath: (NSString *) path {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return nil;
+    }
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
+    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    if (!mimeType) {
+        return @"application/octet-stream";
+    }
+    return ( __bridge NSString *)mimeType;
+}
+
+- (BOOL)removeShortcutFromDeviceHDD:(NSString *)path{
+    if (![[NSFileManager defaultManager]fileExistsAtPath:path]) {
+        return NO;
+    }else{
+        return [[NSFileManager defaultManager]removeItemAtPath:path error:nil];
+    }
+}
 
 - (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
     NSLog(@"current asset - > %@ ",asset.defaultRepresentation.url);

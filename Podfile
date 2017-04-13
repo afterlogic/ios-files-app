@@ -22,9 +22,12 @@ target 'aurorafiles' do
     #этот под не используется. Нужно согласовать его использование (текст и картинка-плейсхолдер для пустого датасета)
     pod 'DZNEmptyDataSet'
     
+
+
 end
 
 target 'aurorafilesaction' do
+    
     pod 'FastEasyMapping', '~> 1.0'
     pod 'SDWebImage', '3.7.3'
     pod 'Reachability', '~> 3.2'
@@ -32,6 +35,25 @@ target 'aurorafilesaction' do
     pod 'AFNetworking', '2.6'
     pod 'AFNetworking+AutoRetry'
     pod 'MagicalRecord','~> 2.3.0'
+    
+    pod "LinkPreviewKit"
+
+end
+
+target 'Save shortcut' do
+    pod 'FastEasyMapping', '~> 1.0'
+    pod 'SDWebImage', '3.7.3'
+    pod 'Reachability', '~> 3.2'
+    pod 'BugfenderSDK', '~> 0.3'
+    pod 'AFNetworking', '2.6'
+    pod 'AFNetworking+AutoRetry'
+    pod 'MagicalRecord','~> 2.3.0'
+    
+    pod "LinkPreviewKit"
+    
+#    pod 'DZReadability'
+#    pod 'CSWebShot'
+
 end
 
 target 'aurorafilesTests' do

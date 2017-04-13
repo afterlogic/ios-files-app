@@ -51,6 +51,7 @@
     [self.toolBar setHidden:YES];
     if ([self.loadType isEqualToString:loadTypeView]) {
         [self.navigationController.navigationBar setHidden:NO];
+        [self.navigationController setTitle:NSLocalizedString(@"Downloads", @"")];
     }else{
         [self.navigationController.navigationBar setHidden:YES];
     }
@@ -172,7 +173,7 @@
             [cell.downloadActivity stopAnimating];
             cell.disclosureButton.hidden = NO;
         }
-        [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateNormal];
+        [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"onboard"] forState:UIControlStateNormal];
     
 //        [cell.disclosureButton setImage:[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateDisabled];
 //        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;

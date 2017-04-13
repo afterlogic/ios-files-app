@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		207B2CD1E037936D60AE1709 /* libPods-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F9F82DE1E424143BB6EE92 /* libPods-Save shortcut.a */; };
 		231184308D0834E67342208D /* libPods-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F1B41B1DE75AD14F8DFC9F /* libPods-aurorafiles.a */; };
 		5C7B53292721A01C4C8F54DE /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
@@ -53,6 +54,9 @@
 		DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */; };
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
+		FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
+		FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
+		FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
 		FF2773DC1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
 		FF2773DD1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
 		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
@@ -115,6 +119,64 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
+		FFA4BFDF1E55AD20008F4522 /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA4BFDE1E55AD20008F4522 /* ShareViewController.m */; };
+		FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA4BFE01E55AD20008F4522 /* MainInterface.storyboard */; };
+		FFA4BFE61E55AD20008F4522 /* Save shortcut.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FFA4BFEA1E55DB79008F4522 /* ActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAD11D06216400238EB5 /* ActionViewController.m */; };
+		FFA4BFEB1E55DB7F008F4522 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
+		FFA4BFEC1E55DC0D008F4522 /* EXFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */; };
+		FFA4BFED1E55DC0D008F4522 /* EXPreviewFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5E81D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m */; };
+		FFA4BFEE1E55DC14008F4522 /* CurrentFilePathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF90530B1D9BDCCD00A09A44 /* CurrentFilePathViewController.m */; };
+		FFA4BFEF1E55DC14008F4522 /* UploadFoldersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF90536E1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m */; };
+		FFA4BFF01E55DC14008F4522 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
+		FFA4BFF21E55E4F8008F4522 /* AuroraHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FF399D4A1DE7341B002071A9 /* AuroraHUD.m */; };
+		FFA4BFF31E55E4FE008F4522 /* UIImage+ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */; };
+		FFA4BFF41E55E505008F4522 /* NSObject+ScreenOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053081D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m */; };
+		FFA4BFF51E55E516008F4522 /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
+		FFA4BFF61E55E532008F4522 /* EXPreviewFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5E31D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.m */; };
+		FFA4BFF71E55E5FB008F4522 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */; };
+		FFA4BFF81E55E5FB008F4522 /* ApiOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360001E3A6235002ABF7C /* ApiOperation.m */; };
+		FFA4BFF91E55E5FB008F4522 /* CheckConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */; };
+		FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EA1DEC6E6C000C4AFF /* P7Manager.m */; };
+		FFA4BFFC1E55E605008F4522 /* ApiP7.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA791D061F1200238EB5 /* ApiP7.m */; };
+		FFA4BFFD1E55E60A008F4522 /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
+		FFA4BFFE1E55E60E008F4522 /* ApiP8.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94B81DB666BE00543269 /* ApiP8.m */; };
+		FFA4BFFF1E55E618008F4522 /* standardAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94BD1DB666FC00543269 /* standardAuth.m */; };
+		FFA4C0001E55E618008F4522 /* core.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C51DB67D8700543269 /* core.m */; };
+		FFA4C0011E55E618008F4522 /* files.m in Sources */ = {isa = PBXBuildFile; fileRef = FF42B1E51DB77F88005A2B0C /* files.m */; };
+		FFA4C0021E55E951008F4522 /* NSObject+PerformSelectorWithCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */; };
+		FFA4C0031E55E99F008F4522 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
+		FFA4C0041E55E9A5008F4522 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
+		FFA4C0051E55E9A9008F4522 /* NSURLRequest+requestGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */; };
+		FFA4C0061E55E9AD008F4522 /* NSString+Validators.m in Sources */ = {isa = PBXBuildFile; fileRef = FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */; };
+		FFA4C0071E55E9BD008F4522 /* SessionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA811D061F1200238EB5 /* SessionProvider.m */; };
+		FFA4C0081E55E9C0008F4522 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
+		FFA4C0091E55E9C5008F4522 /* FileOperationsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */; };
+		FFA4C00A1E55E9C8008F4522 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
+		FFA4C00B1E55E9CF008F4522 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
+		FFA4C00C1E55E9D2008F4522 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
+		FFA4C00D1E55E9D8008F4522 /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
+		FFA4C00E1E55E9FD008F4522 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
+		FFA4C00F1E55EA00008F4522 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
+		FFA4C0101E55EA4B008F4522 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592F1DAE96E8008031B3 /* MBProgressHUD.m */; };
+		FFA4C0111E55EA6A008F4522 /* MLAFNetworkingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46C1DA33162008690D5 /* MLAFNetworkingAdapter.m */; };
+		FFA4C0121E55EA6F008F4522 /* MLNetworkLoggingAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D46F1DA33162008690D5 /* MLNetworkLoggingAdapter.m */; };
+		FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4731DA33162008690D5 /* MLHostnameRequestFilter.m */; };
+		FFA4C0141E55EA7A008F4522 /* MLNetworkLogFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47B1DA33162008690D5 /* MLNetworkLogFactory.m */; };
+		FFA4C0151E55EA7D008F4522 /* MLHTTPTrafficDescriptionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D47E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m */; };
+		FFA4C0161E55EA80008F4522 /* MLNetworkLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4801DA33162008690D5 /* MLNetworkLogger.m */; };
+		FFA4C0171E55EA87008F4522 /* MLLoggingProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4831DA33162008690D5 /* MLLoggingProtocol.m */; };
+		FFA4C0181E55EA9E008F4522 /* AFNetworkActivityLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */; };
+		FFA4C0191E55EAA2008F4522 /* STZPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */; };
+		FFA4C01A1E55EAA5008F4522 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
+		FFA4C01B1E55EAF6008F4522 /* FilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA8E1D061F1200238EB5 /* FilesTableViewCell.m */; };
+		FFA4C01D1E55F060008F4522 /* aurorafiles.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA431D061D7500238EB5 /* aurorafiles.xcdatamodeld */; };
+		FFA4C01E1E55F131008F4522 /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
+		FFA4C01F1E55F131008F4522 /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5E41D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib */; };
+		FFA4C0201E55F149008F4522 /* FilesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */; };
+		FFA4C0211E5616ED008F4522 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
+		FFA4C0231E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */ = {isa = PBXBuildFile; fileRef = FFA4C0221E57308D008F4522 /* ExtensionGetWebPageTitleJS.js */; };
+		FFA4C0241E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */ = {isa = PBXBuildFile; fileRef = FFA4C0221E57308D008F4522 /* ExtensionGetWebPageTitleJS.js */; };
 		FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA9B7381E41F65C00CBDF46 /* Main-iPad.storyboard */; };
 		FFAD03E61DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
 		FFAD03E71DEC6B2A000C4AFF /* P8Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03E51DEC6B2A000C4AFF /* P8Manager.m */; };
@@ -136,7 +198,6 @@
 		FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
 		FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */; };
 		FFE6F0931E033FD9009141CA /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F0911E033FD9009141CA /* ImageViewController.m */; };
-		FFE6F0941E033FD9009141CA /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFE6F0921E033FD9009141CA /* ImageViewController.xib */; };
 		FFE6F0971E04BD46009141CA /* GalleryWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F0961E04BD46009141CA /* GalleryWrapperViewController.m */; };
 		FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
 		FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
@@ -175,6 +236,13 @@
 			remoteGlobalIDString = DAC1CA331D061D7500238EB5;
 			remoteInfo = aurorafiles;
 		};
+		FFA4BFE41E55AD20008F4522 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAC1CA2C1D061D7500238EB5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FFA4BFDA1E55AD1F008F4522;
+			remoteInfo = "Save shortcut";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -184,6 +252,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				FFA4BFE61E55AD20008F4522 /* Save shortcut.appex in Embed App Extensions */,
 				DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -215,14 +284,17 @@
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
 		5C7B5D8394754DE8EFDADEC0 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
 		63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Save shortcut.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut.debug.xcconfig"; sourceTree = "<group>"; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		84A85DBE2F43D9A7108DF1C4 /* Pods-aurorafilesaction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesaction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.debug.xcconfig"; sourceTree = "<group>"; };
+		A9F9F82DE1E424143BB6EE92 /* libPods-Save shortcut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Save shortcut.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAC51FCFDBDAF37334758A68 /* Pods-aurorafilesaction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesaction.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.release.xcconfig"; sourceTree = "<group>"; };
 		AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0F1B41B1DE75AD14F8DFC9F /* libPods-aurorafiles.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafiles.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19E38E5DEE3D20DDA6C932A /* Pods-aurorafilesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.release.xcconfig"; sourceTree = "<group>"; };
 		C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C91918B3233CA24FA894C5BA /* Pods-aurorafilesUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Save shortcut.release.xcconfig"; path = "Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut.release.xcconfig"; sourceTree = "<group>"; };
 		DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "aurorafiles 2.xcdatamodel"; sourceTree = "<group>"; };
 		DA37112B1D21EFFA0067B124 /* DownloadsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadsTableViewController.h; path = Downloads/DownloadsTableViewController.h; sourceTree = "<group>"; };
 		DA37112C1D21EFFA0067B124 /* DownloadsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadsTableViewController.m; path = Downloads/DownloadsTableViewController.m; sourceTree = "<group>"; };
@@ -284,6 +356,7 @@
 		DAC1CADE1D062BEB00238EB5 /* aurorafiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafiles.entitlements; sourceTree = "<group>"; };
 		DAC1CADF1D062BF400238EB5 /* aurorafilesaction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafilesaction.entitlements; sourceTree = "<group>"; };
 		DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
+		FF20F9A41E6A1E5300831874 /* ImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
 		FF2773DA1DF191000061C210 /* DataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseProvider.h; sourceTree = "<group>"; };
 		FF2773DB1DF191000061C210 /* DataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBaseProvider.m; sourceTree = "<group>"; };
 		FF2773DE1DF198EB0061C210 /* IDataBaseProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDataBaseProtocol.h; sourceTree = "<group>"; };
@@ -360,6 +433,13 @@
 		FF90536E1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UploadFoldersTableViewController.m; path = FilePath/UploadFoldersTableViewController.m; sourceTree = "<group>"; };
 		FF9053771D9C313C00A09A44 /* TabBarWrapperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabBarWrapperViewController.h; path = FilePath/TabBarWrapperViewController.h; sourceTree = "<group>"; };
 		FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabBarWrapperViewController.m; path = FilePath/TabBarWrapperViewController.m; sourceTree = "<group>"; };
+		FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Save shortcut.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFA4BFDD1E55AD20008F4522 /* ShareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareViewController.h; sourceTree = "<group>"; };
+		FFA4BFDE1E55AD20008F4522 /* ShareViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShareViewController.m; sourceTree = "<group>"; };
+		FFA4BFE11E55AD20008F4522 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		FFA4BFE31E55AD20008F4522 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FFA4C01C1E55ECA5008F4522 /* Save shortcut.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Save shortcut.entitlements"; sourceTree = "<group>"; };
+		FFA4C0221E57308D008F4522 /* ExtensionGetWebPageTitleJS.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = ExtensionGetWebPageTitleJS.js; path = SupportFiles/ExtensionGetWebPageTitleJS.js; sourceTree = "<group>"; };
 		FFA9B7381E41F65C00CBDF46 /* Main-iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main-iPad.storyboard"; sourceTree = "<group>"; };
 		FFAD03E21DEC5DBB000C4AFF /* ApiProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApiProtocol.h; sourceTree = "<group>"; };
 		FFAD03E41DEC6B2A000C4AFF /* P8Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = P8Manager.h; path = APIpEight/P8Manager.h; sourceTree = "<group>"; };
@@ -384,7 +464,6 @@
 		FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryPageViewController.m; sourceTree = "<group>"; };
 		FFE6F0901E033FD9009141CA /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		FFE6F0911E033FD9009141CA /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		FFE6F0921E033FD9009141CA /* ImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
 		FFE6F0951E04BD46009141CA /* GalleryWrapperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryWrapperViewController.h; sourceTree = "<group>"; };
 		FFE6F0961E04BD46009141CA /* GalleryWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryWrapperViewController.m; sourceTree = "<group>"; };
 		FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
@@ -442,6 +521,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FFA4BFD81E55AD1F008F4522 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				207B2CD1E037936D60AE1709 /* libPods-Save shortcut.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -456,8 +543,17 @@
 				C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */,
 				84A85DBE2F43D9A7108DF1C4 /* Pods-aurorafilesaction.debug.xcconfig */,
 				AAC51FCFDBDAF37334758A68 /* Pods-aurorafilesaction.release.xcconfig */,
+				64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */,
+				C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		5C7B5461A64DB1CF8116F302 /* CustomAlert */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CustomAlert;
 			sourceTree = "<group>";
 		};
 		5C7B56E700ED2B15EBE5B058 /* Folder */ = {
@@ -489,6 +585,7 @@
 				AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */,
 				63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */,
 				0EC9B7C5F92AD71B8DC3A960 /* libPods-aurorafilesaction.a */,
+				A9F9F82DE1E424143BB6EE92 /* libPods-Save shortcut.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -510,6 +607,7 @@
 				DAC1CA5E1D061D7500238EB5 /* aurorafilesUITests */,
 				DAC1CACF1D06216400238EB5 /* aurorafilesaction */,
 				FF4C76431DA7F21800AA5576 /* snapshotTest */,
+				FFA4BFDC1E55AD1F008F4522 /* Save shortcut */,
 				DAC1CA351D061D7500238EB5 /* Products */,
 				08C21F2A8F35CF1838537085 /* Pods */,
 				9D3ABB9A4596045D52E649D4 /* Frameworks */,
@@ -524,6 +622,7 @@
 				DAC1CA5B1D061D7500238EB5 /* aurorafilesUITests.xctest */,
 				DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */,
 				FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */,
+				FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -659,6 +758,7 @@
 				FF6A1D0E1DAD026F005CBA76 /* RootController */,
 				5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */,
 				5C7B585E359719D9DF9927ED /* SplashScreenController.h */,
+				5C7B5461A64DB1CF8116F302 /* CustomAlert */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -965,6 +1065,7 @@
 		FF9053061D9B0E4D00A09A44 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FFA4C0221E57308D008F4522 /* ExtensionGetWebPageTitleJS.js */,
 				FF9053021D9ADA4400A09A44 /* UIImage+ImageCompress.h */,
 				FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */,
 				FF9053051D9B0D4800A09A44 /* EXConstants.h */,
@@ -987,6 +1088,18 @@
 				FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */,
 			);
 			name = "Upload Path";
+			sourceTree = "<group>";
+		};
+		FFA4BFDC1E55AD1F008F4522 /* Save shortcut */ = {
+			isa = PBXGroup;
+			children = (
+				FFA4C01C1E55ECA5008F4522 /* Save shortcut.entitlements */,
+				FFA4BFDD1E55AD20008F4522 /* ShareViewController.h */,
+				FFA4BFDE1E55AD20008F4522 /* ShareViewController.m */,
+				FFA4BFE01E55AD20008F4522 /* MainInterface.storyboard */,
+				FFA4BFE31E55AD20008F4522 /* Info.plist */,
+			);
+			path = "Save shortcut";
 			sourceTree = "<group>";
 		};
 		FFAD03E11DEC5418000C4AFF /* Providers */ = {
@@ -1080,7 +1193,7 @@
 				FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */,
 				FFE6F0901E033FD9009141CA /* ImageViewController.h */,
 				FFE6F0911E033FD9009141CA /* ImageViewController.m */,
-				FFE6F0921E033FD9009141CA /* ImageViewController.xib */,
+				FF20F9A41E6A1E5300831874 /* ImageViewController.xib */,
 			);
 			name = PageControllerVariant;
 			sourceTree = "<group>";
@@ -1131,6 +1244,7 @@
 			);
 			dependencies = (
 				DAC1CAD81D06216400238EB5 /* PBXTargetDependency */,
+				FFA4BFE51E55AD20008F4522 /* PBXTargetDependency */,
 			);
 			name = aurorafiles;
 			productName = aurorafiles;
@@ -1217,6 +1331,25 @@
 			productReference = FF4C76421DA7F21800AA5576 /* snapshotTest.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		FFA4BFDA1E55AD1F008F4522 /* Save shortcut */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFA4BFE71E55AD20008F4522 /* Build configuration list for PBXNativeTarget "Save shortcut" */;
+			buildPhases = (
+				1ABD869C52573190EB9DA22F /* [CP] Check Pods Manifest.lock */,
+				FFA4BFD71E55AD1F008F4522 /* Sources */,
+				FFA4BFD81E55AD1F008F4522 /* Frameworks */,
+				FFA4BFD91E55AD1F008F4522 /* Resources */,
+				3A91CC2084CACB85920CDC12 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Save shortcut";
+			productName = "Save shortcut";
+			productReference = FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1262,6 +1395,16 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = DAC1CA331D061D7500238EB5;
 					};
+					FFA4BFDA1E55AD1F008F4522 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = J7AW6VHJK4;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = DAC1CA2F1D061D7500238EB5 /* Build configuration list for PBXProject "aurorafiles" */;
@@ -1282,6 +1425,7 @@
 				DAC1CA5A1D061D7500238EB5 /* aurorafilesUITests */,
 				DAC1CACD1D06216400238EB5 /* aurorafilesaction */,
 				FF4C76411DA7F21800AA5576 /* snapshotTest */,
+				FFA4BFDA1E55AD1F008F4522 /* Save shortcut */,
 			);
 		};
 /* End PBXProject section */
@@ -1292,8 +1436,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC1CA761D061EF800238EB5 /* Images.xcassets in Resources */,
-				FFE6F0941E033FD9009141CA /* ImageViewController.xib in Resources */,
 				DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */,
+				FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */,
 				FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */,
 				DAC1CA471D061D7500238EB5 /* Assets.xcassets in Resources */,
 				DAC1CAC91D061F6200238EB5 /* LaunchScreen.storyboard in Resources */,
@@ -1324,7 +1468,9 @@
 				FF9053711D9BFCAA00A09A44 /* FilesTableViewCell.xib in Resources */,
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
+				FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */,
 				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
+				FFA4C0231E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1332,6 +1478,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FFA4BFD91E55AD1F008F4522 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFA4C01F1E55F131008F4522 /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
+				FFA4C0211E5616ED008F4522 /* Images.xcassets in Resources */,
+				FFA4C0201E55F149008F4522 /* FilesTableViewCell.xib in Resources */,
+				FFA4C01E1E55F131008F4522 /* EXFileGalleryCollectionViewCell.xib in Resources */,
+				FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */,
+				FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */,
+				FFA4C0241E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1383,6 +1543,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		1ABD869C52573190EB9DA22F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		3847961D9D6C54609DC3D4E6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1396,6 +1571,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3A91CC2084CACB85920CDC12 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		58EDF7AD13B2CC14272CA5CC /* [CP] Copy Pods Resources */ = {
@@ -1683,6 +1873,63 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FFA4BFD71E55AD1F008F4522 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFA4BFF81E55E5FB008F4522 /* ApiOperation.m in Sources */,
+				FFA4C0011E55E618008F4522 /* files.m in Sources */,
+				FFA4BFEA1E55DB79008F4522 /* ActionViewController.m in Sources */,
+				FFA4C0161E55EA80008F4522 /* MLNetworkLogger.m in Sources */,
+				FFA4BFED1E55DC0D008F4522 /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
+				FFA4C0071E55E9BD008F4522 /* SessionProvider.m in Sources */,
+				FFA4C0061E55E9AD008F4522 /* NSString+Validators.m in Sources */,
+				FFA4C0031E55E99F008F4522 /* NSString+URLEncode.m in Sources */,
+				FFA4C0101E55EA4B008F4522 /* MBProgressHUD.m in Sources */,
+				FFA4BFDF1E55AD20008F4522 /* ShareViewController.m in Sources */,
+				FFA4C0181E55EA9E008F4522 /* AFNetworkActivityLogger.m in Sources */,
+				FFA4C01D1E55F060008F4522 /* aurorafiles.xcdatamodeld in Sources */,
+				FFA4C0141E55EA7A008F4522 /* MLNetworkLogFactory.m in Sources */,
+				FFA4C0051E55E9A9008F4522 /* NSURLRequest+requestGenerator.m in Sources */,
+				FFA4BFFD1E55E60A008F4522 /* P8Manager.m in Sources */,
+				FFA4C00D1E55E9D8008F4522 /* MRDataBaseProvider.m in Sources */,
+				FFA4BFF91E55E5FB008F4522 /* CheckConnectionOperation.m in Sources */,
+				FFA4BFF31E55E4FE008F4522 /* UIImage+ImageCompress.m in Sources */,
+				FFA4C00E1E55E9FD008F4522 /* Folder+CoreDataProperties.m in Sources */,
+				FFA4C0121E55EA6F008F4522 /* MLNetworkLoggingAdapter.m in Sources */,
+				FFA4C0191E55EAA2008F4522 /* STZPullToRefresh.m in Sources */,
+				FFA4BFFF1E55E618008F4522 /* standardAuth.m in Sources */,
+				FFA4C0021E55E951008F4522 /* NSObject+PerformSelectorWithCallback.m in Sources */,
+				FFA4C0081E55E9C0008F4522 /* ConnectionProvider.m in Sources */,
+				FFA4C0041E55E9A5008F4522 /* NSString+transferedValues.m in Sources */,
+				FFA4C0091E55E9C5008F4522 /* FileOperationsProvider.m in Sources */,
+				FFA4BFEE1E55DC14008F4522 /* CurrentFilePathViewController.m in Sources */,
+				FFA4BFF41E55E505008F4522 /* NSObject+ScreenOrientation.m in Sources */,
+				FFA4BFF01E55DC14008F4522 /* TabBarWrapperViewController.m in Sources */,
+				FFA4C01A1E55EAA5008F4522 /* STZPullToRefreshView.m in Sources */,
+				FFA4C01B1E55EAF6008F4522 /* FilesTableViewCell.m in Sources */,
+				FFA4BFFC1E55E605008F4522 /* ApiP7.m in Sources */,
+				FFA4C00F1E55EA00008F4522 /* Folder.m in Sources */,
+				FFA4BFEC1E55DC0D008F4522 /* EXFileGalleryCollectionViewController.m in Sources */,
+				FFA4C0171E55EA87008F4522 /* MLLoggingProtocol.m in Sources */,
+				FFA4C00A1E55E9C8008F4522 /* Settings.m in Sources */,
+				FFA4BFF71E55E5FB008F4522 /* NetworkManager.m in Sources */,
+				FFA4C00B1E55E9CF008F4522 /* StorageManager.m in Sources */,
+				FFA4BFF51E55E516008F4522 /* EXFileGalleryCollectionViewCell.m in Sources */,
+				FFA4C0111E55EA6A008F4522 /* MLAFNetworkingAdapter.m in Sources */,
+				FFA4BFEF1E55DC14008F4522 /* UploadFoldersTableViewController.m in Sources */,
+				FFA4C0151E55EA7D008F4522 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
+				FFA4C00C1E55E9D2008F4522 /* DataBaseProvider.m in Sources */,
+				FFA4BFF21E55E4F8008F4522 /* AuroraHUD.m in Sources */,
+				FFA4BFFE1E55E60E008F4522 /* ApiP8.m in Sources */,
+				FFA4C0001E55E618008F4522 /* core.m in Sources */,
+				FFA4BFF61E55E532008F4522 /* EXPreviewFileGalleryCollectionViewCell.m in Sources */,
+				FFA4BFEB1E55DB7F008F4522 /* UploadedFile.m in Sources */,
+				FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */,
+				FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1706,6 +1953,11 @@
 			target = DAC1CA331D061D7500238EB5 /* aurorafiles */;
 			targetProxy = FF4C76471DA7F21800AA5576 /* PBXContainerItemProxy */;
 		};
+		FFA4BFE51E55AD20008F4522 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FFA4BFDA1E55AD1F008F4522 /* Save shortcut */;
+			targetProxy = FFA4BFE41E55AD20008F4522 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1721,6 +1973,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				DAC1CAD41D06216400238EB5 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		FFA4BFE01E55AD20008F4522 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FFA4BFE11E55AD20008F4522 /* Base */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -1999,6 +2259,44 @@
 			};
 			name = Release;
 		};
+		FFA4BFE81E55AD20008F4522 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Save shortcut/Save shortcut.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				INFOPLIST_FILE = "Save shortcut/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.afterlogic.aurorafiles.Save-shortcut";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FFA4BFE91E55AD20008F4522 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Save shortcut/Save shortcut.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				INFOPLIST_FILE = "Save shortcut/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.afterlogic.aurorafiles.Save-shortcut";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2052,6 +2350,15 @@
 			buildConfigurations = (
 				FF4C76491DA7F21800AA5576 /* Debug */,
 				FF4C764A1DA7F21800AA5576 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FFA4BFE71E55AD20008F4522 /* Build configuration list for PBXNativeTarget "Save shortcut" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFA4BFE81E55AD20008F4522 /* Debug */,
+				FFA4BFE91E55AD20008F4522 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
