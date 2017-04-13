@@ -22,7 +22,7 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 
 // Data Property
 @property (nonatomic, strong) NSMutableArray *photoViewControllerArray;
-@property (nonatomic, copy) NSArray *imageSourceArray;
+@property (nonatomic, strong) NSMutableArray *imageSourceArray;
 @property (nonatomic, copy) NSString *caption;
 
 
@@ -50,7 +50,8 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 //}
 
 -(void)setItemsList:(NSArray<Folder *> *)itemsList{
-    self.imageSourceArray = itemsList;
+    self.imageSourceArray = [[NSMutableArray alloc]init];
+    [self.imageSourceArray addObjectsFromArray:itemsList];
 }
 
 -(void)setPageDelegate:(id<GalleryPageDelegate>)pageDelegate{
@@ -60,7 +61,8 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 - (instancetype)initWithImageSourceArray:(NSArray<Folder *>*)imageSourceArray {
     self = [self init];
     if (self) {
-        self.imageSourceArray = imageSourceArray;
+        self.imageSourceArray = [[NSMutableArray alloc]init];
+        [self.imageSourceArray addObjectsFromArray:imageSourceArray];
     }
     return self;
 }
@@ -77,12 +79,11 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
     [self.view setBackgroundColor:[UIColor blackColor]];
 //    self.navigationController.navigationBarHidden = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDissmissNotification:) name:SYPhotoBrowserDismissNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteCurrentPage) name:SYPhotoBrowserDeletePageNotification object:nil];
 
-    
     [self loadPhotoViewControllers];
-    [self updatePageControlWithPageIndex:self.initialPageIndex];
-    [self updateCationLabelWithCaption:self.caption];
+//    [self updatePageControlWithPageIndex:self.initialPageIndex];
+//    [self updateCationLabelWithCaption:self.caption];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -155,16 +156,19 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 
 #pragma mark - Private method
 
-- (void)loadPhotoViewControllers {
+- (void)createPhotoViewControllers{
+    [self.photoViewControllerArray removeAllObjects];
     for (NSUInteger index = 0; index < self.imageSourceArray.count; index++) {
         id imageSource = self.imageSourceArray[index];
         ImageViewController *photoViewController = [[ImageViewController alloc]initWithNibName:@"ImageViewController" bundle:[NSBundle mainBundle]];
-
-//        ImageViewController *photoViewController = [[ImageViewController alloc]initWithItemSouce:imageSource pageIndex:index];
         photoViewController.item = imageSource;
         photoViewController.pageIndex = index;
         [self.photoViewControllerArray addObject:photoViewController];
     }
+}
+
+- (void)loadPhotoViewControllers {
+    [self createPhotoViewControllers];
 
     __block FileGalleryPageViewController *weakSelf = self;
     [self setViewControllers:@[self.photoViewControllerArray[self.initialPageIndex]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
@@ -172,6 +176,37 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
             [weakSelf.pageDelegate setCurrentPageController:[weakSelf.photoViewControllerArray objectAtIndex:[weakSelf initialPageIndex]]];
         }
     }];
+}
+
+- (void)deleteCurrentPage{
+    ImageViewController *photoViewController = (ImageViewController *)[self.viewControllers firstObject] ;
+    int currentPageIdx = [self.photoViewControllerArray indexOfObject:photoViewController];
+    int nextPageIdx = currentPageIdx;
+
+    NSUInteger direction = UIPageViewControllerNavigationDirectionForward;
+    if (currentPageIdx == self.photoViewControllerArray.count - 1) {
+        nextPageIdx = currentPageIdx-1;
+        direction = UIPageViewControllerNavigationDirectionReverse;
+    }
+
+    if(self.photoViewControllerArray.count == 1){
+        [self handleDissmissNotification:nil];
+    }else{
+        self.initialPageIndex = nextPageIdx;
+        [self.imageSourceArray removeObjectAtIndex:currentPageIdx];
+        [self createPhotoViewControllers];
+
+
+        __block FileGalleryPageViewController *weakSelf = self;
+        [self setViewControllers:@[self.photoViewControllerArray[self.initialPageIndex]] direction:direction animated:YES completion:^(BOOL finished) {
+            if (finished) {
+                [weakSelf.pageDelegate setCurrentPageController:[weakSelf.photoViewControllerArray objectAtIndex:[weakSelf initialPageIndex]]];
+            }
+        }];
+    }
+
+
+
 }
 
 - (void)updateCationLabelWithCaption:(NSString *)caption {

@@ -6,6 +6,7 @@ var ExtensionGetWebPageTitleJS = function() {};
 ExtensionGetWebPageTitleJS.prototype = {
     run: function(arguments) {
         // Pass the baseURI of the webpage to the extension.
+//        var firstImage = document.images[0].src;
         arguments.completionFunction({"title": document.title,"link":document.URL});
     }
 };

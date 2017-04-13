@@ -18,6 +18,7 @@
 #import "Settings.h"
 #import "ApiP7.h"
 #import "ApiP8.h"
+#import "NSStringPunycodeAdditions.h"
 #import "SignInViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "STZPullToRefresh.h"
@@ -31,16 +32,24 @@
 
 #import <AFNetworking/AFNetworking.h>
 
+
+static const int shortcutCreationTexFieldTag = 100;
+static const int minimalStringLengthURL = 5;
+static const int minimalStringLengthFiles = 1;
+
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
-        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate>
+        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate,UITextFieldDelegate>
 {
     UILabel *noDataLabel;
+    UIAlertController * alertController;
+    UIAlertAction * defaultAction;
 }
 
 @property (strong, nonatomic) NSURLSession * session;
 @property (strong, nonatomic) NSString * type;
 @property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
+@property (strong, nonatomic) STZPullToRefreshView *refreshView;
 @property (strong, nonatomic) NSManagedObjectContext * defaultMOC;
 @property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -149,7 +158,7 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    self.pickerController = [[CRMediaPickerController alloc]init];
+    self.pickerController = self.pickerController == nil ? [[CRMediaPickerController alloc]init] : self.pickerController;
     self.pickerController.delegate = self;
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
@@ -162,9 +171,9 @@
     
     self.navigationController.navigationBar.hidden = NO;
     
-    STZPullToRefreshView *refreshView = [[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
-    [self.view addSubview:refreshView];
-    self.lineRefreshController = [[STZPullToRefresh alloc] initWithTableView:nil refreshView:refreshView tableViewDelegate:self];
+    self.refreshView = self.refreshView ? self.refreshView :[[STZPullToRefreshView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1.5)];
+    [self.view addSubview:self.refreshView];
+    self.lineRefreshController = self.lineRefreshController ? self.lineRefreshController : [[STZPullToRefresh alloc] initWithTableView:nil refreshView:self.refreshView tableViewDelegate:self];
 
     //
     self.isCorporate = [self.type isEqualToString:@"corporate"];
@@ -172,17 +181,20 @@
         return [url absoluteString];
     }];
     
-    self.signOutButton.tintColor = refreshView.progressColor;
-    self.editButton.tintColor = refreshView.progressColor;
-    self.spinnerRefreshController = [[UIRefreshControl alloc]init];
+    self.signOutButton.tintColor = self.refreshView.progressColor;
+    self.editButton.tintColor = self.refreshView.progressColor;
+
+    self.spinnerRefreshController = self.spinnerRefreshController == nil ? [UIRefreshControl new] : self.spinnerRefreshController;
     [self.spinnerRefreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
-    self.tableView.refreshControl = self.spinnerRefreshController;
+    [self.tableView addSubview:self.spinnerRefreshController];
+//    [self.tableView insertSubview:self.spinnerRefreshController atIndex:0];
+
     self.searchBar.delegate = self;
-    
+
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
     
     noDataLabel                  = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
-    noDataLabel.text             = @"Folder is loading...";
+    noDataLabel.text             = NSLocalizedString(@"Folder is loading...", @"files refresh title");
     noDataLabel.textColor        = [UIColor lightGrayColor];
     noDataLabel.textAlignment    = NSTextAlignmentCenter;
     noDataLabel.font             = [UIFont fontWithName:@"System" size:22.0f];
@@ -190,9 +202,13 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
+- (void)viewWillLayoutSubviews {
+    [self.refreshView setFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 1.5)];
+}
+
 - (void)updateView{
     if(![self.view isHidden]) {
-        noDataLabel.text = @"Folder is loading...";
+        noDataLabel.text = NSLocalizedString(@"Folder is loading...", @"files refresh title");
         [self.lineRefreshController startRefresh];
         [self updateFiles:^() {
             [self stopRefresh];
@@ -212,7 +228,7 @@
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
-    noDataLabel.text             = @"Folder is loading...";
+    noDataLabel.text             = NSLocalizedString(@"Folder is loading...", @"files refresh title");
     [self updateFiles:^() {
         [self stopRefresh];
         [self reloadTableData];
@@ -313,7 +329,7 @@
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
 
     NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
-    
+
     indexPathsToInsert = [[NSMutableArray alloc] init];
     for (id obj in newItems)
     {
@@ -452,7 +468,7 @@
                 [self fetchData];
 //                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
                 if (itemsCount==0) {
-                    noDataLabel.text = @"Folder is empty";
+                    noDataLabel.text = NSLocalizedString(@"Folder is empty", @"files view empty title");
                 }
             }
             completionHandler();
@@ -482,7 +498,11 @@
 - (void)tableViewCellDownloadAction:(UITableViewCell *)cell
 {
     if (![Settings isFirstRun]) {
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Download files", @"") message:NSLocalizedString(@"Tapping this icon makes the file available offline. The file will be stored on your device locally. If you want to remove the file from the device, just tap the icon again making it grey and the file won't consume space on your device anymore.", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"Got it!", @"") otherButtonTitles:nil, nil];
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Download files", @"download popup title")
+                                                        message:NSLocalizedString(@"Tapping this icon makes the file available offline. The file will be stored on your device locally. If you want to remove the file from the device, just tap the icon again making it grey and the file won't consume space on your device anymore.", @"download popup message text")
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"Got it!", @"download popup cancel button title")
+                                              otherButtonTitles:nil, nil];
         [alert show];
         [Settings setFirstRun:@"YES"];
     }
@@ -602,7 +622,6 @@
     Folder *file = [fetchedFiles lastObject];
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
-//TODO: валится destinationFilename. Судя по всему не приходит итем из базы (fault), в результате чего destinationFileName становится ниловым и крашит всё к черту. Добавить проверку на нил и проверить получение файла.
     NSString *destinationFilename = file.name;
 
     NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
@@ -644,17 +663,19 @@
 {
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
     self.folderToOperate = folder;
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel
+    alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"more action popup title text")
+                                                                    message:nil
+                                                             preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                            style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * action) {
                                                               
                                                           }];
     
+    [alertController addAction:[self renameCurrentFolderAction]];
     
-    [alert addAction:[self renameCurrentFolderAction]];
-    
-    [alert addAction:defaultAction];
-    [self presentViewController:alert animated:YES completion:nil];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:nil];
     
     NSLog(@"%s",__PRETTY_FUNCTION__);
 }
@@ -758,34 +779,41 @@
 
 - (IBAction)editAction:(id)sender
 {
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"") message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel
+    alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"edit actions title text ")
+                                                                    message:nil
+                                                             preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                            style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * action) {
                                                               
                                                           }];
     
     self.folderToOperate = _folder;
-    [alert addAction:[self createFolderAction]];
-    [alert addAction:[self createShortcutAction]];
+    if (![self.folder isZippedFile] && ![self.folder isZipArchive]){
+        [alertController addAction:[self createFolderAction]];
+        [alertController addAction:[self createShortcutAction]];
+    }
     
     if (self.folder)
     {
-        [alert addAction:[self renameCurrentFolderAction]];
+        [alertController addAction:[self renameCurrentFolderAction]];
+        [alertController addAction:[self deleteFolderAction]];
     }
-    [alert addAction:[self savedFilesAction]];
-    [alert addAction:[self logoutAction]];
-    [alert addAction:defaultAction];
+    
+    [alertController addAction:[self savedFilesAction]];
+    [alertController addAction:[self logoutAction]];
+    [alertController addAction:cancelAction];
     
 
     if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
-        alert.popoverPresentationController.barButtonItem = self.editButton;
+        alertController.popoverPresentationController.barButtonItem = self.editButton;
     }
     
-    [self presentViewController:alert animated:YES completion:nil];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 -(UIAlertAction *)createShortcutAction{
-    UIAlertAction * action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Shortcut", @"")
+    UIAlertAction * action = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Shortcut", @"Create shortcut action name")
                                                       style:UIAlertActionStyleDefault
                                                     handler:^(UIAlertAction *action) {
                 [self createShortcut];
@@ -795,7 +823,7 @@
 }
 
 - (UIAlertAction*)savedFilesAction{
-    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Downloads", @"")
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Downloads", @"Downloads action name")
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action) {
                                                        [self showDownloadedFiles];
@@ -805,7 +833,7 @@
 
 - (UIAlertAction*)logoutAction
 {
-    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Logout", @"")
+    UIAlertAction* logout = [UIAlertAction actionWithTitle:NSLocalizedString(@"Logout", @"Logout action name")
                                                      style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action) {
                                                            [self signOut];
@@ -814,26 +842,32 @@
 }
 
 -(void)createShortcut{
-    UIAlertController * createShortcut = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter URL", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [createShortcut addTextFieldWithConfigurationHandler:^(UITextField * textField){
-        textField.placeholder = NSLocalizedString(@"URL", @"");
+    alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter URL", @"creating shortcut popup title")
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
+        textField.placeholder = NSLocalizedString(@"URL", @"creating shortcut popup textfield placeholder");
+        [textField setDelegate:self];
+        [textField setTag:shortcutCreationTexFieldTag];
+
     }];
 
-    UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+    defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
         
         _fetchedResultsController.delegate = nil;
         _fetchedResultsController = nil;
 
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [hud setMode:MBProgressHUDModeIndeterminate];
-        hud.label.text = [NSString stringWithFormat:@"Checking URL..."];
+        hud.label.text = NSLocalizedString(@"Checking URL...", @"hud cheking url text");
 //        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-        NSString *urlString = [(UITextField *)createShortcut.textFields.lastObject text];
-        NSURL *url = [NSURL URLWithString:urlString];
+//        NSString *urlString = [[(UITextField *)alertController.textFields.lastObject text]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        NSString *urlString = [(UITextField *)alertController.textFields.lastObject text].encodedURLString;
+        NSURL *url = [[NSURL alloc] initWithString:urlString];
         NSString *fullUrl = urlString;
         if (![url scheme]) {
-            fullUrl = [NSString stringWithFormat:@"https://%@",urlString];
+            fullUrl = [NSString stringWithFormat:@"http://%@",urlString];
         }
         
         AFHTTPSessionManager *manager = [AFHTTPSessionManager new];
@@ -843,7 +877,7 @@
         [manager GET:fullUrl
           parameters:nil
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                 hud.label.text = [NSString stringWithFormat:@"Creating shortuct..."];
+                 hud.label.text = NSLocalizedString(@"Creating shortuct...", @"hud creating shortcut text");
                  NSLog(@"%@",responseObject);
                  NSData *data = [NSData new];
                  if ([responseObject isKindOfClass:[NSData class]]){
@@ -851,7 +885,6 @@
                  }
                  
                  NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//                 NSLog(@"%@",htmlString);
                  NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
                  NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : urlString;
                  NSString *shortcutName = tmpShortcutName;
@@ -871,14 +904,14 @@
                  NSData * fileData = [[NSData alloc] initWithContentsOfURL:resultPath];
 
                  [hud setMode:MBProgressHUDModeDeterminate];
-                 hud.label.text = [NSString stringWithFormat:@"%@ uploading", shortcutFileName];
+                 hud.label.text = [NSString stringWithFormat:@"%@ %@", shortcutFileName,NSLocalizedString(@"uploading", @"hud uploading text")];
                  if ([[Settings version]isEqualToString:@"P8"]) {
                      [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:shortcutFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
                          hud.progress = progress;
                      } completion:^(BOOL result) {
                          if (result) {
                              [hud setMode:MBProgressHUDModeIndeterminate];
-                             hud.label.text = [NSString stringWithFormat:@"Updating files..."];
+                             hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
                              [self updateFiles:^(){
                                  [hud hideAnimated:YES];
                                  [self reloadTableData];
@@ -901,30 +934,36 @@
                      } completion:^(NSDictionary * response){
                          NSLog(@"%@",response);
                          [hud setMode:MBProgressHUDModeIndeterminate];
-                         hud.label.text = [NSString stringWithFormat:@"Updating files..."];
+                         hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
                          [self updateFiles:^(){
                              [hud hideAnimated:YES];
                              [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
                          }];
                      }];
                  }
-        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
-            NSLog(@"%@",error);
-            hud.mode = MBProgressHUDModeCustomView;
-            hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-            hud.detailsLabel.text = @"";
-            hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"");
-            [hud hideAnimated:YES afterDelay:0.7f];
+        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {NSLog(@"%@",error);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self updateFiles:^{
+                            hud.mode = MBProgressHUDModeCustomView;
+                            hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+                            hud.detailsLabel.text = @"";
+                            hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"hud error text");
+                            [hud hideAnimated:YES afterDelay:0.7f];
+                        }];
+                    });
         }];
 
     }];
 
-    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                            style:UIAlertActionStyleCancel
+                                                          handler:^(UIAlertAction * action){
 
     }];
-    [createShortcut addAction:defaultAction];
-    [createShortcut addAction:cancelAction];
-    [self presentViewController:createShortcut animated:YES completion:nil];
+    [alertController addAction:defaultAction];
+    [defaultAction setEnabled:NO];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (NSString *)scanString:(NSString *)string
@@ -990,7 +1029,7 @@
 
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.mode = MBProgressHUDModeDeterminate;
-        hud.label.text = [NSString stringWithFormat:@"%@ uploading", realFileName];
+        hud.label.text = [NSString stringWithFormat:@"%@ %@",realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
     
     if ([[Settings version]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
@@ -1052,7 +1091,9 @@
 
 - (UIAlertAction*)deleteFolderAction
 {
-    UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
+    UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"delete action title text")
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
 //        object.wasDeleted = @YES;
         [self.storageManager deleteItem:object];
@@ -1060,14 +1101,16 @@
             [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     [self updateFiles:^(){
-                        [self.tableView reloadData];
+                        [self.navigationController popViewControllerAnimated:YES];
+//                        [self.tableView reloadData];
                     }];
                 }
             }];
         }else{
             [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
                 [self updateFiles:^(){
-                    [self.tableView reloadData];
+                    [self.navigationController popViewControllerAnimated:YES];
+//                    [self.tableView reloadData];
                 }];
             }];
         }
@@ -1078,17 +1121,22 @@
 
 - (UIAlertAction*)renameCurrentFolderAction
 {
-    NSString * text = [self.folderToOperate isEqual:self.folder] ? NSLocalizedString(@"Rename Current Folder", @"") : NSLocalizedString(@"Rename", @"");
+    NSString * text = [self.folderToOperate isEqual:self.folder] ? NSLocalizedString(@"Rename Current Folder", @"rename folder action title text") : NSLocalizedString(@"Rename", @"rename file action title text");
     UIAlertAction* renameFolder = [UIAlertAction actionWithTitle:text style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
-                                                             UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
-                                                             [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField){
-                                                                 textField.placeholder = NSLocalizedString(@"Folder Name", @"");
+                                                             alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
+                                                                                                                                    message:nil
+                                                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                                                             [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                                                                 textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
                                                                  textField.text = _folderToOperate.name;
                                                                  self.folderName = textField;
+                                                                 [textField setDelegate:self];
                                                              }];
                                                              
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
+                                                                                                                      style:UIAlertActionStyleDefault
+                                                                                                                    handler:^(UIAlertAction * action) {
                                                                  if (!_folderToOperate)
                                                                  {
                                                                      return ;
@@ -1100,20 +1148,20 @@
                                                                  
                                                                  [self.storageManager  renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
                                                                      if (folder && !folder.isFault) {
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
                                                                          self.folderToOperate = folder;
                                                                          self.folder = folder;
                                                                          self.title = folder.name;
-                                                                         NSError * error = nil;
+//                                                                         NSError * error = nil;
                                                                          [self fetchData];
-                                                                         if (error)
-                                                                         {
-                                                                             NSLog(@"%@",[error userInfo]);
-                                                                         }
-
+                                                                         });
                                                                      }
                                                                     [self updateFiles:^(){
-                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         [self.tableView reloadData];
+                                                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                            [self.tableView reloadData];
+                                                                        });
+
                                                                      }];
                                                                     
                                                                  }];
@@ -1121,12 +1169,15 @@
                                                                  
                                                              }];
                                                              
-                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                                                                                     style:UIAlertActionStyleCancel
+                                                                                                                   handler:^(UIAlertAction * action){
                                                                  
                                                              }];
-                                                             [createFolder addAction:defaultAction];
-                                                             [createFolder addAction:cancelAction];
-                                                             [self presentViewController:createFolder animated:YES completion:nil];
+                                                             [alertController addAction:defaultAction];
+                                                             [defaultAction setEnabled:NO];
+                                                             [alertController addAction:cancelAction];
+                                                             [self presentViewController:alertController animated:YES completion:nil];
                                                          }];
     return renameFolder;
 
@@ -1137,14 +1188,15 @@
     
     UIAlertAction* createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Folder", @"") style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
-                                                             UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
-                                                             [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                                                             alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+                                                             [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
                                                                  
                                                                  self.folderName = textField;
+                                                                 [textField setDelegate:self];
                                                              }];
                                                              
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                              defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
                                                                  [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
                                                                      if (success) {
@@ -1158,14 +1210,24 @@
                                                                  
                                                             }];
                                                              
-                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
+                                                             UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
                                                              }];
-                                                             [createFolder addAction:defaultAction];
-                                                             [createFolder addAction:cancelAction];
-                                                             [self presentViewController:createFolder animated:YES completion:nil];
+                                                             [alertController addAction:defaultAction];
+                                                             [defaultAction setEnabled:NO];
+                                                             [alertController addAction:cancelAction];
+                                                             [self presentViewController:alertController animated:YES completion:nil];
                                                          }];
     return createFolder;
+}
+
+#pragma mark - TextField Delegate
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    int minimalStringLength = textField.tag == shortcutCreationTexFieldTag ? minimalStringLengthURL:minimalStringLengthFiles;
+    [defaultAction setEnabled:text.length>=minimalStringLength];
+    return YES;
 }
 
 #pragma mark - Navigation

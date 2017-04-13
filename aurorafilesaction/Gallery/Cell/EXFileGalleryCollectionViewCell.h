@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 @class UploadedFile;
 @interface EXFileGalleryCollectionViewCell : UICollectionViewCell
 
@@ -16,7 +17,9 @@
 @property (weak, nonatomic) IBOutlet UIView *webContainerView;
 @property (weak, nonatomic) IBOutlet UILabel *pageName;
 @property (weak, nonatomic) IBOutlet UILabel *pageLink;
-@property (weak, nonatomic) IBOutlet UIWebView *wevView;
+@property (weak, nonatomic) IBOutlet UILabel *pageDescription;
+@property (weak, nonatomic) IBOutlet UIImageView *pagePreview;
+
 + (NSString*)cellId;
 
 @end

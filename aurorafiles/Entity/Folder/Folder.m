@@ -12,6 +12,8 @@
 
 @implementation Folder
 
+
+
 #pragma mark - Awake
 
 -(void)awakeFromInsert {
@@ -122,7 +124,25 @@
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
-    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    
+//    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    FEMAttribute *actionType = [[FEMAttribute alloc]initWithProperty:@"mainAction" keyPath:@"Actions" map:^id _Nullable(id  _Nonnull value) {
+        NSString *resultAction = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+//            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+//            f.numberStyle = NSNumberFormatterDecimalStyle;
+//            NSNumber *myNumber = [f numberFromString:(NSString *)value];
+            NSString *listKey = [Folder convertFileActionTypeToString:listActionType];
+            
+            if ([valueDict objectForKey:listKey]) {
+                resultAction = listKey;
+            }
+            return resultAction;
+        }
+        return resultAction;
+    } reverseMap:NULL];
+    [mapping addAttribute:actionType];
 
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
 
@@ -173,8 +193,6 @@
 
 
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
-    
-    
     
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
@@ -310,6 +328,13 @@
     return NO;
 }
 
+-(BOOL)isZipArchive{
+    if ([self.contentType isEqualToString:@"application/zip"]) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - Fetch
 
 +(NSFetchRequest *)folderFetchRequestInContext:(NSManagedObjectContext *)ctx{
@@ -364,6 +389,27 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
     NSMutableArray * result = [Folder fetchFoldersInContext:ctx descriptors:descriptors predicate:predicate].mutableCopy;
     return result.lastObject;
+}
+
+#pragma mark - Utilities
+
++(NSString *)convertFileActionTypeToString:(MainActionType)actionType{
+    NSString * result = nil;
+    switch (actionType) {
+        case viewActionType:
+            result = @"view";
+            break;
+        case downloadActionType:
+            result = @"download";
+            break;
+        case listActionType:
+            result = @"list";
+            break;
+        case openActionType:
+            result = @"open";
+            break;
+    }
+    return result;
 }
 
 @end

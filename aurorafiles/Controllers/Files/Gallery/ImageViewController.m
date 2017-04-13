@@ -189,14 +189,17 @@
             [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     [object.managedObjectContext save:nil];
-                    [self.navigationController popViewControllerAnimated:YES];
+//                     [self.navigationController popViewControllerAnimated:YES];
+                    [self deletePage];
+
                 }
             }];
         }else{
             [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
                 object.wasDeleted = @YES;
                 [object.managedObjectContext save:nil];
-                [self.navigationController popViewControllerAnimated:YES];
+//                [self.navigationController popViewControllerAnimated:YES];
+                [self deletePage];
             }];
         }
     }];
@@ -469,6 +472,10 @@
 
 - (void)dismiss {
     [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDismissNotification object:nil];
+}
+
+- (void)deletePage{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
 }
 
 #pragma mark - Public method

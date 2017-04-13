@@ -9,10 +9,12 @@
 #import "EXFileGalleryCollectionViewCell.h"
 #import "UploadedFile.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "LKLinkPreviewKit.h"
 #import "UIImage+ImageCompress.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@interface EXFileGalleryCollectionViewCell () <UIScrollViewDelegate,UIWebViewDelegate>
+
+@interface EXFileGalleryCollectionViewCell () <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -28,12 +30,13 @@
     self.scrollView.minimumZoomScale = 1;
     self.scrollView.maximumZoomScale = 5;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.wevView.contentMode = UIViewContentModeScaleAspectFit;
+    self.pagePreview.contentMode = UIViewContentModeScaleAspectFit;
     self.pageLink.text = @"";
     self.pageName.text = @"";
+    self.pageDescription.text = @"";
     self.webContainerView.alpha = 0.0f;
     self.scrollView.delegate = self;
-    self.wevView.delegate = self;
+
     // Initialization code
 }
 
@@ -52,9 +55,39 @@
     {
         [self.activityView startAnimating];
         if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
-            self.pageName.text = file.name;
-            self.pageLink.text = [file.webPageLink absoluteString];
-            [self.wevView loadRequest:[NSURLRequest requestWithURL:file.webPageLink]];
+            
+//            self.pageName.text = file.name;
+//            self.pageLink.text = [file.webPageLink absoluteString];
+            [LKLinkPreviewReader linkPreviewFromURL:file.webPageLink completionHandler:^(NSArray *previews, NSError *error) {
+                if (previews.count > 0  && ! error) {
+                    NSMutableString *text = [NSMutableString new];
+                    for (LKLinkPreview *preview in previews) {
+                        [text appendFormat:@"%@\n", [preview description]];
+                    }
+                    NSLog(@"%@",text);
+                    LKLinkPreview *preview = previews.firstObject;
+                    self.pageName.text = preview.title;
+                    self.pageLink.text = file.webPageLink.absoluteString;
+//                    self.pageDescription.text = preview.linkDescription;
+                    
+                    if (preview.imageURL){
+                        [self.pagePreview sd_setImageWithURL:preview.imageURL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                            if (image) {
+                                self.pagePreview.image = image;
+                            }
+                            [self webPageEndParsing];
+                        }];
+                    }else{
+                        [self webPageEndParsing];
+                    }
+//                    self.previewTextView.text = text;
+                }
+                else {
+//                    self.previewTextView.text = @"Error";
+                    [self webPageEndParsing];
+                }
+                
+            }];
         }else
         {
             UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
@@ -129,17 +162,17 @@
     }
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
+- (void)webPageEndParsing{
     self.webContainerView.alpha = 1.0f;
     [self.activityView stopAnimating];
     self.activityView.alpha = 0.0f;
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    self.wevView.alpha = 0.0f;
-    self.webContainerView.alpha = 1.0f;
-    [self.activityView stopAnimating];
-    self.activityView.alpha = 0.0f;
-}
+//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+//    self.wevView.alpha = 0.0f;
+//    self.webContainerView.alpha = 1.0f;
+//    [self.activityView stopAnimating];
+//    self.activityView.alpha = 0.0f;
+//}
 
 @end
