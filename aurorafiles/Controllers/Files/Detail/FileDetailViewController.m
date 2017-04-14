@@ -70,32 +70,40 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]
+                                           options:@{}
+                                 completionHandler:nil];
         return;
         
     }
     
-    if (self.isP8 && !self.viewLink) {
-        [[ApiP8 filesModule] getFileView:self.object type:self.type withProgress:^(float progress) {
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                hud.progress = progress;
-                NSLog(@"%@ progress -> %f",self.object.name, progress);
-            });
-        } withCompletion:^(NSString *thumbnail) {
-            NSURL *url = [NSURL URLWithString:[thumbnail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-            self.webView.delegate = self;
-            [self.webView loadRequest:request];
-            [hud hideAnimated:YES];
-        }];
-        
-    }else{
-        NSURL *url = [NSURL URLWithString:[self.viewLink stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-        self.webView.delegate = self;
-        [self.webView loadRequest:request];
-        [hud hideAnimated:YES];
+//    if (self.isP8 && !self.viewLink) {
+//        [[ApiP8 filesModule] getFileView:self.object type:self.type withProgress:^(float progress) {
+//            dispatch_async(dispatch_get_main_queue(), ^(){
+//                hud.progress = progress;
+//                NSLog(@"%@ progress -> %f",self.object.name, progress);
+//            });
+//        } withCompletion:^(NSString *thumbnail) {
+//            NSURL *url = [NSURL URLWithString:thumbnail];
+//            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
+//            self.webView.delegate = self;
+//            [self.webView loadRequest:request];
+//            [hud hideAnimated:YES];
+//        }];
+//    }else{
+    NSURL *url = [NSURL URLWithString:self.viewLink];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
+    if (self.isP8){
+//        NSMutableDictionary * headers = [NSMutableDictionary  new];
+//        [headers setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+//        [request.allHTTPHeaderFields setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forKey:@"Authorization"];
+        [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     }
+    self.webView.delegate = self;
+    [self.webView loadRequest:request];
+    [hud hideAnimated:YES];
+//    }
 
     self.title = self.object.name;
     
@@ -244,7 +252,10 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     self.scrollView.alpha = 1.0f;
-    self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
+    if (error){
+        self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
+    }
+
 }
 
 #pragma mark scrollview

@@ -367,14 +367,23 @@ static const int minimalStringLengthFiles = 1;
         }
         else if([[object isLink] boolValue]){
             if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+//                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
+                                                   options:@{}
+                                         completionHandler:nil];
             }else{
                 NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
                 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
                 if ([[UIApplication sharedApplication]canOpenURL:url]) {
-                     [[UIApplication sharedApplication]openURL:url];
+//                     [[UIApplication sharedApplication]openURL:url];
+                    [[UIApplication sharedApplication] openURL:url
+                                                       options:@{}
+                                             completionHandler:nil];
                 }else{
-                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+//                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
+                                                       options:@{}
+                                             completionHandler:nil];
                 }
             }
         }
@@ -1247,9 +1256,10 @@ static const int minimalStringLengthFiles = 1;
         FileDetailViewController * vc = [segue destinationViewController];
         NSString *viewLink = nil;
         if ([[Settings version]isEqualToString:@"P8"]) {
+            viewLink = [NSString stringWithFormat:@"%@%@/%@",[Settings domainScheme],[Settings domain], [object viewUrl]];
             vc.isP8 = YES;
         }else{
-            viewLink = [NSString stringWithFormat:@"%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
+            viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",[Settings domainScheme],[Settings domain],[Settings currentAccount],[object folderHash],[Settings authToken]];
             if (object.isDownloaded.boolValue)
             {
                 viewLink = [[[self downloadURL] URLByAppendingPathComponent:object.name] absoluteString];

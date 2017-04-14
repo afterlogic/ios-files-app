@@ -130,11 +130,7 @@
         NSString *resultAction = @"";
         if ([value isKindOfClass:[NSDictionary class]]) {
             NSDictionary *valueDict = (NSDictionary *)value;
-//            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-//            f.numberStyle = NSNumberFormatterDecimalStyle;
-//            NSNumber *myNumber = [f numberFromString:(NSString *)value];
             NSString *listKey = [Folder convertFileActionTypeToString:listActionType];
-            
             if ([valueDict objectForKey:listKey]) {
                 resultAction = listKey;
             }
@@ -148,8 +144,34 @@
 
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
-    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
-    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+//    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    FEMAttribute *downloadURL = [[FEMAttribute alloc] initWithProperty:@"downloadUrl" keyPath:@"Actions" map:^id(id value) {
+        NSString *resultURL = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+            NSString *listKey = [Folder convertFileActionTypeToString:downloadActionType];
+            if ([[valueDict objectForKey:listKey] isKindOfClass:[NSDictionary class]]) {
+                resultURL = [valueDict objectForKey:listKey][@"url"];
+            }
+            return resultURL;
+        }
+        return resultURL;
+    } reverseMap:nil];
+    [mapping addAttribute:downloadURL];
+//    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    FEMAttribute *viewURL = [[FEMAttribute alloc] initWithProperty:@"viewUrl" keyPath:@"Actions" map:^id(id value) {
+        NSString *resultURL = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+            NSString *listKey = [Folder convertFileActionTypeToString:viewActionType];
+            if ([[valueDict objectForKey:listKey] isKindOfClass:[NSDictionary class]]) {
+                resultURL = [valueDict objectForKey:listKey][@"url"];
+            }
+            return resultURL;
+        }
+        return resultURL;
+    } reverseMap:nil];
+    [mapping addAttribute:viewURL];
     [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
 
     

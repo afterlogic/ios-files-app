@@ -627,7 +627,7 @@ static const int minimalStringLengthFiles = 1;
             [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     [self updateFiles:^(){
-                        
+        
                         [self.tableView reloadData];
                     }];
                 }
