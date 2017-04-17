@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -443,10 +443,10 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="personal"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="EditButton" destination="iJm-ms-mGI" id="HMg-kx-MqQ"/>
                         <outlet property="activityView" destination="D7j-gU-6tL" id="thb-9H-7tD"/>
                         <outlet property="backButton" destination="drg-oh-tJj" id="5nm-Fi-hCi"/>
                         <outlet property="doneButton" destination="T6f-RQ-OkT" id="ttt-qX-CjN"/>
+                        <outlet property="editButton" destination="iJm-ms-mGI" id="gez-tR-NPr"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKR-bn-oJu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -528,10 +528,10 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="corporate"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="EditButton" destination="RfH-Hx-DRX" id="5Ah-Y9-9uz"/>
                         <outlet property="activityView" destination="D7j-gU-6tL" id="pia-RU-j3F"/>
                         <outlet property="backButton" destination="2EC-o2-eyC" id="oFV-qz-KN8"/>
                         <outlet property="doneButton" destination="ApG-Pq-3FI" id="KTH-LH-Ch9"/>
+                        <outlet property="editButton" destination="RfH-Hx-DRX" id="Hmh-Ij-6yk"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xHp-N4-7ff" userLabel="First Responder" sceneMemberID="firstResponder"/>

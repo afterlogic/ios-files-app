@@ -107,7 +107,7 @@ static const int minimalStringLengthFiles = 1;
         NSMutableArray *curentControllersStack = [self.navigationController viewControllers].mutableCopy;
         for (UploadFoldersTableViewController *vc in controllersStack) {
             vc.doneButton = self.doneButton;
-            vc.EditButton = self.EditButton;
+            vc.editButton = self.editButton;
         };
         NSLog(@"curentControllersStack %@",curentControllersStack);
         for (UploadFoldersTableViewController* vc in controllersStack) {
@@ -138,7 +138,7 @@ static const int minimalStringLengthFiles = 1;
         
         self.navigationItem.title = self.folder.name;
         self.navigationItem.leftBarButtonItem = self.backButton;
-        self.navigationItem.rightBarButtonItems = @[self.doneButton, self.EditButton];
+        self.navigationItem.rightBarButtonItems = @[self.doneButton, self.editButton];
         
         [self.delegate currentFolder:self.folder root:self.type];
         
@@ -146,7 +146,7 @@ static const int minimalStringLengthFiles = 1;
     else
     {
         self.navigationItem.title = [self.type capitalizedString];
-        self.navigationItem.rightBarButtonItems = @[self.doneButton,self.EditButton];
+        self.navigationItem.rightBarButtonItems = @[self.doneButton,self.editButton];
         
     }
     NSError * error = nil;
@@ -575,6 +575,11 @@ static const int minimalStringLengthFiles = 1;
         [alertController addAction:[self renameCurrentFolderAction]];
     }
     [alertController addAction:cancelAction];
+    
+    if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        alertController.popoverPresentationController.barButtonItem = self.editButton;
+    }
+
     [self presentViewController:alertController animated:YES completion:nil];
 }
 

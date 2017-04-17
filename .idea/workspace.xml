@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.h" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.m" afterPath="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Save shortcut/Base.lproj/MainInterface.storyboard" afterPath="$PROJECT_DIR$/Save shortcut/Base.lproj/MainInterface.storyboard" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Base.lproj/MainInterface.storyboard" afterPath="$PROJECT_DIR$/aurorafilesaction/Base.lproj/MainInterface.storyboard" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" afterPath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" />
     </list>
     <ignored path="Aurora-git.iws" />
@@ -67,15 +66,73 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileDetailViewController.m" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FileDetailViewController.m" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
-              <caret line="275" column="20" lean-forward="true" selection-start-line="275" selection-start-column="20" selection-end-line="275" selection-end-column="20" />
+            <state relative-caret-position="400">
+              <caret line="266" column="4" lean-forward="true" selection-start-line="266" selection-start-column="4" selection-end-line="266" selection-end-column="4" />
               <folding>
                 <element signature="e#4670#4710#0" expanded="true" />
                 <element signature="e#4840#4873#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UploadFoldersTableViewController.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="88">
+              <caret line="21" column="28" lean-forward="true" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+              <folding>
+                <marker date="1492420737000" expanded="true" signature="1658:37541" ph="..." />
+                <marker date="1492420737000" expanded="true" signature="21387:21475" ph="{...}" />
+                <marker date="1492420737000" expanded="true" signature="23821:24792" ph="{...}" />
+                <marker date="1492420737000" expanded="false" signature="23889:23922" ph="@&quot;Delete&quot;" />
+                <marker date="1492420737000" expanded="true" signature="23967:24758" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="true" signature="24270:24481" ph="^(BOOL succsess){...}" />
+                <marker date="1492420737000" expanded="true" signature="24359:24447" ph="^(){...}" />
+                <marker date="1492420737000" expanded="true" signature="24593:24740" ph="^(NSDictionary* handler){...}" />
+                <marker date="1492420737000" expanded="true" signature="24653:24724" ph="^(){...}" />
+                <marker date="1492420737000" expanded="true" signature="24838:29594" ph="{...}" />
+                <marker date="1492420737000" expanded="false" signature="24907:24955" ph="@&quot;Rename Current Folder&quot;" />
+                <marker date="1492420737000" expanded="false" signature="24958:24991" ph="@&quot;Rename&quot;" />
+                <marker date="1492420737000" expanded="true" signature="25160:29560" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="false" signature="25311:25348" ph="@&quot;Enter Name&quot;" />
+                <marker date="1492420737000" expanded="true" signature="25521:26038" ph="^(UITextField * textField){...}" />
+                <marker date="1492420737000" expanded="false" signature="25638:25676" ph="@&quot;Folder Name&quot;" />
+                <marker date="1492420737000" expanded="false" signature="26211:26242" ph="@&quot;Save&quot;" />
+                <marker date="1492420737000" expanded="true" signature="26283:28649" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="true" signature="26998:28452" ph="^(Folder * folder){...}" />
+                <marker date="1492420737000" expanded="false" signature="28837:28870" ph="@&quot;Cancel&quot;" />
+                <marker date="1492420737000" expanded="true" signature="28910:29065" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="true" signature="29633:36033" ph="{...}" />
+                <marker date="1492420737000" expanded="false" signature="29705:29745" ph="@&quot;Create Folder&quot;" />
+                <marker date="1492420737000" expanded="true" signature="29843:36004" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="false" signature="30056:30093" ph="@&quot;Enter Name&quot;" />
+                <marker date="1492420737000" expanded="true" signature="30266:30674" ph="^(UITextField * textField){...}" />
+                <marker date="1492420737000" expanded="false" signature="30383:30421" ph="@&quot;Folder Name&quot;" />
+                <marker date="1492420737000" expanded="false" signature="30847:30880" ph="@&quot;Create&quot;" />
+                <marker date="1492420737000" expanded="true" signature="30921:35093" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="true" signature="31258:35028" ph="^(BOOL success){...}" />
+                <marker date="1492420737000" expanded="true" signature="31451:34563" ph="^(){...}" />
+                <marker date="1492420737000" expanded="true" signature="34733:34888" ph="^{...}" />
+                <marker date="1492420737000" expanded="false" signature="35281:35314" ph="@&quot;Cancel&quot;" />
+                <marker date="1492420737000" expanded="true" signature="35354:35509" ph="^(UIAlertAction * action){...}" />
+                <marker date="1492420737000" expanded="true" signature="36195:36631" ph="{...}" />
+                <marker date="1492420737000" expanded="true" signature="36729:37206" ph="{...}" />
+                <marker date="1492420737000" expanded="true" signature="37245:37539" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UploadFoldersTableViewController.h" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="525">
+              <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -104,7 +161,7 @@
         <entry file="file://$PROJECT_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloader.m">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
-              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -152,7 +209,6 @@
         <option value="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.h" />
         <option value="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" />
         <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder.h" />
-        <option value="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" />
         <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder.m" />
         <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.h" />
         <option value="$PROJECT_DIR$/aurorafiles/Entity/NonCDFolder/Item.h" />
@@ -196,6 +252,7 @@
         <option value="$PROJECT_DIR$/aurorafiles/Entity/Folder/Folder.m" />
         <option value="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" />
         <option value="$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m" />
+        <option value="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h" />
       </list>
     </option>
   </component>
@@ -636,7 +693,7 @@
       <workItem from="1491384440446" duration="825000" />
       <workItem from="1492004561425" duration="250000" />
       <workItem from="1492066024981" duration="606000" />
-      <workItem from="1492068711335" duration="21543000" />
+      <workItem from="1492068711335" duration="22568000" />
     </task>
     <servers />
   </component>
@@ -649,7 +706,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="297722000" />
+    <option name="totallyTimeSpent" value="298747000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -663,6 +720,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="-106" width="1920" height="1080" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15742575" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25247526" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
@@ -675,7 +733,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15335463" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32772276" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16773163" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38924387" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="-1308" y="-71" width="695" height="1010" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38924387" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="-1308" y="-71" width="695" height="1010" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -761,14 +819,6 @@
     </PATH>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/aurorafilesaction/SupportFiles/ExtensionGetWebPageTitleJS.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="13" column="62" lean-forward="false" selection-start-line="13" selection-start-column="62" selection-end-line="13" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKNavigation.h" />
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKWebView.h" />
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKNavigationDelegate.h" />
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKUIDelegate.h" />
@@ -1047,7 +1097,7 @@
         <state relative-caret-position="241">
           <caret line="279" column="27" lean-forward="false" selection-start-line="279" selection-start-column="27" selection-end-line="279" selection-end-column="27" />
           <folding>
-            <element signature="e#2076#2112#0" expanded="true" />
+            <element signature="e#2076#2112#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1071,19 +1121,73 @@
     <entry file="file://$PROJECT_DIR$/Pods/SDWebImage/SDWebImage/SDWebImageDownloader.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aurorafiles/Controllers/Files/Detail/FileDetailViewController.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="275" column="20" lean-forward="true" selection-start-line="275" selection-start-column="20" selection-end-line="275" selection-end-column="20" />
+        <state relative-caret-position="400">
+          <caret line="266" column="4" lean-forward="true" selection-start-line="266" selection-start-column="4" selection-end-line="266" selection-end-column="4" />
           <folding>
             <element signature="e#4670#4710#0" expanded="true" />
             <element signature="e#4840#4873#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="21" column="28" lean-forward="true" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+          <folding>
+            <marker date="1492420737000" expanded="true" signature="1658:37541" ph="..." />
+            <marker date="1492420737000" expanded="true" signature="21387:21475" ph="{...}" />
+            <marker date="1492420737000" expanded="true" signature="23821:24792" ph="{...}" />
+            <marker date="1492420737000" expanded="false" signature="23889:23922" ph="@&quot;Delete&quot;" />
+            <marker date="1492420737000" expanded="true" signature="23967:24758" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="true" signature="24270:24481" ph="^(BOOL succsess){...}" />
+            <marker date="1492420737000" expanded="true" signature="24359:24447" ph="^(){...}" />
+            <marker date="1492420737000" expanded="true" signature="24593:24740" ph="^(NSDictionary* handler){...}" />
+            <marker date="1492420737000" expanded="true" signature="24653:24724" ph="^(){...}" />
+            <marker date="1492420737000" expanded="true" signature="24838:29594" ph="{...}" />
+            <marker date="1492420737000" expanded="false" signature="24907:24955" ph="@&quot;Rename Current Folder&quot;" />
+            <marker date="1492420737000" expanded="false" signature="24958:24991" ph="@&quot;Rename&quot;" />
+            <marker date="1492420737000" expanded="true" signature="25160:29560" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="false" signature="25311:25348" ph="@&quot;Enter Name&quot;" />
+            <marker date="1492420737000" expanded="true" signature="25521:26038" ph="^(UITextField * textField){...}" />
+            <marker date="1492420737000" expanded="false" signature="25638:25676" ph="@&quot;Folder Name&quot;" />
+            <marker date="1492420737000" expanded="false" signature="26211:26242" ph="@&quot;Save&quot;" />
+            <marker date="1492420737000" expanded="true" signature="26283:28649" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="true" signature="26998:28452" ph="^(Folder * folder){...}" />
+            <marker date="1492420737000" expanded="false" signature="28837:28870" ph="@&quot;Cancel&quot;" />
+            <marker date="1492420737000" expanded="true" signature="28910:29065" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="true" signature="29633:36033" ph="{...}" />
+            <marker date="1492420737000" expanded="false" signature="29705:29745" ph="@&quot;Create Folder&quot;" />
+            <marker date="1492420737000" expanded="true" signature="29843:36004" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="false" signature="30056:30093" ph="@&quot;Enter Name&quot;" />
+            <marker date="1492420737000" expanded="true" signature="30266:30674" ph="^(UITextField * textField){...}" />
+            <marker date="1492420737000" expanded="false" signature="30383:30421" ph="@&quot;Folder Name&quot;" />
+            <marker date="1492420737000" expanded="false" signature="30847:30880" ph="@&quot;Create&quot;" />
+            <marker date="1492420737000" expanded="true" signature="30921:35093" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="true" signature="31258:35028" ph="^(BOOL success){...}" />
+            <marker date="1492420737000" expanded="true" signature="31451:34563" ph="^(){...}" />
+            <marker date="1492420737000" expanded="true" signature="34733:34888" ph="^{...}" />
+            <marker date="1492420737000" expanded="false" signature="35281:35314" ph="@&quot;Cancel&quot;" />
+            <marker date="1492420737000" expanded="true" signature="35354:35509" ph="^(UIAlertAction * action){...}" />
+            <marker date="1492420737000" expanded="true" signature="36195:36631" ph="{...}" />
+            <marker date="1492420737000" expanded="true" signature="36729:37206" ph="{...}" />
+            <marker date="1492420737000" expanded="true" signature="37245:37539" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="36" column="0" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

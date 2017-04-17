@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="h1S-wA-BEz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="h1S-wA-BEz">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -461,10 +461,10 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="personal"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="EditButton" destination="lZ8-GU-ywo" id="PQf-P6-fRT"/>
                         <outlet property="activityView" destination="hwV-In-H7i" id="En1-NS-xHY"/>
                         <outlet property="backButton" destination="1Bo-1j-vPp" id="Iwy-jM-EHM"/>
                         <outlet property="doneButton" destination="z4b-wJ-ttB" id="HO2-Qb-SMv"/>
+                        <outlet property="editButton" destination="lZ8-GU-ywo" id="vli-wQ-opf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0UH-sN-eFG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -546,10 +546,10 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="type" value="corporate"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="EditButton" destination="mZB-yf-E2k" id="zoW-Dg-NGP"/>
                         <outlet property="activityView" destination="hwV-In-H7i" id="fA5-U0-twI"/>
                         <outlet property="backButton" destination="hc8-A1-dza" id="BO4-UV-Og9"/>
                         <outlet property="doneButton" destination="mG8-nR-uCy" id="Shg-za-cub"/>
+                        <outlet property="editButton" destination="mZB-yf-E2k" id="GVX-Uq-7sf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vKS-wk-nxg" userLabel="First Responder" sceneMemberID="firstResponder"/>
