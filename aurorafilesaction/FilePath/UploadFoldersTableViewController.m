@@ -579,6 +579,7 @@ static const int minimalStringLengthFiles = 1;
     if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
         alertController.popoverPresentationController.barButtonItem = self.editButton;
     }
+    //same test change
 
     [self presentViewController:alertController animated:YES completion:nil];
 }
