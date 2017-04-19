@@ -36,7 +36,7 @@ typedef enum ActionType: int {
 - (NSString*)downloadLink;
 - (NSString*)urlScheme;
 - (NSString*)validContentType;
-- (NSURL*)downloadURL;
+- (NSURL *)localURL;
 - (NSDictionary *)folderMOC;
 
 + (Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
@@ -45,6 +45,7 @@ typedef enum ActionType: int {
 + (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx;
 
 + (NSString *)getExistedFile:(Folder *)folder;
++ (NSURL*)downloadsDirectoryURL;
 @end
 
 NS_ASSUME_NONNULL_END

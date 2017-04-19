@@ -116,7 +116,8 @@
             NSLog(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
-                NSString * string = [[[file downloadURL] URLByAppendingPathComponent:file.name] absoluteString];
+//                NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
+                NSString * string = [file localURL].absoluteString;
                 NSFileManager * manager = [NSFileManager defaultManager];
                 if ([manager fileExistsAtPath:string])
                 {
@@ -172,7 +173,7 @@
             NSLog(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
-                NSString * string = [[[file downloadURL] URLByAppendingPathComponent:file.name] absoluteString];
+                NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
                 NSFileManager * manager = [NSFileManager defaultManager];
                 if ([manager fileExistsAtPath:string])
                 {

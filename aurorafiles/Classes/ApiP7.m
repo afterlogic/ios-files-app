@@ -616,7 +616,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 {
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],name];
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];

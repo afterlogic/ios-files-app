@@ -97,11 +97,11 @@
         UIImage * placeholder = [UIImage assetImageForContentType:[folder validContentType]];
         if (thumb)
         {
-            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:nil options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [self.fileImageView sd_setImageWithURL:[NSURL URLWithString:thumb] placeholderImage:placeholder options:SDWebImageRefreshCached completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 dispatch_async(dispatch_get_main_queue(), ^(){
-                    if(!image){
-                        [self.fileImageView setImage:[UIImage assetImageForContentType:[folder validContentType]]];
-                    }
+//                    if(!image){
+//                        [self.fileImageView setImage:[UIImage assetImageForContentType:[folder validContentType]]];
+//                    }
                     [self stopHUD];
                 });
             }];
@@ -110,7 +110,7 @@
             {
                 placeholder = [UIImage imageNamed:@"shotcut"];
             }
-            self.fileImageView.image =placeholder;
+            self.fileImageView.image = placeholder;
             [self stopHUD];
         }
     }

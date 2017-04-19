@@ -75,6 +75,8 @@
 //    [[SessionProvider sharedManager] cancelAllOperations];
 }
 
+
+
 #pragma mark - Search Bar
 
 - (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -163,6 +165,7 @@
         {
             placeholder = [UIImage imageNamed:@"shotcut"];
         }
+    
         if (object.downloadIdentifier.integerValue != -1)
         {
             [cell.downloadActivity startAnimating];
@@ -175,12 +178,9 @@
         }
         [cell.disclosureButton setImage: !object.isDownloaded.boolValue ? [UIImage imageNamed:@"download"] :[UIImage imageNamed:@"onboard"] forState:UIControlStateNormal];
     
-//        [cell.disclosureButton setImage:[UIImage imageNamed:@"removeFromDevice"] forState:UIControlStateDisabled];
-//        cell.disclosureButton.enabled = !object.isDownloaded.boolValue;
-    
         cell.fileDownloaded = object.isDownloaded.boolValue;
     
-        cell.fileImageView.image =placeholder;
+        cell.fileImageView.image = placeholder;
         cell.disclosureButton.alpha = 1.0f;
         
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -212,6 +212,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
     if ([object isImageContentType] && ![[object isLink] boolValue])
     {
@@ -219,11 +220,11 @@
     }
     else if([[object isLink] boolValue]){
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
-            //            return;
     }
     else{
         [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
@@ -281,7 +282,7 @@
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSString * path = [[[Folder downloadsDirectoryURL] URLByAppendingPathComponent:object.name] absoluteString];
     NSFileManager * manager = [NSFileManager defaultManager];
     NSError * error;
     [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
@@ -318,22 +319,18 @@
         FileDetailViewController * vc = [segue destinationViewController];
         if (object.isDownloaded.boolValue)
         {
-            viewLink = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+            viewLink = [object localURL].absoluteString;
         }
         vc.viewLink = viewLink;
-        vc.object = object;        
+        vc.object = object;
     }
+
     if ([segue.identifier isEqualToString:@"OpenDownloadFileGallerySegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-//        FileGalleryCollectionViewController * vc = [segue destinationViewController];
-//        UIImage * snap = [self snapshot:self.navigationController.view];
-//        vc.snapshot= snap;
-//        
-//        vc.currentItem = object;
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@ AND isFolder == NO AND contentType IN (%@)",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]],[Folder imageContentTypes]];
         NSError * error = [NSError new];
         NSArray *items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
         

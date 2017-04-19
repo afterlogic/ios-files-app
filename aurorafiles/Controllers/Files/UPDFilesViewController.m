@@ -527,51 +527,21 @@ static const int minimalStringLengthFiles = 1;
     
     [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
     [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
-    if (self.isP8) {
-        [[self.storageManager DBProvider] saveWithBlock:^(NSManagedObjectContext *context) {
-            [[(FilesTableViewCell *) cell downloadActivity] startAnimating];
-            [[ApiP8 filesModule] getFileView:folder type:self.type withProgress:^(float progress) {
 
-            }                 withCompletion:^(NSString *thumbnail) {
-                folder.content = thumbnail;
-                if ([folder.thumb boolValue]) {
-                    NSString *parentPath = folder.parentPath ? folder.parentPath : @"";
-                    [[ApiP8 filesModule] getThumbnailForFileNamed:folder.name type:self.type path:parentPath withCompletion:^(NSString *thumbnail) {
-                        folder.thumbnailLink = thumbnail;
-                        folder.isDownloaded = [NSNumber numberWithBool:YES];
-                        //                        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-                        //                        NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-                        //                        NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-                        //                        NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-                        //                        folder.downloadIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-                        NSError *error;
-                        [folder.managedObjectContext save:&error];
-                        //                        [downloadTask resume];
-                    }];
-                    [[(FilesTableViewCell *) cell downloadActivity] stopAnimating];
-                    [(FilesTableViewCell *) cell disclosureButton].hidden = YES;
-                }
-            }];
-        }];
-    }else{
-//        [[self.storageManager DBProvider] saveWithBlock:^(NSManagedObjectContext *context) {
-            NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-            NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-            NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-            NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-            NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-            folder.downloadIdentifier = downloadIdetifier;
-            NSError * error;
-            if ([folder.managedObjectContext save:&error]){
-                [downloadTask resume];
-            };
-
-//        }];
-
-
-//        self.downloadedItem = folder;
-
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
+    if (self.isP8){
+        [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
     }
+    NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
+    NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+    NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
+    NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
+    folder.downloadIdentifier = downloadIdetifier;
+    NSError * error;
+    if ([folder.managedObjectContext save:&error]){
+        [downloadTask resume];
+    };
+    
 }
 
 -(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
@@ -665,7 +635,6 @@ static const int minimalStringLengthFiles = 1;
         NSError * error;
         [file.managedObjectContext save:&error];
     }];
-
 }
 
 - (void)tableViewCellMoreAction:(UITableViewCell *)cell
@@ -692,7 +661,7 @@ static const int minimalStringLengthFiles = 1;
 #pragma mark - Help Methods
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
     
     NSFileManager * manager = [NSFileManager defaultManager];
     NSError * error;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KvR-io-hZn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="KvR-io-hZn">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -140,6 +140,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                                     </imageView>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="wX9-gB-vxT" firstAttribute="leading" secondItem="5IG-w7-LrD" secondAttribute="leading" id="DJt-mF-PuE"/>
                                     <constraint firstItem="wX9-gB-vxT" firstAttribute="centerY" secondItem="5IG-w7-LrD" secondAttribute="centerY" id="KdT-Fu-OTW"/>
@@ -151,10 +152,10 @@
                             </scrollView>
                             <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3NQ-Fj-ShM">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="5IG-w7-LrD" firstAttribute="top" secondItem="30Y-91-JYL" secondAttribute="bottom" id="1bd-DZ-pGW"/>
                             <constraint firstAttribute="trailing" secondItem="3NQ-Fj-ShM" secondAttribute="trailing" id="4dx-tC-Ki1"/>
@@ -320,7 +321,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="abN-ri-677" id="XQQ-BZ-ABY">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -604,7 +605,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LA9-0n-g7i" id="TCT-ON-tVo">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -715,7 +716,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qlx-6B-RdI" id="7F1-y6-CbJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
@@ -752,7 +753,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="Jab-Qu-uFV"/>
+                    <navigationItem key="navigationItem" title="Downloads" id="Jab-Qu-uFV"/>
                     <connections>
                         <outlet property="searchBar" destination="hmS-Jm-ybf" id="a0L-ma-AK4"/>
                         <outlet property="tableView" destination="5f7-VM-7rX" id="kyD-NB-JQn"/>
@@ -790,9 +791,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="3wf-We-1Hi"/>
-        <segue reference="cQi-CL-Swj"/>
         <segue reference="Biu-mK-C6o"/>
         <segue reference="hay-3m-SKe"/>
+        <segue reference="cQi-CL-Swj"/>
         <segue reference="jBf-a1-8Po"/>
         <segue reference="1js-mv-bFF"/>
         <segue reference="Yce-Sr-ME5"/>

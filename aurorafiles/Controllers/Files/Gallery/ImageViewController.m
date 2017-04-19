@@ -385,7 +385,7 @@
         NSLog(@"collection view cell image - > %@",[file viewLink]);
         if (file.isDownloaded.boolValue)
         {
-            NSString * string = [[[file downloadURL] URLByAppendingPathComponent:file.name] absoluteString];
+            NSString * string = [file localURL].absoluteString;
             NSFileManager * manager = [NSFileManager defaultManager];
             if ([manager fileExistsAtPath:string])
             {
@@ -403,7 +403,6 @@
                     hud.progress = fractionCompleted;
                 });
             } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
                     if (error) {
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
@@ -414,7 +413,6 @@
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
                     }
-//                });
             }];
         }
         else

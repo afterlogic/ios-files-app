@@ -267,18 +267,18 @@
 - (NSString*)downloadLink
 {
     NSString * downloadLink = @"";
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [url scheme];
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [Settings domainScheme];
     if ([self.isP8 boolValue]) {
-        downloadLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.downloadedUrl];
+        downloadLink = [NSString stringWithFormat:@"%@%@/%@",scheme,[Settings domain],self.downloadUrl];
     }else{
-        downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+        downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme,[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
     }
     
     return downloadLink;
 }
 
-- (NSURL*)downloadURL
++ (NSURL*)downloadsDirectoryURL
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -291,8 +291,17 @@
     if (error)
     {
         NSLog(@"%@",error);
+        return nil;
     }
     return [NSURL URLWithString:filePath];
+}
+
+- (NSURL *)localURL{
+    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
+    components.scheme = @"file";
+    NSURL *path = components.URL;
+    return path;
 }
 
 - (NSString*)urlScheme
@@ -398,6 +407,7 @@
     NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    
     NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
     NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
     if ([fileManager fileExistsAtPath:fullURL.path]) {

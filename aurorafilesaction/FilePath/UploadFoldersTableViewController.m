@@ -470,7 +470,8 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object downloadURL] URLByAppendingPathComponent:object.name] absoluteString];
+//    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSString * path = [object localURL].absoluteString;
     NSFileManager * manager = [NSFileManager defaultManager];
     NSError * error;
     [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
@@ -579,7 +580,6 @@ static const int minimalStringLengthFiles = 1;
     if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
         alertController.popoverPresentationController.barButtonItem = self.editButton;
     }
-    //same test change
 
     [self presentViewController:alertController animated:YES completion:nil];
 }

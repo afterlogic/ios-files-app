@@ -60,5 +60,7 @@
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your photo library is used to select and upload photo</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

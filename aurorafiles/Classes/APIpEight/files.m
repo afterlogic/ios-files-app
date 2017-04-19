@@ -12,6 +12,7 @@
 #import "Settings.h"
 #import "NSURLRequest+requestGenerator.h"
 #import "StorageManager.h"
+#import "NSString+URLEncode.h"
 
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
@@ -563,7 +564,8 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     
-    NSDictionary *headers = @{ @"auth-token": [Settings authToken],
+    NSDictionary *headers = @{
+//                              @"auth-token": [Settings authToken],
                                @"cache-control": @"no-cache",
                                @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]]};
     
@@ -692,22 +694,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             return nil;
         }
         NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
-//        NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-//        NSString *folderName = folder.name ? folder.name : @"";
-//        NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folderName]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
-//        NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
         NSURL *originalFileUrl = [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
-//        [self removeFileAtPath:fullURL];
-//        NSError *copyError = [[NSError alloc]init];
-//        
-//        if([[NSFileManager defaultManager]fileExistsAtPath:originalFileUrl.path]){
-//            if([[NSFileManager defaultManager] replaceItemAtURL:originalFileUrl withItemAtURL:fullURL backupItemName:[NSString stringWithFormat:@"backup_%@",name] options:NSFileManagerItemReplacementWithoutDeletingBackupItem resultingItemURL:nil error:&copyError]){
-//                 return fullURL;
-//            }
-//            NSLog(@"copy item error -> %@",copyError.localizedDescription);
-//        }else{
-//            
-//        }
 
         return originalFileUrl;
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {

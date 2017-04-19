@@ -8,6 +8,7 @@
 
 #import "FileDetailViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <QuickLook/QuickLook.h>
 #import "ApiP7.h"
 #import "Folder.h"
 #import "UIImage+Aurora.h"
@@ -17,7 +18,7 @@
 #import "MBProgressHUD.h"
 
 
-@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate>{
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
     MBProgressHUD *hud;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -27,6 +28,7 @@
 @property (weak, nonatomic) UIBarButtonItem * moreItem;
 @property (weak, nonatomic) UITapGestureRecognizer * zoomOnDoubleTap;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareItem;
+@property (strong, nonatomic) UIDocumentInteractionController *documentInteractorVC;
 
 @end
 
@@ -38,6 +40,7 @@
     self.webView.delegate = nil;
     self.object = nil;
     self.scrollView.delegate = nil;
+    self.documentInteractorVC = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -47,9 +50,17 @@
     
     NSArray *objectsToShare = @[myWebsite];
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-    
-    [self presentViewController:activityVC animated:YES completion:nil];
+    if (self.object.isDownloaded){
+        self.documentInteractorVC = [UIDocumentInteractionController interactionControllerWithURL:[self.object localURL]];
+        self.documentInteractorVC.delegate = self;
+        [self.documentInteractorVC presentOptionsMenuFromBarButtonItem:self.shareItem animated:YES];
+    }else{
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+        
+        activityVC.popoverPresentationController.barButtonItem = self.shareItem;
+        
+        [self presentViewController:activityVC animated:YES completion:nil];
+    }
 }
 
 - (void)viewDidLoad
@@ -70,7 +81,6 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]
                                            options:@{}
                                  completionHandler:nil];
@@ -78,32 +88,14 @@
         
     }
     
-//    if (self.isP8 && !self.viewLink) {
-//        [[ApiP8 filesModule] getFileView:self.object type:self.type withProgress:^(float progress) {
-//            dispatch_async(dispatch_get_main_queue(), ^(){
-//                hud.progress = progress;
-//                NSLog(@"%@ progress -> %f",self.object.name, progress);
-//            });
-//        } withCompletion:^(NSString *thumbnail) {
-//            NSURL *url = [NSURL URLWithString:thumbnail];
-//            NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:50.0f];
-//            self.webView.delegate = self;
-//            [self.webView loadRequest:request];
-//            [hud hideAnimated:YES];
-//        }];
-//    }else{
     NSURL *url = [NSURL URLWithString:self.viewLink];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
     if (self.isP8){
-//        NSMutableDictionary * headers = [NSMutableDictionary  new];
-//        [headers setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
-//        [request.allHTTPHeaderFields setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forKey:@"Authorization"];
         [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     }
     self.webView.delegate = self;
     [self.webView loadRequest:request];
     [hud hideAnimated:YES];
-//    }
 
     self.title = self.object.name;
     
@@ -112,10 +104,6 @@
     self.navigationItem.rightBarButtonItems = @[self.shareItem, self.moreItem];
     self.navigationController.navigationBar.hidden = NO;
 }
-
-//-(void)setViewLink:(NSString *)viewLink{
-//    NSLog(@"link");
-//}
 
 - (IBAction)moreItemAction:(id)sender
 {
@@ -129,6 +117,7 @@
     [alert addAction:[self renameCurrentFileAction]];
     [alert addAction:[self deleteFolderAction]];
     [alert addAction:defaultAction];
+    alert.popoverPresentationController.barButtonItem = self.moreItem;
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -214,6 +203,12 @@
 - (void)orientationChanged:(NSNotification*)notification
 {
     [self.webView reload];
+}
+
+#pragma mark - Documents Interaction Delegate
+
+-(UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller{
+    return  self;
 }
 
 #pragma mark Toolbars behavior

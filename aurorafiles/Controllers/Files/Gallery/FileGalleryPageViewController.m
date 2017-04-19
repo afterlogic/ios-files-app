@@ -33,22 +33,6 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 
 @implementation FileGalleryPageViewController
 
-//- (instancetype)init {
-//    self = [super initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
-//                    navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
-//                                  options:@{UIPageViewControllerOptionInterPageSpacingKey: @(10)}];
-//    if (self) {
-//        self.dataSource = self;
-//        self.delegate = self;
-//        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-//        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-//        self.enableStatusBarHidden = NO;
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDissmissNotification:) name:SYPhotoBrowserDismissNotification object:nil];
-////        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleLongPressNotification:) name:SYPhotoBrowserLongPressNotification object:nil];
-//    }
-//    return self;
-//}
-
 -(void)setItemsList:(NSArray<Folder *> *)itemsList{
     self.imageSourceArray = [[NSMutableArray alloc]init];
     [self.imageSourceArray addObjectsFromArray:itemsList];
@@ -180,8 +164,8 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
 
 - (void)deleteCurrentPage{
     ImageViewController *photoViewController = (ImageViewController *)[self.viewControllers firstObject] ;
-    int currentPageIdx = [self.photoViewControllerArray indexOfObject:photoViewController];
-    int nextPageIdx = currentPageIdx;
+    NSUInteger currentPageIdx = [self.photoViewControllerArray indexOfObject:photoViewController];
+    NSUInteger nextPageIdx = currentPageIdx;
 
     NSUInteger direction = UIPageViewControllerNavigationDirectionForward;
     if (currentPageIdx == self.photoViewControllerArray.count - 1) {
@@ -272,21 +256,6 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
     }
     return _labelPageControl;
 }
-
-//- (SYPhotoBrowserCaptionLabel *)captionLabel {
-//    if (_captionLabel == nil) {
-//        CGRect frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), 0.0);
-//        UIEdgeInsets edgeInsets = UIEdgeInsetsMake(SYPhotoBrowserCaptionLabelPadding, SYPhotoBrowserCaptionLabelPadding, SYPhotoBrowserCaptionLabelPadding, SYPhotoBrowserCaptionLabelPadding);
-//        _captionLabel = [[SYPhotoBrowserCaptionLabel alloc] initWithFrame:frame edgeInsets:edgeInsets];
-//        _captionLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
-//        _captionLabel.numberOfLines = 0;
-//        _captionLabel.textColor = [UIColor whiteColor];
-//        _captionLabel.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
-//        _captionLabel.font = [UIFont systemFontOfSize:18.0];
-//        [self.view addSubview:_captionLabel];
-//    }
-//    return _captionLabel;
-//}
 
 
 

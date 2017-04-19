@@ -45,6 +45,6 @@
 
 @dynamic thumbnailUrl;
 @dynamic viewUrl;
-@dynamic downloadedUrl;
+@dynamic downloadUrl;
 
 @end

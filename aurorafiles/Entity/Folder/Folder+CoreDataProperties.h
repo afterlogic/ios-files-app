@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, retain) NSString *thumbnailUrl;
 @property (nullable, nonatomic, retain) NSString *viewUrl;
-@property (nullable, nonatomic, retain) NSString *downloadedUrl;
+@property (nullable, nonatomic, retain) NSString *downloadUrl;
 
 @end
 

@@ -89,7 +89,6 @@ static const int imageNameMinimalLength = 1;
 
     if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
         alert.popoverPresentationController.barButtonItem = self.moreButton;
-//        alert.modalInPopover = YES;
     }
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -101,9 +100,6 @@ static const int imageNameMinimalLength = 1;
                                                              UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.currentPage.item;
-//                                                                 [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-                                                                 
-                                                                 
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
                                                                  textField.text = [file.name stringByDeletingPathExtension];
                                                                  self.folderName = textField;
@@ -111,8 +107,6 @@ static const int imageNameMinimalLength = 1;
                                                              }];
                                                              
                                                              defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 
-//                                                                 Folder * file = [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
                                                                  Folder * file = self.currentPage.item;
                                                                  [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                                      if (updatedFile) {
@@ -165,8 +159,6 @@ static const int imageNameMinimalLength = 1;
 - (IBAction)shareFileAction:(id)sender
 {
     Folder * object = self.currentPage.item;
-//    [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-//    FileGalleryCollectionViewCell * cell = (FileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:[self.collectionView.indexPathsForVisibleItems firstObject]];
     if ([[Settings version] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
             NSLog(@"link is -> %@", publicLink);
@@ -190,7 +182,6 @@ static const int imageNameMinimalLength = 1;
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
             if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
                 activityVC.popoverPresentationController.barButtonItem = self.shareButton;
-//                activityVC.modalInPopover = YES;
             }
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
@@ -200,7 +191,6 @@ static const int imageNameMinimalLength = 1;
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
             NSLog(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/share",[Settings domain]]];
-//            [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
             UIImage * image = self.currentPage.imageView.image;
             NSURL *myWebsite = [NSURL URLWithString:publicLink];
@@ -217,7 +207,6 @@ static const int imageNameMinimalLength = 1;
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
             if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
                 activityVC.popoverPresentationController.barButtonItem = self.shareButton;
-//                activityVC.modalInPopover = YES;
             }
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
