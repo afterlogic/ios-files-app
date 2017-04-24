@@ -50,15 +50,13 @@
     
     NSArray *objectsToShare = @[myWebsite];
     
-    if (self.object.isDownloaded){
+    if ([self.object.isDownloaded boolValue]){
         self.documentInteractorVC = [UIDocumentInteractionController interactionControllerWithURL:[self.object localURL]];
         self.documentInteractorVC.delegate = self;
         [self.documentInteractorVC presentOptionsMenuFromBarButtonItem:self.shareItem animated:YES];
     }else{
         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-        
         activityVC.popoverPresentationController.barButtonItem = self.shareItem;
-        
         [self presentViewController:activityVC animated:YES completion:nil];
     }
 }

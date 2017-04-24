@@ -382,15 +382,15 @@
         
         hud.hidden = NO;
         [hud showAnimated:YES];
-        NSLog(@"collection view cell image - > %@",[file viewLink]);
         if (file.isDownloaded.boolValue)
         {
-            NSString * string = [file localURL].absoluteString;
+            NSString * string = [file localPath].absoluteString;
             NSFileManager * manager = [NSFileManager defaultManager];
             if ([manager fileExistsAtPath:string])
             {
                 NSLog(@"exist");
             }
+            NSLog(@"collection view cell downloaded image - > %@", string);
             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
         }
         if (!image)

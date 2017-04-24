@@ -360,14 +360,10 @@ static const int minimalStringLengthFiles = 1;
     {
         if ([object isImageContentType] && ![[object isLink] boolValue])
         {
-//            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone){
              [self performSegueWithIdentifier:@"OpenFileGallerySegue" sender:self];
-//            }
-//            [self.navigationController presentViewController:gallery animated:YES completion:nil];
         }
         else if([[object isLink] boolValue]){
             if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
-//                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
                                                    options:@{}
                                          completionHandler:nil];
@@ -375,12 +371,10 @@ static const int minimalStringLengthFiles = 1;
                 NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
                 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
                 if ([[UIApplication sharedApplication]canOpenURL:url]) {
-//                     [[UIApplication sharedApplication]openURL:url];
                     [[UIApplication sharedApplication] openURL:url
                                                        options:@{}
                                              completionHandler:nil];
                 }else{
-//                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
                                                        options:@{}
                                              completionHandler:nil];
@@ -389,9 +383,7 @@ static const int minimalStringLengthFiles = 1;
         }
         else
         {
-//            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone){
                 [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
-//            }
         }
         
     }

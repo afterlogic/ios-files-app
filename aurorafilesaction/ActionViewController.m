@@ -529,7 +529,7 @@
     NSString *Link = [NSString stringWithFormat:@"http://cloudtest.afterlogic.com/?/upload/files/%@%@/%@",storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
-    NSDictionary *headers = @{ @"auth-token": [Settings authToken],
+    NSDictionary *headers = @{ @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]],
                                @"cache-control": @"no-cache"};
     
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:testUrl];

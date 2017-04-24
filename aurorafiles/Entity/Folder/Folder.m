@@ -304,6 +304,14 @@
     return path;
 }
 
+- (NSURL *)localPath{
+    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
+    NSURL *path = components.URL;
+    return path;
+}
+
+
 - (NSString*)urlScheme
 {
     
