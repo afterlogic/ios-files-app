@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>4</string>
 	<key>FASTLANE_XCODE_LIST_TIMEOUT</key>
 	<string>0</string>
 	<key>Fabric</key>
