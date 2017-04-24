@@ -70,6 +70,7 @@
     {
         return [UIImage imageNamed:@"video"];
     }
+    
     return [UIImage imageNamed:@"other"];
 }
 

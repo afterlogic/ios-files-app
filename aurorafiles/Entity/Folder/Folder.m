@@ -12,6 +12,8 @@
 
 @implementation Folder
 
+
+
 #pragma mark - Awake
 
 -(void)awakeFromInsert {
@@ -122,11 +124,55 @@
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
-    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    
+//    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    FEMAttribute *actionType = [[FEMAttribute alloc]initWithProperty:@"mainAction" keyPath:@"Actions" map:^id _Nullable(id  _Nonnull value) {
+        NSString *resultAction = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+            NSString *listKey = [Folder convertFileActionTypeToString:listActionType];
+            if ([valueDict objectForKey:listKey]) {
+                resultAction = listKey;
+            }
+            return resultAction;
+        }
+        return resultAction;
+    } reverseMap:NULL];
+    [mapping addAttribute:actionType];
 
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
 
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
+    
+//    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    FEMAttribute *downloadURL = [[FEMAttribute alloc] initWithProperty:@"downloadUrl" keyPath:@"Actions" map:^id(id value) {
+        NSString *resultURL = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+            NSString *listKey = [Folder convertFileActionTypeToString:downloadActionType];
+            if ([[valueDict objectForKey:listKey] isKindOfClass:[NSDictionary class]]) {
+                resultURL = [valueDict objectForKey:listKey][@"url"];
+            }
+            return resultURL;
+        }
+        return resultURL;
+    } reverseMap:nil];
+    [mapping addAttribute:downloadURL];
+//    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    FEMAttribute *viewURL = [[FEMAttribute alloc] initWithProperty:@"viewUrl" keyPath:@"Actions" map:^id(id value) {
+        NSString *resultURL = @"";
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *valueDict = (NSDictionary *)value;
+            NSString *listKey = [Folder convertFileActionTypeToString:viewActionType];
+            if ([[valueDict objectForKey:listKey] isKindOfClass:[NSDictionary class]]) {
+                resultURL = [valueDict objectForKey:listKey][@"url"];
+            }
+            return resultURL;
+        }
+        return resultURL;
+    } reverseMap:nil];
+    [mapping addAttribute:viewURL];
+    [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
 
     
     return mapping;
@@ -170,10 +216,11 @@
 
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
     
-    
-    
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
+    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
     
     return mapping;
     
@@ -183,16 +230,20 @@
 
 - (NSString*)embedThumbnailLink
 {
+    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [url scheme];
+    NSString * viewLink = @"";
     if ([self isImageContentType])
     {
-        if ([self.linkUrl length])
-        {
-            return self.linkUrl;
+        if ([self.isP8 boolValue]) {
+            viewLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.thumbnailUrl];
+        }else{
+            if ([self.linkUrl length])
+            {
+                return self.linkUrl;
+            }
+            viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
         }
-        NSURL * url = [NSURL URLWithString:[Settings domain]];
-        NSString * scheme = [url scheme];
-        NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesThumbnail/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],self.folderHash,[Settings authToken]];
-        
         return viewLink;
     }
     
@@ -201,22 +252,33 @@
 
 - (NSString*)viewLink
 {
+    NSString * viewLink = @"";
     NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [url scheme];
-    NSString * viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    if ([self.isP8 boolValue]) {
+        viewLink = [NSString stringWithFormat:@"%@%@%@",scheme ? @"" : @"https://",[Settings domain],self.viewUrl];
+    }else{
+        viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    }
     
     return viewLink;
 }
 
 - (NSString*)downloadLink
 {
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [url scheme];
-    NSString * downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    NSString * downloadLink = @"";
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [Settings domainScheme];
+    if ([self.isP8 boolValue]) {
+        downloadLink = [NSString stringWithFormat:@"%@%@/%@",scheme,[Settings domain],self.downloadUrl];
+    }else{
+        downloadLink =[NSString stringWithFormat:@"%@%@/?/Raw/FilesDownload/%@/%@/0/hash/%@",scheme,[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
+    }
+    
     return downloadLink;
 }
 
-- (NSURL*)downloadURL
++ (NSURL*)downloadsDirectoryURL
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -229,9 +291,26 @@
     if (error)
     {
         NSLog(@"%@",error);
+        return nil;
     }
     return [NSURL URLWithString:filePath];
 }
+
+- (NSURL *)localURL{
+    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
+    components.scheme = @"file";
+    NSURL *path = components.URL;
+    return path;
+}
+
+- (NSURL *)localPath{
+    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
+    NSURL *path = components.URL;
+    return path;
+}
+
 
 - (NSString*)urlScheme
 {
@@ -288,6 +367,13 @@
     return NO;
 }
 
+-(BOOL)isZipArchive{
+    if ([self.contentType isEqualToString:@"application/zip"]) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - Fetch
 
 +(NSFetchRequest *)folderFetchRequestInContext:(NSManagedObjectContext *)ctx{
@@ -329,6 +415,7 @@
     NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *folderParentPath = [folder.parentPath stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    
     NSString *name = [[NSString stringWithFormat:@"%@_%@",folderParentPath,folder.name]stringByReplacingOccurrencesOfString:@".zip" withString:@"_zip"];
     NSURL *fullURL = [documentsDirectoryURL URLByAppendingPathComponent:[name stringByReplacingOccurrencesOfString:@"$ZIP:" withString:@"_ZIP_"]];
     if ([fileManager fileExistsAtPath:fullURL.path]) {
@@ -342,6 +429,27 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"identifier = %@ AND fullpath = %@ AND contentType = %@ AND type = %@ AND name = %@",itemRef[@"Id"],itemRef[@"FullPath"],itemRef[@"ContentType"],itemRef[@"Type"],itemRef[@"Name"]];
     NSMutableArray * result = [Folder fetchFoldersInContext:ctx descriptors:descriptors predicate:predicate].mutableCopy;
     return result.lastObject;
+}
+
+#pragma mark - Utilities
+
++(NSString *)convertFileActionTypeToString:(MainActionType)actionType{
+    NSString * result = nil;
+    switch (actionType) {
+        case viewActionType:
+            result = @"view";
+            break;
+        case downloadActionType:
+            result = @"download";
+            break;
+        case listActionType:
+            result = @"list";
+            break;
+        case openActionType:
+            result = @"open";
+            break;
+    }
+    return result;
 }
 
 @end

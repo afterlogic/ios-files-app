@@ -52,9 +52,12 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
 }
 
 - (void)getUserAccountsWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
-    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
+    NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetUsersAccount,
-                                                                    @"AuthToken":[Settings authToken]}];
+//                                                                    @"AuthToken":[Settings authToken]
+                                                                           }].mutableCopy;
+    
+    [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {

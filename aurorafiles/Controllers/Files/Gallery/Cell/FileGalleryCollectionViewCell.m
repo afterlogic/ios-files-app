@@ -14,9 +14,11 @@
 #import "MBProgressHUD.h"
 #import "StorageManager.h"
 #import "ApiP8.h"
+#import "Settings.h"
 
 @interface FileGalleryCollectionViewCell () <UIScrollViewDelegate>{
     MBProgressHUD *hud;
+    SDWebImageDownloader *p8ImageDownloader;
 }
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
@@ -36,6 +38,8 @@
     self.scrollView.delegate = self;
     self.activityView.hidden = YES;
     hud.hidden = YES;
+    p8ImageDownloader = [SDWebImageDownloader sharedDownloader];
+    [p8ImageDownloader setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
 }
 
 
@@ -72,48 +76,104 @@
         self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
-            NSData *data = [NSData dataWithContentsOfFile:[Folder getExistedFile:file]];
-            if(data && data.length > 0){
-                UIImage *image = [UIImage imageWithData:data];
-                [self.imageView setImage:image];
+//            NSData *data = [NSData dataWithContentsOfFile:[Folder getExistedFile:file]];
+//            if(data && data.length > 0){
+//                UIImage *image = [UIImage imageWithData:data];
+//                [self.imageView setImage:image];
+//                self.imageView.alpha = 1.0f;
+//                [hud hideAnimated:YES];
+//                hud.hidden = YES;
+//            }else{
+//                [[ApiP8 filesModule]getFileView:file type:file.type withProgress:^(float progress) {
+//                    dispatch_async(dispatch_get_main_queue(), ^(){
+//                        hud.progress = progress;
+//                        NSLog(@"%@ progress -> %f",file.name, progress);
+//                    });
+//                } withCompletion:^(NSString *thumbnail) {
+//                    if(thumbnail){
+//                         dispatch_async(dispatch_get_main_queue(), ^(){
+//                            NSData* data= [[NSData alloc]initWithContentsOfFile:thumbnail];
+//                            UIImage* image = [UIImage imageWithData:data];
+//                            self.imageView.image = image;
+//                             self.imageView.alpha = 1.0f;
+//                            [hud hideAnimated:YES];
+//                            hud.hidden = YES;
+//                        });
+//                    }else{
+//                        UIImage * placeholder = [UIImage assetImageForContentType:[file validContentType]];
+//                        if (file.isLink.boolValue && ![file isImageContentType])
+//                        {
+//                            placeholder = [UIImage imageNamed:@"shotcut"];
+//                        }
+//                        self.imageView.image = placeholder;
+//                        self.imageView.alpha = 1.0f;
+//                        [hud hideAnimated:YES];
+//                        hud.hidden = YES;
+//
+//                    }
+//                }];
+//            }
+            NSLog(@"collection view cell image - > %@",[file viewLink]);
+            if (file.isDownloaded.boolValue)
+            {
+//                NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
+                NSString * string = [file localURL].absoluteString;
+                NSFileManager * manager = [NSFileManager defaultManager];
+                if ([manager fileExistsAtPath:string])
+                {
+                    NSLog(@"exist");
+                }
+                image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
+            }
+            if (!image)
+            {
+                NSString *fileViewLink = [file viewLink];
+                [p8ImageDownloader downloadImageWithURL:[NSURL URLWithString:fileViewLink] options:SDWebImageDownloaderContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                    hud.progress = (float)receivedSize / file.size.floatValue;
+                } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                            [self.imageView setImage:image];
+                            [hud hideAnimated:YES];
+                            hud.hidden = YES;
+                            self.imageView.alpha = 1.0f;
+                            CGFloat minScale = 1;
+                            self.scrollView.minimumZoomScale = minScale;
+                            self.scrollView.maximumZoomScale = 5.0f;
+                            self.scrollView.zoomScale = minScale;
+                        });
+                }];
+                
+//                [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+//                    hud.progress = (float)receivedSize / file.size.floatValue;
+//                } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//                    [hud hideAnimated:YES];
+//                    hud.hidden = YES;
+//                    self.imageView.alpha = 1.0f;
+//                    CGFloat minScale = 1;
+//                    self.scrollView.minimumZoomScale = minScale;
+//                    self.scrollView.maximumZoomScale = 5.0f;
+//                    self.scrollView.zoomScale = minScale;
+//                }];
+                
+            }
+            else
+            {
+                self.imageView.image = image;
                 self.imageView.alpha = 1.0f;
                 [hud hideAnimated:YES];
                 hud.hidden = YES;
-            }else{
-                [[ApiP8 filesModule]getFileView:file type:file.type withProgress:^(float progress) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        hud.progress = progress;
-                        NSLog(@"%@ progress -> %f",file.name, progress);
-                    });
-                } withCompletion:^(NSString *thumbnail) {
-                    if(thumbnail){
-                         dispatch_async(dispatch_get_main_queue(), ^(){
-                            NSData* data= [[NSData alloc]initWithContentsOfFile:thumbnail];
-                            UIImage* image = [UIImage imageWithData:data];
-                            self.imageView.image = image;
-                             self.imageView.alpha = 1.0f;
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
-                        });
-                    }else{
-                        UIImage * placeholder = [UIImage assetImageForContentType:[file validContentType]];
-                        if (file.isLink.boolValue && ![file isImageContentType])
-                        {
-                            placeholder = [UIImage imageNamed:@"shotcut"];
-                        }
-                        self.imageView.image = placeholder;
-                        self.imageView.alpha = 1.0f;
-                        [hud hideAnimated:YES];
-                        hud.hidden = YES;
-
-                    }
-                }];
+                CGFloat minScale = 1;
+                self.scrollView.minimumZoomScale = minScale;
+                
+                // 5
+                self.scrollView.maximumZoomScale = 5.0f;
+                self.scrollView.zoomScale = minScale;
             }
         }else{
             NSLog(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
-                NSString * string = [[[file downloadURL] URLByAppendingPathComponent:file.name] absoluteString];
+                NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
                 NSFileManager * manager = [NSFileManager defaultManager];
                 if ([manager fileExistsAtPath:string])
                 {
@@ -131,8 +191,6 @@
                     self.imageView.alpha = 1.0f;
                     CGFloat minScale = 1;
                     self.scrollView.minimumZoomScale = minScale;
-                    
-                    // 5
                     self.scrollView.maximumZoomScale = 5.0f;
                     self.scrollView.zoomScale = minScale;
                 }];
@@ -151,7 +209,6 @@
                 self.scrollView.maximumZoomScale = 5.0f;
                 self.scrollView.zoomScale = minScale;
             }
-            
         }
     }
 }

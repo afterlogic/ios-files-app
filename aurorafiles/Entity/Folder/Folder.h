@@ -12,6 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef enum ActionType: int {
+    viewActionType,
+    downloadActionType,
+    listActionType,
+    openActionType
+}MainActionType;
+
 @interface Folder : NSManagedObject
 
 // Insert code here to declare functionality of your managed object subclass
@@ -22,13 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
 - (BOOL)isZippedFile;
+- (BOOL)isZipArchive;
 + (NSArray*)imageContentTypes;
 - (NSString*)embedThumbnailLink;
 - (NSString*)viewLink;
 - (NSString*)downloadLink;
 - (NSString*)urlScheme;
 - (NSString*)validContentType;
-- (NSURL*)downloadURL;
+- (NSURL *)localURL;
+- (NSURL *)localPath;
 - (NSDictionary *)folderMOC;
 
 + (Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
@@ -37,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx;
 
 + (NSString *)getExistedFile:(Folder *)folder;
++ (NSURL*)downloadsDirectoryURL;
 @end
 
 NS_ASSUME_NONNULL_END

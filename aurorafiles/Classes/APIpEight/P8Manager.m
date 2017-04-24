@@ -111,9 +111,9 @@
             complitionHandler(nil);
         }else{
             if (items.count>0) {
-                [[ApiP8 filesModule]getThumbnailsForFiles:items withCompletion:^(NSArray *resultedItems) {
-                    complitionHandler(resultedItems);
-                }];
+//                [[ApiP8 filesModule]getThumbnailsForFiles:items withCompletion:^(NSArray *resultedItems) {
+                    complitionHandler(items);
+//                }];
             }else{
                 complitionHandler(@[]);
             }

@@ -43,4 +43,8 @@
 @dynamic isLastUsedUploadFolder;
 @dynamic mainAction;
 
+@dynamic thumbnailUrl;
+@dynamic viewUrl;
+@dynamic downloadUrl;
+
 @end

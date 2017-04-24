@@ -9,7 +9,10 @@
 #import "EXFileGalleryCollectionViewCell.h"
 #import "UploadedFile.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "LKLinkPreviewKit.h"
 #import "UIImage+ImageCompress.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+
 
 @interface EXFileGalleryCollectionViewCell () <UIScrollViewDelegate>
 
@@ -27,7 +30,13 @@
     self.scrollView.minimumZoomScale = 1;
     self.scrollView.maximumZoomScale = 5;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.pagePreview.contentMode = UIViewContentModeScaleAspectFit;
+    self.pageLink.text = @"";
+    self.pageName.text = @"";
+    self.pageDescription.text = @"";
+    self.webContainerView.alpha = 0.0f;
     self.scrollView.delegate = self;
+
     // Initialization code
 }
 
@@ -45,33 +54,69 @@
     if (file)
     {
         [self.activityView startAnimating];
-        UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
+        if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
+            
+//            self.pageName.text = file.name;
+//            self.pageLink.text = [file.webPageLink absoluteString];
+            [LKLinkPreviewReader linkPreviewFromURL:file.webPageLink completionHandler:^(NSArray *previews, NSError *error) {
+                if (previews.count > 0  && ! error) {
+                    NSMutableString *text = [NSMutableString new];
+                    for (LKLinkPreview *preview in previews) {
+                        [text appendFormat:@"%@\n", [preview description]];
+                    }
+                    NSLog(@"%@",text);
+                    LKLinkPreview *preview = previews.firstObject;
+                    self.pageName.text = preview.title;
+                    self.pageLink.text = file.webPageLink.absoluteString;
+//                    self.pageDescription.text = preview.linkDescription;
+                    
+                    if (preview.imageURL){
+                        [self.pagePreview sd_setImageWithURL:preview.imageURL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                            if (image) {
+                                self.pagePreview.image = image;
+                            }
+                            [self webPageEndParsing];
+                        }];
+                    }else{
+                        [self webPageEndParsing];
+                    }
+//                    self.previewTextView.text = text;
+                }
+                else {
+//                    self.previewTextView.text = @"Error";
+                    [self webPageEndParsing];
+                }
+                
+            }];
+        }else
+        {
+            UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
 
-        zoomOn.numberOfTapsRequired = 2;
-        zoomOn.numberOfTouchesRequired = 1;
-        self.doubleTap = zoomOn;
-        [self.imageView addGestureRecognizer:self.doubleTap];
-        self.imageView.userInteractionEnabled = YES;
-        self.imageView.alpha = 0.0f;
-        
-        NSLog(@"%@",[file path]);
-        self.imageView.image = nil;
-        UIImage * image = nil;
-        
-        NSString *path = file.path.absoluteString;
-        image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
-        self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
-        image = nil;
-        self.imageView.alpha = 1.0f;
-        [self.activityView stopAnimating];
-        CGFloat minScale = 1;
-        self.scrollView.minimumZoomScale = minScale;
-        
-        // 5
-        self.scrollView.maximumZoomScale = 5.0f;
-        self.scrollView.zoomScale = minScale;
-        self.activityView.alpha = 0.0f;
-
+            zoomOn.numberOfTapsRequired = 2;
+            zoomOn.numberOfTouchesRequired = 1;
+            self.doubleTap = zoomOn;
+            [self.imageView addGestureRecognizer:self.doubleTap];
+            self.imageView.userInteractionEnabled = YES;
+            self.imageView.alpha = 0.0f;
+            
+            NSLog(@"%@",[file path]);
+            self.imageView.image = nil;
+            UIImage * image = nil;
+            
+            NSString *path = file.path.absoluteString;
+            image = [UIImage imageWithContentsOfFile: [path stringByReplacingOccurrencesOfString:@"file://" withString:@""]];
+            self.imageView.image = [UIImage compressImage:image compressRatio:0.1];
+            image = nil;
+            self.imageView.alpha = 1.0f;
+            [self.activityView stopAnimating];
+            CGFloat minScale = 1;
+            self.scrollView.minimumZoomScale = minScale;
+            
+            // 5
+            self.scrollView.maximumZoomScale = 5.0f;
+            self.scrollView.zoomScale = minScale;
+            self.activityView.alpha = 0.0f;
+        }
         
     }
 }
@@ -116,5 +161,18 @@
         [self.scrollView zoomToRect:zoomRect animated:YES];
     }
 }
+
+- (void)webPageEndParsing{
+    self.webContainerView.alpha = 1.0f;
+    [self.activityView stopAnimating];
+    self.activityView.alpha = 0.0f;
+}
+
+//- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+//    self.wevView.alpha = 0.0f;
+//    self.webContainerView.alpha = 1.0f;
+//    [self.activityView stopAnimating];
+//    self.activityView.alpha = 0.0f;
+//}
 
 @end

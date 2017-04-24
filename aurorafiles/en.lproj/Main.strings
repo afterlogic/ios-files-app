@@ -1,0 +1,51 @@
+
+/* Class = "UIButton"; normalTitle = "Sign In"; ObjectID = "8Vv-6p-Vpd"; */
+"8Vv-6p-Vpd.normalTitle" = "Sign In";
+
+/* Class = "UITextField"; placeholder = "Host"; ObjectID = "IKj-GC-0EU"; */
+"IKj-GC-0EU.placeholder" = "Host";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "MfZ-jH-WiM"; */
+"MfZ-jH-WiM.placeholder" = "Email";
+
+/* Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "P2e-5F-q5I"; */
+"P2e-5F-q5I.title" = "Upload";
+
+/* Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "Wp3-5P-dw1"; */
+"Wp3-5P-dw1.title" = "Upload";
+
+/* Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[0] = "Personal"; ObjectID = "ZVu-8x-Df1"; */
+"ZVu-8x-Df1.segmentTitles[0]" = "Personal";
+
+/* Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[1] = "Corporate"; ObjectID = "ZVu-8x-Df1"; */
+"ZVu-8x-Df1.segmentTitles[1]" = "Corporate";
+
+/* Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[2] = "Downloads"; ObjectID = "ZVu-8x-Df1"; */
+"ZVu-8x-Df1.segmentTitles[2]" = "Downloads";
+
+/* Class = "UITabBarItem"; title = "Personal"; ObjectID = "cL2-li-7n4"; */
+"cL2-li-7n4.title" = "Personal";
+
+/* Class = "UISearchBar"; hmS-Jm-ybf.scopeButtonTitles[0] = "Title"; ObjectID = "hmS-Jm-ybf"; */
+"hmS-Jm-ybf.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; hmS-Jm-ybf.scopeButtonTitles[1] = "Title"; ObjectID = "hmS-Jm-ybf"; */
+"hmS-Jm-ybf.scopeButtonTitles[1]" = "Title";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "l28-wP-U8W"; */
+"l28-wP-U8W.placeholder" = "Password";
+
+/* Class = "UISearchBar"; r9h-uG-C4I.scopeButtonTitles[0] = "Title"; ObjectID = "r9h-uG-C4I"; */
+"r9h-uG-C4I.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; r9h-uG-C4I.scopeButtonTitles[1] = "Title"; ObjectID = "r9h-uG-C4I"; */
+"r9h-uG-C4I.scopeButtonTitles[1]" = "Title";
+
+/* Class = "UISearchBar"; sG1-yx-259.scopeButtonTitles[0] = "Title"; ObjectID = "sG1-yx-259"; */
+"sG1-yx-259.scopeButtonTitles[0]" = "Title";
+
+/* Class = "UISearchBar"; sG1-yx-259.scopeButtonTitles[1] = "Title"; ObjectID = "sG1-yx-259"; */
+"sG1-yx-259.scopeButtonTitles[1]" = "Title";
+
+/* Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "uHw-UU-5cI"; */
+"uHw-UU-5cI.title" = "Upload";

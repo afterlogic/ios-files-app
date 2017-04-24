@@ -93,6 +93,7 @@
     [self.navigationController.navigationController setTitle:self.selectedRootPath];
 
     self.currentFolderController.doneButton = self.navRightButton;
+    self.currentFolderController.editButton = self.editRightButton;
     
     [self currentFolder:self.currentFolderController.folder root:self.currentFolderController.type];
 }
@@ -133,6 +134,7 @@
         self.currentFolderController.delegate = self;
         self.currentFolderController.doneButton = self.navRightButton;
         self.currentFolderController.backButton = self.backButton;
+        self.currentFolderController.editButton = self.editRightButton;
         self.selectedRootPath = self.currentFolderController.type;
         self.selectedFolderPath = @"";
 //        [self.navigationController setTitle:self.selectedRootPath];

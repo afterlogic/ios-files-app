@@ -16,4 +16,5 @@
 @property (strong, nonatomic) Folder * object;
 @property (nonatomic) BOOL isP8;
 
+
 @end

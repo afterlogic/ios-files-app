@@ -16,12 +16,17 @@
 #import "ApiP7.h"
 #import "ApiP8.h"
 
-@interface GalleryWrapperViewController () <GalleryPageDelegate>
+static const int imageNameMinimalLength = 1;
+
+@interface GalleryWrapperViewController () <GalleryPageDelegate, UITextFieldDelegate>{
+    UIAlertAction * defaultRenameAction;
+}
 @property (weak, nonatomic) UIBarButtonItem * moreButton;
 @property (weak, nonatomic) UIBarButtonItem * shareButton;
 @property (weak, nonatomic) UITextField * folderName;
 @property (weak, nonatomic) Folder *currentChoosenItem;
 @property (weak, nonatomic) ImageViewController *currentPage;
+@property  BOOL isStatusBarHidden;
 
 @end
 
@@ -35,6 +40,7 @@
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
     self.moreButton = moreItem;
     self.shareButton = shareItem;
+    self.isStatusBarHidden = NO;
     self.navigationItem.rightBarButtonItems = @[self.shareButton, self.moreButton];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(hideNavBar) name:SYPhotoBrowserHideNavbarNotification object:nil];
@@ -53,7 +59,7 @@
 }
 
 -(BOOL)prefersStatusBarHidden{
-    return YES;
+    return self.isStatusBarHidden;
 }
 
 
@@ -61,8 +67,10 @@
 
 -(void)hideNavBar{
     BOOL isHidden = !self.navigationController.navigationBar.isHidden;
+    self.isStatusBarHidden = isHidden;
     [UIView animateWithDuration:0.2f animations:^{
         [self.navigationController setNavigationBarHidden: isHidden];
+        [self prefersStatusBarHidden];
     }];
 }
 
@@ -78,6 +86,10 @@
     [alert addAction:[self renameCurrentFileAction]];
     [alert addAction:[self deleteFolderAction]];
     [alert addAction:defaultAction];
+
+    if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+        alert.popoverPresentationController.barButtonItem = self.moreButton;
+    }
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -88,21 +100,19 @@
                                                              UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.currentPage.item;
-//                                                                 [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-                                                                 
-                                                                 
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
                                                                  textField.text = [file.name stringByDeletingPathExtension];
                                                                  self.folderName = textField;
+                                                                 textField.delegate = self;
                                                              }];
                                                              
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 
-//                                                                 Folder * file = [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
+                                                             defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  Folder * file = self.currentPage.item;
                                                                  [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                                      if (updatedFile) {
-                                                                         self.title = updatedFile.name;
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             self.title = updatedFile.name;
+                                                                         });
                                                                      }
                                                                  }];
                                                              }];
@@ -110,7 +120,8 @@
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
                                                              }];
-                                                             [createFolder addAction:defaultAction];
+                                                             [createFolder addAction:defaultRenameAction];
+                                                             [defaultRenameAction setEnabled:NO];
                                                              [createFolder addAction:cancelAction];
                                                              [self presentViewController:createFolder animated:YES completion:nil];
                                                          }];
@@ -130,14 +141,14 @@
 //                    [object.managedObjectContext save:nil];
 //                    [self.navigationController popViewControllerAnimated:YES];
                     [[StorageManager sharedManager] deleteItem:object];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDismissNotification object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
                 }
             }];
         }else{
             [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
                 [[StorageManager sharedManager] deleteItem:object];
 //                [self.navigationController popViewControllerAnimated:YES];
-                [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDismissNotification object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
             }];
         }
     }];
@@ -148,8 +159,6 @@
 - (IBAction)shareFileAction:(id)sender
 {
     Folder * object = self.currentPage.item;
-//    [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
-//    FileGalleryCollectionViewCell * cell = (FileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:[self.collectionView.indexPathsForVisibleItems firstObject]];
     if ([[Settings version] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
             NSLog(@"link is -> %@", publicLink);
@@ -171,7 +180,9 @@
             }
             
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-            
+            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+                activityVC.popoverPresentationController.barButtonItem = self.shareButton;
+            }
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
     }else{
@@ -180,7 +191,6 @@
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
             NSLog(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/share",[Settings domain]]];
-//            [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
             UIImage * image = self.currentPage.imageView.image;
             NSURL *myWebsite = [NSURL URLWithString:publicLink];
@@ -195,17 +205,21 @@
             }
             
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
-            
+            if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad){
+                activityVC.popoverPresentationController.barButtonItem = self.shareButton;
+            }
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
     }
-
-    
-
-    
-
 }
 
+#pragma mark - TextField Delegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    BOOL  isActionEnabled =  currentTextFieldText.length>=imageNameMinimalLength ? YES : NO;
+    [defaultRenameAction setEnabled:isActionEnabled] ;
+    return YES;
+}
 #pragma mark - Page Delegate
 
 - (void)setCurrentPageController:(ImageViewController *)currentPage{

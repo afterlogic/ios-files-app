@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Save shortcut/Base.lproj/MainInterface.storyboard" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="1Bo-1j-vPp.title">
+        <source>Back</source>
+        <target>Back</target>
+        <note>Class = "UIBarButtonItem"; title = "Back"; ObjectID = "1Bo-1j-vPp";</note>
+      </trans-unit>
+      <trans-unit id="Bll-ea-evg.text">
+        <source>To continue, click Aurora.Files app and sign in</source>
+        <target>To continue, click Aurora.Files app and sign in</target>
+        <note>Class = "UILabel"; text = "To continue, click Aurora.Files app and sign in"; ObjectID = "Bll-ea-evg";</note>
+      </trans-unit>
+      <trans-unit id="GZc-YN-Y5f.title">
+        <source>Personal</source>
+        <target>Personal</target>
+        <note>Class = "UITabBarItem"; title = "Personal"; ObjectID = "GZc-YN-Y5f";</note>
+      </trans-unit>
+      <trans-unit id="Mz1-yk-OVS.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; Mz1-yk-OVS.scopeButtonTitles[0] = "Title"; ObjectID = "Mz1-yk-OVS";</note>
+      </trans-unit>
+      <trans-unit id="Mz1-yk-OVS.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; Mz1-yk-OVS.scopeButtonTitles[1] = "Title"; ObjectID = "Mz1-yk-OVS";</note>
+      </trans-unit>
+      <trans-unit id="OJn-7X-hZl.text">
+        <source>Save to:</source>
+        <target>Save to:</target>
+        <note>Class = "UILabel"; text = "Save to:"; ObjectID = "OJn-7X-hZl";</note>
+      </trans-unit>
+      <trans-unit id="Qql-ir-6ry.text">
+        <source>Sign in Aurora.Files</source>
+        <target>Sign in Aurora.Files</target>
+        <note>Class = "UILabel"; text = "Sign in Aurora.Files"; ObjectID = "Qql-ir-6ry";</note>
+      </trans-unit>
+      <trans-unit id="WQB-hQ-B9I.title">
+        <source>Upload</source>
+        <target>Upload</target>
+        <note>Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "WQB-hQ-B9I";</note>
+      </trans-unit>
+      <trans-unit id="hc8-A1-dza.title">
+        <source>Back</source>
+        <target>Back</target>
+        <note>Class = "UIBarButtonItem"; title = "Back"; ObjectID = "hc8-A1-dza";</note>
+      </trans-unit>
+      <trans-unit id="mtV-4j-PAw.title">
+        <source>Corporate</source>
+        <target>Corporate</target>
+        <note>Class = "UITabBarItem"; title = "Corporate"; ObjectID = "mtV-4j-PAw";</note>
+      </trans-unit>
+      <trans-unit id="u0V-mm-duL.text">
+        <source>filePath</source>
+        <target>filePath</target>
+        <note>Class = "UILabel"; text = "filePath"; ObjectID = "u0V-mm-duL";</note>
+      </trans-unit>
+      <trans-unit id="ye3-22-MwR.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; ye3-22-MwR.scopeButtonTitles[0] = "Title"; ObjectID = "ye3-22-MwR";</note>
+      </trans-unit>
+      <trans-unit id="ye3-22-MwR.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; ye3-22-MwR.scopeButtonTitles[1] = "Title"; ObjectID = "ye3-22-MwR";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Save shortcut/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName">
+        <source>AuroraFiles</source>
+      </trans-unit>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.3</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Save shortcut/en.lproj/Localizable.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="Aurora version smaller than 8">
+        <source>Aurora version smaller than 8</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Can't get access to API">
+        <source>Can't get access to API</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Cancel">
+        <source>Cancel</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Check connection...">
+        <source>Check connection...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Check saved folder existance...">
+        <source>Check saved folder existance...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Choose option">
+        <source>Choose option</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create">
+        <source>Create</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create Folder">
+        <source>Create Folder</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Delete">
+        <source>Delete</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Enter Name">
+        <source>Enter Name</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Files succesfully uploaded!">
+        <source>Files succesfully uploaded!</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Files uploaded with some errors...">
+        <source>Files uploaded with some errors...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Folder Name">
+        <source>Folder Name</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename">
+        <source>Rename</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename Current Folder">
+        <source>Rename Current Folder</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename File">
+        <source>Rename File</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Save">
+        <source>Save</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Something went wrong.Maybe you dont have internet connection =(">
+        <source>Something went wrong.Maybe you dont have internet connection =(</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="The username or password you entered is incorrect">
+        <source>The username or password you entered is incorrect</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Upload File">
+        <source>Upload File</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="server is unavailable now">
+        <source>server is unavailable now</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Save shortcut/en.lproj/MainInterface.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="1Bo-1j-vPp.title">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="Bll-ea-evg.text">
+        <source>To continue, click Aurora.Files app and sign in</source>
+      </trans-unit>
+      <trans-unit id="GZc-YN-Y5f.title">
+        <source>Personal</source>
+      </trans-unit>
+      <trans-unit id="Mz1-yk-OVS.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="Mz1-yk-OVS.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="OJn-7X-hZl.text">
+        <source>Save to:</source>
+      </trans-unit>
+      <trans-unit id="Qql-ir-6ry.text">
+        <source>Sign in Aurora.Files</source>
+      </trans-unit>
+      <trans-unit id="WQB-hQ-B9I.title">
+        <source>Upload</source>
+      </trans-unit>
+      <trans-unit id="hc8-A1-dza.title">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="mtV-4j-PAw.title">
+        <source>Corporate</source>
+      </trans-unit>
+      <trans-unit id="u0V-mm-duL.text">
+        <source>filePath</source>
+      </trans-unit>
+      <trans-unit id="ye3-22-MwR.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="ye3-22-MwR.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafiles/Base.lproj/Main.storyboard" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="8Vv-6p-Vpd.normalTitle">
+        <source>Sign In</source>
+        <target>Sign In</target>
+        <note>Class = "UIButton"; normalTitle = "Sign In"; ObjectID = "8Vv-6p-Vpd";</note>
+      </trans-unit>
+      <trans-unit id="IKj-GC-0EU.placeholder">
+        <source>Host</source>
+        <target>Host</target>
+        <note>Class = "UITextField"; placeholder = "Host"; ObjectID = "IKj-GC-0EU";</note>
+      </trans-unit>
+      <trans-unit id="MfZ-jH-WiM.placeholder">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Class = "UITextField"; placeholder = "Email"; ObjectID = "MfZ-jH-WiM";</note>
+      </trans-unit>
+      <trans-unit id="P2e-5F-q5I.title">
+        <source>Upload</source>
+        <target>Upload</target>
+        <note>Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "P2e-5F-q5I";</note>
+      </trans-unit>
+      <trans-unit id="Wp3-5P-dw1.title">
+        <source>Upload</source>
+        <target>Upload</target>
+        <note>Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "Wp3-5P-dw1";</note>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[0]">
+        <source>Personal</source>
+        <target>Personal</target>
+        <note>Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[0] = "Personal"; ObjectID = "ZVu-8x-Df1";</note>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[1]">
+        <source>Corporate</source>
+        <target>Corporate</target>
+        <note>Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[1] = "Corporate"; ObjectID = "ZVu-8x-Df1";</note>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[2]">
+        <source>Downloads</source>
+        <target>Downloads</target>
+        <note>Class = "UISegmentedControl"; ZVu-8x-Df1.segmentTitles[2] = "Downloads"; ObjectID = "ZVu-8x-Df1";</note>
+      </trans-unit>
+      <trans-unit id="cL2-li-7n4.title">
+        <source>Personal</source>
+        <target>Personal</target>
+        <note>Class = "UITabBarItem"; title = "Personal"; ObjectID = "cL2-li-7n4";</note>
+      </trans-unit>
+      <trans-unit id="hmS-Jm-ybf.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; hmS-Jm-ybf.scopeButtonTitles[0] = "Title"; ObjectID = "hmS-Jm-ybf";</note>
+      </trans-unit>
+      <trans-unit id="hmS-Jm-ybf.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; hmS-Jm-ybf.scopeButtonTitles[1] = "Title"; ObjectID = "hmS-Jm-ybf";</note>
+      </trans-unit>
+      <trans-unit id="l28-wP-U8W.placeholder">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Class = "UITextField"; placeholder = "Password"; ObjectID = "l28-wP-U8W";</note>
+      </trans-unit>
+      <trans-unit id="r9h-uG-C4I.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; r9h-uG-C4I.scopeButtonTitles[0] = "Title"; ObjectID = "r9h-uG-C4I";</note>
+      </trans-unit>
+      <trans-unit id="r9h-uG-C4I.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; r9h-uG-C4I.scopeButtonTitles[1] = "Title"; ObjectID = "r9h-uG-C4I";</note>
+      </trans-unit>
+      <trans-unit id="sG1-yx-259.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; sG1-yx-259.scopeButtonTitles[0] = "Title"; ObjectID = "sG1-yx-259";</note>
+      </trans-unit>
+      <trans-unit id="sG1-yx-259.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; sG1-yx-259.scopeButtonTitles[1] = "Title"; ObjectID = "sG1-yx-259";</note>
+      </trans-unit>
+      <trans-unit id="uHw-UU-5cI.title">
+        <source>Upload</source>
+        <target>Upload</target>
+        <note>Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "uHw-UU-5cI";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafiles/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName">
+        <source>AuroraFiles</source>
+      </trans-unit>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.3</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafiles/en.lproj/Localizable.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="Aurora version smaller than 8">
+        <source>Aurora version smaller than 8</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Can't get access to API">
+        <source>Can't get access to API</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Cancel">
+        <source>Cancel</source>
+        <note>cancel text</note>
+      </trans-unit>
+      <trans-unit id="Checking URL...">
+        <source>Checking URL...</source>
+        <note>hud cheking url text</note>
+      </trans-unit>
+      <trans-unit id="Choose option">
+        <source>Choose option</source>
+        <note>edit actions title text 
+   more action popup title text</note>
+      </trans-unit>
+      <trans-unit id="Corporate">
+        <source>Corporate</source>
+        <note>corporate tab title</note>
+      </trans-unit>
+      <trans-unit id="Create">
+        <source>Create</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create Folder">
+        <source>Create Folder</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create Shortcut">
+        <source>Create Shortcut</source>
+        <note>Create shortcut action name</note>
+      </trans-unit>
+      <trans-unit id="Creating shortuct...">
+        <source>Creating shortuct...</source>
+        <note>hud creating shortcut text</note>
+      </trans-unit>
+      <trans-unit id="Delete">
+        <source>Delete</source>
+        <note>delete action title text</note>
+      </trans-unit>
+      <trans-unit id="Download files">
+        <source>Download files</source>
+        <note>download popup title</note>
+      </trans-unit>
+      <trans-unit id="Downloads">
+        <source>Downloads</source>
+        <note>download tab title
+   Downloads action name</note>
+      </trans-unit>
+      <trans-unit id="ERROR">
+        <source>ERROR</source>
+        <note>error popup label</note>
+      </trans-unit>
+      <trans-unit id="Enter Name">
+        <source>Enter Name</source>
+        <note>rename popup title text</note>
+      </trans-unit>
+      <trans-unit id="Enter URL">
+        <source>Enter URL</source>
+        <note>creating shortcut popup title</note>
+      </trans-unit>
+      <trans-unit id="Folder Name">
+        <source>Folder Name</source>
+        <note>rename popup textField placeholder text</note>
+      </trans-unit>
+      <trans-unit id="Folder is empty">
+        <source>Folder is empty</source>
+        <note>files view empty title</note>
+      </trans-unit>
+      <trans-unit id="Folder is loading...">
+        <source>Folder is loading...</source>
+        <note>files refresh title</note>
+      </trans-unit>
+      <trans-unit id="Got it!">
+        <source>Got it!</source>
+        <note>download popup cancel button title</note>
+      </trans-unit>
+      <trans-unit id="Host field should not be empty. Please, enter the host url and try again">
+        <source>Host field should not be empty. Please, enter the host url and try again</source>
+        <note>4062 error text</note>
+      </trans-unit>
+      <trans-unit id="Logout">
+        <source>Logout</source>
+        <note>Logout action name</note>
+      </trans-unit>
+      <trans-unit id="OK">
+        <source>OK</source>
+        <note>error popup cancelButton Title</note>
+      </trans-unit>
+      <trans-unit id="Personal">
+        <source>Personal</source>
+        <note>personal tab title</note>
+      </trans-unit>
+      <trans-unit id="Rename">
+        <source>Rename</source>
+        <note>rename file action title text</note>
+      </trans-unit>
+      <trans-unit id="Rename Current Folder">
+        <source>Rename Current Folder</source>
+        <note>rename folder action title text</note>
+      </trans-unit>
+      <trans-unit id="Rename File">
+        <source>Rename File</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Save">
+        <source>Save</source>
+        <note>save action title text</note>
+      </trans-unit>
+      <trans-unit id="Something goes wrong. Please, try again later.">
+        <source>Something goes wrong. Please, try again later.</source>
+        <note>hud error text</note>
+      </trans-unit>
+      <trans-unit id="Something went wrong.Maybe you dont have internet connection =(">
+        <source>Something went wrong.Maybe you dont have internet connection =(</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Tapping this icon makes the file available offline. The file will be stored on your device locally. If you want to remove the file from the device, just tap the icon again making it grey and the file won't consume space on your device anymore.">
+        <source>Tapping this icon makes the file available offline. The file will be stored on your device locally. If you want to remove the file from the device, just tap the icon again making it grey and the file won't consume space on your device anymore.</source>
+        <note>download popup message text</note>
+      </trans-unit>
+      <trans-unit id="The e-mail or password you entered is incorrect">
+        <source>The e-mail or password you entered is incorrect</source>
+        <note>500 error text</note>
+      </trans-unit>
+      <trans-unit id="The host is not responding. Try connecting again later">
+        <source>The host is not responding. Try connecting again later</source>
+        <note>401 error text</note>
+      </trans-unit>
+      <trans-unit id="The username or password you entered is incorrect">
+        <source>The username or password you entered is incorrect</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="URL">
+        <source>URL</source>
+        <note>creating shortcut popup textfield placeholder</note>
+      </trans-unit>
+      <trans-unit id="Updating files...">
+        <source>Updating files...</source>
+        <note>hud updating files text</note>
+      </trans-unit>
+      <trans-unit id="You have entered an invalid e-mail address. Please try again">
+        <source>You have entered an invalid e-mail address. Please try again</source>
+        <note>4061 error text</note>
+      </trans-unit>
+      <trans-unit id="server is unavailable now">
+        <source>server is unavailable now</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="uploading">
+        <source>uploading</source>
+        <note>hud uploading text</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafiles/en.lproj/Main.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="8Vv-6p-Vpd.normalTitle">
+        <source>Sign In</source>
+      </trans-unit>
+      <trans-unit id="IKj-GC-0EU.placeholder">
+        <source>Host</source>
+      </trans-unit>
+      <trans-unit id="MfZ-jH-WiM.placeholder">
+        <source>Email</source>
+      </trans-unit>
+      <trans-unit id="P2e-5F-q5I.title">
+        <source>Upload</source>
+      </trans-unit>
+      <trans-unit id="Wp3-5P-dw1.title">
+        <source>Upload</source>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[0]">
+        <source>Personal</source>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[1]">
+        <source>Corporate</source>
+      </trans-unit>
+      <trans-unit id="ZVu-8x-Df1.segmentTitles[2]">
+        <source>Downloads</source>
+      </trans-unit>
+      <trans-unit id="cL2-li-7n4.title">
+        <source>Personal</source>
+      </trans-unit>
+      <trans-unit id="hmS-Jm-ybf.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="hmS-Jm-ybf.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="l28-wP-U8W.placeholder">
+        <source>Password</source>
+      </trans-unit>
+      <trans-unit id="r9h-uG-C4I.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="r9h-uG-C4I.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="sG1-yx-259.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="sG1-yx-259.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="uHw-UU-5cI.title">
+        <source>Upload</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesTests/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.0</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesUITests/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.0</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesaction/Base.lproj/MainInterface.storyboard" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="2EC-o2-eyC.title">
+        <source>Back</source>
+        <target>Back</target>
+        <note>Class = "UIBarButtonItem"; title = "Back"; ObjectID = "2EC-o2-eyC";</note>
+      </trans-unit>
+      <trans-unit id="DKm-NJ-ntF.title">
+        <source>Upload</source>
+        <target>Upload</target>
+        <note>Class = "UIBarButtonItem"; title = "Upload"; ObjectID = "DKm-NJ-ntF";</note>
+      </trans-unit>
+      <trans-unit id="ObA-dk-sSI.title">
+        <source>Image</source>
+        <target>Image</target>
+        <note>Class = "UIViewController"; title = "Image"; ObjectID = "ObA-dk-sSI";</note>
+      </trans-unit>
+      <trans-unit id="ShG-0h-MU2.title">
+        <source>Corporate</source>
+        <target>Corporate</target>
+        <note>Class = "UITabBarItem"; title = "Corporate"; ObjectID = "ShG-0h-MU2";</note>
+      </trans-unit>
+      <trans-unit id="Sht-2g-JaI.text">
+        <source>Save to:</source>
+        <target>Save to:</target>
+        <note>Class = "UILabel"; text = "Save to:"; ObjectID = "Sht-2g-JaI";</note>
+      </trans-unit>
+      <trans-unit id="Yz6-my-ir0.text">
+        <source>To continue, click Aurora.Files app and sign in</source>
+        <target>To continue, click Aurora.Files app and sign in</target>
+        <note>Class = "UILabel"; text = "To continue, click Aurora.Files app and sign in"; ObjectID = "Yz6-my-ir0";</note>
+      </trans-unit>
+      <trans-unit id="ay3-OO-7rw.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; ay3-OO-7rw.scopeButtonTitles[0] = "Title"; ObjectID = "ay3-OO-7rw";</note>
+      </trans-unit>
+      <trans-unit id="ay3-OO-7rw.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; ay3-OO-7rw.scopeButtonTitles[1] = "Title"; ObjectID = "ay3-OO-7rw";</note>
+      </trans-unit>
+      <trans-unit id="drg-oh-tJj.title">
+        <source>Back</source>
+        <target>Back</target>
+        <note>Class = "UIBarButtonItem"; title = "Back"; ObjectID = "drg-oh-tJj";</note>
+      </trans-unit>
+      <trans-unit id="i9V-fz-WRx.title">
+        <source>Personal</source>
+        <target>Personal</target>
+        <note>Class = "UITabBarItem"; title = "Personal"; ObjectID = "i9V-fz-WRx";</note>
+      </trans-unit>
+      <trans-unit id="l19-7D-Dla.text">
+        <source>filePath</source>
+        <target>filePath</target>
+        <note>Class = "UILabel"; text = "filePath"; ObjectID = "l19-7D-Dla";</note>
+      </trans-unit>
+      <trans-unit id="s6v-eV-8q6.text">
+        <source>Sign in Aurora.Files</source>
+        <target>Sign in Aurora.Files</target>
+        <note>Class = "UILabel"; text = "Sign in Aurora.Files"; ObjectID = "s6v-eV-8q6";</note>
+      </trans-unit>
+      <trans-unit id="zyA-19-EXD.scopeButtonTitles[0]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; zyA-19-EXD.scopeButtonTitles[0] = "Title"; ObjectID = "zyA-19-EXD";</note>
+      </trans-unit>
+      <trans-unit id="zyA-19-EXD.scopeButtonTitles[1]">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Class = "UISearchBar"; zyA-19-EXD.scopeButtonTitles[1] = "Title"; ObjectID = "zyA-19-EXD";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesaction/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName">
+        <source>Create Aurora shortcut</source>
+      </trans-unit>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.3</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesaction/en.lproj/Localizable.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="Aurora version smaller than 8">
+        <source>Aurora version smaller than 8</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Can't get access to API">
+        <source>Can't get access to API</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Cancel">
+        <source>Cancel</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Check connection...">
+        <source>Check connection...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Check saved folder existance...">
+        <source>Check saved folder existance...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Choose option">
+        <source>Choose option</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create">
+        <source>Create</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Create Folder">
+        <source>Create Folder</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Delete">
+        <source>Delete</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Enter Name">
+        <source>Enter Name</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Files succesfully uploaded!">
+        <source>Files succesfully uploaded!</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Files uploaded with some errors...">
+        <source>Files uploaded with some errors...</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Folder Name">
+        <source>Folder Name</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename">
+        <source>Rename</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename Current Folder">
+        <source>Rename Current Folder</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Rename File">
+        <source>Rename File</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Save">
+        <source>Save</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Something went wrong.Maybe you dont have internet connection =(">
+        <source>Something went wrong.Maybe you dont have internet connection =(</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="The username or password you entered is incorrect">
+        <source>The username or password you entered is incorrect</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Upload File">
+        <source>Upload File</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="server is unavailable now">
+        <source>server is unavailable now</source>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="aurorafilesaction/en.lproj/MainInterface.strings" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="2EC-o2-eyC.title">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="DKm-NJ-ntF.title">
+        <source>Upload</source>
+      </trans-unit>
+      <trans-unit id="ObA-dk-sSI.title">
+        <source>Image</source>
+      </trans-unit>
+      <trans-unit id="ShG-0h-MU2.title">
+        <source>Corporate</source>
+      </trans-unit>
+      <trans-unit id="Sht-2g-JaI.text">
+        <source>Save to:</source>
+      </trans-unit>
+      <trans-unit id="Yz6-my-ir0.text">
+        <source>To continue, click Aurora.Files app and sign in</source>
+      </trans-unit>
+      <trans-unit id="ay3-OO-7rw.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="ay3-OO-7rw.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="drg-oh-tJj.title">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="i9V-fz-WRx.title">
+        <source>Personal</source>
+      </trans-unit>
+      <trans-unit id="l19-7D-Dla.text">
+        <source>filePath</source>
+      </trans-unit>
+      <trans-unit id="s6v-eV-8q6.text">
+        <source>Sign in Aurora.Files</source>
+      </trans-unit>
+      <trans-unit id="zyA-19-EXD.scopeButtonTitles[0]">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="zyA-19-EXD.scopeButtonTitles[1]">
+        <source>Title</source>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="snapshotTest/Info.plist" source-language="en" datatype="plaintext" target-language="ru">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="8.2.1" build-num="8C1002"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName">
+        <source>$(PRODUCT_NAME)</source>
+      </trans-unit>
+      <trans-unit id="CFBundleShortVersionString">
+        <source>1.0</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

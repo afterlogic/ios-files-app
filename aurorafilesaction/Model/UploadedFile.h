@@ -10,13 +10,14 @@
 
 @interface UploadedFile : NSObject
 
-@property (weak, nonatomic) NSString *extension;
-@property (weak, nonatomic) NSURL *path;
-@property (weak, nonatomic) NSString *type;
-@property (weak, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *extension;
+@property (strong, nonatomic) NSURL *path;
+@property (strong, nonatomic) NSString *type;
+@property (strong, nonatomic) NSString *name;
 @property (assign, nonatomic) unsigned long long size;
 @property (strong, nonatomic) NSURLRequest *request;
-@property (weak, nonatomic) NSString *MIMEType;
+@property (strong, nonatomic) NSString *MIMEType;
 @property (assign, nonatomic) BOOL savedLocal;
+@property (strong, nonatomic) NSURL *webPageLink;
 
 @end

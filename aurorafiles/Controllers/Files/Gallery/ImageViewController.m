@@ -50,8 +50,13 @@
     self.moreButton = moreItem;
     self.shareButton = shareItem;
     
-    [self prepareImageToShow];
+   
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+     [self prepareImageToShow];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,22 +69,24 @@
     [super viewWillLayoutSubviews];
     //Scrollview
     //Set the aspect ration of the image
-    float hfactor = self.loadedImage.size.width / CGRectGetWidth(self.view.bounds);
-    float vfactor = self.loadedImage.size.height / CGRectGetHeight(self.view.bounds);
-    float factor = fmax(hfactor, vfactor);
-    
-    //Divide the size by the greater of the vertical or horizontal shrinkage factor
-    float newWidth = self.loadedImage.size.width / factor;
-    float newHeight = self.loadedImage.size.height / factor;
-    
-    //Then figure out offset to center vertically or horizontally
-    float leftOffset = (CGRectGetWidth(self.view.bounds) - newWidth) / 2;
-    float topOffset = (CGRectGetHeight(self.view.bounds) - newHeight) / 2;
-    
-    //Reposition image view
-    CGRect newRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
-    self.imageView.frame = newRect;
-    [self.scrollView setFrame:self.view.bounds];
+    if(self.loadedImage){
+        float hfactor = self.loadedImage.size.width / CGRectGetWidth(self.view.bounds);
+        float vfactor = self.loadedImage.size.height / CGRectGetHeight(self.view.bounds);
+        float factor = fmax(hfactor, vfactor);
+        
+        //Divide the size by the greater of the vertical or horizontal shrinkage factor
+        float newWidth = self.loadedImage.size.width / factor;
+        float newHeight = self.loadedImage.size.height / factor;
+        
+        //Then figure out offset to center vertically or horizontally
+        float leftOffset = (CGRectGetWidth(self.view.bounds) - newWidth) / 2;
+        float topOffset = (CGRectGetHeight(self.view.bounds) - newHeight) / 2;
+        
+        //Reposition image view
+        CGRect newRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
+        self.imageView.frame = newRect;
+        [self.scrollView setFrame:self.view.bounds];
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -90,6 +97,13 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     [self.dynamicAnimator removeAllBehaviors];
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    self.imageView.image = nil;
+    self.loadedImage = nil;
+    
 }
 
 #pragma mark - Actions
@@ -175,14 +189,17 @@
             [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     [object.managedObjectContext save:nil];
-                    [self.navigationController popViewControllerAnimated:YES];
+//                     [self.navigationController popViewControllerAnimated:YES];
+                    [self deletePage];
+
                 }
             }];
         }else{
             [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
                 object.wasDeleted = @YES;
                 [object.managedObjectContext save:nil];
-                [self.navigationController popViewControllerAnimated:YES];
+//                [self.navigationController popViewControllerAnimated:YES];
+                [self deletePage];
             }];
         }
     }];
@@ -343,105 +360,70 @@
 - (void)downloadImageForItem:(Folder *)file {
     
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[SDImageCache sharedImageCache] setShouldDecompressImages:NO];
+    [[SDWebImageDownloader sharedDownloader] setShouldDecompressImages:NO];
     if (file)
     {
-
+        
         self.imageView.userInteractionEnabled = YES;
         self.imageView.alpha = 0.0f;
         self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
-            hud.mode = MBProgressHUDModeDeterminate;
-            [hud setBackgroundColor:[UIColor clearColor]];
+            [[SDWebImageDownloader sharedDownloader] setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+        }else{
+            NSString *authHeaderValue = [[SDWebImageDownloader sharedDownloader] valueForHTTPHeaderField:@"Authorization"];
+            if (authHeaderValue) {
+                [[SDWebImageDownloader sharedDownloader] setValue:nil forHTTPHeaderField:@"Authorization"];
+            }
+        }
+        hud.mode = MBProgressHUDModeIndeterminate;
+        [hud setBackgroundColor:[UIColor clearColor]];
+        
+        hud.hidden = NO;
+        [hud showAnimated:YES];
+        if (file.isDownloaded.boolValue)
+        {
+            NSString * string = [file localPath].absoluteString;
+            NSFileManager * manager = [NSFileManager defaultManager];
+            if ([manager fileExistsAtPath:string])
+            {
+                NSLog(@"exist");
+            }
+            NSLog(@"collection view cell downloaded image - > %@", string);
+            image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
+        }
+        if (!image)
+        {
             
-            hud.hidden = NO;
-            [hud showAnimated:YES];
-            NSData *data = [NSData dataWithContentsOfFile:[Folder getExistedFile:file]];
-            if(data && data.length > 0){
-                UIImage *image = [UIImage imageWithData:data];
-                self.loadedImage = image;
-                [self prepareImageViewToShow];
-                [hud hideAnimated:YES];
-                hud.hidden = YES;
-            }else{
-                [[ApiP8 filesModule]getFileView:file type:file.type withProgress:^(float progress) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        hud.progress = progress;
-                        NSLog(@"%@ progress -> %f",file.name, progress);
-                    });
-                } withCompletion:^(NSString *thumbnail) {
-                    if(thumbnail){
-                        dispatch_async(dispatch_get_main_queue(), ^(){
-                            NSData* data= [[NSData alloc]initWithContentsOfFile:thumbnail];
-                            UIImage* image = [UIImage imageWithData:data];
-                            self.loadedImage = image;
-                            [self prepareImageViewToShow];
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
-                        });
-                    }else{
-                        UIImage * placeholder = [UIImage assetImageForContentType:[file validContentType]];
-                        if (file.isLink.boolValue && ![file isImageContentType])
-                        {
-                            placeholder = [UIImage imageNamed:@"shotcut"];
-                        }
+            SDWebImageManager *manager = [SDWebImageManager sharedManager];
+            [manager downloadImageWithURL:[NSURL URLWithString:[file viewLink]] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                float fractionCompleted = (float)receivedSize/(float)expectedSize;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.progress = fractionCompleted;
+                });
+            } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                    if (error) {
+                        [hud hideAnimated:YES];
+                        hud.hidden = YES;
+                        NSLog(@"error %@", error);
+                    } else {
                         self.loadedImage = image;
                         [self prepareImageViewToShow];
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
-                        
                     }
-                }];
-            }
-        }else{
-            hud.mode = MBProgressHUDModeIndeterminate;
-            [hud setBackgroundColor:[UIColor clearColor]];
-            
-            hud.hidden = NO;
-            [hud showAnimated:YES];
-            NSLog(@"collection view cell image - > %@",[file viewLink]);
-            if (file.isDownloaded.boolValue)
-            {
-                NSString * string = [[[file downloadURL] URLByAppendingPathComponent:file.name] absoluteString];
-                NSFileManager * manager = [NSFileManager defaultManager];
-                if ([manager fileExistsAtPath:string])
-                {
-                    NSLog(@"exist");
-                }
-                image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
-            }
-            if (!image)
-            {
-                SDWebImageManager *manager = [SDWebImageManager sharedManager];
-                [manager downloadImageWithURL:[NSURL URLWithString:[file viewLink]] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                    float fractionCompleted = (float)receivedSize/(float)expectedSize;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        hud.progress = fractionCompleted;
-                    });
-                } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (error) {
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
-                            NSLog(@"error %@", error);
-                        } else {
-                            [hud hideAnimated:YES];
-                            hud.hidden = YES;
-                            self.loadedImage = image;
-                            [self prepareImageViewToShow];
-                        }
-                    });
-                }];
-            }
-            else
-            {
-                self.loadedImage = image;
-                [self prepareImageViewToShow];
-                [hud hideAnimated:YES];
-                hud.hidden = YES;
-            }
-            
+            }];
         }
+        else
+        {
+            self.loadedImage = image;
+            self.imageView = [self createImageView];
+            [self prepareImageViewToShow];
+            [hud hideAnimated:YES];
+            hud.hidden = YES;
+        }
+        
     }
 }
 
@@ -479,6 +461,7 @@
     self.imageView = [self createImageView];
 
     [self.scrollView addSubview:self.imageView];
+    [self.view setNeedsLayout];
 }
 
 -(void)hideNavBar{
@@ -487,6 +470,10 @@
 
 - (void)dismiss {
     [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDismissNotification object:nil];
+}
+
+- (void)deletePage{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
 }
 
 #pragma mark - Public method
