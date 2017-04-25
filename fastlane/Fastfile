@@ -126,7 +126,25 @@ platform :ios do
     )
   end
 
+  desc "Fake upload. Only for tests!!!"
+  lane :fakeUpload do |options|
 
+    version_number = options[:version_number]
+
+    build_number = increment_build_number
+
+
+    complete_version_number = version_string(version_number, build_number)
+
+    clean_build_artifacts
+    clear_derived_data
+
+    # забираем все коммиты из гита для ченджлога
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
+
+    #отправляем сообщение в слак
+    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
+  end
 
   # You can define as many lanes as you want
 
@@ -154,22 +172,4 @@ end
 
 
 #test lanes
-  desc "Fake upload. Only for tests!!!"
-  lane :fakeUpload do |options|
 
-    version_number = options[:version_number]
-
-    build_number = increment_build_number
-
-
-    complete_version_number = version_string(version_number, build_number)
-
-    clean_build_artifacts
-    clear_derived_data
-
-    # забираем все коммиты из гита для ченджлога
-    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
-
-    #отправляем сообщение в слак
-    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
-  end

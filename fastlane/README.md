@@ -29,14 +29,6 @@ xcode-select --install
 </table>
 
 # Available Actions
-### fakeUpload
-```
-fastlane fakeUpload
-```
-Fake upload. Only for tests!!!
-
-----
-
 ## iOS
 ### ios test
 ```
@@ -65,6 +57,11 @@ Deploy a new version to the App Store
 fastlane ios MrHandyMessage
 ```
 send message to slack
+### ios fakeUpload
+```
+fastlane ios fakeUpload
+```
+Fake upload. Only for tests!!!
 
 ----
 
