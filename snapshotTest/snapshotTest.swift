@@ -48,18 +48,15 @@ class snapshotTest: XCTestCase {
         hostTextField.tap()
         hostTextField.typeText("aurora")
         
-        let moreKey = app.keys["more"]
-        moreKey.tap()
-        moreKey.tap()
+//        let moreKey = app.keys["more"]
+//        moreKey.tap()
         hostTextField.typeText(".")
         
-        let moreKey2 = app.keys["more"]
-        moreKey2.tap()
-        moreKey2.tap()
+//        moreKey.tap()
         hostTextField.typeText("afterlogic")
-        moreKey.tap()
+//        moreKey.tap()
         hostTextField.typeText(".")
-        moreKey2.tap()
+//        moreKey.tap()
         hostTextField.typeText("com")
         emailTextField.tap()
         emailTextField.typeText("aurora@afterlogic.com")

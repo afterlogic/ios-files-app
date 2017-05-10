@@ -472,7 +472,7 @@
         }else{
             NSURL * url = [NSURL URLWithString:[Settings domain]];
             NSString * scheme = [url scheme];
-            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
+            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
             file.request = [self generateRequestWithUrl:urlString data:file.path savedLocal:file.savedLocal];
         }
         
@@ -526,7 +526,7 @@
     
     NSString *storageType = [NSString stringWithString:rootPath];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"%@",path] : @""];
-    NSString *Link = [NSString stringWithFormat:@"http://cloudtest.afterlogic.com/?/upload/files/%@%@/%@",storageType,pathTmp,name];
+    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",[Settings domainScheme],[Settings domain],storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSDictionary *headers = @{ @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]],
