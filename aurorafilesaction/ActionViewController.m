@@ -340,10 +340,8 @@
                                 NSURL *pageLink = [NSURL URLWithString:[pageInfo objectForKey:@"link"]];
                                 NSString *webPageTitle = [pageInfo objectForKey:@"title"];
                                 NSLog(@"%@",webPageTitle);
-                                
                                 fileExtension = @"url";
                                 mediaData = [self createInternetShortcutFile:webPageTitle ext:fileExtension link:pageLink];
-                                
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
                                 file.extension = fileExtension;
@@ -363,7 +361,6 @@
                     if(fileURLItem) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             if ([fileURLItem isKindOfClass:[NSURL class]]) {
-                                
                                 fileExtension = @"url";
                                 NSMutableArray *urlParts = [[(NSURL *) fileURLItem absoluteString] componentsSeparatedByString:@"/"].mutableCopy;
                                 NSMutableArray *urlPartsTmp = urlParts.mutableCopy;
@@ -373,9 +370,7 @@
                                     }
                                 }
                                 NSString *tmpFileName = [urlParts lastObject];
-                                
                                 mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
-                                
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
                                 file.extension = fileExtension;
@@ -456,7 +451,7 @@
 - (IBAction)uploadAction:(id)sender
 {
     urlString = @"";
-    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
+//    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     requestsForUpload = [NSMutableArray new];
     
     for (UploadedFile *file in self.filesForUpload){
@@ -493,11 +488,7 @@
             fileName = currentFile.name;
         });
     }
-//    if ([[Settings version]isEqualToString:@"P8"]) {
-//        [self uploadP8File:currentFile];
-//    }else{
-        [self uploadFile:currentFile];
-//    }
+    [self uploadFile:currentFile];
 }
 
 -(NSMutableURLRequest *)generateRequestWithUrl:(NSString *)linkString data:(NSURL *)data savedLocal:(BOOL) isLocal
@@ -546,8 +537,6 @@
     uploadStart = YES;
     if (!hud) {
         hud = [AuroraHUD uploadHUD:self.view];
-//        hud.mode = MBProgressHUDModeDeterminate;
-//        [hud showAnimated:YES];
     }
 
     [self requestLog:file.request];
@@ -584,7 +573,7 @@
                     hud.hudView.detailsLabel.text = @"";
                     hud.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
                     [hud hideHUDWithDelay:0.7f];
-//                    return ;
+//                    strongSelf.uploadButton.enabled = YES;
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
                     [strongSelf uploadAction:self];

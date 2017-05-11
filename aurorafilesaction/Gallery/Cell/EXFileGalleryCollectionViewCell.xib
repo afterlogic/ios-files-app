@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="EXFileGalleryCollectionViewCell">
-            <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOz-T6-Wqc">
-                        <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Axp-cZ-7Ex">
-                                <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zid-Pm-Yb1">
-                                <rect key="frame" x="0.0" y="0.0" width="367" height="570"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="2Zn-cl-95N">
-                                        <rect key="frame" x="8" y="19" width="351" height="48"/>
+                                        <rect key="frame" x="8" y="19" width="284" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="Gyx-y0-iIp"/>
                                         </constraints>
@@ -37,13 +37,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Link" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="fcq-F0-hfU">
-                                        <rect key="frame" x="8" y="82" width="351" height="21"/>
+                                        <rect key="frame" x="8" y="82" width="284" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W1j-fC-g0m">
-                                        <rect key="frame" x="34" y="145" width="300" height="280"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W1j-fC-g0m">
+                                        <rect key="frame" x="34" y="145" width="233" height="127"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -52,7 +52,7 @@
                                     <constraint firstItem="W1j-fC-g0m" firstAttribute="leading" secondItem="Zid-Pm-Yb1" secondAttribute="leading" constant="34" id="8KC-Nv-iiG"/>
                                     <constraint firstItem="2Zn-cl-95N" firstAttribute="leading" secondItem="fcq-F0-hfU" secondAttribute="leading" id="9mF-ej-OTh"/>
                                     <constraint firstItem="fcq-F0-hfU" firstAttribute="leading" secondItem="Zid-Pm-Yb1" secondAttribute="leading" constant="8" id="Z1R-mY-pgx"/>
-                                    <constraint firstAttribute="bottom" secondItem="W1j-fC-g0m" secondAttribute="bottom" constant="145" id="bRK-lv-rMn"/>
+                                    <constraint firstAttribute="bottom" secondItem="W1j-fC-g0m" secondAttribute="bottom" constant="28" id="bRK-lv-rMn"/>
                                     <constraint firstItem="fcq-F0-hfU" firstAttribute="centerX" secondItem="Zid-Pm-Yb1" secondAttribute="centerX" id="byn-P0-BcE"/>
                                     <constraint firstAttribute="trailing" secondItem="W1j-fC-g0m" secondAttribute="trailing" constant="33" id="gW7-4J-iOS"/>
                                     <constraint firstItem="fcq-F0-hfU" firstAttribute="top" secondItem="2Zn-cl-95N" secondAttribute="bottom" constant="15" id="hAL-rs-HnY"/>
@@ -78,7 +78,7 @@
                         </constraints>
                     </scrollView>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="yhR-0g-az0">
-                        <rect key="frame" x="165" y="267" width="37" height="37"/>
+                        <rect key="frame" x="131.5" y="131.5" width="37" height="37"/>
                     </activityIndicatorView>
                 </subviews>
             </view>
@@ -90,7 +90,7 @@
                 <constraint firstItem="yhR-0g-az0" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="ave-r7-186"/>
                 <constraint firstAttribute="bottom" secondItem="dOz-T6-Wqc" secondAttribute="bottom" id="owa-cR-xNk"/>
             </constraints>
-            <size key="customSize" width="367" height="570"/>
+            <size key="customSize" width="296" height="356"/>
             <connections>
                 <outlet property="activityView" destination="yhR-0g-az0" id="NHZ-h7-4AK"/>
                 <outlet property="imageView" destination="Axp-cZ-7Ex" id="7hY-5U-Ldx"/>
@@ -100,7 +100,7 @@
                 <outlet property="scrollView" destination="dOz-T6-Wqc" id="elc-v1-dJA"/>
                 <outlet property="webContainerView" destination="Zid-Pm-Yb1" id="GHl-1V-se9"/>
             </connections>
-            <point key="canvasLocation" x="406.5" y="410"/>
+            <point key="canvasLocation" x="371" y="303"/>
         </collectionViewCell>
     </objects>
 </document>

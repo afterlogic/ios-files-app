@@ -9,12 +9,14 @@
 #import "EXFileGalleryCollectionViewController.h"
 #import "EXFileGalleryCollectionViewCell.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+
 //#import "StorageManager.h"
 //#import "API.h"
 
 @interface EXFileGalleryCollectionViewController () <UIGestureRecognizerDelegate>
 {
     CGPoint _lastTouch;
+    NSUInteger itemsCount;
 }
 
 //@property (strong, nonatomic) StorageManager * manager;
@@ -46,6 +48,7 @@
     self.backgroundImageView.alpha = 0.0f;
     [self.view addSubview:self.backgroundImageView];
     [self.view sendSubviewToBack:self.backgroundImageView];
+    itemsCount = 0;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     //self.manager = [StorageManager sharedManager];
@@ -89,8 +92,10 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     [self.collectionView setCollectionViewLayout:layout];
-    if (self.currentItem) {
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    if (itemsCount > 0) {
+        if (self.currentItem) {
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:[self.items indexOfObject:self.currentItem] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically|UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+        }
     }
     [self.navigationController setToolbarHidden:YES animated:YES];
 }
@@ -99,6 +104,11 @@
 {
     [super viewWillDisappear:animated];
 //    [self.navigationController setToolbarHidden:NO animated:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    itemsCount = self.items.count;
+    [self.collectionView reloadData];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -189,10 +199,6 @@
                                                                  
                                                                  file.name = [self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]];
                                                                  self.title = file.name;
-                                                                 //[[API sharedInstance] renameFolderFromName:oldName toName:[self.folderName.text stringByAppendingPathExtension:[oldName pathExtension]] isCorporate:[[file type] isEqualToString:@"corporate"] atPath:self.folder.parentPath ? self.folder.parentPath : @"" isLink:self.folder.isLink.boolValue completion:^(NSDictionary* handler) {
-                                                                     
-                                                                  //   [file.managedObjectContext save:nil];
-                                                                 //}];
                                                                  
                                                              }];
                                                              
@@ -257,7 +263,8 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return self.collectionView.bounds.size;
+    CGSize collectionViewSize = collectionView.bounds.size;
+    return collectionViewSize;
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -286,22 +293,25 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.items.count;
+    return itemsCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     EXFileGalleryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[EXFileGalleryCollectionViewCell cellId] forIndexPath:indexPath];
+    return cell;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
     UploadedFile * item = [self.items objectAtIndex:indexPath.row];
-    
+    EXFileGalleryCollectionViewCell *currentCell = (EXFileGalleryCollectionViewCell *)cell;
     self.title = item.name;
     // Configure the cell
-  
-    cell.file = item;
+    currentCell.file = item;
     if (![item.type isEqualToString:(NSString *)kUTTypeURL]) {
-        [self.tapGesture requireGestureRecognizerToFail:cell.doubleTap];
+        [self.tapGesture requireGestureRecognizerToFail:currentCell.doubleTap];
     }
-    return cell;
+
 }
 
 - (IBAction)panCollectionToBack:(UIPanGestureRecognizer*)recognizer

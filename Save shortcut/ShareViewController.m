@@ -83,23 +83,6 @@
 
 @implementation ShareViewController
 
-//- (BOOL)isContentValid {
-//    // Do validation of contentText and/or NSExtensionContext attachments here
-//    return YES;
-//}
-//
-//- (void)didSelectPost {
-//    // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
-//    
-//    // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
-//    [self.extensionContext completeRequestReturningItems:@[] completionHandler:nil];
-//}
-//
-//- (NSArray *)configurationItems {
-//    // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-//    return @[];
-//}
-
 -(void)loadView{
     [super loadView];
     [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
@@ -118,7 +101,6 @@
     [self setCurrentUploadFolder:@"" root:@""];
     
     AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
-    //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [Settings domainScheme];
     if (scheme) {
         [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
@@ -142,7 +124,6 @@
 }
 
 -(void)setupInterfaceForP8:(BOOL)isP8 {
-    //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [Settings domainScheme];
     NSString *authToken = [Settings authToken];
     NSString *token = [Settings token];
@@ -159,10 +140,7 @@
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-            //            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
             [self getLastUsedFolder:folderHud];
-            //            }];
-            
         }
     }else{
         if (!token || !scheme) {
@@ -171,9 +149,7 @@
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-            //            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
             [self getLastUsedFolder:folderHud];
-            //            }];
         }
     }
     
@@ -248,8 +224,6 @@
                                 return ;
                             }
                             if ([image isKindOfClass:[UIImage class]]){
-                                //                                [NSFileManager defaultManager];
-                                //                                thumbnail = [json valueForKey:@"Result"];
                                 NSData *data = [[NSData alloc]initWithData:UIImageJPEGRepresentation(image, 10.0)];
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 
@@ -274,18 +248,11 @@
                                 file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
                                 file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
                                 file.savedLocal = YES;
-                                
-                                //                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
-                                
                                 [self.filesForUpload addObject:file];
                                 return ;
                             }
                             
                             if([image isKindOfClass:[NSData class]]){
-                                
-                                //                                UIImage *currentImage =  [UIImage imageWithData:image];
-                                //                                NSLog(@"image is -> %@",currentImage);
-                                
                                 NSData *data = image;
                                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                 
@@ -595,7 +562,7 @@
                     hud.hudView.detailsLabel.text = @"";
                     hud.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
                     [hud hideHUDWithDelay:0.7f];
-                    //                    return ;
+//                    strongSelf.uploadButton.enabled = YES;
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
                     [strongSelf uploadAction:self];

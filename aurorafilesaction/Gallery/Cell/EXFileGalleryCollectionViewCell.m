@@ -55,39 +55,34 @@
     {
         [self.activityView startAnimating];
         if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
-            
-//            self.pageName.text = file.name;
-//            self.pageLink.text = [file.webPageLink absoluteString];
-            [LKLinkPreviewReader linkPreviewFromURL:file.webPageLink completionHandler:^(NSArray *previews, NSError *error) {
-                if (previews.count > 0  && ! error) {
-                    NSMutableString *text = [NSMutableString new];
-                    for (LKLinkPreview *preview in previews) {
-                        [text appendFormat:@"%@\n", [preview description]];
-                    }
-                    NSLog(@"%@",text);
-                    LKLinkPreview *preview = previews.firstObject;
-                    self.pageName.text = preview.title;
-                    self.pageLink.text = file.webPageLink.absoluteString;
-//                    self.pageDescription.text = preview.linkDescription;
-                    
-                    if (preview.imageURL){
-                        [self.pagePreview sd_setImageWithURL:preview.imageURL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                            if (image) {
-                                self.pagePreview.image = image;
-                            }
+                [LKLinkPreviewReader linkPreviewFromURL:file.webPageLink completionHandler:^(NSArray *previews, NSError *error) {
+                    if (previews.count > 0  && ! error) {
+                        NSMutableString *text = [NSMutableString new];
+                        for (LKLinkPreview *preview in previews) {
+                            [text appendFormat:@"%@\n", [preview description]];
+                        }
+                        NSLog(@"%@",text);
+                        LKLinkPreview *preview = previews.firstObject;
+                        self.pageName.text = preview.title;
+                        self.pageLink.text = file.webPageLink.absoluteString;
+                        //                    self.pageDescription.text = preview.linkDescription;
+                        
+                        if (preview.imageURL){
+                            [self.pagePreview sd_setImageWithURL:preview.imageURL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                if (image) {
+                                    self.pagePreview.image = image;
+                                }
+                                [self webPageEndParsing];
+                            }];
+                        }else{
                             [self webPageEndParsing];
-                        }];
-                    }else{
+                        }
+                    }
+                    else {
                         [self webPageEndParsing];
                     }
-//                    self.previewTextView.text = text;
-                }
-                else {
-//                    self.previewTextView.text = @"Error";
-                    [self webPageEndParsing];
-                }
-                
-            }];
+                    
+                }];
         }else
         {
             UITapGestureRecognizer * zoomOn = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(zoomImageIn:)];
