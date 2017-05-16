@@ -21,8 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		101858E6D8CB59DA9C0EA308 /* libPods-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 814AD339E28BA20D042EF340 /* libPods-aurorafiles.a */; };
-		3ED05736B3387008977938F7 /* libPods-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 536B70D8105D27C506E41723 /* libPods-Save shortcut.a */; };
 		5C7B53292721A01C4C8F54DE /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
@@ -37,8 +35,12 @@
 		5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		6705CC7AF0730C85A80D7FA3 /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */; };
-		9D0FF2D9854E53491488DB01 /* libPods-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F82AFE11E4DF75C601F1D6 /* libPods-aurorafilesaction.a */; };
+		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
+		98619DC6573734865E3CF438 /* Pods_aurorafiles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE17CFD866625AB04E2674F1 /* Pods_aurorafiles.framework */; };
+		AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */; };
+		B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */; };
 		B9625021EAA93E0A0537A454 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */; };
+		BA53C853FD8EC824A30A1E3D /* Pods_aurorafilesaction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D869EBC6752FA44C2B67B4 /* Pods_aurorafilesaction.framework */; };
 		DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA37112C1D21EFFA0067B124 /* DownloadsTableViewController.m */; };
 		DAC1CA391D061D7500238EB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA381D061D7500238EB5 /* main.m */; };
 		DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA3B1D061D7500238EB5 /* AppDelegate.m */; };
@@ -71,6 +73,7 @@
 		DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */; };
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
+		E950FFE0FF1EEB918B731F9A /* Pods_Save_shortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D5A0EC63F63310CF5337FCF /* Pods_Save_shortcut.framework */; };
 		FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
 		FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
 		FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
@@ -293,9 +296,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		12F82AFE11E4DF75C601F1D6 /* libPods-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-aurorafiles.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		33D869EBC6752FA44C2B67B4 /* Pods_aurorafilesaction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aurorafilesaction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-Save shortcut.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B835F02F7C822DF64B167D /* Pods-aurorafiles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.debug.xcconfig"; sourceTree = "<group>"; };
-		536B70D8105D27C506E41723 /* libPods-Save shortcut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Save shortcut.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5053964D2882F7B3722B5321 /* Pods-Application-aurorafiles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-aurorafiles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles.debug.xcconfig"; sourceTree = "<group>"; };
+		5101F2218E140D245F77C015 /* Pods-Application-Extensions-aurorafilesaction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-aurorafilesaction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction.debug.xcconfig"; sourceTree = "<group>"; };
+		54CC1F76486E3FC41E34958C /* Pods-Application-Extensions-Save shortcut.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-Save shortcut.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut.debug.xcconfig"; sourceTree = "<group>"; };
 		5C7B543D016454AD9418B53D /* Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Folder.h; sourceTree = "<group>"; };
 		5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInterface.h; sourceTree = "<group>"; };
 		5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDataBaseProvider.m; sourceTree = "<group>"; };
@@ -309,17 +316,20 @@
 		5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenController.m; sourceTree = "<group>"; };
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
 		5C7B5D8394754DE8EFDADEC0 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		5D5A0EC63F63310CF5337FCF /* Pods_Save_shortcut.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Save_shortcut.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Save shortcut.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut.debug.xcconfig"; sourceTree = "<group>"; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
-		814AD339E28BA20D042EF340 /* libPods-aurorafiles.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafiles.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84A85DBE2F43D9A7108DF1C4 /* Pods-aurorafilesaction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesaction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.debug.xcconfig"; sourceTree = "<group>"; };
 		AAC51FCFDBDAF37334758A68 /* Pods-aurorafilesaction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesaction.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction.release.xcconfig"; sourceTree = "<group>"; };
+		AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
 		AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19E38E5DEE3D20DDA6C932A /* Pods-aurorafilesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.release.xcconfig"; sourceTree = "<group>"; };
 		C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C91918B3233CA24FA894C5BA /* Pods-aurorafilesUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Save shortcut.release.xcconfig"; path = "Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut.release.xcconfig"; sourceTree = "<group>"; };
+		D51C8575601CAA279C31E583 /* Pods-Application-Extensions-Save shortcut.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-Save shortcut.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut.release.xcconfig"; sourceTree = "<group>"; };
 		DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "aurorafiles 2.xcdatamodel"; sourceTree = "<group>"; };
 		DA37112B1D21EFFA0067B124 /* DownloadsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadsTableViewController.h; path = Downloads/DownloadsTableViewController.h; sourceTree = "<group>"; };
 		DA37112C1D21EFFA0067B124 /* DownloadsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadsTableViewController.m; path = Downloads/DownloadsTableViewController.m; sourceTree = "<group>"; };
@@ -380,7 +390,9 @@
 		DAC1CAD61D06216400238EB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DAC1CADE1D062BEB00238EB5 /* aurorafiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafiles.entitlements; sourceTree = "<group>"; };
 		DAC1CADF1D062BF400238EB5 /* aurorafilesaction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafilesaction.entitlements; sourceTree = "<group>"; };
+		DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; sourceTree = "<group>"; };
 		DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
+		EE17CFD866625AB04E2674F1 /* Pods_aurorafiles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aurorafiles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF20F9A41E6A1E5300831874 /* ImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
 		FF2773DA1DF191000061C210 /* DataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseProvider.h; sourceTree = "<group>"; };
 		FF2773DB1DF191000061C210 /* DataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBaseProvider.m; sourceTree = "<group>"; };
@@ -519,7 +531,8 @@
 			files = (
 				FF64877B1DD9EA610063ACB0 /* libsqlite3.tbd in Frameworks */,
 				FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */,
-				101858E6D8CB59DA9C0EA308 /* libPods-aurorafiles.a in Frameworks */,
+				98619DC6573734865E3CF438 /* Pods_aurorafiles.framework in Frameworks */,
+				B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,7 +557,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF64877C1DD9EA6B0063ACB0 /* libsqlite3.tbd in Frameworks */,
-				9D0FF2D9854E53491488DB01 /* libPods-aurorafilesaction.a in Frameworks */,
+				BA53C853FD8EC824A30A1E3D /* Pods_aurorafilesaction.framework in Frameworks */,
+				AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +573,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3ED05736B3387008977938F7 /* libPods-Save shortcut.a in Frameworks */,
+				E950FFE0FF1EEB918B731F9A /* Pods_Save_shortcut.framework in Frameworks */,
+				712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +594,12 @@
 				AAC51FCFDBDAF37334758A68 /* Pods-aurorafilesaction.release.xcconfig */,
 				64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */,
 				C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */,
+				54CC1F76486E3FC41E34958C /* Pods-Application-Extensions-Save shortcut.debug.xcconfig */,
+				D51C8575601CAA279C31E583 /* Pods-Application-Extensions-Save shortcut.release.xcconfig */,
+				5101F2218E140D245F77C015 /* Pods-Application-Extensions-aurorafilesaction.debug.xcconfig */,
+				DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */,
+				5053964D2882F7B3722B5321 /* Pods-Application-aurorafiles.debug.xcconfig */,
+				AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -617,9 +638,12 @@
 				FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */,
 				AFA6B06262B7CEB137E2364D /* libPods-aurorafilesTests.a */,
 				63310C56FD18065C45F790FE /* libPods-aurorafilesUITests.a */,
-				536B70D8105D27C506E41723 /* libPods-Save shortcut.a */,
-				814AD339E28BA20D042EF340 /* libPods-aurorafiles.a */,
-				12F82AFE11E4DF75C601F1D6 /* libPods-aurorafilesaction.a */,
+				5D5A0EC63F63310CF5337FCF /* Pods_Save_shortcut.framework */,
+				EE17CFD866625AB04E2674F1 /* Pods_aurorafiles.framework */,
+				33D869EBC6752FA44C2B67B4 /* Pods_aurorafilesaction.framework */,
+				3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */,
+				60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */,
+				15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1700,7 +1724,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1ABD869C52573190EB9DA22F /* [CP] Check Pods Manifest.lock */ = {
@@ -1730,7 +1754,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafilesaction/Pods-aurorafilesaction-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3A91CC2084CACB85920CDC12 /* [CP] Copy Pods Resources */ = {
@@ -1745,7 +1769,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Save shortcut/Pods-Save shortcut-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		58EDF7AD13B2CC14272CA5CC /* [CP] Copy Pods Resources */ = {
@@ -1760,7 +1784,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafiles/Pods-aurorafiles-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A50829A76E8E782A11B38466 /* [CP] Check Pods Manifest.lock */ = {
@@ -2308,7 +2332,7 @@
 		};
 		DAC1CA651D061D7500238EB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 44B835F02F7C822DF64B167D /* Pods-aurorafiles.debug.xcconfig */;
+			baseConfigurationReference = 5053964D2882F7B3722B5321 /* Pods-Application-aurorafiles.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = aurorafiles/aurorafiles.entitlements;
@@ -2320,6 +2344,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = aurorafiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2334,7 +2359,7 @@
 		};
 		DAC1CA661D061D7500238EB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DBF6A930DEE89149D39B93A1 /* Pods-aurorafiles.release.xcconfig */;
+			baseConfigurationReference = AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = aurorafiles/aurorafiles.entitlements;
@@ -2346,6 +2371,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = aurorafiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2410,7 +2436,7 @@
 		};
 		DAC1CADB1D06216500238EB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84A85DBE2F43D9A7108DF1C4 /* Pods-aurorafilesaction.debug.xcconfig */;
+			baseConfigurationReference = 5101F2218E140D245F77C015 /* Pods-Application-Extensions-aurorafilesaction.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExtension;
 				CODE_SIGN_ENTITLEMENTS = aurorafilesaction/aurorafilesaction.entitlements;
@@ -2422,6 +2448,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -2436,7 +2463,7 @@
 		};
 		DAC1CADC1D06216500238EB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AAC51FCFDBDAF37334758A68 /* Pods-aurorafilesaction.release.xcconfig */;
+			baseConfigurationReference = DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconExtension;
 				CODE_SIGN_ENTITLEMENTS = aurorafilesaction/aurorafilesaction.entitlements;
@@ -2448,6 +2475,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -2514,13 +2542,18 @@
 		};
 		FFA4BFE81E55AD20008F4522 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 64B5C2A92C9E5F4B2598780D /* Pods-Save shortcut.debug.xcconfig */;
+			baseConfigurationReference = 54CC1F76486E3FC41E34958C /* Pods-Application-Extensions-Save shortcut.debug.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Save shortcut/Save shortcut.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -2534,13 +2567,18 @@
 		};
 		FFA4BFE91E55AD20008F4522 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C99E1343B76CFC0121FC8394 /* Pods-Save shortcut.release.xcconfig */;
+			baseConfigurationReference = D51C8575601CAA279C31E583 /* Pods-Application-Extensions-Save shortcut.release.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Save shortcut/Save shortcut.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = J7AW6VHJK4;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/aurorafiles",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
