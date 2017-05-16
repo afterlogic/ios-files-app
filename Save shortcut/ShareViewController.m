@@ -492,8 +492,8 @@
     
     [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:data.absoluteString] :[[NSInputStream alloc]initWithURL:data]];
     
-    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
-    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
+//    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
+//    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
     
     
     return request;

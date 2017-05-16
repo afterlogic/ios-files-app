@@ -22,7 +22,7 @@ target 'aurorafiles' do
 
     #этот под не используется. Нужно согласовать его использование (текст и картинка-плейсхолдер для пустого датасета)
     pod 'DZNEmptyDataSet'
-    
+    pod "NSLogger"
 
 
 end
@@ -38,6 +38,7 @@ target 'aurorafilesaction' do
     pod 'MagicalRecord','~> 2.3.0'
     
     pod "LinkPreviewKit"
+    pod "NSLogger"
 
 end
 
@@ -51,6 +52,7 @@ target 'Save shortcut' do
     pod 'MagicalRecord','~> 2.3.0'
     
     pod "LinkPreviewKit"
+    pod "NSLogger"
     
 #    pod 'DZReadability'
 #    pod 'CSWebShot'

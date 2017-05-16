@@ -213,19 +213,10 @@
 		FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */; };
 		FFCF0C7A1E83B603005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C6E1E83B603005F87DE /* Localizable.strings */; };
 		FFCF0C7B1E83B603005F87DE /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C701E83B603005F87DE /* Main.strings */; };
-		FFCF0C7C1E83B603005F87DE /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C731E83B603005F87DE /* Main.strings */; };
-		FFCF0C7D1E83B603005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C761E83B603005F87DE /* Localizable.strings */; };
-		FFCF0C7E1E83B603005F87DE /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C781E83B603005F87DE /* Main.strings */; };
 		FFCF0C901E83B758005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C841E83B758005F87DE /* Localizable.strings */; };
 		FFCF0C911E83B758005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C861E83B758005F87DE /* MainInterface.strings */; };
-		FFCF0C921E83B758005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C891E83B758005F87DE /* MainInterface.strings */; };
-		FFCF0C931E83B758005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C8C1E83B758005F87DE /* Localizable.strings */; };
-		FFCF0C941E83B758005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C8E1E83B758005F87DE /* MainInterface.strings */; };
 		FFCF0CA41E83B827005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C981E83B827005F87DE /* Localizable.strings */; };
 		FFCF0CA51E83B827005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C9A1E83B827005F87DE /* MainInterface.strings */; };
-		FFCF0CA61E83B827005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C9D1E83B827005F87DE /* MainInterface.strings */; };
-		FFCF0CA71E83B827005F87DE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0CA01E83B827005F87DE /* Localizable.strings */; };
-		FFCF0CA81E83B827005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0CA21E83B827005F87DE /* MainInterface.strings */; };
 		FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */; };
 		FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
 		FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */; };
@@ -494,30 +485,15 @@
 		FFB959341DAF8C73008031B3 /* NSObject+PerformSelectorWithCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PerformSelectorWithCallback.m"; sourceTree = "<group>"; };
 		FFB959371DAF96D8008031B3 /* NSString+transferedValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+transferedValues.h"; sourceTree = "<group>"; };
 		FFB959381DAF96D8008031B3 /* NSString+transferedValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+transferedValues.m"; sourceTree = "<group>"; };
-		FFCF0C651E834357005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
-		FFCF0C661E834359005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C671E83435A005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C681E8344C4005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
-		FFCF0C691E8344C6005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C6A1E8344C6005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		FFCF0C6C1E83B5B0005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		FFCF0C6F1E83B603005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		FFCF0C711E83B603005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Main.strings; sourceTree = "<group>"; };
-		FFCF0C741E83B603005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = Main.strings; sourceTree = "<group>"; };
-		FFCF0C771E83B603005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = Localizable.strings; sourceTree = "<group>"; };
-		FFCF0C791E83B603005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = Main.strings; sourceTree = "<group>"; };
 		FFCF0C801E83B650005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		FFCF0C821E83B667005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		FFCF0C851E83B758005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		FFCF0C871E83B758005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C8A1E83B758005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C8D1E83B758005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = Localizable.strings; sourceTree = "<group>"; };
-		FFCF0C8F1E83B758005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = MainInterface.strings; sourceTree = "<group>"; };
 		FFCF0C991E83B827005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		FFCF0C9B1E83B827005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0C9E1E83B827005F87DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = MainInterface.strings; sourceTree = "<group>"; };
-		FFCF0CA11E83B827005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = Localizable.strings; sourceTree = "<group>"; };
-		FFCF0CA31E83B827005F87DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = MainInterface.strings; sourceTree = "<group>"; };
 		FFE6F08B1E033EA2009141CA /* FileGalleryPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileGalleryPageViewController.h; sourceTree = "<group>"; };
 		FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryPageViewController.m; sourceTree = "<group>"; };
 		FFE6F0901E033FD9009141CA /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
@@ -1219,7 +1195,6 @@
 		FFCF0C721E83B603005F87DE /* ru.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0C731E83B603005F87DE /* Main.strings */,
 			);
 			path = ru.lproj;
 			sourceTree = "<group>";
@@ -1227,8 +1202,6 @@
 		FFCF0C751E83B603005F87DE /* tr.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0C761E83B603005F87DE /* Localizable.strings */,
-				FFCF0C781E83B603005F87DE /* Main.strings */,
 			);
 			path = tr.lproj;
 			sourceTree = "<group>";
@@ -1245,7 +1218,6 @@
 		FFCF0C881E83B758005F87DE /* ru.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0C891E83B758005F87DE /* MainInterface.strings */,
 			);
 			path = ru.lproj;
 			sourceTree = "<group>";
@@ -1253,8 +1225,6 @@
 		FFCF0C8B1E83B758005F87DE /* tr.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0C8C1E83B758005F87DE /* Localizable.strings */,
-				FFCF0C8E1E83B758005F87DE /* MainInterface.strings */,
 			);
 			path = tr.lproj;
 			sourceTree = "<group>";
@@ -1291,7 +1261,6 @@
 		FFCF0C9C1E83B827005F87DE /* ru.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0C9D1E83B827005F87DE /* MainInterface.strings */,
 			);
 			path = ru.lproj;
 			sourceTree = "<group>";
@@ -1299,8 +1268,6 @@
 		FFCF0C9F1E83B827005F87DE /* tr.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				FFCF0CA01E83B827005F87DE /* Localizable.strings */,
-				FFCF0CA21E83B827005F87DE /* MainInterface.strings */,
 			);
 			path = tr.lproj;
 			sourceTree = "<group>";
@@ -1600,8 +1567,6 @@
 			knownRegions = (
 				en,
 				Base,
-				ru,
-				tr,
 			);
 			mainGroup = DAC1CA2B1D061D7500238EB5;
 			productRefGroup = DAC1CA351D061D7500238EB5 /* Products */;
@@ -1625,8 +1590,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC1CA761D061EF800238EB5 /* Images.xcassets in Resources */,
-				FFCF0C7D1E83B603005F87DE /* Localizable.strings in Resources */,
-				FFCF0C7C1E83B603005F87DE /* Main.strings in Resources */,
 				DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */,
 				FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */,
 				FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */,
@@ -1634,7 +1597,6 @@
 				DAC1CA471D061D7500238EB5 /* Assets.xcassets in Resources */,
 				DAC1CAC91D061F6200238EB5 /* LaunchScreen.storyboard in Resources */,
 				DAC1CAB81D061F1200238EB5 /* FilesTableViewCell.xib in Resources */,
-				FFCF0C7E1E83B603005F87DE /* Main.strings in Resources */,
 				DAC1CA421D061D7500238EB5 /* Main.storyboard in Resources */,
 				FFCF0C7B1E83B603005F87DE /* Main.strings in Resources */,
 			);
@@ -1660,12 +1622,9 @@
 			files = (
 				DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */,
 				FF9053711D9BFCAA00A09A44 /* FilesTableViewCell.xib in Resources */,
-				FFCF0C931E83B758005F87DE /* Localizable.strings in Resources */,
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
-				FFCF0C921E83B758005F87DE /* MainInterface.strings in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0C911E83B758005F87DE /* MainInterface.strings in Resources */,
-				FFCF0C941E83B758005F87DE /* MainInterface.strings in Resources */,
 				FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */,
 				FFCF0C901E83B758005F87DE /* Localizable.strings in Resources */,
 				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
@@ -1686,12 +1645,9 @@
 			files = (
 				FFA4C01F1E55F131008F4522 /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
 				FFA4C0211E5616ED008F4522 /* Images.xcassets in Resources */,
-				FFCF0CA71E83B827005F87DE /* Localizable.strings in Resources */,
 				FFA4C0201E55F149008F4522 /* FilesTableViewCell.xib in Resources */,
-				FFCF0CA61E83B827005F87DE /* MainInterface.strings in Resources */,
 				FFA4C01E1E55F131008F4522 /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0CA51E83B827005F87DE /* MainInterface.strings in Resources */,
-				FFCF0CA81E83B827005F87DE /* MainInterface.strings in Resources */,
 				FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */,
 				FFCF0CA41E83B827005F87DE /* Localizable.strings in Resources */,
 				FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */,
@@ -2185,8 +2141,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				DAC1CA411D061D7500238EB5 /* Base */,
-				FFCF0C651E834357005F87DE /* tr */,
-				FFCF0C681E8344C4005F87DE /* ru */,
 				FFCF0C6C1E83B5B0005F87DE /* en */,
 			);
 			name = Main.storyboard;
@@ -2196,8 +2150,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				DAC1CAD41D06216400238EB5 /* Base */,
-				FFCF0C661E834359005F87DE /* tr */,
-				FFCF0C691E8344C6005F87DE /* ru */,
 				FFCF0C801E83B650005F87DE /* en */,
 			);
 			name = MainInterface.storyboard;
@@ -2207,8 +2159,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				FFA4BFE11E55AD20008F4522 /* Base */,
-				FFCF0C671E83435A005F87DE /* tr */,
-				FFCF0C6A1E8344C6005F87DE /* ru */,
 				FFCF0C821E83B667005F87DE /* en */,
 			);
 			name = MainInterface.storyboard;
@@ -2230,30 +2180,6 @@
 			name = Main.strings;
 			sourceTree = "<group>";
 		};
-		FFCF0C731E83B603005F87DE /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C741E83B603005F87DE /* ru */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0C761E83B603005F87DE /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C771E83B603005F87DE /* tr */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0C781E83B603005F87DE /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C791E83B603005F87DE /* tr */,
-			);
-			name = Main.strings;
-			sourceTree = "<group>";
-		};
 		FFCF0C841E83B758005F87DE /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2270,30 +2196,6 @@
 			name = MainInterface.strings;
 			sourceTree = "<group>";
 		};
-		FFCF0C891E83B758005F87DE /* MainInterface.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C8A1E83B758005F87DE /* ru */,
-			);
-			name = MainInterface.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0C8C1E83B758005F87DE /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C8D1E83B758005F87DE /* tr */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0C8E1E83B758005F87DE /* MainInterface.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C8F1E83B758005F87DE /* tr */,
-			);
-			name = MainInterface.strings;
-			sourceTree = "<group>";
-		};
 		FFCF0C981E83B827005F87DE /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2306,30 +2208,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				FFCF0C9B1E83B827005F87DE /* en */,
-			);
-			name = MainInterface.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0C9D1E83B827005F87DE /* MainInterface.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0C9E1E83B827005F87DE /* ru */,
-			);
-			name = MainInterface.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0CA01E83B827005F87DE /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0CA11E83B827005F87DE /* tr */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		FFCF0CA21E83B827005F87DE /* MainInterface.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FFCF0CA31E83B827005F87DE /* tr */,
 			);
 			name = MainInterface.strings;
 			sourceTree = "<group>";

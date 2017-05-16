@@ -47,6 +47,8 @@ typedef enum ActionType: int {
 
 + (NSString *)getExistedFile:(Folder *)folder;
 + (NSURL*)downloadsDirectoryURL;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

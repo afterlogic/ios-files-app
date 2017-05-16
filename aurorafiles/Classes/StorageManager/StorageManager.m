@@ -129,7 +129,7 @@
                 if ([context objectWithID:folderID]) {
                     [self.DBProvider deleteObject:folder fromContext:context];
                 }
-                //TODO: 03.04.2017 - по неизвестным причинам в контексте нет удаляемого объекта. Приложуха падает, так как объекта нет к контексте.
+                
                 NSManagedObjectContext *folderContext = folder.managedObjectContext;
                 NSLog(@"%@",folderContext);
                 

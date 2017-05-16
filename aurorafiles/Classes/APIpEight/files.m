@@ -558,9 +558,9 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [url scheme];
-    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? @"" : @"https://",[Settings domain],storageType,pathTmp,name];
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [Settings domainScheme];
+    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     

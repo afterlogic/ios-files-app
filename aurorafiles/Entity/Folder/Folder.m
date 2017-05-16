@@ -26,7 +26,6 @@
 {
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"prKey";
-    
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
@@ -397,16 +396,13 @@
 #pragma mark - Folder Operations
 
 +(Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
-//    Folder *item = [Folder findObjectByItemRef:itemRef context:context];
-//    if (!item) {
-        NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
-        NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
-        [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
-        Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-        item.toRemove = [NSNumber numberWithBool:NO];
-        item.isP8 = [NSNumber numberWithBool:isP8];
-        item.parentPath = path;
-//    }
+    NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
+    NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
+    [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
+    Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+    item.toRemove = [NSNumber numberWithBool:NO];
+    item.isP8 = [NSNumber numberWithBool:isP8];
+    item.parentPath = path;
     return item;
 }
 

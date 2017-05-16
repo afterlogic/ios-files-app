@@ -10,6 +10,7 @@
 #import "Settings.h"
 #import "Folder.h"
 #import "AFNetworking.h"
+#import "NSString+URLEncode.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
 static  int retryCount = 3;
@@ -19,33 +20,33 @@ static  int retryInterval = 5;
 
 @implementation NSString (NSString_Extended)
 
--(NSString *)urlEncodeUsingEncoding:(NSStringEncoding)encoding {
-    return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                                 (CFStringRef)self,
-                                                                                 NULL,
-                                                                                 (CFStringRef)@"!*'\"();:@&=+$,?%#[]% ",
-                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding)));
-}
+//-(NSString *)urlEncodeUsingEncoding:(NSStringEncoding)encoding {
+//    return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
+//                                                                                 (CFStringRef)self,
+//                                                                                 NULL,
+//                                                                                 (CFStringRef)@"!*'\"();:@&=+$,?%#[]% ",
+//                                                                                 CFStringConvertNSStringEncodingToEncoding(encoding)));
+//}
 
-- (NSString *)urlencode {
-    NSMutableString *output = [NSMutableString string];
-    const unsigned char *source = (const unsigned char *)[self UTF8String];
-    int sourceLen = strlen((const char *)source);
-    for (int i = 0; i < sourceLen; ++i) {
-        const unsigned char thisChar = source[i];
-        if (thisChar == ' '){
-            [output appendString:@"+"];
-        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                   (thisChar >= 'a' && thisChar <= 'z') ||
-                   (thisChar >= 'A' && thisChar <= 'Z') ||
-                   (thisChar >= '0' && thisChar <= '9')) {
-            [output appendFormat:@"%c", thisChar];
-        } else {
-            [output appendFormat:@"%%%02X", thisChar];
-        }
-    }
-    return output;
-}
+//- (NSString *)urlencode {
+//    NSMutableString *output = [NSMutableString string];
+//    const unsigned char *source = (const unsigned char *)[self UTF8String];
+//    int sourceLen = strlen((const char *)source);
+//    for (int i = 0; i < sourceLen; ++i) {
+//        const unsigned char thisChar = source[i];
+//        if (thisChar == ' '){
+//            [output appendString:@"+"];
+//        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
+//                   (thisChar >= 'a' && thisChar <= 'z') ||
+//                   (thisChar >= 'A' && thisChar <= 'Z') ||
+//                   (thisChar >= '0' && thisChar <= '9')) {
+//            [output appendFormat:@"%c", thisChar];
+//        } else {
+//            [output appendFormat:@"%%%02X", thisChar];
+//        }
+//    }
+//    return output;
+//}
 
 @end;
 
@@ -614,14 +615,14 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 - (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler
 {
-    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [url scheme];
-    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
+//    NSURL * url = [NSURL URLWithString:[Settings domain]];
+    NSString * scheme = [Settings domainScheme];
+    NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? scheme : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSLog(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
-    [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
-    [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
+//    [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
+//    [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {

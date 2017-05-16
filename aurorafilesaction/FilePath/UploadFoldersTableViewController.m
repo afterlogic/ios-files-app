@@ -322,9 +322,45 @@ static const int minimalStringLengthFiles = 1;
         {
             handler();
             [self reloadTableData];
-            
         }
     }];
+}
+
+- (void)updateFilesWithSubsequentTransitionFromFolder:(Folder *)folder handler:(void (^)())handler{
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+        if (handler)
+        {
+            handler();
+            [self reloadTableData];
+            
+            [self.fetchedResultsController performFetch:nil];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", self.folderName.text];
+            NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
+            NSLog(@"%@ fetched folders after Folder Create Operations -> ", filteredArray);
+            if (filteredArray.count > 0){
+                self.folderToNavigate = [filteredArray lastObject];
+                [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+            }else{
+                BOOL isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+                NSDictionary *itemRef = [self generateSimpleItemRefUsingParentFolder:folder];
+                self.folderToNavigate = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folder.fullpath ? folder.fullpath : @"" InContext:self.managedObjectContext];
+                [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+            }
+            
+
+        }
+    }];
+}
+
+- (NSDictionary *)generateSimpleItemRefUsingParentFolder:(Folder *)folder{
+    return @{@"Name":self.folderName.text,
+             @"Id":self.folderName.text,
+             @"Path":folder.fullpath ? folder.fullpath : @"",
+             @"IsLink":@'0',
+             @"IsFolder":@'1',
+             @"FullPath":[NSString stringWithFormat:@"%@/%@",folder.fullpath,self.folderName.text],
+             @"Type":self.isCorporate ? @"corporate": @"personal"
+             };
 }
 
 - (void)reloadTableData
@@ -512,33 +548,16 @@ static const int minimalStringLengthFiles = 1;
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
-    
-//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-//    NSEntityDescription *entity = [NSEntityDescription
-//                                   entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
-//    [fetchRequest setEntity:entity];
-    
+
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                                   initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-//    [fetchRequest setSortDescriptors:@[isFolder, title]];
-    
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
-//    [fetchRequest setReturnsObjectsAsFaults:NO];
-    
-//    NSFetchedResultsController *theFetchedResultsController =
-//    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-//                                        managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
-//                                                   cacheName:nil];
-//    self.fetchedResultsController = theFetchedResultsController;
-//    _fetchedResultsController.delegate = self;
     NSError * error;
 
-    
-    
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
+    [req setReturnsObjectsAsFaults:NO];
     
     _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
@@ -706,9 +725,9 @@ static const int minimalStringLengthFiles = 1;
 
 - (UIAlertAction*)createFolderAction
 {
-    
     UIAlertAction* createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Folder", @"") style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
+                                                             
                                                              
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
@@ -717,34 +736,12 @@ static const int minimalStringLengthFiles = 1;
                                                                  [textField setDelegate:self];
                                                              }];
                                                              
+                                                             __weak typeof (self)weakSelf = self;
                                                              defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 __weak typeof (self)weakSelf = self;
-                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                                 [[StorageManager sharedManager]createFolderWithName:weakSelf.folderName.text isCorporate:weakSelf.isCorporate andPath:weakSelf.folder.fullpath completion:^(BOOL success) {
                                                                      if (success) {
-                                                                         [self updateFiles:^(){
-//                                                                             [self.tableView reloadData];
-                                                                             __strong typeof(self)self = weakSelf;
-                                                                             [weakSelf.fetchedResultsController performFetch:nil];
-                                                                             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
-                                                                             NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
-                                                                             NSLog(@"%@", filteredArray);
-                                                                             if (filteredArray.count > 0){
-                                                                                 self.folderToNavigate = [filteredArray lastObject];
-                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                             }else{
-                                                                                 self.folderToNavigate = [[Folder alloc]initWithContext:self.managedObjectContext];
-                                                                                 [self.folderToNavigate setName:weakSelf.folderName.text];
-                                                                                 [self.folderToNavigate setParentPath:weakSelf.folder.fullpath ? weakSelf.folder.fullpath : @""];
-                                                                                 [self.folderToNavigate setIsLink:[NSNumber numberWithBool:NO]];
-                                                                                 [self.folderToNavigate setIsFolder:[NSNumber numberWithBool:YES]];
-                                                                                 [self.folderToNavigate setFullpath:[NSString stringWithFormat:@"%@/%@",self.folderToNavigate.parentPath,weakSelf.folderName.text]];
-                                                                                 [self.folderToNavigate setIsP8:[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
-                                                                                 [self.folderToNavigate setType:self.isCorporate ? @"corporate": @"personal"];
-                                                                                 
-                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                             }
+                                                                         [self updateFilesWithSubsequentTransitionFromFolder:weakSelf.folder handler:^{
                                                                              
-
                                                                          }];
                                                                      }else{
                                                                          [self updateFiles:^{

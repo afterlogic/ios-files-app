@@ -32,7 +32,7 @@
 - (void)deleteAllObjects: (NSString *) entityDescription ;
 - (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef;
 - (void)getLastUsedFolderWithHandler:(void(^)(NSDictionary *result))complition;
-- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
+//- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
 - (void)removeSavedFilesForItem:(Folder *)item;
 - (void)deleteItem:(Folder *)item;
 
