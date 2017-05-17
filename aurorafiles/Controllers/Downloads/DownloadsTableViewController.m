@@ -17,6 +17,7 @@
 #import "GalleryWrapperViewController.h"
 #import "Settings.h"
 #import "SessionProvider.h"
+#import "UIApplication+openURL.h"
 
 @interface DownloadsTableViewController () <NSFetchedResultsControllerDelegate,FilesTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource,UISearchBarDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -219,7 +220,7 @@
         [self performSegueWithIdentifier:@"OpenDownloadFileGallerySegue" sender:self];
     }
     else if([[object isLink] boolValue]){
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]];
+        [[UIApplication sharedApplication] openLink:[NSURL URLWithString:object.linkUrl]];
     }
     else{
         [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];

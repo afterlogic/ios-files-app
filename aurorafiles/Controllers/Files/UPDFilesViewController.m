@@ -31,6 +31,7 @@
 #import <MagicalRecord/MagicalRecord.h>
 
 #import <AFNetworking/AFNetworking.h>
+#import "UIApplication+openURL.h"
 
 
 static const int shortcutCreationTexFieldTag = 100;
@@ -364,20 +365,14 @@ static const int minimalStringLengthFiles = 1;
         }
         else if([[object isLink] boolValue]){
             if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
-                                                   options:@{}
-                                         completionHandler:nil];
+                [[UIApplication sharedApplication] openLink:[NSURL URLWithString:object.linkUrl]];
             }else{
                 NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
                 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
                 if ([[UIApplication sharedApplication]canOpenURL:url]) {
-                    [[UIApplication sharedApplication] openURL:url
-                                                       options:@{}
-                                             completionHandler:nil];
+                    [[UIApplication sharedApplication] openLink:url];
                 }else{
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
-                                                       options:@{}
-                                             completionHandler:nil];
+                    [[UIApplication sharedApplication] openLink:[NSURL URLWithString:object.linkUrl]];
                 }
             }
         }

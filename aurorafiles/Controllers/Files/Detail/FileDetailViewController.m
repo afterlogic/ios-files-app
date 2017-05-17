@@ -16,6 +16,7 @@
 #import "ApiP8.h"
 #import "StorageManager.h"
 #import "MBProgressHUD.h"
+#import "UIApplication+openURL.h"
 
 
 @interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
@@ -79,9 +80,7 @@
     if (self.object.isLink.boolValue)
     {
         self.viewLink = self.object.linkUrl;
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]
-                                           options:@{}
-                                 completionHandler:nil];
+        [[UIApplication sharedApplication] openLink:[NSURL URLWithString:self.object.linkUrl]];
         return;
         
     }
