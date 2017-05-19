@@ -524,20 +524,14 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)removeFileFromCloud:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    object.wasDeleted = @YES;
-    if ([[Settings version] isEqualToString:@"P8"]) {
-//        [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-//            if (succsess) {
-//            BFLog(@"%@",handler);
-//            [self.managedObjectContext save:nil];
-//            }
-//        }];
-    }else{
-        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            BFLog(@"%@",handler);
-            [self.managedObjectContext save:nil];
-        }];
-    }
+    [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+        if (succsess) {
+            DDLogDebug(@"file named %@ successfuly removed", object.name);
+            [self.managedObjectContext  save:nil];
+        }else{
+            DDLogDebug(@"file named %@ hasn't been removed", object.name);
+        }
+    }];
 }
 
 
@@ -646,24 +640,13 @@ static const int minimalStringLengthFiles = 1;
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
-        object.wasDeleted = @YES;
-        [self.managedObjectContext save:nil];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [self updateFiles:^(){
-        
-                        [self.tableView reloadData];
-                    }];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+            if(succsess){
                 [self updateFiles:^(){
                     [self.tableView reloadData];
                 }];
-            }];
-        }
+            }
+        }];
     }];
     
     return deleteFolder;

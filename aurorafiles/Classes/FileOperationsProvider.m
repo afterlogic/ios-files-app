@@ -68,6 +68,16 @@
     }];
 }
 
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+    [self setupNetworkManager];
+    [self.networkManager deleteFile:folder isCorporate:corporate completion:complitionHandler];
+}
+
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+    [self setupNetworkManager];
+    [self.networkManager deleteFiles:files isCorporate:corporate completion:complitionHandler];
+}
+
 //MARK: важная функция для работы экстеншена
 -(void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL))complitionHandler{
     [self setupNetworkManager];

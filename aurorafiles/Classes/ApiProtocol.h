@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Folder.h"
 
 @protocol ApiProtocol <NSObject>
 
@@ -23,6 +24,10 @@
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary * result))complitionHandler;
 - (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler;
 - (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink))completionHandler;
+
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler;
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler;
+
 #pragma mark - Helpers
 - (void)checkConnection:(void (^)(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager))complitionHandler;
 - (void)stopFileThumb:(NSString *)folderName;

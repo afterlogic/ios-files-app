@@ -120,6 +120,9 @@
 		FF71D4D91DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */; };
 		FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
 		FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */; };
+		FF88DDC11ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF88DDC01ECECF0600D8DA00 /* UIAlertController+Confirmation.m */; };
+		FF88DDC21ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF88DDC01ECECF0600D8DA00 /* UIAlertController+Confirmation.m */; };
+		FF88DDC31ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF88DDC01ECECF0600D8DA00 /* UIAlertController+Confirmation.m */; };
 		FF8A21DF1D53EAFE006EBE36 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */; };
 		FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */; };
 		FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053031D9ADA4400A09A44 /* UIImage+ImageCompress.m */; };
@@ -443,6 +446,8 @@
 		FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
 		FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		FF88DDBD1ECDF3C800D8DA00 /* AuroraPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AuroraPrefixHeader.pch; path = aurorafiles/AuroraPrefixHeader.pch; sourceTree = SOURCE_ROOT; };
+		FF88DDBF1ECECF0600D8DA00 /* UIAlertController+Confirmation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+Confirmation.h"; sourceTree = "<group>"; };
+		FF88DDC01ECECF0600D8DA00 /* UIAlertController+Confirmation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+Confirmation.m"; sourceTree = "<group>"; };
 		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
 		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
@@ -741,6 +746,8 @@
 				5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */,
 				FF1573691ECC897000972F33 /* UIApplication+openURL.h */,
 				FF15736A1ECC897000972F33 /* UIApplication+openURL.m */,
+				FF88DDBF1ECECF0600D8DA00 /* UIAlertController+Confirmation.h */,
+				FF88DDC01ECECF0600D8DA00 /* UIAlertController+Confirmation.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1934,6 +1941,7 @@
 				FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */,
 				FFAD03EF1DEC727A000C4AFF /* NetworkManager.m in Sources */,
 				FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */,
+				FF88DDC11ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */,
 				FF6A94C61DB67D8700543269 /* core.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
 				FFAD03EB1DEC6E6C000C4AFF /* P7Manager.m in Sources */,
@@ -1978,6 +1986,7 @@
 			files = (
 				FF71D4891DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				FF42B1E71DB77F88005A2B0C /* files.m in Sources */,
+				FF88DDC21ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */,
 				FFB9593A1DAF96D8008031B3 /* NSString+transferedValues.m in Sources */,
 				FF6A94BA1DB666BE00543269 /* ApiP8.m in Sources */,
 				FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */,
@@ -2078,6 +2087,7 @@
 				FFA4BFFC1E55E605008F4522 /* ApiP7.m in Sources */,
 				FFA4C00F1E55EA00008F4522 /* Folder.m in Sources */,
 				FFA4BFEC1E55DC0D008F4522 /* EXFileGalleryCollectionViewController.m in Sources */,
+				FF88DDC31ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */,
 				FFA4C0171E55EA87008F4522 /* MLLoggingProtocol.m in Sources */,
 				FFA4C00A1E55E9C8008F4522 /* Settings.m in Sources */,
 				FFA4BFF71E55E5FB008F4522 /* NetworkManager.m in Sources */,

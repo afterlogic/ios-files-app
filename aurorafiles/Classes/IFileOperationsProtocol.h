@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Folder.h"
 
 @protocol IFileOperationsProtocol <NSObject>
 
@@ -17,6 +18,9 @@
 - (void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler;
 - (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items))complitionHandler;
 - (void)stopDownloadigThumbForFile:(NSString *)fileName;
+
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler;
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler;
 
 - (void)clearNetworkManager;
 

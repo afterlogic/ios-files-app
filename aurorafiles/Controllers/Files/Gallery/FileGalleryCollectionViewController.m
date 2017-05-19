@@ -220,20 +220,11 @@
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [object.managedObjectContext save:nil];
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-            }];
-        }else{
-        [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-            object.wasDeleted = @YES;
-            [object.managedObjectContext save:nil];
-            [self.navigationController popViewControllerAnimated:YES];
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess) {
+            if (succsess) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
         }];
-        }
     }];
     
     return deleteFolder;

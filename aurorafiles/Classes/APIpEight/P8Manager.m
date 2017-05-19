@@ -128,6 +128,14 @@
         completionHandler(publicLink);
     }];
 }
+
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+    [[ApiP8 filesModule]deleteFile:folder isCorporate:corporate completion:complitionHandler];
+}
+
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+    [[ApiP8 filesModule]deleteFiles:files isCorporate:corporate completion:complitionHandler];
+}
 #pragma mark - Helpers
 
 -(void)checkConnection:(void (^)(BOOL, NSError *, NSString *, id<ApiProtocol>))complitionHandler{

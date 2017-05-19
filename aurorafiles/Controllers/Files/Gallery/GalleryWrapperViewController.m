@@ -135,22 +135,9 @@ static const int imageNameMinimalLength = 1;
 //        Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         Folder * object = self.currentPage.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-//                    [object.managedObjectContext save:nil];
-//                    [self.navigationController popViewControllerAnimated:YES];
-                    [[StorageManager sharedManager] deleteItem:object];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-                [[StorageManager sharedManager] deleteItem:object];
-//                [self.navigationController popViewControllerAnimated:YES];
-                [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
-            }];
-        }
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
+        }];
     }];
     
     return deleteFolder;

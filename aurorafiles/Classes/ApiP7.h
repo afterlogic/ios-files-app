@@ -23,9 +23,9 @@ typedef void (^UploadProgressBlock)(float progress);
 
 - (void)getFilesForFolder:(NSString*)folderName withType:(NSString*)type completion:(void (^)(NSDictionary *data)) handler;
 
-- (void)deleteFiles:(NSDictionary*)files isCorporate:(BOOL)corporate completion: (void (^)(NSDictionary* data)) handler;
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler;
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 
 - (void)createFolderWithName:(NSString*)name isCorporate:(BOOL)corporate andPath:(NSString*)path completion:(void (^)(NSDictionary*))handler;
 

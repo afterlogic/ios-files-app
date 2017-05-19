@@ -429,7 +429,7 @@ static const int minimalStringLengthFiles = 1;
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        [self removeFileFromCloud:indexPath];
+        [self removeFileByIndexPath:indexPath];
     }
 }
 
@@ -646,45 +646,6 @@ static const int minimalStringLengthFiles = 1;
     DDLogDebug(@"%s",__PRETTY_FUNCTION__);
 }
 
-#pragma mark - Help Methods
--(void)removeFileFromDevice:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
-    
-    NSFileManager * manager = [NSFileManager defaultManager];
-    NSError * error;
-    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
-    if (self.isP8){
-        [self.storageManager removeSavedFilesForItem:object];
-    }
-    object.isDownloaded = @NO;
-    
-    if (error)
-    {
-        DDLogError(@"%@",[error userInfo]);
-    }
-    
-    [self.defaultMOC  save:nil];
-    
-}
-
--(void)removeFileFromCloud:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    object.wasDeleted = @YES;
-    if ([[Settings version] isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-            if (succsess) {
-                [self.defaultMOC  save:nil];
-            }
-        }];
-    }else{
-        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            DDLogDebug(@"%@",handler);
-            [self.defaultMOC  save:nil];
-        }];
-    }
-}
-
 
 #pragma mark NSFetchedResultsController
 
@@ -748,6 +709,7 @@ static const int minimalStringLengthFiles = 1;
     alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"edit actions title text ")
                                                                     message:nil
                                                              preferredStyle:UIAlertControllerStyleActionSheet];
+    
     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
                                                             style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * action) {
@@ -1060,26 +1022,17 @@ static const int minimalStringLengthFiles = 1;
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"delete action title text")
                                                             style:UIAlertActionStyleDestructive
                                                           handler:^(UIAlertAction * action){
-        Folder * object = self.folderToOperate;
-//        object.wasDeleted = @YES;
-        [self.storageManager deleteItem:object];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [self updateFiles:^(){
-                        [self.navigationController popViewControllerAnimated:YES];
-//                        [self.tableView reloadData];
-                    }];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-                [self updateFiles:^(){
-                    [self.navigationController popViewControllerAnimated:YES];
-//                    [self.tableView reloadData];
-                }];
-            }];
-        }
+                                                              Folder * object = self.folderToOperate;
+                                                              [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+                                                                  if (succsess) {
+                                                                      DDLogDebug(@"file named %@ successfuly removed", object.name);
+                                                                      [self updateFiles:^(){
+                                                                          [self.navigationController popViewControllerAnimated:YES];
+                                                                      }];
+                                                                  }else{
+                                                                      DDLogDebug(@"file named %@ hasn't been removed", object.name);
+                                                                  }
+                                                              }];
     }];
     
     return deleteFolder;
@@ -1194,6 +1147,47 @@ static const int minimalStringLengthFiles = 1;
     int minimalStringLength = textField.tag == shortcutCreationTexFieldTag ? minimalStringLengthURL:minimalStringLengthFiles;
     [defaultAction setEnabled:text.length>=minimalStringLength];
     return YES;
+}
+
+#pragma mark - Utility Methods
+
+-(void)removeFileFromDevice:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
+    
+    NSFileManager * manager = [NSFileManager defaultManager];
+    NSError * error;
+    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
+    if (self.isP8){
+        [self.storageManager removeSavedFilesForItem:object];
+    }
+    object.isDownloaded = @NO;
+    
+    if (error)
+    {
+        DDLogError(@"%@",[error userInfo]);
+    }
+    
+    [self.defaultMOC  save:nil];
+    
+}
+
+-(void)removeFileByIndexPath:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    object.wasDeleted = @YES;
+    [self removeItem:object];
+}
+
+- (void)removeItem:(Folder *)object{
+    [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+        if (succsess) {
+            DDLogDebug(@"file named %@ successfuly removed", object.name);
+            [self.defaultMOC  save:nil];
+        }else{
+            DDLogDebug(@"file named %@ hasn't been removed", object.name);
+        }
+    }];
+
 }
 
 #pragma mark - Navigation

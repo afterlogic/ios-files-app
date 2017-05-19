@@ -344,64 +344,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
-{
-    
-    
-    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
-    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
-    [newDict setObject:deleteFiles forKey:@"Action"];
-    NSString * name = folder.name;
-    if (folder.isLink.boolValue)
-    {
-        name = [name stringByAppendingString:@".url"];
-    }
-    NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",folder.parentPath ? folder.parentPath : @"", name];
-    [newDict setObject:items forKey:@"Items"];
-    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
-    [newDict setObject:@"" forKey:@"Path"];
-    
-    
-    NSURLRequest * request = [self requestWithDictionary:newDict];
 
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            NSError *error = nil;
-            NSData *data = [NSData new];
-            if ([responseObject isKindOfClass:[NSData class]]) {
-                data = responseObject;
-            }
-            
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            
-            if (![json isKindOfClass:[NSDictionary class]])
-            {
-                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-            }
-            if (error)
-            {
-                DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
-                return ;
-            }
-            handler(json);
-        });
-    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            if (error)
-            {
-                DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
-                return ;
-            }
-        });
-    }autoRetryOf:retryCount retryInterval:retryInterval];
-    
-    [manager.operationQueue addOperation:operation];
-
-    
-}
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))handler
 {
@@ -513,14 +456,82 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)deleteFiles:(NSDictionary *)files isCorporate:(BOOL)corporate completion:(void (^)(NSDictionary *))handler
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler
+{
+    NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
+    [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
+    [newDict setObject:deleteFiles forKey:@"Action"];
+    NSString * name = folder.name;
+    if (folder.isLink.boolValue)
+    {
+        name = [name stringByAppendingString:@".url"];
+    }
+    NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",folder.parentPath ? folder.parentPath : @"", name];
+    [newDict setObject:items forKey:@"Items"];
+    [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
+    [newDict setObject:@"" forKey:@"Path"];
+    
+    
+    NSURLRequest * request = [self requestWithDictionary:newDict];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error = nil;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+            if (error)
+            {
+                DDLogError(@"%@",[error localizedDescription]);
+                handler(NO);
+                return ;
+            }
+            handler(YES);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            if (error)
+            {
+                DDLogError(@"%@",[error localizedDescription]);
+                handler(NO);
+                return ;
+            }
+        });
+    }autoRetryOf:retryCount retryInterval:retryInterval];
+    
+    [manager.operationQueue addOperation:operation];
+    
+    
+}
+
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:deleteFiles forKey:@"Action"];
-    NSString * items = [NSString stringWithFormat:@"[{\"Path\":\"%@\",\"Name\":\"%@\"}]",[files objectForKey:@"Path"], [files objectForKey:@"Name"]];
-    [newDict setObject:items forKey:@"Items"];
+    
+    NSMutableString *itemsForDelet = [[NSMutableString alloc]initWithString:@"["];
+    for (Folder *removedItem in files){
+        NSString * itemInfo = [NSString stringWithFormat:@"{\"Path\":\"%@\",\"Name\":\"%@\"}",removedItem.fullpath, removedItem.name];
+        [itemsForDelet appendString:itemInfo];
+        if (![removedItem isEqual:files.lastObject]) {
+            [itemsForDelet appendString:@","];
+        }
+    }
+    [itemsForDelet appendString:@"]"];
+    
+    
+    [newDict setObject:itemsForDelet forKey:@"Items"];
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
     [newDict setObject:@"" forKey:@"Path"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
@@ -543,17 +554,17 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(NO);
                 return ;
             }
-            handler(json);
+            handler(YES);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(NO);
                 return ;
             }
         });

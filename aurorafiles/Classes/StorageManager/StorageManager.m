@@ -161,6 +161,22 @@
     }];
 }
 
+- (void)deleteItem:(Folder *)item controller:(UIViewController *)controller isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
+    
+    NSString *confirmTitle = [NSString stringWithFormat:@"%@ %@ ?",NSLocalizedString(@"Delete", @"delete confirmation title text"),item.name];
+    NSString *confirmMessage = NSLocalizedString(@"You cannot undo this action.", @"delete confirmation message text");
+    UIAlertController *confirmController = [UIAlertController confirmationAlertWithTitle:confirmTitle
+                                                                                 message:confirmMessage
+                                                                          confirmHandler:^{
+                                                                              [self deleteItem:item];
+                                                                              [self.fileOperationsProvider deleteFile:item isCorporate:corporate completion:^(BOOL success) {
+                                                                                  handler(success);
+                                                                              }];
+                                                                          }
+                                                                           cancelHandler:nil];
+    [controller presentViewController:confirmController animated:YES completion:nil];
+}
+
 #pragma mark -
 
 - (void)stopGettingFileThumb:(NSString *)fileName{

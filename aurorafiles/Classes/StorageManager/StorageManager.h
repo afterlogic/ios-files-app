@@ -32,9 +32,9 @@
 - (void)deleteAllObjects: (NSString *) entityDescription ;
 - (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef;
 - (void)getLastUsedFolderWithHandler:(void(^)(NSDictionary *result))complition;
-//- (Folder *)getFolderWithName:(NSString *)name type:(NSString *)type fullPath:(NSString *)path;
+- (void)deleteItem:(Folder *)item controller:(UIViewController *)controller isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
 - (void)removeSavedFilesForItem:(Folder *)item;
-- (void)deleteItem:(Folder *)item;
+//- (void)deleteItem:(Folder *)item;
 
 - (void)clear;
 
