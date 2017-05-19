@@ -291,7 +291,7 @@
     
     if (error)
     {
-        NSLog(@"%@",[error userInfo]);
+        DDLogError(@"%@",[error userInfo]);
     }
     
     [self.managedObjectContext save:nil];

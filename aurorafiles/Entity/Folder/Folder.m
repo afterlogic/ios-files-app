@@ -289,7 +289,7 @@
     }
     if (error)
     {
-        NSLog(@"%@",error);
+        DDLogError(@"local file creation error -> %@",error);
         return nil;
     }
     return [NSURL URLWithString:filePath];
@@ -335,7 +335,7 @@
 
 - (NSString*)validContentType
 {
-    NSLog(@"%@",[self.name pathExtension]);
+    DDLogDebug(@"%@",[self.name pathExtension]);
     if ([[self.name pathExtension] isEqualToString:@"pptx"] || [[self.name pathExtension] isEqualToString:@"ppt"])
     {
         return @"application/vnd.ms-powerpoint";

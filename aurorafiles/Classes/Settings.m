@@ -28,7 +28,7 @@
 
 + (NSString *)domainScheme{
     NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
-    NSLog(@"⚠️ current domain Scheme is -> %@", sch);
+    DDLogInfo(@"⚠️ current domain Scheme is -> %@", sch);
     return sch;
 }
 
@@ -108,7 +108,7 @@
     [[Settings sharedDefaults] synchronize];
 }
 + (NSString *)version{
-    NSLog(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
+    DDLogInfo(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
     return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
 }
 
@@ -136,7 +136,7 @@
     NSString * authToken = [Settings authToken];
     NSString * domainScheme = [Settings domainScheme];
 
-    NSLog(@"%@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
+    DDLogInfo(@"Settings after clear ->  %@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
 }
 
 @end

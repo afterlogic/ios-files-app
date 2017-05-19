@@ -161,9 +161,9 @@ static const int imageNameMinimalLength = 1;
     Folder * object = self.currentPage.item;
     if ([[Settings version] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
-            NSLog(@"link is -> %@", publicLink);
+            DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
-            NSLog(@"link components -> %@",publicLinkComponents);
+            DDLogDebug(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/?",[Settings domain]]];
             [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
@@ -187,9 +187,9 @@ static const int imageNameMinimalLength = 1;
         }];
     }else{
         [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
-            NSLog(@"link is -> %@", publicLink);
+            DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
-            NSLog(@"link components -> %@",publicLinkComponents);
+            DDLogDebug(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/share",[Settings domain]]];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
             UIImage * image = self.currentPage.imageView.image;

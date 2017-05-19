@@ -106,7 +106,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil,error);
                 return ;
             }
@@ -143,7 +143,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
     }];
@@ -179,7 +179,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 //            }
 //            if (error)
 //            {
-//                NSLog(@"%@",[error localizedDescription]);
+//                DDLogError(@"%@",[error localizedDescription]);
 //                handler(nil,error);
 //                return ;
 //            }
@@ -188,7 +188,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 //        });
 //    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
 //        dispatch_async(dispatch_get_main_queue(), ^(){
-//            NSLog(@"HTTP Request failed: %@", error);
+//            DDLogError(@"HTTP Request failed: %@", error);
 //            handler(nil,error);
 //        });
 //    }];
@@ -240,7 +240,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];
@@ -316,7 +316,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 
                 file[@"ThumbnailLink"] = thumbnail;
                 if (error) {
-                    NSLog(@"save error -> %@", error.localizedFailureReason);
+                    DDLogError(@"save error -> %@", error.localizedFailureReason);
                 }
                 image = [UIImage imageWithData:data];
             }else{
@@ -325,7 +325,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error userInfo]);
+                DDLogError(@"%@",[error userInfo]);
                 handler (nil);
                 return;
             }
@@ -388,7 +388,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil);
         });
     }];
@@ -445,7 +445,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(NO);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];
@@ -496,7 +496,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];
@@ -545,7 +545,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];
@@ -593,7 +593,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             {
                 result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 handlResult = [result isEqualToString:@"true"];
-                NSLog(@"%@",result);
+                DDLogError(@"%@",result);
             }
             
             if (!handlResult)
@@ -603,7 +603,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(handlResult);
                 return ;
             }
@@ -613,7 +613,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(NO);
                 return ;
             }
@@ -642,7 +642,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     if (folder.isZippedFile) {
         filepathPath = folder ? folder.fullpath : @"";
         NSMutableArray *pathPrtsArr = [filepathPath componentsSeparatedByString:@"$ZIP:"].mutableCopy;
-        NSLog(@"%@",pathPrtsArr);
+        DDLogError(@"%@",pathPrtsArr);
         path = [pathPrtsArr firstObject];
         name = [pathPrtsArr lastObject];
         fileSize = [folder.size floatValue];
@@ -711,7 +711,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
                 if([[NSFileManager defaultManager]copyItemAtPath:filePath.path toPath:fullURL.path error:&copyError]){
                     handler(fullURL.path);
                 }else{
-                    NSLog(@"copy item error -> %@",copyError.localizedDescription);
+                    DDLogError(@"copy item error -> %@",copyError.localizedDescription);
                     handler(@"");
                 }
             }else{
@@ -726,7 +726,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 
 - (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink))completion{
     NSMutableArray *filePathComponents = [filePath componentsSeparatedByString:@"/"].mutableCopy;
-    NSLog(@"components -> %@", filePathComponents);
+    DDLogError(@"components -> %@", filePathComponents);
     [filePathComponents removeLastObject];
     filePath = [filePathComponents count] == 1 ? @"" : [filePathComponents componentsJoinedByString:@"/"];
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
@@ -776,7 +776,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             completion(nil);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];

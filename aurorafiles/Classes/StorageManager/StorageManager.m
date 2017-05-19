@@ -131,7 +131,7 @@
                 }
                 
                 NSManagedObjectContext *folderContext = folder.managedObjectContext;
-                NSLog(@"%@",folderContext);
+                DDLogDebug(@"%@",folderContext);
                 
                 dispatch_async(dispatch_get_main_queue(), ^() {
                     if (handler) {
@@ -298,7 +298,7 @@
 
 - (NSString *)generateParentPath:(NSString *)itemFullpath{
     NSMutableArray *pathParts = [itemFullpath componentsSeparatedByString:@"/"].mutableCopy;
-    NSLog(@"%@",pathParts);
+    DDLogDebug(@"%@",pathParts);
     [pathParts removeObject:[pathParts lastObject]];
     if (pathParts.count == 1) {
         return [pathParts lastObject];
@@ -336,7 +336,7 @@
 //        if (result.count > 1) {
 //           result = [self removeDuplicatesFromOneItemFetch:result withParentPath:folder[@"Path"]].mutableCopy;
 //        }
-//        NSLog(@"%@",result);
+//        DDLogDebug(@"%@",result);
 //    }
 //};
 
@@ -393,11 +393,11 @@
     
     for (NSManagedObject *managedObject in items) {
         [self.DBProvider deleteObject:managedObject fromContext:context];
-        NSLog(@"%@ object deleted",entityDescription);
+        DDLogDebug(@"%@ object deleted",entityDescription);
     }
         [context save:&error];
     if (error) {
-        NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
+        DDLogError(@"Error deleting %@ - error:%@",entityDescription,error);
     }}];
 }
 

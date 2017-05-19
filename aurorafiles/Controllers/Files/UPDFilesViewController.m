@@ -239,10 +239,10 @@ static const int minimalStringLengthFiles = 1;
 - (void)fetchData{
     NSError * error = [NSError new];
     if([self.fetchedResultsController performFetch:&error]){
-        NSLog(@"✅ fetch success with items -> %@",self.fetchedResultsController.fetchedObjects);
+        DDLogDebug(@"✅ fetch success with items -> %@",self.fetchedResultsController.fetchedObjects);
         [self.tableView reloadData];
     }else{
-        NSLog(@"❌ fetch error desc -> %@",error.localizedDescription);
+        DDLogError(@"❌ fetch error desc -> %@",error.localizedDescription);
     }
 }
 
@@ -328,6 +328,9 @@ static const int minimalStringLengthFiles = 1;
     self.fetchedResultsController.fetchRequest.predicate = predicate;
     [self.fetchedResultsController performFetch:nil];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
+    if (newItems.count == 0){
+        noDataLabel.text = NSLocalizedString(@"Files not found..", @"files not found tableView label");
+    }
 
     NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
 
@@ -339,9 +342,7 @@ static const int minimalStringLengthFiles = 1;
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-//    if (indexPathsToInsert.count > 0) {
-        [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
-//    }
+    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -520,7 +521,7 @@ static const int minimalStringLengthFiles = 1;
         [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
     }
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
+    DDLogDebug(@"%@",[NSURL URLWithString:[folder downloadLink]]);
     NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
     NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
     folder.downloadIdentifier = downloadIdetifier;
@@ -570,7 +571,7 @@ static const int minimalStringLengthFiles = 1;
     }
     if (error)
     {
-        NSLog(@"%@",error);
+        DDLogError(@"%@",error);
     }
     return [NSURL URLWithString:filePath];
 }
@@ -592,8 +593,8 @@ static const int minimalStringLengthFiles = 1;
 
     NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
     destinationURL = [NSURL fileURLWithPath:[destinationURL absoluteString]];
-    NSLog(@"%@",[self downloadURL]);
-    NSLog(@"%@",destinationURL);
+    DDLogDebug(@"%@",[self downloadURL]);
+    DDLogDebug(@"%@",destinationURL);
 
     if ([fileManager fileExistsAtPath:[destinationURL path]])
     {
@@ -610,7 +611,7 @@ static const int minimalStringLengthFiles = 1;
 
         if (!success)
         {
-            NSLog(@"failed to download %@", [error userInfo]);
+            DDLogDebug(@"failed to download %@", [error userInfo]);
         }
 
         file.downloadIdentifier = [NSNumber numberWithInt:-1];
@@ -642,7 +643,7 @@ static const int minimalStringLengthFiles = 1;
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:nil];
     
-    NSLog(@"%s",__PRETTY_FUNCTION__);
+    DDLogDebug(@"%s",__PRETTY_FUNCTION__);
 }
 
 #pragma mark - Help Methods
@@ -660,7 +661,7 @@ static const int minimalStringLengthFiles = 1;
     
     if (error)
     {
-        NSLog(@"%@",[error userInfo]);
+        DDLogError(@"%@",[error userInfo]);
     }
     
     [self.defaultMOC  save:nil];
@@ -678,7 +679,7 @@ static const int minimalStringLengthFiles = 1;
         }];
     }else{
         [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            NSLog(@"%@",handler);
+            DDLogDebug(@"%@",handler);
             [self.defaultMOC  save:nil];
         }];
     }
@@ -715,10 +716,10 @@ static const int minimalStringLengthFiles = 1;
         Folder *fold = anObject;
         switch (type) {
             case 1:
-                NSLog(@"insert fold name is -> %@",fold.name);
+                DDLogDebug(@"insert fold name is -> %@",fold.name);
                 break;
             case 2:
-                NSLog(@"deleted fold name is -> %@",fold.name);
+                DDLogDebug(@"deleted fold name is -> %@",fold.name);
                 break;
             case 3:
                 
@@ -843,7 +844,7 @@ static const int minimalStringLengthFiles = 1;
           parameters:nil
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                  hud.label.text = NSLocalizedString(@"Creating shortuct...", @"hud creating shortcut text");
-                 NSLog(@"%@",responseObject);
+                 DDLogDebug(@"%@",responseObject);
                  NSData *data = [NSData new];
                  if ([responseObject isKindOfClass:[NSData class]]){
                      data = responseObject;
@@ -897,7 +898,7 @@ static const int minimalStringLengthFiles = 1;
                      [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:shortcutFileName uploadProgressBlock:^(float progress) {
                          hud.progress = progress;
                      } completion:^(NSDictionary * response){
-                         NSLog(@"%@",response);
+                         DDLogDebug(@"%@",response);
                          [hud setMode:MBProgressHUDModeIndeterminate];
                          hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
                          [self updateFiles:^(){
@@ -906,7 +907,7 @@ static const int minimalStringLengthFiles = 1;
                          }];
                      }];
                  }
-        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {NSLog(@"%@",error);
+        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {DDLogDebug(@"%@",error);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self updateFiles:^{
                             hud.mode = MBProgressHUDModeCustomView;
@@ -982,13 +983,13 @@ static const int minimalStringLengthFiles = 1;
 }
 
 - (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
-    NSLog(@"current asset - > %@ ",asset.defaultRepresentation.url);
+//    DDLogDebug(@"current asset - > %@ ",asset.defaultRepresentation.url);
     ALAssetRepresentation *rep = [asset defaultRepresentation];
     Byte *buffer = (Byte*)malloc((NSUInteger)rep.size);
     NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSUInteger)rep.size error:nil];
     NSData *fileData = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
     NSString *realFileName = asset.defaultRepresentation.filename;
-    NSLog(@"current fileData - > %@ ",fileData);
+//    DDLogDebug(@"current fileData - > %@ ",fileData);
     NSString* MIMEType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass
     ((__bridge CFStringRef)[rep UTI], kUTTagClassMIMEType);
 
@@ -1019,7 +1020,7 @@ static const int minimalStringLengthFiles = 1;
         [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
             hud.progress = progress;
         } completion:^(NSDictionary * response){
-            NSLog(@"%@",response);
+            DDLogDebug(@"%@",response);
             [self updateFiles:^(){
                 [hud hideAnimated:YES];
             }];
@@ -1047,7 +1048,7 @@ static const int minimalStringLengthFiles = 1;
 //    }
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 //    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-//        NSLog(@"%@",response);
+//        DDLogDebug(@"%@",response);
 //        [self updateFiles:^(){
 //            [MBProgressHUD hideHUDForView:self.view animated:YES];
 //        }];

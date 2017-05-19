@@ -57,26 +57,26 @@
 
 - (void)prepareLayout
 {
-    NSLog(@"%@ preparing layout", self);
+    DDLogDebug(@"%@ preparing layout", self);
     [super prepareLayout];
 //    self.previousSize = self.collectionView.bounds.size;
 }
 
 - (void)finalizeCollectionViewUpdates
 {
-    NSLog(@"%@ finalize updates", self);
+    DDLogDebug(@"%@ finalize updates", self);
     [super finalizeCollectionViewUpdates];
     self.indexPathsToAnimate = nil;
 }
 
 - (void)prepareForAnimatedBoundsChange:(CGRect)oldBounds
 {
-    NSLog(@"%@ prepare animated bounds change", self);
+    DDLogDebug(@"%@ prepare animated bounds change", self);
     [super prepareForAnimatedBoundsChange:oldBounds];
 }
 
 - (void)finalizeAnimatedBoundsChange {
-    NSLog(@"%@ finalize animated bounds change", self);
+    DDLogDebug(@"%@ finalize animated bounds change", self);
     [super finalizeAnimatedBoundsChange];
 }
 
@@ -97,7 +97,7 @@
                 [indexPaths addObject:updateItem.indexPathAfterUpdate];
                 break;
             default:
-                NSLog(@"unhandled case: %@", updateItem);
+                DDLogDebug(@"unhandled case: %@", updateItem);
                 break;
         }
     }

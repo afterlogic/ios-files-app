@@ -190,7 +190,7 @@
     if([segue.identifier isEqualToString:@"downloads_embed"]){
 //        DownloadsTableViewController *vc = [segue destinationViewController];
 //        vc.loadType = loadTypeContainer;
-//        NSLog(@"%@",vc);
+//        DDLogDebug(@"%@",vc);
     }
 }
 

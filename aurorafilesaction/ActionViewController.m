@@ -272,7 +272,7 @@
 //                            if([image isKindOfClass:[NSData class]]){
 //                                
 ////                                UIImage *currentImage =  [UIImage imageWithData:image];
-////                                NSLog(@"image is -> %@",currentImage);
+////                                DDLogDebug(@"image is -> %@",currentImage);
 //                                
 //                                NSData *data = image;
 //                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -339,7 +339,7 @@
                                 NSDictionary *pageInfo = [fileURLItem objectForKey:NSExtensionJavaScriptPreprocessingResultsKey];
                                 NSURL *pageLink = [NSURL URLWithString:[pageInfo objectForKey:@"link"]];
                                 NSString *webPageTitle = [pageInfo objectForKey:@"title"];
-                                NSLog(@"%@",webPageTitle);
+//                                DDLogDebug(@"%@",webPageTitle);
                                 fileExtension = @"url";
                                 mediaData = [self createInternetShortcutFile:webPageTitle ext:fileExtension link:pageLink];
                                 UploadedFile *file = [UploadedFile new];
@@ -611,7 +611,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
         hud.hudView.progress = progress;
         NSString *uploadStatus = [NSString stringWithFormat:@"%@ %@",[NSString transformedValue:[NSNumber numberWithLongLong:totalBytesForAllFilesSend]],[NSString transformedValue:[NSNumber numberWithLongLong:uploadSize]]];
         hud.hudView.detailsLabel.text = uploadStatus;
-        NSLog(@"fileName is -> %@",fileName);
+        DDLogDebug(@"fileName is -> %@",fileName);
         hud.hudView.label.text = fileName;
     });
 

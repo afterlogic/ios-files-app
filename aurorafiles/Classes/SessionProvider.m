@@ -138,8 +138,8 @@
         [Settings setLastLoginServerVersion:domainVersion];
         self.actualApiManager =  [networkManager getNetworkManager];
     }
-    NSLog(@"ℹ️ host version is %@",[Settings version]);
-    NSLog(@"ℹ️ host is %@",[Settings domain]);
+    DDLogInfo(@"ℹ️ host version is %@",[Settings version]);
+    DDLogInfo(@"ℹ️ host is %@",[Settings domain]);
 }
 
 -(void)setupActualApiManager{

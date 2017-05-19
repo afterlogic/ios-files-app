@@ -25,7 +25,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"P7 API Used");
+        DDLogInfo(@"P7 API Used");
         self.apiManager = [ApiP7 sharedInstance];
     }
     return self;

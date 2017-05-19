@@ -22,7 +22,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"P8 API Used");
+        DDLogInfo(@"P8 API Used");
     }
     return self;
 }

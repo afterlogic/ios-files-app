@@ -119,7 +119,7 @@
     NSMutableArray *pathParts = [folderPath componentsSeparatedByString:@"/"].mutableCopy;
     [pathParts removeLastObject];
     NSString *parrentPath = [pathParts componentsJoinedByString:@"/"];
-    NSLog(@"%@",parrentPath);
+    DDLogDebug(@"current folder parrent path -> %@",parrentPath);
     NSDictionary *lastSavedPath = @{@"Type":self.selectedRootPath,
                                     @"Name":name,
                                     @"ParrentPath":parrentPath,
@@ -176,7 +176,7 @@
 //                [self getFolderWithName:name fullPath:fullPath type:type];
 //            }
 //        }else{
-//            NSLog(@"same log %@",folders);
+//            DDLogDebug(@"same log %@",folders);
 //            [self generateViewsStack:folders];
 //        }
 //    }

@@ -388,9 +388,9 @@
             NSFileManager * manager = [NSFileManager defaultManager];
             if ([manager fileExistsAtPath:string])
             {
-                NSLog(@"exist");
+                DDLogDebug(@"exist");
             }
-            NSLog(@"collection view cell downloaded image - > %@", string);
+            DDLogDebug(@"collection view cell downloaded image - > %@", string);
             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
         }
         if (!image)
@@ -406,7 +406,7 @@
                     if (error) {
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
-                        NSLog(@"error %@", error);
+                        DDLogError(@"image download error -> %@", error);
                     } else {
                         self.loadedImage = image;
                         [self prepareImageViewToShow];

@@ -190,7 +190,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
          dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
          });
     }];
@@ -219,7 +219,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -228,7 +228,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil);
         });
     }autoRetryOf:retryCount retryInterval:retryInterval];
@@ -290,7 +290,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
     }autoRetryOf:retryCount retryInterval:retryInterval];
@@ -332,7 +332,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             
             if (error)
             {
-                NSLog(@"%s %@",__PRETTY_FUNCTION__,[error localizedDescription]);
+                DDLogError(@"%s %@",__PRETTY_FUNCTION__,[error localizedDescription]);
                 handler(nil, error);
                 return;
             }
@@ -381,7 +381,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -391,7 +391,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -441,7 +441,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -451,7 +451,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -472,7 +472,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
     [newDict setObject:path forKey:@"Path"];
     [newDict setObject:name forKey:@"FolderName"];
-    NSLog(@"%@",newDict);
+    DDLogError(@"%@",newDict);
     NSURLRequest * request = [self requestWithDictionary:newDict];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -492,7 +492,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -502,7 +502,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -542,7 +542,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -552,7 +552,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -592,7 +592,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -602,7 +602,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -618,7 +618,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [Settings domainScheme];
     NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? scheme : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
-    NSLog(@"%@",urlString);
+    DDLogError(@"%@",urlString);
     NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
 //    [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
@@ -645,7 +645,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -655,7 +655,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil);
                 return ;
             }
@@ -711,7 +711,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 completion(nil);
                 return ;
             }
@@ -722,7 +722,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 completion(nil);
                 return ;
             }

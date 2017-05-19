@@ -92,9 +92,9 @@
     } completion:^(BOOL contextDidSave, NSError * _Nullable error) {
         if (!error && contextDidSave) {
             [[NSManagedObjectContext MR_defaultContext]MR_saveToPersistentStoreAndWait];
-            NSLog(@"context saved -> %@",contextDidSave ? @"✅" : @"❌");
+            DDLogDebug(@"context saved -> %@",contextDidSave ? @"✅" : @"❌");
         }else{
-            NSLog(@"context saved - %@. Error is -> %@",contextDidSave ? @"✅" : @"❌" , error);
+            DDLogError(@"context saved - %@. Error is -> %@",contextDidSave ? @"✅" : @"❌" , error);
         }
     }];
 
@@ -105,9 +105,9 @@
 //    }];
 //    NSError *error = [NSError new];
 //    if ([_defaultMOC save:&error]) {
-//        NSLog(@"context saved -> ✅");
+//        DDLogError(@"context saved -> ✅");
 //    }else{
-//        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+//        DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
 //    }
 
 }
@@ -122,9 +122,9 @@
 //    NSError *error = [NSError new];
 //
 //    if ([context save:&error]) {
-//        NSLog(@"context saved -> ✅");
+//        DDLogError(@"context saved -> ✅");
 //    }else{
-//        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+//        DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
 //    }
 }
 
@@ -181,7 +181,7 @@
 //        error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
 //        // Replace this with code to handle the error appropriately.
 //        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        DDLogError(@"Unresolved error %@, %@", error, [error userInfo]);
 //    }
 //
 //    return _persistentStoreCoordinator;

@@ -16,6 +16,7 @@ abstract_target 'Application' do
     pod 'MagicalRecord','~> 2.3.0'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'CocoaLumberjack'
     
     target 'aurorafiles' do
         pod 'MagicalRecord','~> 2.3.0'

@@ -21,7 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		5C7B53292721A01C4C8F54DE /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
+		49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */; };
 		5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
 		5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
@@ -32,11 +32,11 @@
 		5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */; };
 		5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
-		5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5BA3A303C3D0423B3656 /* Item.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
 		AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */; };
 		B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */; };
+		BB6A53D584BF19F604CC6ABA /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */; };
 		DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA37112C1D21EFFA0067B124 /* DownloadsTableViewController.m */; };
 		DAC1CA391D061D7500238EB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA381D061D7500238EB5 /* main.m */; };
 		DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA3B1D061D7500238EB5 /* AppDelegate.m */; };
@@ -305,13 +305,13 @@
 		5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
 		5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringPunycodeAdditions.m; sourceTree = "<group>"; };
 		5C7B5AFC49B3E804A3971C34 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
-		5C7B5BA3A303C3D0423B3656 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
 		5C7B5C0895C7BFCAB1A0EE0D /* NSStringPunycodeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringPunycodeAdditions.h; sourceTree = "<group>"; };
 		5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenController.m; sourceTree = "<group>"; };
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
-		5C7B5D8394754DE8EFDADEC0 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
 		60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
 		B19E38E5DEE3D20DDA6C932A /* Pods-aurorafilesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.release.xcconfig"; sourceTree = "<group>"; };
 		C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -442,6 +442,7 @@
 		FF71D4D71DA3C851008690D5 /* AFNetworkActivityLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityLogger.m; sourceTree = "<group>"; };
 		FF7F443C1DA1936E00B12E35 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
 		FF7F443D1DA1936E00B12E35 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
+		FF88DDBD1ECDF3C800D8DA00 /* AuroraPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AuroraPrefixHeader.pch; path = aurorafiles/AuroraPrefixHeader.pch; sourceTree = SOURCE_ROOT; };
 		FF8A21DE1D53EAFE006EBE36 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionProvider.h; sourceTree = "<group>"; };
 		FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectionProvider.m; sourceTree = "<group>"; };
@@ -526,6 +527,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB6A53D584BF19F604CC6ABA /* libPods-aurorafilesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,6 +535,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,15 +601,6 @@
 			path = Folder;
 			sourceTree = "<group>";
 		};
-		5C7B585372D3E136D324F39D /* NonCDFolder */ = {
-			isa = PBXGroup;
-			children = (
-				5C7B5D8394754DE8EFDADEC0 /* Item.h */,
-				5C7B5BA3A303C3D0423B3656 /* Item.m */,
-			);
-			path = NonCDFolder;
-			sourceTree = "<group>";
-		};
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,6 +609,8 @@
 				3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */,
 				60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */,
 				15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */,
+				953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */,
+				7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -684,6 +680,7 @@
 				FFCF0C961E83B769005F87DE /* Localization */,
 				DAC1CA381D061D7500238EB5 /* main.m */,
 				FF8A21E31D53F1F7006EBE36 /* Constants.h */,
+				FF88DDBD1ECDF3C800D8DA00 /* AuroraPrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -880,7 +877,6 @@
 			children = (
 				5C7B56E700ED2B15EBE5B058 /* Folder */,
 				5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */,
-				5C7B585372D3E136D324F39D /* NonCDFolder */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -1954,7 +1950,6 @@
 				FF71D48A1DA33162008690D5 /* MLHostnameRequestFilter.m in Sources */,
 				5C7B55D38C4C54085FEC8DE0 /* Folder+CoreDataProperties.m in Sources */,
 				5C7B569238FB61688ABDE377 /* Folder.m in Sources */,
-				5C7B5C62CBC37AD29030FDE7 /* Item.m in Sources */,
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 				5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */,
@@ -2030,7 +2025,6 @@
 				5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */,
 				5C7B53F65754E0763E85B7BA /* Folder.m in Sources */,
 				FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */,
-				5C7B53292721A01C4C8F54DE /* Item.m in Sources */,
 				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
 				5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */,
 				5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */,
@@ -2319,6 +2313,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles;
@@ -2344,6 +2340,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles;
@@ -2420,6 +2418,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles.aurorafilesaction;
@@ -2447,6 +2447,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles.aurorafilesaction;
@@ -2523,6 +2525,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -2548,6 +2552,8 @@
 					"$(PROJECT_DIR)/aurorafiles",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";

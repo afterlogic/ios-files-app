@@ -87,7 +87,7 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil,error);
                 return ;
             }
@@ -96,7 +96,7 @@ static NSString *methodGetUsersAccount = @"GetUserAccounts";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];

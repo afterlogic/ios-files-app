@@ -56,7 +56,6 @@
     NSString *string = @"";
     NSMutableArray *resultArr = [NSMutableArray new];
     for (id obj in dict){
-        NSLog(@"%@", obj);
         if ([[dict valueForKey:obj] isKindOfClass:[NSString class]]) {
             [resultArr addObject:[NSString stringWithFormat:@"\"%@\":\"%@\"",obj,[dict valueForKey:obj]]];
         }else if([[dict valueForKey:obj] isKindOfClass:[NSDictionary class]]){

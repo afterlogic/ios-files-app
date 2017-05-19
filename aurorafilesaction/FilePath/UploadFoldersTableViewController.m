@@ -44,9 +44,9 @@ static const int minimalStringLengthFiles = 1;
 @implementation UploadFoldersTableViewController
 
 - (void)loadView{
-//    NSLog(@"self -> %@",self);
+//    DDLogDebug(@"self -> %@",self);
     [super loadView];
-//    NSLog(@"self after super load -> %@",self);
+//    DDLogDebug(@"self after super load -> %@",self);
 }
 
 - (void)awakeFromNib{
@@ -109,7 +109,7 @@ static const int minimalStringLengthFiles = 1;
             vc.doneButton = self.doneButton;
             vc.editButton = self.editButton;
         };
-        NSLog(@"curentControllersStack %@",curentControllersStack);
+        DDLogDebug(@"curentControllersStack %@",curentControllersStack);
         for (UploadFoldersTableViewController* vc in controllersStack) {
                 [self.navigationController pushViewController:vc animated:NO];
         }
@@ -336,7 +336,7 @@ static const int minimalStringLengthFiles = 1;
             [self.fetchedResultsController performFetch:nil];
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", self.folderName.text];
             NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
-            NSLog(@"%@ fetched folders after Folder Create Operations -> ", filteredArray);
+            DDLogDebug(@"%@ fetched folders after Folder Create Operations -> ", filteredArray);
             if (filteredArray.count > 0){
                 self.folderToNavigate = [filteredArray lastObject];
                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];

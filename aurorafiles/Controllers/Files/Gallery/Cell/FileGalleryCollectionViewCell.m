@@ -87,7 +87,7 @@
 //                [[ApiP8 filesModule]getFileView:file type:file.type withProgress:^(float progress) {
 //                    dispatch_async(dispatch_get_main_queue(), ^(){
 //                        hud.progress = progress;
-//                        NSLog(@"%@ progress -> %f",file.name, progress);
+//                        DDLogDebug(@"%@ progress -> %f",file.name, progress);
 //                    });
 //                } withCompletion:^(NSString *thumbnail) {
 //                    if(thumbnail){
@@ -113,15 +113,14 @@
 //                    }
 //                }];
 //            }
-            NSLog(@"collection view cell image - > %@",[file viewLink]);
+            DDLogDebug(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
-//                NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
                 NSString * string = [file localURL].absoluteString;
                 NSFileManager * manager = [NSFileManager defaultManager];
                 if ([manager fileExistsAtPath:string])
                 {
-                    NSLog(@"exist");
+                    DDLogDebug(@"exist");
                 }
                 image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
             }
@@ -142,19 +141,6 @@
                             self.scrollView.zoomScale = minScale;
                         });
                 }];
-                
-//                [self.imageView sd_setImageWithURL:[NSURL URLWithString:[file viewLink]] placeholderImage:nil options:SDWebImageContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//                    hud.progress = (float)receivedSize / file.size.floatValue;
-//                } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-//                    [hud hideAnimated:YES];
-//                    hud.hidden = YES;
-//                    self.imageView.alpha = 1.0f;
-//                    CGFloat minScale = 1;
-//                    self.scrollView.minimumZoomScale = minScale;
-//                    self.scrollView.maximumZoomScale = 5.0f;
-//                    self.scrollView.zoomScale = minScale;
-//                }];
-                
             }
             else
             {
@@ -170,14 +156,14 @@
                 self.scrollView.zoomScale = minScale;
             }
         }else{
-            NSLog(@"collection view cell image - > %@",[file viewLink]);
+            DDLogDebug(@"collection view cell image - > %@",[file viewLink]);
             if (file.isDownloaded.boolValue)
             {
                 NSString * string = [[[file localURL] URLByAppendingPathComponent:file.name] absoluteString];
                 NSFileManager * manager = [NSFileManager defaultManager];
                 if ([manager fileExistsAtPath:string])
                 {
-                    NSLog(@"exist");
+                    DDLogDebug(@"exist");
                 }
                 image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
             }

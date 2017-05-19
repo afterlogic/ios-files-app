@@ -61,7 +61,7 @@
                         for (LKLinkPreview *preview in previews) {
                             [text appendFormat:@"%@\n", [preview description]];
                         }
-                        NSLog(@"%@",text);
+                        DDLogDebug(@"%@",text);
                         LKLinkPreview *preview = previews.firstObject;
                         self.pageName.text = preview.title;
                         self.pageLink.text = file.webPageLink.absoluteString;
@@ -94,7 +94,7 @@
             self.imageView.userInteractionEnabled = YES;
             self.imageView.alpha = 0.0f;
             
-            NSLog(@"%@",[file path]);
+            DDLogDebug(@"%@",[file path]);
             self.imageView.image = nil;
             UIImage * image = nil;
             

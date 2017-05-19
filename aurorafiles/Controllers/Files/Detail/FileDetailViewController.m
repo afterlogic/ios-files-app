@@ -77,21 +77,30 @@
     self.scrollView.alpha = 0;
 
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    if (self.object.isLink.boolValue)
-    {
-        self.viewLink = self.object.linkUrl;
-        [[UIApplication sharedApplication] openLink:[NSURL URLWithString:self.object.linkUrl]];
-        return;
+//    if (self.object.isLink.boolValue)
+//    {
+//        self.viewLink = self.object.linkUrl;
+//        [[UIApplication sharedApplication] openLink:[NSURL URLWithString:self.object.linkUrl]];
+//        return;
+//        
+//    }
+    
+    NSURL *url = [NSURL URLWithString:self.viewLink];
+    if (![self.object isZipArchive]){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
+        if (self.isP8){
+            [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+        }
+        self.webView.delegate = self;
+        [self.webView loadRequest:request];
+    }else{
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        self.scrollView.alpha = 1.0f;
+        self.imageView.contentMode = UIViewContentModeCenter;
+        self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
         
     }
     
-    NSURL *url = [NSURL URLWithString:self.viewLink];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
-    if (self.isP8){
-        [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
-    }
-    self.webView.delegate = self;
-    [self.webView loadRequest:request];
     [hud hideAnimated:YES];
 
     self.title = self.object.name;
