@@ -17,6 +17,7 @@ abstract_target 'Application' do
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'CocoaLumberjack'
+    pod 'SWTableViewCell', '~> 0.3.7'
     
     target 'aurorafiles' do
         pod 'MagicalRecord','~> 2.3.0'

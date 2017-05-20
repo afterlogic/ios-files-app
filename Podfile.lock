@@ -52,6 +52,7 @@ PODS:
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
+  - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
   - AFNetworking (= 2.6)
@@ -67,6 +68,7 @@ DEPENDENCIES:
   - MagicalRecord (~> 2.3.0)
   - Reachability (~> 3.2)
   - SDWebImage (= 3.7.3)
+  - SWTableViewCell (~> 0.3.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
@@ -84,7 +86,8 @@ SPEC CHECKSUMS:
   ObjcAssociatedObjectHelpers: 686c291f292c26a49b9b1fa7d58130a8d35d59d2
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
-PODFILE CHECKSUM: dbd8faad065e978bfa80b792335caf902df94ffb
+PODFILE CHECKSUM: a1471eb515e346aa56a8e4d6ac99f868f7b3c0ea
 
 COCOAPODS: 1.2.1

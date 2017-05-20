@@ -40,7 +40,7 @@ static const int minimalStringLengthFiles = 1;
 
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
-        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate,UITextFieldDelegate>
+        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate,UITextFieldDelegate,SWTableViewCellDelegate>
 {
     UILabel *noDataLabel;
     UIAlertController * alertController;
@@ -420,8 +420,10 @@ static const int minimalStringLengthFiles = 1;
     Folder * object = [objects objectAtIndex:indexPath.row];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
+    cell.filesDelegate = self;
     cell.delegate = self;
     [cell setupCellForFile:object];
+    cell.rightUtilityButtons = [self rightUtilityButtons];
     return cell;
 }
 
@@ -1043,6 +1045,7 @@ static const int minimalStringLengthFiles = 1;
     NSString * text = [self.folderToOperate isEqual:self.folder] ? NSLocalizedString(@"Rename Current Folder", @"rename folder action title text") : NSLocalizedString(@"Rename", @"rename file action title text");
     UIAlertAction* renameFolder = [UIAlertAction actionWithTitle:text style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
+                                                             
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
                                                                                                                                     message:nil
                                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
@@ -1149,7 +1152,100 @@ static const int minimalStringLengthFiles = 1;
     return YES;
 }
 
+#pragma mark - SWTableViewCell Delegate
+
+- (NSArray *)rightUtilityButtons{
+    NSMutableArray *buttons = [NSMutableArray new];
+    [buttons sw_addUtilityButtonWithColor:[UIColor grayColor] title:NSLocalizedString(@"Rename", @"cell Rename title")];
+    [buttons sw_addUtilityButtonWithColor:[UIColor redColor] title:NSLocalizedString(@"Delete", @"cell Delete title")];
+    return buttons;
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index{
+    
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+    Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+    switch (index) {
+        case 0:{
+            DDLogDebug(@"Rename button pressed");
+            alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
+                                                                  message:nil
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
+                textField.text = folder.name;
+                self.folderName = textField;
+                [textField setDelegate:self];
+            }];
+            
+            defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action) {
+                                                       if (!folder)
+                                                       {
+                                                           return ;
+                                                       }
+                                                       _fetchedResultsController.delegate = nil;
+                                                       _fetchedResultsController = nil;
+                                                       
+                                                       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                       
+                                                       [self.storageManager  renameFolder:folder toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                           [self updateFiles:^(){
+                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                                   [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                   [self.tableView reloadData];
+                                                               });
+                                                           }];
+                                                           
+                                                       }];
+                                                   }];
+            
+            UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                                    style:UIAlertActionStyleCancel
+                                                                  handler:^(UIAlertAction * action){
+                                                                      
+                                                                  }];
+            [alertController addAction:defaultAction];
+            [defaultAction setEnabled:NO];
+            [alertController addAction:cancelAction];
+            [self presentViewController:alertController animated:YES completion:nil];
+
+        }
+            break;
+        case 1:{
+            DDLogDebug(@"Delete button pressed");
+            [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+                if (succsess) {
+                    DDLogDebug(@"file named %@ successfuly removed", folder.name);
+                    [self updateFiles:^(){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                            [self.tableView reloadData];
+                        });
+                    }];
+                }else{
+                    DDLogDebug(@"file named %@ hasn't been removed", folder.name);
+                }
+            }];
+        }
+            break;
+        default:
+            DDLogDebug(@"default");
+            break;
+    }
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state{
+    
+}
+
 #pragma mark - Utility Methods
+
+
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];

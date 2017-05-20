@@ -135,7 +135,7 @@
 
 - (IBAction)moreAction:(id)sender
 {
-    [self.delegate tableViewCellMoreAction:self];
+    [self.filesDelegate tableViewCellMoreAction:self];
 }
 
 + (CGFloat)cellHeight
@@ -147,9 +147,9 @@
 {
     if (!self.fileDownloaded) {
         [self.downloadActivity startAnimating];
-        [self.delegate tableViewCellDownloadAction:self];
+        [self.filesDelegate tableViewCellDownloadAction:self];
     }else{
-        [self.delegate tableViewCellRemoveAction:self];
+        [self.filesDelegate tableViewCellRemoveAction:self];
     }
 }
 

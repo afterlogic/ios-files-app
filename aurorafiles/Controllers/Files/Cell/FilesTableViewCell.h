@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SWTableViewCell/SWTableViewCell.h>
 @class Folder;
 @protocol FilesTableViewCellDelegate <NSObject>
 @required
@@ -16,7 +17,7 @@
 - (void)tableViewCellRemoveAction:(UITableViewCell*)cell;
 @end
 
-@interface FilesTableViewCell : UITableViewCell
+@interface FilesTableViewCell : SWTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *downloadActivity;
 @property (weak, nonatomic) IBOutlet UIButton *disclosureButton;
@@ -25,7 +26,7 @@
 
 @property BOOL fileDownloaded;
 
-@property (nonatomic, assign) id <FilesTableViewCellDelegate> delegate;
+@property (nonatomic, assign) id <FilesTableViewCellDelegate> filesDelegate;
 
 //- (IBAction)downloadAction:(id)sender;
 - (IBAction)moreAction:(id)sender;
