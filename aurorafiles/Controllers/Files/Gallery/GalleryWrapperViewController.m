@@ -108,7 +108,7 @@ static const int imageNameMinimalLength = 1;
                                                              
                                                              defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  Folder * file = self.currentPage.item;
-                                                                 [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                                      if (updatedFile) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              self.title = updatedFile.name;

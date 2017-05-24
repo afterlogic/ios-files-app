@@ -22,9 +22,11 @@
 - (void)setupDBProvider:(id<IDataBaseProtocol>)provider;
 - (void)setupFileOperationsProvider:(id<IFileOperationsProtocol>)provider;
 
-- (void)renameFolder:(Folder*)folder toNewName:(NSString*)newName withCompletion:(void (^)(Folder*))handler;
+- (void)renameOperation:(Folder *)file withNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
+//- (void)renameFolder:(Folder*)folder toNewName:(NSString*)newName withCompletion:(void (^)(Folder*))handler;
+//- (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
 
-- (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler;
+
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler;
 - (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler;
 - (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount))handler;

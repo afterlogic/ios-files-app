@@ -162,7 +162,7 @@
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
                                                                  Folder * file = self.item;
-                                                                 [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                      }
@@ -372,7 +372,7 @@
         [hud showAnimated:YES];
         if (file.isDownloaded.boolValue)
         {
-            NSString * string = [file localPath].absoluteString;
+            NSString * string = [file localPath];
             NSFileManager * manager = [NSFileManager defaultManager];
             if ([manager fileExistsAtPath:string])
             {

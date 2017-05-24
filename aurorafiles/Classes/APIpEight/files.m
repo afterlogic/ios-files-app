@@ -407,7 +407,6 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler{
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodRename,
-//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name,
@@ -457,7 +456,6 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 - (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(NSDictionary *result))handler{
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileInfo,
-//                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
                                                                                     @"Path":path,
                                                                                     @"Name":name,

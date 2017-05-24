@@ -593,21 +593,20 @@ static const int minimalStringLengthFiles = 1;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *destinationFilename = file.name;
 
-    NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
-    destinationURL = [NSURL fileURLWithPath:[destinationURL absoluteString]];
-    DDLogDebug(@"%@",[self downloadURL]);
-    DDLogDebug(@"%@",destinationURL);
+//    NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
+    NSString *destinationURL = [[self downloadURL].absoluteString stringByAppendingPathComponent:destinationFilename];
+    NSURL *tmpUrl = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
+    DDLogDebug(@"default download folder -> %@",[self downloadURL]);
+    DDLogDebug(@"download file destination URL -> %@",tmpUrl);
 
-    if ([fileManager fileExistsAtPath:[destinationURL path]])
+    if ([fileManager fileExistsAtPath:destinationURL])
     {
-        [fileManager removeItemAtURL:destinationURL error:nil];
+        [fileManager removeItemAtPath:destinationURL error:nil];
     }
 
-    BOOL success = [fileManager copyItemAtURL:location
-                                        toURL:destinationURL
-                                        error:&error];
-
-
+    BOOL success = [fileManager copyItemAtPath:location.path
+                                        toPath:destinationURL
+                                         error:&error];
 
     [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
 
@@ -1067,13 +1066,13 @@ static const int minimalStringLengthFiles = 1;
                                                                  _fetchedResultsController = nil;
                                                                  
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                                 
-                                                                 [self.storageManager  renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
-                                                                     if (folder && !folder.isFault) {
+                                                                                                                        
+                                                                 [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                                     if (updatedFile && !updatedFile.isFault) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                                                         self.folderToOperate = folder;
-                                                                         self.folder = folder;
-                                                                         self.title = folder.name;
+                                                                         self.folderToOperate = updatedFile;
+                                                                         self.folder = updatedFile;
+                                                                         self.title = updatedFile.name;
 //                                                                         NSError * error = nil;
                                                                          [self fetchData];
                                                                          });
@@ -1192,8 +1191,7 @@ static const int minimalStringLengthFiles = 1;
                                                        _fetchedResultsController = nil;
                                                        
                                                        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                       
-                                                       [self.storageManager  renameFolder:folder toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                       [self.storageManager  renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
                                                            [self updateFiles:^(){
                                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                                    [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1249,7 +1247,7 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
+    NSString * path = [object localPath];
     
     NSFileManager * manager = [NSFileManager defaultManager];
     NSError * error;
@@ -1265,7 +1263,6 @@ static const int minimalStringLengthFiles = 1;
     }
     
     [self.defaultMOC  save:nil];
-    
 }
 
 -(void)removeFileByIndexPath:(NSIndexPath *)indexPath{

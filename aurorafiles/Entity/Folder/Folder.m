@@ -303,10 +303,8 @@
     return path;
 }
 
-- (NSURL *)localPath{
-    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
-    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
-    NSURL *path = components.URL;
+- (NSString *)localPath{
+    NSString *path = [[Folder downloadsDirectoryURL].absoluteString stringByAppendingPathComponent:self.name];
     return path;
 }
 
@@ -418,6 +416,22 @@
         filePath =  fullURL.path;
     }
     return filePath;
+}
+
++(BOOL)renameLocalFile:(Folder *)file newName:(NSString *)name{
+    BOOL result = NO;
+    NSString *localFilePath = file.localPath;
+    DDLogDebug(@"local filePath -> %@",localFilePath);
+    NSString *newLocalFilePath = [[Folder downloadsDirectoryURL].absoluteString stringByAppendingPathComponent:name];
+    DDLogDebug(@"new local filePath -> %@",newLocalFilePath);
+    if (localFilePath){
+        NSError *error = nil;
+        [[NSFileManager defaultManager] moveItemAtPath:localFilePath toPath:newLocalFilePath error:&error];
+        result = YES;
+    }else{
+
+    }
+    return result;
 }
 
 + (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx{

@@ -57,16 +57,27 @@
 }
 
 #pragma mark -
+
+- (void)renameOperation:(Folder *)file withNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
+    if ([file.isFolder boolValue]){
+        [self renameFolder:file toNewName:newName withCompletion:complitionHandler];
+    }else{
+        [self renameToFile:file newName:newName withCompletion:complitionHandler];
+    }
+}
+
 - (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
     NSString * oldName = file.name;
     NSString * type = file.type;
     NSString * parentPath = file.parentPath ? file.parentPath : @"";
     bool isLink = file.isLink.boolValue;
     NSString *fileNewName;
-    NSString * ex = [oldName pathExtension];
-    if ([ex length])
+    NSString *ex = [oldName pathExtension];
+    NSString *newNameExtension = [newName pathExtension];
+    if ([newNameExtension length] == 0)
     {
-        fileNewName = [newName stringByAppendingPathExtension:[oldName pathExtension]];
+        NSString *tmpName = [newName stringByAppendingPathExtension:ex];
+        fileNewName = tmpName;
     }
     else
     {
@@ -82,13 +93,21 @@
     [self.fileOperationsProvider renameFileFromName:oldName toName:fileNewName type:type atPath:parentPath isLink:isLink completion:^(BOOL success) {
         if (success) {
             [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+                if (file.isDownloaded){
+                    [Folder renameLocalFile:file newName:fileNewName];
+                }
                 file.name = fileNewName;
                 file.identifier = fileNewName;
+                file.downloadedName = fileNewName;
                 NSString *newFullPath = @"";
                 NSMutableArray *path = [file.fullpath componentsSeparatedByString:@"/"].mutableCopy;
                 [path replaceObjectAtIndex:[path indexOfObject:[path lastObject]] withObject:fileNewName];
                 newFullPath = [path componentsJoinedByString:@"/"];
                 file.fullpath = newFullPath;
+
+                NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",type,newFullPath];
+                file.prKey = primaryKey;
+
                 complitionHandler(file);
             }];
         }else{

@@ -546,15 +546,14 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                        _fetchedResultsController = nil;
                                                        
 //                                                       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                       
-                                                       [[StorageManager sharedManager]  renameFolder:folder toNewName:self.folderName.text withCompletion:^(Folder * folder) {
+                                                       [[StorageManager sharedManager] renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                            [self updateFiles:^(){
                                                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                                                   [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                   //[MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                    [self.tableView reloadData];
                                                                });
                                                            }];
-                                                           
+
                                                        }];
                                                    }];
             
@@ -768,11 +767,11 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                                  }
                                                                  _fetchedResultsController.delegate = nil;
                                                                  _fetchedResultsController = nil;
-
-                                                                 [[StorageManager sharedManager] renameFolder:self.folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
-                                                                     self.folderToOperate = folder;
-                                                                     self.folder = folder;
-                                                                     self.title = folder.name;
+                                                                 
+                                                                [[StorageManager sharedManager] renameOperation:self.folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                                     self.folderToOperate = updatedFile;
+                                                                     self.folder = updatedFile;
+                                                                     self.title = updatedFile.name;
                                                                      NSError * error = nil;
                                                                      [self.fetchedResultsController performFetch:&error];
                                                                      if (error)

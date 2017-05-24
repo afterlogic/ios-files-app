@@ -142,7 +142,7 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 [[StorageManager sharedManager] renameToFile:self.object newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:self.object withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                          self.object = updatedFile;
