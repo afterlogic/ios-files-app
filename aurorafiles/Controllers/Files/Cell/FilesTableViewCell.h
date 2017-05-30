@@ -13,10 +13,11 @@
 @required
 - (void)tableViewCellDownloadAction:(UITableViewCell*)cell;
 - (void)tableViewCellMoreAction:(UITableViewCell*)cell;
+- (void)tableViewCell:(UITableViewCell*)cell fileReloadAction:(Folder *)file;
 @optional
 - (void)tableViewCellRemoveAction:(UITableViewCell*)cell;
-@end
 
+@end
 @interface FilesTableViewCell : SWTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *downloadActivity;

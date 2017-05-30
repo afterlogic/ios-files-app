@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */; };
+		5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
+		5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B53F65754E0763E85B7BA /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
 		5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
@@ -32,7 +34,11 @@
 		5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */; };
 		5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
+		5C7B5D317CC88C5E4BC9DED7 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
+		5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
+		5C7B5F269CE57769465BF0D0 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
+		5C7B5FCE97DF5C7753492951 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
 		AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */; };
 		B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */; };
@@ -301,10 +307,14 @@
 		5101F2218E140D245F77C015 /* Pods-Application-Extensions-aurorafilesaction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-aurorafilesaction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction.debug.xcconfig"; sourceTree = "<group>"; };
 		54CC1F76486E3FC41E34958C /* Pods-Application-Extensions-Save shortcut.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-Save shortcut.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut.debug.xcconfig"; sourceTree = "<group>"; };
 		5C7B543D016454AD9418B53D /* Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Folder.h; sourceTree = "<group>"; };
+		5C7B5496076EC444253315BD /* UploadDownloadProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadDownloadProvider.h; sourceTree = "<group>"; };
 		5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemInterface.h; sourceTree = "<group>"; };
 		5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDataBaseProvider.m; sourceTree = "<group>"; };
+		5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadDownloadProvider.m; sourceTree = "<group>"; };
 		5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Folder+CoreDataProperties.m"; sourceTree = "<group>"; };
 		5C7B585E359719D9DF9927ED /* SplashScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenController.h; sourceTree = "<group>"; };
+		5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuroraNetworkException.m; sourceTree = "<group>"; };
+		5C7B599C506B8192439A9547 /* AuroraNetworkException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuroraNetworkException.h; sourceTree = "<group>"; };
 		5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
 		5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringPunycodeAdditions.m; sourceTree = "<group>"; };
 		5C7B5AFC49B3E804A3971C34 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
@@ -588,6 +598,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5C7B5324A01592781839DBD4 /* Exceptions */ = {
+			isa = PBXGroup;
+			children = (
+				5C7B599C506B8192439A9547 /* AuroraNetworkException.h */,
+				5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */,
+			);
+			path = Exceptions;
+			sourceTree = "<group>";
+		};
 		5C7B5461A64DB1CF8116F302 /* CustomAlert */ = {
 			isa = PBXGroup;
 			children = (
@@ -604,6 +623,14 @@
 				5C7B5AFC49B3E804A3971C34 /* Folder.m */,
 			);
 			path = Folder;
+			sourceTree = "<group>";
+		};
+		5C7B5852C5DA7E0DB3CB3CDA /* Error Layer */ = {
+			isa = PBXGroup;
+			children = (
+				5C7B5324A01592781839DBD4 /* Exceptions */,
+			);
+			path = "Error Layer";
 			sourceTree = "<group>";
 		};
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
@@ -719,6 +746,7 @@
 				DAC1CA831D061F1200238EB5 /* Settings.m */,
 				DAC1CA841D061F1200238EB5 /* StorageManager */,
 				DAC1CA871D061F1200238EB5 /* View */,
+				5C7B5852C5DA7E0DB3CB3CDA /* Error Layer */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1128,6 +1156,27 @@
 			name = "Upload Path";
 			sourceTree = "<group>";
 		};
+		FF9FC9221EDD7C88000C97A0 /* API Operations */ = {
+			isa = PBXGroup;
+			children = (
+				FF635FFF1E3A6235002ABF7C /* ApiOperation.h */,
+				FF6360001E3A6235002ABF7C /* ApiOperation.m */,
+				FF6360031E3A7918002ABF7C /* CheckConnectionOperation.h */,
+				FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */,
+			);
+			name = "API Operations";
+			sourceTree = "<group>";
+		};
+		FF9FC9231EDD7CFE000C97A0 /* FileOperationsProvider */ = {
+			isa = PBXGroup;
+			children = (
+				FF2773DF1DF1A3980061C210 /* IFileOperationsProtocol.h */,
+				FFAD03F51DECA386000C4AFF /* FileOperationsProvider.h */,
+				FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */,
+			);
+			name = FileOperationsProvider;
+			sourceTree = "<group>";
+		};
 		FFA4BFDC1E55AD1F008F4522 /* Save shortcut */ = {
 			isa = PBXGroup;
 			children = (
@@ -1147,9 +1196,9 @@
 				DAC1CA811D061F1200238EB5 /* SessionProvider.m */,
 				FF8A21E01D53ECAD006EBE36 /* ConnectionProvider.h */,
 				FF8A21E11D53ECAD006EBE36 /* ConnectionProvider.m */,
-				FF2773DF1DF1A3980061C210 /* IFileOperationsProtocol.h */,
-				FFAD03F51DECA386000C4AFF /* FileOperationsProvider.h */,
-				FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */,
+				FF9FC9231EDD7CFE000C97A0 /* FileOperationsProvider */,
+				5C7B5496076EC444253315BD /* UploadDownloadProvider.h */,
+				5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -1307,10 +1356,7 @@
 				FFAD03E21DEC5DBB000C4AFF /* ApiProtocol.h */,
 				FFAD03ED1DEC727A000C4AFF /* NetworkManager.h */,
 				FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */,
-				FF635FFF1E3A6235002ABF7C /* ApiOperation.h */,
-				FF6360001E3A6235002ABF7C /* ApiOperation.m */,
-				FF6360031E3A7918002ABF7C /* CheckConnectionOperation.h */,
-				FF6360041E3A7918002ABF7C /* CheckConnectionOperation.m */,
+				FF9FC9221EDD7C88000C97A0 /* API Operations */,
 				FFE2C61F1DE321AF001F798D /* ApiP7 */,
 				FF6A94BB1DB666CA00543269 /* ApiP8 */,
 			);
@@ -1961,6 +2007,8 @@
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 				5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */,
+				5C7B5F269CE57769465BF0D0 /* AuroraNetworkException.m in Sources */,
+				5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2037,6 +2085,8 @@
 				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
 				5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */,
 				5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */,
+				5C7B5FCE97DF5C7753492951 /* AuroraNetworkException.m in Sources */,
+				5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2105,6 +2155,8 @@
 				FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */,
 				FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */,
 				5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */,
+				5C7B5D317CC88C5E4BC9DED7 /* AuroraNetworkException.m in Sources */,
+				5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

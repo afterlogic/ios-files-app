@@ -11,6 +11,7 @@
 #import "AFNetworking.h"
 #import "Settings.h"
 #import "NSURLRequest+requestGenerator.h"
+#import "UIAlertView+Errors.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
 static int retryCount = 3;

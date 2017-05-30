@@ -11,10 +11,13 @@
 #import "Folder.h"
 #import "AFNetworking.h"
 #import "NSString+URLEncode.h"
+#import "UIAlertView+Errors.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static  int retryCount = 3;
+static  int retryCount = 1;
+static  int retryCountForFolderUpdate = 3;
 static  int retryInterval = 5;
+static NSString * errorFieldName = @"ErrorCode";
 
 @import UIKit;
 
@@ -178,7 +181,12 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 }
                 else
                 {
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                    if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                        NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                    }else {
+                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                    }
                 }
             }
             else
@@ -186,6 +194,10 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
             }
         }
+            if(error){
+                handler(nil,error);
+                return;
+            }
             handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
@@ -198,10 +210,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [manager.operationQueue addOperation:operation];
 }
 
-- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *))handler
+- (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
-
-    
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": type }];
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -216,22 +226,25 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
             
-            handler(json);
+            handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             DDLogError(@"HTTP Request failed: %@", error);
-            handler(nil);
+            handler(nil, error);
         });
-    }autoRetryOf:retryCount retryInterval:retryInterval];
+    }autoRetryOf:retryCountForFolderUpdate retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
 
@@ -285,6 +298,10 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 {
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The username or password you entered is incorrect", @"")}];
                 }
+                if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }
             }
             handler(json,error);
         });
@@ -298,10 +315,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [manager.operationQueue addOperation:operation];
 }
 
-- (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *, NSError *))handler
+- (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *data, NSError *error))handler
 {
-    
-    
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":isAuhtCheck}];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -341,12 +356,9 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     }autoRetryOf:retryCount retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
-
 }
 
-
-
-- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))handler
+- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName isCorporate:(BOOL)corporate atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
@@ -381,21 +393,24 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
-            handler(json);
+            handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
         });
@@ -406,7 +421,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(NSDictionary *))handler
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
@@ -432,21 +447,24 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
-            handler(json);
+            handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil, error);
                 return ;
             }
         });
@@ -456,7 +474,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError* error))handler
 {
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
@@ -488,21 +506,24 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(NO);
+                handler(NO,error);
                 return ;
             }
-            handler(YES);
+            handler(YES, error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(NO);
+                handler(NO, error);
                 return ;
             }
         });
@@ -513,7 +534,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     
 }
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError* error))handler
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
@@ -550,21 +571,24 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(NO);
+                handler(NO,error);
                 return ;
             }
-            handler(YES);
+            handler(YES, error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(NO);
+                handler(NO,error);
                 return ;
             }
         });
@@ -574,7 +598,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)getFolderInfoForName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(NSDictionary *))handler
+- (void)getFolderInfoForName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
     
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
@@ -600,21 +624,25 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
-            handler(json);
+            handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+
+                handler(nil,error);
                 return ;
             }
         });
@@ -624,7 +652,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 }
 
-- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler
+- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
 //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [Settings domainScheme];
@@ -653,21 +681,24 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (![json isKindOfClass:[NSDictionary class]])
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
             }
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
-            handler(json);
+            handler(json,nil);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                handler(nil);
+                handler(nil,error);
                 return ;
             }
         });
@@ -686,7 +717,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 }
 
 
--(void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completion{
+-(void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *data, NSError* error))completion{
     NSMutableDictionary * newDict = [[NSMutableDictionary alloc] init];
     [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:publicLink forKey:@"Action"];
@@ -714,6 +745,9 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             {
                 if ([[json objectForKey:@"Result"] isKindOfClass:[NSString class]]) {
                     result = [json objectForKey:@"Result"];
+                }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
                 }else{
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
                 }
@@ -723,18 +757,19 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                completion(nil);
+                completion(nil,error);
                 return ;
             }
 
-            completion(result);
+            completion(result,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
             if (error)
             {
                 DDLogError(@"%@",[error localizedDescription]);
-                completion(nil);
+
+                completion(nil,error);
                 return ;
             }
         });

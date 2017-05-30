@@ -24,18 +24,6 @@
 
 @implementation StorageManager
 
-+ (instancetype)sharedManager
-{
-    static StorageManager *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[StorageManager alloc] init];
-    });
-    return sharedInstance;
-}
-
-
-
 - (instancetype)init
 {
     self = [super init];
@@ -44,8 +32,20 @@
         self.filesOperationsQueue = [[NSOperationQueue alloc]init];
         [self.filesOperationsQueue setName:@"com.AuroraFiles.FilesOperationsQueue"];
     }
-    
+
     return self;
+}
+
+
+
++ (instancetype)sharedManager
+{
+    static StorageManager *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[StorageManager alloc] init];
+    });
+    return sharedInstance;
 }
 
 - (void)setupDBProvider:(id<IDataBaseProtocol>)provider{

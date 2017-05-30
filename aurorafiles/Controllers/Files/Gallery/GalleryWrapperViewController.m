@@ -147,7 +147,7 @@ static const int imageNameMinimalLength = 1;
 {
     Folder * object = self.currentPage.item;
     if ([[Settings version] isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
+        [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink, NSError *error) {
             DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
             DDLogDebug(@"link components -> %@",publicLinkComponents);
@@ -173,7 +173,7 @@ static const int imageNameMinimalLength = 1;
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
     }else{
-        [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
+        [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink, NSError *error) {
             DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
             DDLogDebug(@"link components -> %@",publicLinkComponents);

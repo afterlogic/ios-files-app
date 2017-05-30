@@ -21,21 +21,21 @@ typedef void (^UploadProgressBlock)(float progress);
 
 - (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *data, NSError *error)) handler;
 
-- (void)getFilesForFolder:(NSString*)folderName withType:(NSString*)type completion:(void (^)(NSDictionary *data)) handler;
+- (void)getFilesForFolder:(NSString*)folderName withType:(NSString*)type completion:(void (^)(NSDictionary *data, NSError* error)) handler;
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
+- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError* error))handler;
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler;
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError* error))handler;
 
-- (void)createFolderWithName:(NSString*)name isCorporate:(BOOL)corporate andPath:(NSString*)path completion:(void (^)(NSDictionary*))handler;
+- (void)createFolderWithName:(NSString*)name isCorporate:(BOOL)corporate andPath:(NSString*)path completion:(void (^)(NSDictionary* data, NSError* error))handler;
 
-- (void)renameFolderFromName:(NSString*)name toName:(NSString*)newName isCorporate:(BOOL)corporate atPath:(NSString*)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary*))handler;
+- (void)renameFolderFromName:(NSString*)name toName:(NSString*)newName isCorporate:(BOOL)corporate atPath:(NSString*)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary* data , NSError* error))handler;
 
-- (void)getFolderInfoForName:(NSString*)name path:(NSString*)path type:(NSString*)type completion:(void (^)(NSDictionary*))handler;
+- (void)getFolderInfoForName:(NSString*)name path:(NSString*)path type:(NSString*)type completion:(void (^)(NSDictionary *data , NSError* error))handler;
 
-- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *))handler;
+- (void)putFile:(NSData *)file toFolderPath:(NSString *)folderPath withName:(NSString *)name uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(NSDictionary *data, NSError* error))handler;
 
-- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink))completion;
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink, NSError* error))completion;
 
 - (void)cancelAllOperations;
 

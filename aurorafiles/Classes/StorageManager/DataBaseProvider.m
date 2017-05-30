@@ -100,17 +100,6 @@
 
 - (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block {
 
-//    [self.defaultMOC performBlock:^{
-//        if (block) {
-//            block(self.defaultMOC);
-//        }
-//        NSError *error = [NSError new];
-//        if ([self.defaultMOC save:&error]) {
-//            DDLogDebug(@"context saved -> ✅");
-//        }else{
-//            DDLogDebug(@"context saved - ❌. Error is -> %@",error.localizedDescription);
-//        }
-//    }];
     NSBlockOperation *saveOperation = [NSBlockOperation blockOperationWithBlock:^{
         NSManagedObjectContext *tmpContext = self.operationsMOC;
         [tmpContext performBlock:^{

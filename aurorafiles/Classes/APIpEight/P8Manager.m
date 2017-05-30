@@ -29,7 +29,7 @@
 
 #pragma mark - User Operations
 
--(void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL, NSError *))handler{
+-(void)authorizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success, NSError *error))handler{
     [[ApiP8 coreModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
         if (error)
         {
@@ -71,51 +71,55 @@
 }
 
 #pragma mark - Files Operations
--(void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL))complitionHandler{
-    [[ApiP8 filesModule]createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL result) {
-        complitionHandler(result);
+-(void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
+    [[ApiP8 filesModule]createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL result, NSError *error) {
+        complitionHandler(result,error);
     }];
 }
--(void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL))complitionHandler{
-    [[ApiP8 filesModule]renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(BOOL success) {
+-(void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))complitionHandler{
+    [[ApiP8 filesModule]renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(BOOL success, NSError *error) {
         if (success) {
-            complitionHandler(YES);
+            complitionHandler(YES,nil);
         }else{
-            complitionHandler(NO);
+            complitionHandler(NO,error);
         }
     }];
 }
 
--(void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *))complitionHandler{
+-(void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *result, NSError *error))complitionHandler{
     
-    [[ApiP8 filesModule]renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink  completion:^(BOOL success) {
+    [[ApiP8 filesModule]renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink  completion:^(BOOL success, NSError *error) {
         if (success) {
-            [[ApiP8 filesModule]getFileInfoForName:newName path:path corporate:type completion:^(NSDictionary *result) {
-                complitionHandler(result);
+            [[ApiP8 filesModule]getFileInfoForName:newName path:path corporate:type completion:^(NSDictionary *result, NSError *error) {
+                if(error){
+                    complitionHandler(nil,error);
+                }else{
+                    complitionHandler(result,nil);
+                }
             }];
         }else{
-            complitionHandler(nil);
+            complitionHandler(nil,error);
         }
     }];
 }
 
--(void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL))complitionHandler{
-    [[ApiP8 filesModule]getFileInfoForName:name path:path corporate:type completion:^(NSDictionary *result) {
-        complitionHandler(result);
+-(void)checkItemExistenceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler{
+    [[ApiP8 filesModule]getFileInfoForName:name path:path corporate:type completion:^(NSDictionary *result, NSError *error) {
+        complitionHandler(result,error);
     }];
 }
--(void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *))complitionHandler{
+-(void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler{
     [[ApiP8 filesModule] prepareForThumbUpdate];
     [[ApiP8 filesModule]getFilesForFolder:folderPath withType:type completion:^(NSArray *items, NSError * error){
         if (error){
-            complitionHandler(nil);
+            complitionHandler(nil,error);
         }else{
             if (items.count>0) {
 //                [[ApiP8 filesModule]getThumbnailsForFiles:items withCompletion:^(NSArray *resultedItems) {
-                    complitionHandler(items);
+                    complitionHandler(items,nil);
 //                }];
             }else{
-                complitionHandler(@[]);
+                complitionHandler(@[],error);
             }
         }
 
@@ -123,17 +127,17 @@
 
 }
 
-- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completionHandler{
-    [[ApiP8 filesModule]getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink) {
-        completionHandler(publicLink);
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink, NSError *error))completionHandler{
+    [[ApiP8 filesModule]getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink, NSError *error) {
+        completionHandler(publicLink,error);
     }];
 }
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [[ApiP8 filesModule]deleteFile:folder isCorporate:corporate completion:complitionHandler];
 }
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFiles:(NSArray<Folder *> *)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [[ApiP8 filesModule]deleteFiles:files isCorporate:corporate completion:complitionHandler];
 }
 #pragma mark - Helpers

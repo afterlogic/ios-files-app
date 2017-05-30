@@ -837,7 +837,7 @@ static const int minimalStringLengthFiles = 1;
                  if ([[Settings version]isEqualToString:@"P8"]) {
                      [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:shortcutFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
                          hud.progress = progress;
-                     } completion:^(BOOL result) {
+                     } completion:^(BOOL result,NSError *error) {
                          if (result) {
                              [hud setMode:MBProgressHUDModeIndeterminate];
                              hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
@@ -860,7 +860,7 @@ static const int minimalStringLengthFiles = 1;
                      }
                      [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:shortcutFileName uploadProgressBlock:^(float progress) {
                          hud.progress = progress;
-                     } completion:^(NSDictionary * response){
+                     } completion:^(NSDictionary * response, NSError *error){
                          DDLogDebug(@"%@",response);
                          [hud setMode:MBProgressHUDModeIndeterminate];
                          hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
@@ -963,7 +963,7 @@ static const int minimalStringLengthFiles = 1;
     if ([[Settings version]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
              hud.progress = progress;
-        } completion:^(BOOL result) {
+        } completion:^(BOOL result, NSError *error) {
             if (result) {
                 [self updateFiles:^(){
                     [hud hideAnimated:YES];
@@ -982,7 +982,7 @@ static const int minimalStringLengthFiles = 1;
         }
         [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
             hud.progress = progress;
-        } completion:^(NSDictionary * response){
+        } completion:^(NSDictionary * response, NSError *error){
             DDLogDebug(@"%@",response);
             [self updateFiles:^(){
                 [hud hideAnimated:YES];

@@ -10,4 +10,5 @@
 
 @interface UIAlertView (Errors)
 +(UIAlertView *)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc;
++(void)generatePopupWithError:(NSError *)error;
 @end

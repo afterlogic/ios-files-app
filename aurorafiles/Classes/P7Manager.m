@@ -33,7 +33,7 @@
 
 #pragma mark - User Operations
 
--(void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL, NSError *))handler{
+-(void)authorizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success, NSError *error))handler{
     [self.apiManager getAppDataCompletionHandler:^(NSDictionary *result, NSError *error) {
         if (error)
         {
@@ -55,8 +55,8 @@
                     NSString * password = [Settings password];
                     if (email.length && password.length)
                     {
-                        [self authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                            handler(isAuthorised,error);
+                        [self authorizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error) {
+                            handler(isAuthorised, error);
                         }];
                         return;
                     }else{
@@ -97,8 +97,8 @@
                         NSString * password = [Settings password];
                         if (email.length && password.length)
                         {
-                            [self authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                                handler(isAuthorised,NO, NO);
+                            [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
+                                handler(success,NO, NO);
                             }];
                             return;
                         }else{
@@ -121,8 +121,10 @@
             NSString * password = [Settings password];
             if (email.length && password.length)
             {
-                [self authroizeEmail:email withPassword:password completion:^(BOOL isAuthorised, NSError *error){
-                    handler(isAuthorised,NO, NO);
+                [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
+                    handler(success,NO, NO);
+                }];                            [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
+                    handler(success,NO, NO);
                 }];
                 return;
             }
@@ -138,80 +140,84 @@
     handler(YES, nil);
 }
 #pragma mark - Files Operations
-- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL))complitionHandler{
-    [self.apiManager createFolderWithName:name isCorporate:corporate andPath:path ? path : @"" completion:^(NSDictionary * result){
-        if ([[result objectForKey:@"Result"]boolValue]) {
-            complitionHandler([[result objectForKey:@"Result"]boolValue]);
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
+    [self.apiManager createFolderWithName:name isCorporate:corporate andPath:path ? path : @"" completion:^(NSDictionary* data, NSError* error){
+        if ([[data objectForKey:@"Result"]boolValue]) {
+            complitionHandler([[data objectForKey:@"Result"]boolValue],error);
         }
     }];
 }
-- (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL))complitionHandler{
-    [self.apiManager renameFolderFromName:name toName:newName isCorporate:[type isEqualToString:@"corporate"] atPath:path isLink:isLink completion:^(NSDictionary* handler){
-        if ([[handler objectForKey:@"Result"]boolValue]) {
-            complitionHandler(YES);
+- (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))complitionHandler{
+    [self.apiManager renameFolderFromName:name toName:newName isCorporate:[type isEqualToString:@"corporate"] atPath:path isLink:isLink completion:^(NSDictionary* data, NSError* error){
+        if ([[data objectForKey:@"Result"]boolValue]) {
+            complitionHandler(YES,nil);
         }else{
-            complitionHandler(NO);
+            complitionHandler(NO,error);
         }
     }];
 }
 
-- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary * result))complitionHandler{
+- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *result, NSError *error))complitionHandler{
     
     
-    [self.apiManager renameFolderFromName:name toName:newName isCorporate:[type isEqualToString:@"corporate"] atPath:path isLink:isLink  completion:^(NSDictionary* result) {
-        if ([[result objectForKey:@"Result"]boolValue]){
-            [self.apiManager getFolderInfoForName:newName path:path type:type completion:^(NSDictionary * result) {
-                if ([[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]]){
-                    NSDictionary *folderRef = [result objectForKey:@"Result"];
-                    complitionHandler(folderRef);
+    [self.apiManager renameFolderFromName:name toName:newName isCorporate:[type isEqualToString:@"corporate"] atPath:path isLink:isLink  completion:^(NSDictionary* data, NSError* error) {
+        if ([[data objectForKey:@"Result"]boolValue]){
+            [self.apiManager getFolderInfoForName:newName path:path type:type completion:^(NSDictionary* data, NSError* error) {
+                if ([[data objectForKey:@"Result"] isKindOfClass:[NSDictionary class]]){
+                    NSDictionary *folderRef = [data objectForKey:@"Result"];
+                    complitionHandler(folderRef,nil);
                 }
                 else{
-                    complitionHandler(nil);
+                    complitionHandler(nil,error);
                 }
                 
             }];
         }
         else{
-            complitionHandler(nil);
+            complitionHandler(nil,error);
         }
     }];
 }
 
--(void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL))complitionHandler{
-    [self.apiManager getFolderInfoForName:name path:path type:type completion:^(NSDictionary *result) {
-        if ([[result valueForKey:@"Result"]isKindOfClass:[NSNumber class]] && ![[result valueForKey:@"Result"]boolValue]) {
-            complitionHandler(NO);
+-(void)checkItemExistenceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler{
+    [self.apiManager getFolderInfoForName:name path:path type:type completion:^(NSDictionary* data, NSError* error) {
+        if ([[data valueForKey:@"Result"]isKindOfClass:[NSNumber class]] && ![[data valueForKey:@"Result"]boolValue]) {
+            complitionHandler(NO,error);
         }else{
-            id resultObj = [result valueForKey:@"Result"];
+            id resultObj = [data valueForKey:@"Result"];
             if ([resultObj isKindOfClass:[NSNull class]]) {
-                complitionHandler(NO);
+                complitionHandler(NO,error);
                 return;
             }
-            complitionHandler(YES);
+            complitionHandler(YES,nil);
         }
     }];
 }
 
--(void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *))complitionHandler{
-    [self.apiManager getFilesForFolder:folderPath withType:type completion:^(NSDictionary * result) {
+-(void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler{
+    [self.apiManager getFilesForFolder:folderPath withType:type completion:^(NSDictionary* data, NSError* error) {
+        if(error){
+            complitionHandler(@[],error);
+            return;
+        }
         NSArray * items;
-        if (result && [result isKindOfClass:[NSDictionary class]] && [[result objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+        if (data && [data isKindOfClass:[NSDictionary class]] && [[data objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
         {
-            items = [[[result objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[result objectForKey:@"Result"] objectForKey:@"Items"] : @[];
+            items = [[[data objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[data objectForKey:@"Result"] objectForKey:@"Items"] : @[];
         }
         else
         {
             items = @[];
         }
-        complitionHandler(items);
+        complitionHandler(items,nil);
     }];
 }
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self.apiManager deleteFile:folder isCorporate:corporate completion:complitionHandler];
 }
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFiles:(NSArray<Folder *> *)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self.apiManager deleteFiles:files isCorporate:corporate completion:complitionHandler];
 }
 #pragma mark - Helpers
@@ -229,9 +235,13 @@
     }];
 }
 
-- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *))completionHandler{
-    [self.apiManager getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink) {
-        completionHandler(publicLink);
+- (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink, NSError *error))completionHandler{
+    [self.apiManager getPublicLinkForFileNamed:name filePath:filePath type:type size:size isFolder:isFolder completion:^(NSString *publicLink, NSError* error) {
+        if(error){
+            completionHandler(nil,error);
+            return;;
+        }
+        completionHandler(publicLink,nil);
     }];
 }
 

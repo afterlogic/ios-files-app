@@ -63,11 +63,11 @@
         
         self.fileImageView.image = nil;
 
-        if (folder.downloadIdentifier.integerValue != -1)
+        if (folder.isFolder.boolValue != NO && folder.downloadIdentifier.integerValue != -1)
         {
             [self.downloadActivity startAnimating];
             self.disclosureButton.hidden = YES;
-//            [self.filesDelegate tableViewCellDownloadAction:self];
+            [self.filesDelegate tableViewCell:self fileReloadAction:folder];
         }
         else
         {

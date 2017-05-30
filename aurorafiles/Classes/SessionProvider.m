@@ -109,9 +109,7 @@
 
 - (void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
 {
-    [self.actualApiManager authroizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
-        handler(success,error);
-    }];
+    [self.actualApiManager authorizeEmail:email withPassword:password completion:handler];
 }
 
 - (void)checkSSLConnection:(void (^)(NSString *))handler{
