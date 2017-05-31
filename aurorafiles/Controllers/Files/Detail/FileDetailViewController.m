@@ -17,6 +17,7 @@
 #import "StorageManager.h"
 #import "MBProgressHUD.h"
 #import "UIApplication+openURL.h"
+#import "UIAlertView+Errors.h"
 
 
 @interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
@@ -248,6 +249,7 @@
     self.scrollView.alpha = 1.0f;
     if (error){
         self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
+        [UIAlertView generatePopupWithError:error];
     }
 
 }

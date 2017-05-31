@@ -11,6 +11,7 @@
 @implementation UIAlertView (Errors)
 
 +(UIAlertView *)generatePopupWithError:(NSError *)error forVC:(UIViewController *)vc{
+#ifndef AURORA_EXTENSION
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
     NSString *text = [[UIAlertView getErrorList] valueForKey:errorCode];
     UIAlertView *a = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"ERROR", @"error popup label")
@@ -19,9 +20,13 @@
                                       cancelButtonTitle:NSLocalizedString(@"OK", @"error popup cancelButton Title")
                                       otherButtonTitles:nil, nil];
     return a;
+#else
+    return nil;
+#endif
 }
 
 +(void)generatePopupWithError:(NSError *)error{
+#ifndef AURORA_EXTENSION
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
     if ([errorCode isEqualToString:@"-999"]) {
         return;
@@ -37,6 +42,7 @@
                                       cancelButtonTitle:NSLocalizedString(@"OK", @"error popup cancelButton Title")
                                       otherButtonTitles:nil, nil];
     [a show];
+#endif
 }
 
 +(NSDictionary *)getErrorList{

@@ -32,6 +32,7 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import "UIApplication+openURL.h"
+#import "UploadDownloadProvider.h"
 
 
 static const int shortcutCreationTexFieldTag = 100;
@@ -40,7 +41,10 @@ static const int minimalStringLengthFiles = 1;
 
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
-        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate,UITextFieldDelegate,SWTableViewCellDelegate>
+        FilesTableViewCellDelegate,
+//        NSURLSessionDownloadDelegate,
+        CRMediaPickerControllerDelegate,UITextFieldDelegate,
+        SWTableViewCellDelegate,UploadDelegate,DownloadDelegate>
 {
     UILabel *noDataLabel;
     UIAlertController * alertController;
@@ -63,6 +67,7 @@ static const int minimalStringLengthFiles = 1;
 
 @property (strong, nonatomic) SessionProvider *sessionProvider;
 @property (strong, nonatomic) StorageManager *storageManager;
+@property (strong, nonatomic) UploadDownloadProvider *uploadDownloadManager;
 @end
 
 @implementation UPDFilesViewController
@@ -86,6 +91,12 @@ static const int minimalStringLengthFiles = 1;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+    self.uploadDownloadManager = [UploadDownloadProvider providerWithDefaultMOC:self.defaultMOC
+                                                                 storageManager:self.storageManager
+                                                       fetchedResultsController:self.fetchedResultsController];
+    self.uploadDownloadManager.uploadDelegate = self;
+    self.uploadDownloadManager.downloadDelegate = self;
 
     if (self.folder)
     {
@@ -155,7 +166,8 @@ static const int minimalStringLengthFiles = 1;
     self.sessionProvider = [SessionProvider sharedManager];
     self.storageManager = [StorageManager sharedManager];
     self.defaultMOC = [self.storageManager.DBProvider defaultMOC];
-    
+
+
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -518,47 +530,27 @@ static const int minimalStringLengthFiles = 1;
     [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
     [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
 
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-    if (self.isP8){
-        [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
+    [self.uploadDownloadManager startDownloadTaskForFile:folder];
+}
+
+-(void)tableViewCell:(UITableViewCell *)cell fileReloadAction:(Folder *)file {
+    if (file.isDownloaded.boolValue)
+    {
+        return;
     }
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    DDLogDebug(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-    NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-    NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-    folder.downloadIdentifier = downloadIdetifier;
-    NSError * error;
-    if ([folder.managedObjectContext save:&error]){
-        [downloadTask resume];
-    };
-    
+    [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
+
+    [self.uploadDownloadManager startDownloadTaskForFile:file];
 }
 
 -(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
     [self removeFileFromDevice:[self.tableView indexPathForCell:cell]];
 }
 
--(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-            NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-            fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO",[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
-            fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
-            fetchDownloadRequest.fetchLimit = 1;
-            NSError * error;
-            Folder * file = [[self.defaultMOC  executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
-            if (file)
-            {
-                NSIndexPath * indxPath = [self.fetchedResultsController indexPathForObject:file];
-                if (indxPath)
-                {
-                    FilesTableViewCell * cell = [self.tableView cellForRowAtIndexPath:indxPath];
-                    
-                    [cell.downloadActivity startAnimating];
-                    cell.disclosureButton.hidden = YES;
-                }
-                
-            }
-        }];
+- (void)indexPathForDownloadingItem:(NSIndexPath *)indexPath {
+    FilesTableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [cell.downloadActivity startAnimating];
+    cell.disclosureButton.hidden = YES;
 }
 
 - (NSURL*)downloadURL
@@ -576,54 +568,6 @@ static const int minimalStringLengthFiles = 1;
         DDLogError(@"%@",error);
     }
     return [NSURL URLWithString:filePath];
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
-{
-    NSError * error;
-
-    NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-    NSNumber * taskIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-    fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO", taskIdentifier];
-    fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
-    fetchDownloadRequest.fetchLimit = 1;
-    NSArray * fetchedFiles = [[[[StorageManager sharedManager] DBProvider] defaultMOC] executeFetchRequest:fetchDownloadRequest error:&error];
-    Folder *file = [fetchedFiles lastObject];
-
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *destinationFilename = file.name;
-
-//    NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
-    NSString *destinationURL = [[self downloadURL].absoluteString stringByAppendingPathComponent:destinationFilename];
-    NSURL *tmpUrl = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
-    DDLogDebug(@"default download folder -> %@",[self downloadURL]);
-    DDLogDebug(@"download file destination URL -> %@",tmpUrl);
-
-    if ([fileManager fileExistsAtPath:destinationURL])
-    {
-        [fileManager removeItemAtPath:destinationURL error:nil];
-    }
-
-    BOOL success = [fileManager copyItemAtPath:location.path
-                                        toPath:destinationURL
-                                         error:&error];
-
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-
-        if (!success)
-        {
-            DDLogDebug(@"failed to download %@", [error userInfo]);
-        }
-
-        file.downloadIdentifier = [NSNumber numberWithInt:-1];
-        file.isDownloaded = [NSNumber numberWithBool:success];
-        if(success)
-        {
-            file.downloadedName = destinationFilename;
-        }
-        NSError * error;
-        [file.managedObjectContext save:&error];
-    }];
 }
 
 - (void)tableViewCellMoreAction:(UITableViewCell *)cell
@@ -696,10 +640,6 @@ static const int minimalStringLengthFiles = 1;
     }
 }
 #pragma mark More Actions
-
-
-
-#pragma mark Edit Menu Actions
 
 - (IBAction)uploadAction:(id)sender {
     [self.pickerController show];
@@ -793,95 +733,48 @@ static const int minimalStringLengthFiles = 1;
 
 //        NSString *urlString = [[(UITextField *)alertController.textFields.lastObject text]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
         NSString *urlString = [(UITextField *)alertController.textFields.lastObject text].encodedURLString;
-        NSURL *url = [[NSURL alloc] initWithString:urlString];
-        NSString *fullUrl = urlString;
-        if (![url scheme]) {
-            fullUrl = [NSString stringWithFormat:@"http://%@",urlString];
-        }
-        
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager new];
-        [manager setResponseSerializer:[AFHTTPResponseSerializer serializer]];
-        [manager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
-        
-        [manager GET:fullUrl
-          parameters:nil
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                 hud.label.text = NSLocalizedString(@"Creating shortuct...", @"hud creating shortcut text");
-                 DDLogDebug(@"%@",responseObject);
-                 NSData *data = [NSData new];
-                 if ([responseObject isKindOfClass:[NSData class]]){
-                     data = responseObject;
-                 }
-                 
-                 NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                 NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
-                 NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : urlString;
-                 NSString *shortcutName = tmpShortcutName;
-                 if(![tmpShortcutName isEqualToString:urlString]){
-                     NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
-                     shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
-                 }
-                 
-                 NSURL *resourceUrl = task.originalRequest.URL;
-                 NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
-                 NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];
-                 NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutFileName];
-                 NSError * error = [NSError new];
-                 [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-                 NSURL *resultPath = [NSURL fileURLWithPath:filePath];
-                 NSString *MIMEType = [self mimeTypeForFileAtPath:resultPath.absoluteString];
-                 NSData * fileData = [[NSData alloc] initWithContentsOfURL:resultPath];
+        [self.uploadDownloadManager prepareForShortcutUpload:urlString success:^(NSDictionary *shortcutData) {
 
-                 [hud setMode:MBProgressHUDModeDeterminate];
-                 hud.label.text = [NSString stringWithFormat:@"%@ %@", shortcutFileName,NSLocalizedString(@"uploading", @"hud uploading text")];
-                 if ([[Settings version]isEqualToString:@"P8"]) {
-                     [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:shortcutFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
-                         hud.progress = progress;
-                     } completion:^(BOOL result,NSError *error) {
-                         if (result) {
+            NSString * realFileName = shortcutData[kFileName];
+            NSString * MIMEType = shortcutData[kMIMEType];
+            NSData * fileData = shortcutData[kFileData];
+            NSString *resultPath = shortcutData[kResultPath];
+
+            [hud setMode:MBProgressHUDModeDeterminate];
+            hud.label.text = [NSString stringWithFormat:@"%@ %@", realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
+            [self.uploadDownloadManager uploadFile:fileData
+                                          mimeType:MIMEType
+                                      toFolderPath:self.folder.fullpath
+                                          withName:realFileName
+                                       isCorporate:self.isCorporate
+                               uploadProgressBlock:^(float progress) {
+                                   hud.progress = progress;
+                               }
+                                        completion:^(BOOL result) {
+                        if (result) {
                              [hud setMode:MBProgressHUDModeIndeterminate];
                              hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
                              [self updateFiles:^(){
                                  [hud hideAnimated:YES];
                                  [self reloadTableData];
-                                 [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
+                                 [self removeShortcutFromDeviceHDD:resultPath];
                              }];
                          }else{
                              [hud hideAnimated:YES];
-                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
+                             [self removeShortcutFromDeviceHDD:resultPath];
                          }
-
-                     }];
-                 }else{
-                     NSString * path = self.isCorporate ? @"corporate" : @"personal";
-                     if (self.folder.fullpath)
-                     {
-                         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-                     }
-                     [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:shortcutFileName uploadProgressBlock:^(float progress) {
-                         hud.progress = progress;
-                     } completion:^(NSDictionary * response, NSError *error){
-                         DDLogDebug(@"%@",response);
-                         [hud setMode:MBProgressHUDModeIndeterminate];
-                         hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
-                         [self updateFiles:^(){
-                             [hud hideAnimated:YES];
-                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
-                         }];
-                     }];
-                 }
-        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {DDLogDebug(@"%@",error);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self updateFiles:^{
-                            hud.mode = MBProgressHUDModeCustomView;
-                            hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-                            hud.detailsLabel.text = @"";
-                            hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"hud error text");
-                            [hud hideAnimated:YES afterDelay:0.7f];
-                        }];
-                    });
+                    }];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateFiles:^{
+                    hud.mode = MBProgressHUDModeCustomView;
+                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+                    hud.detailsLabel.text = @"";
+                    hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"hud error text");
+                    [hud hideAnimated:YES afterDelay:0.7f];
+                }];
+            });
         }];
-
     }];
 
     UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
@@ -895,48 +788,6 @@ static const int minimalStringLengthFiles = 1;
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (NSString *)scanString:(NSString *)string
-                startTag:(NSString *)startTag
-                  endTag:(NSString *)endTag
-{
-    
-    NSString* scanString = @"";
-    
-    if (string.length > 0) {
-        
-        NSScanner* scanner = [[NSScanner alloc] initWithString:string];
-        
-        @try {
-            [scanner scanUpToString:startTag intoString:nil];
-            scanner.scanLocation += [startTag length];
-            [scanner scanUpToString:endTag intoString:&scanString];
-        }
-        @catch (NSException *exception) {
-            return nil;
-        }
-        @finally {
-            return scanString;
-        }
-        
-    }
-    
-    return scanString;
-    
-}
-
-- (NSString*)mimeTypeForFileAtPath: (NSString *) path {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        return nil;
-    }
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
-    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
-    if (!mimeType) {
-        return @"application/octet-stream";
-    }
-    return ( __bridge NSString *)mimeType;
-}
-
 - (BOOL)removeShortcutFromDeviceHDD:(NSString *)path{
     if (![[NSFileManager defaultManager]fileExistsAtPath:path]) {
         return NO;
@@ -945,50 +796,34 @@ static const int minimalStringLengthFiles = 1;
     }
 }
 
-- (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
-//    DDLogDebug(@"current asset - > %@ ",asset.defaultRepresentation.url);
-    ALAssetRepresentation *rep = [asset defaultRepresentation];
-    Byte *buffer = (Byte*)malloc((NSUInteger)rep.size);
-    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSUInteger)rep.size error:nil];
-    NSData *fileData = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-    NSString *realFileName = asset.defaultRepresentation.filename;
-//    DDLogDebug(@"current fileData - > %@ ",fileData);
-    NSString* MIMEType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass
-    ((__bridge CFStringRef)[rep UTI], kUTTagClassMIMEType);
+- (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error {
 
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeDeterminate;
-        hud.label.text = [NSString stringWithFormat:@"%@ %@",realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
-    
-    if ([[Settings version]isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
-             hud.progress = progress;
-        } completion:^(BOOL result, NSError *error) {
-            if (result) {
-                [self updateFiles:^(){
+    NSDictionary * fileDataDictionary = [self.uploadDownloadManager prepareFileFromAsset:asset error:error];
+    NSString * realFileName = fileDataDictionary[kFileName];
+    NSString * MIMEType = fileDataDictionary[kMIMEType];
+    NSData * fileData = fileDataDictionary[kFileData];
+
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeDeterminate;
+    hud.label.text = [NSString stringWithFormat:@"%@ %@",realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
+
+    [self.uploadDownloadManager uploadFile:fileData
+                                   mimeType:MIMEType
+                               toFolderPath:self.folder.fullpath
+                                   withName:realFileName
+                                isCorporate:self.isCorporate
+                        uploadProgressBlock:^(float progress) {
+                            hud.progress = progress;
+                        } completion:^(BOOL result) {
+                if (result) {
+                    [self updateFiles:^(){
+                        [hud hideAnimated:YES];
+                        [self reloadTableData];
+                    }];
+                }else{
                     [hud hideAnimated:YES];
-                    [self reloadTableData];
-                }];
-            }else{
-                [hud hideAnimated:YES];
-            }
-
-        }];
-    }else{
-        NSString * path = self.isCorporate ? @"corporate" : @"personal";
-        if (self.folder.fullpath)
-        {
-            path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-        }
-        [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
-            hud.progress = progress;
-        } completion:^(NSDictionary * response, NSError *error){
-            DDLogDebug(@"%@",response);
-            [self updateFiles:^(){
-                [hud hideAnimated:YES];
+                }
             }];
-        }];
-    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
@@ -1068,6 +903,9 @@ static const int minimalStringLengthFiles = 1;
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                                                                         
                                                                  [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
                                                                      if (updatedFile && !updatedFile.isFault) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                          self.folderToOperate = updatedFile;
@@ -1076,15 +914,15 @@ static const int minimalStringLengthFiles = 1;
 //                                                                         NSError * error = nil;
                                                                          [self fetchData];
                                                                          });
+                                                                     }else{
+//                                                                         [self updateFiles:^(){
+//                                                                             dispatch_async(dispatch_get_main_queue(), ^{
+////                                                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                                                                                 [self.tableView reloadData];
+//                                                                             });
+//
+//                                                                         }];
                                                                      }
-                                                                    [self updateFiles:^(){
-                                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                            [self.tableView reloadData];
-                                                                        });
-
-                                                                     }];
-                                                                    
                                                                  }];
                                                                  
                                                                  
@@ -1192,13 +1030,17 @@ static const int minimalStringLengthFiles = 1;
                                                        
                                                        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                        [self.storageManager  renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
-                                                           [self updateFiles:^(){
-                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                                   [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                   [self.tableView reloadData];
-                                                               });
-                                                           }];
-                                                           
+                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                               [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                           });
+                                                           if(updatedFile && !updatedFile.isFault){
+                                                               [self updateFiles:^(){
+                                                                   dispatch_async(dispatch_get_main_queue(), ^{
+
+                                                                       [self.tableView reloadData];
+                                                                   });
+                                                               }];
+                                                           }
                                                        }];
                                                    }];
             

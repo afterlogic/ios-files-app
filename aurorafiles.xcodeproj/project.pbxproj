@@ -144,6 +144,8 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
+		FF9FC9281EDF3D99000C97A0 /* UIAlertView+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */; };
+		FF9FC9291EDF3D9B000C97A0 /* UIAlertView+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */; };
 		FFA4BFDF1E55AD20008F4522 /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA4BFDE1E55AD20008F4522 /* ShareViewController.m */; };
 		FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA4BFE01E55AD20008F4522 /* MainInterface.storyboard */; };
 		FFA4BFE61E55AD20008F4522 /* Save shortcut.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -2072,6 +2074,7 @@
 				FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */,
 				FF90530E1D9BE53400A09A44 /* aurorafiles.xcdatamodeld in Sources */,
 				FF71D4911DA33162008690D5 /* MLNetworkLogger.m in Sources */,
+				FF9FC9281EDF3D99000C97A0 /* UIAlertView+Errors.m in Sources */,
 				FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */,
 				FF9053741D9C02E600A09A44 /* ConnectionProvider.m in Sources */,
 				FF90530C1D9BDCCD00A09A44 /* CurrentFilePathViewController.m in Sources */,
@@ -2155,6 +2158,7 @@
 				FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */,
 				FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */,
 				5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */,
+				FF9FC9291EDF3D9B000C97A0 /* UIAlertView+Errors.m in Sources */,
 				5C7B5D317CC88C5E4BC9DED7 /* AuroraNetworkException.m in Sources */,
 				5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */,
 			);
@@ -2484,6 +2488,44 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking+AutoRetry\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/BugfenderSDK\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CRMediaPickerController\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/DZNEmptyDataSet\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/FastEasyMapping\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/HTMLReader\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/LinkPreviewKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/MagicalRecord\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/ObjcAssociatedObjectHelpers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Reachability\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SWTableViewCell\"",
+					"-DAURORA_EXTENSION",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles.aurorafilesaction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2513,6 +2555,44 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/AuroraPrefixHeader.pch";
 				INFOPLIST_FILE = aurorafilesaction/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking+AutoRetry\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/BugfenderSDK\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CRMediaPickerController\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/DZNEmptyDataSet\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/FastEasyMapping\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/HTMLReader\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/LinkPreviewKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/MagicalRecord\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/ObjcAssociatedObjectHelpers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Reachability\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SWTableViewCell\"",
+					"-DAURORA_EXTENSION",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurorafiles.aurorafilesaction;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2592,6 +2672,44 @@
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking+AutoRetry\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/BugfenderSDK\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CRMediaPickerController\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/DZNEmptyDataSet\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/FastEasyMapping\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/HTMLReader\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/LinkPreviewKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/MagicalRecord\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/ObjcAssociatedObjectHelpers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Reachability\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SWTableViewCell\"",
+					"-DAURORA_EXTENSION",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.afterlogic.aurorafiles.Save-shortcut";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2619,6 +2737,44 @@
 				INFOPLIST_FILE = "Save shortcut/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking+AutoRetry\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/BugfenderSDK\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CRMediaPickerController\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/CocoaLumberjack\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/DZNEmptyDataSet\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/FastEasyMapping\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/HTMLReader\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/LinkPreviewKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/MagicalRecord\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/ObjcAssociatedObjectHelpers\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/Reachability\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SWTableViewCell\"",
+					"-DAURORA_EXTENSION",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.afterlogic.aurorafiles.Save-shortcut";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

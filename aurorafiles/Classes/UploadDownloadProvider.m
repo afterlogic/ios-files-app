@@ -11,6 +11,7 @@
 #import "StorageManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "UIAlertView+Errors.h"
+#import <AFNetworking/AFNetworking.h>
 
 
 @interface UploadDownloadProvider()<NSURLSessionDownloadDelegate>{
@@ -114,10 +115,68 @@
     }
 }
 
+- (void)prepareForShortcutUpload:(NSString *)pageLink success:(void (^)(NSDictionary *shortcutData))successHandler failure:(void(^)(NSError *error))failureHandler{
+    NSURL *url = [[NSURL alloc] initWithString:pageLink];
+    NSString *fullUrl = pageLink;
+    if (![url scheme]) {
+        fullUrl = [NSString stringWithFormat:@"http://%@",pageLink];
+    }
+
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager new];
+    [manager setResponseSerializer:[AFHTTPResponseSerializer serializer]];
+    [manager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+
+    [manager GET:fullUrl
+      parameters:nil
+         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+             NSData *data = [NSData new];
+             if ([responseObject isKindOfClass:[NSData class]]){
+                 data = responseObject;
+             }
+
+             NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+             NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
+             NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : pageLink;
+             NSString *shortcutName = tmpShortcutName;
+             if(![tmpShortcutName isEqualToString:pageLink]){
+                 NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
+                 shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
+             }
+             NSURL *resourceUrl = task.originalRequest.URL;
+             NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
+             NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];
+             NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutFileName];
+             NSError * error = [NSError new];
+             [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+             NSURL *resultPath = [NSURL fileURLWithPath:filePath];
+             NSString *MIMEType = [self mimeTypeForFileAtPath:resultPath.absoluteString];
+             NSData * fileData = [[NSData alloc] initWithContentsOfURL:resultPath];
+
+             NSDictionary *shortcutData = @{
+                     kFileData:fileData,
+                     kMIMEType:MIMEType,
+                     kFileName:shortcutFileName,
+                     kResultPath:resultPath.absoluteString
+             };
+             successHandler(shortcutData);
+
+         } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
+                DDLogDebug(@"%@",error);
+                [UIAlertView generatePopupWithError:error];
+                failureHandler(error);
+            }];
+
+}
 
 #pragma mark - NSURLSessionDownloadDelegate methods
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
     [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
+        if (downloadTask.error){
+            DDLogError(@"download error -> %@",downloadTask.error);
+            [UIAlertView generatePopupWithError:downloadTask.error];
+            [downloadTask cancel];
+            return;
+        }
         NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO",[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
         fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
@@ -138,6 +197,9 @@
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location{
     if (downloadTask.error){
         DDLogError(@"download error -> %@",downloadTask.error);
+        [UIAlertView generatePopupWithError:downloadTask.error];
+        [downloadTask cancel];
+        return;
     }
     NSError * error;
     DDLogDebug(@"downloadTask did finish downloading to url -> %@",location);
@@ -171,6 +233,8 @@
             if (!success)
             {
                 DDLogDebug(@"failed to download %@", [error userInfo]);
+                [UIAlertView generatePopupWithError:downloadTask.error];
+                return;
             }
 
             file.downloadIdentifier = [NSNumber numberWithInt:-1];
@@ -186,6 +250,7 @@
 }
 
 #pragma mark - Utility Methods
+
 - (NSURL*)downloadURL {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -202,6 +267,48 @@
 
     }
     return [NSURL URLWithString:filePath];
+}
+
+- (NSString *)scanString:(NSString *)string
+                startTag:(NSString *)startTag
+                  endTag:(NSString *)endTag
+{
+
+    NSString* scanString = @"";
+
+    if (string.length > 0) {
+
+        NSScanner* scanner = [[NSScanner alloc] initWithString:string];
+
+        @try {
+            [scanner scanUpToString:startTag intoString:nil];
+            scanner.scanLocation += [startTag length];
+            [scanner scanUpToString:endTag intoString:&scanString];
+        }
+        @catch (NSException *exception) {
+            return nil;
+        }
+        @finally {
+            return scanString;
+        }
+
+    }
+
+    return scanString;
+
+}
+
+- (NSString*)mimeTypeForFileAtPath: (NSString *) path {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return @"application/octet-stream";
+    }
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
+    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+    CFRelease(UTI);
+    if (!mimeType) {
+        return @"application/octet-stream";
+    }
+    return ( __bridge NSString *)mimeType;
 }
 
 @end

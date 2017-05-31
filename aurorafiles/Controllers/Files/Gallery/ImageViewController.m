@@ -17,6 +17,8 @@
 #import "ApiP8.h"
 #import "ApiP7.h"
 #import "Settings.h"
+#import "UIAlertView+Errors.h"
+
 @interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
     MBProgressHUD *hud;
@@ -395,6 +397,7 @@
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
                         DDLogError(@"image download error -> %@", error);
+                        [UIAlertView generatePopupWithError:error];
                     } else {
                         self.loadedImage = image;
                         [self prepareImageViewToShow];

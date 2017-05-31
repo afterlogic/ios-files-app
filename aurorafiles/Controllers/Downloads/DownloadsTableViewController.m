@@ -157,10 +157,8 @@
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.delegate = self;
+    cell.filesDelegate = self;
     cell.imageView.image = nil;
-    
-        
-    
         UIImage * placeholder = [UIImage assetImageForContentType:[object validContentType]];
         if (object.isLink.boolValue && ![object isImageContentType])
         {
@@ -288,25 +286,24 @@
     NSError * error;
     [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
     object.isDownloaded = @NO;
-    
+
     if (error)
     {
         DDLogError(@"%@",[error userInfo]);
     }
-    
+
     [self.managedObjectContext save:nil];
-    
 }
 
-- (UIImage *)snapshot:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
+//- (UIImage *)snapshot:(UIView *)view
+//{
+//    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, [[UIScreen mainScreen] scale]);
+//    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//    return image;
+//}
 
 #pragma mark - Navigation
 

@@ -23,6 +23,8 @@
 static NSString * kFileData = @"data";
 static NSString * kFileName = @"name";
 static NSString * kMIMEType = @"mime";
+static NSString * kResultPath = @"resultPath";
+
 
 @class StorageManager;
 @interface UploadDownloadProvider : NSObject <DownloadDelegate,UploadDelegate>
@@ -42,6 +44,8 @@ static NSString * kMIMEType = @"mime";
        isCorporate:(BOOL)corporate
 uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock
         completion:(void (^)(BOOL result))handler;
+
+- (void)prepareForShortcutUpload:(NSString *)pageLink success:(void (^)(NSDictionary *shortcutData))successHandler failure:(void(^)(NSError *error))failureHandler;
 
 - (NSURL*)downloadURL;
 

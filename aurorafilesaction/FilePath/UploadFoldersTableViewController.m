@@ -20,6 +20,8 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "ApiP8.h"
 #import "STZPullToRefresh.h"
+#import "AuroraHUD.h"
+#import "MBProgressHUD.h"
 
 static const int minimalStringLengthFiles = 1;
 
@@ -545,11 +547,14 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                        _fetchedResultsController.delegate = nil;
                                                        _fetchedResultsController = nil;
                                                        
-//                                                       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                        [[StorageManager sharedManager] renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                               [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                           });
                                                            [self updateFiles:^(){
                                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                                   //[MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                   
                                                                    [self.tableView reloadData];
                                                                });
                                                            }];
@@ -571,9 +576,13 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
             break;
         case 1:{
             DDLogDebug(@"Delete button pressed");
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [[StorageManager sharedManager] deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
                 if (succsess) {
                     DDLogDebug(@"file named %@ successfuly removed", folder.name);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
 //                            [MBProgressHUD hideHUDForView:self.view animated:YES];
