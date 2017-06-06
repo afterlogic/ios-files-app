@@ -17,7 +17,6 @@
 #import "StorageManager.h"
 #import "MBProgressHUD.h"
 #import "UIApplication+openURL.h"
-#import "UIAlertView+Errors.h"
 
 
 @interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
@@ -66,8 +65,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.webView.alpha = 0;
+    [ErrorProvider instance].currentViewController = self;
     
+    self.webView.alpha = 0;
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeDeterminate;
     
@@ -143,7 +143,11 @@
                                                              }];
                                                              
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 [[StorageManager sharedManager] renameOperation:self.object withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:self.object withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                          self.object = updatedFile;
@@ -169,7 +173,11 @@
       Folder * object = self.object;
       BOOL isCorporate = [object.type isEqualToString:@"corporate"];
       object.wasDeleted = @YES;
-      [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess) {
+      [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+          if(error){
+              [[ErrorProvider instance]generatePopWithError:error controller:self];
+              return;
+          }
           if (succsess) {
               [self.object.managedObjectContext save:nil];
               [self.navigationController popViewControllerAnimated:YES];
@@ -249,7 +257,7 @@
     self.scrollView.alpha = 1.0f;
     if (error){
         self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
-        [UIAlertView generatePopupWithError:error];
+        [[ErrorProvider instance] generatePopWithError:error controller:nil];
     }
 
 }

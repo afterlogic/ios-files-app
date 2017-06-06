@@ -67,31 +67,31 @@
 }
 
 - (void)logout:(void (^)(BOOL succsess, NSError *error))handler{
-    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8, NSError *error){
         [self.actualApiManager logoutWithCompletion:^(BOOL succsess, NSError *error) {
             handler(succsess,error);
         }];
     }];
 }
 
-- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler{
+- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler{
     NSString *scheme = [Settings domainScheme];
     if (!scheme) {
         [self checkSSLConnection:^(NSString *domain) {
             if(domain && domain.length > 0){
-                [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-                    handler(authorised,offline,isP8);
+                [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8,NSError *error){
+                    handler(authorised,offline,isP8,error);
                 }];
             }else{
-                handler(NO, NO, NO);
+                handler(NO, NO, NO, nil);
             }
         }];
     }else{
         if (!self.actualApiManager) {
             [self setupActualApiManager];
         }
-        [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-            handler(authorised,offline,isP8);
+        [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8,NSError *error){
+            handler(authorised,offline,isP8,error);
         }];
     }
 }
@@ -100,10 +100,10 @@
     [self.actualApiManager cancelAllOperations];
 }
 
-- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler
+- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler
 {
-    [self.actualApiManager checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline, BOOL isP8) {
-        handler(authorised,offline,isP8);
+    [self.actualApiManager checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline, BOOL isP8,NSError *error) {
+        handler(authorised,offline,isP8,error);
     }];
 }
 

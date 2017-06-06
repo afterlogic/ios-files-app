@@ -14,6 +14,7 @@
 #import "IFileOperationsProtocol.h"
 
 #import "Folder.h"
+#import "MBProgressHUD.h"
 
 
 @interface StorageManager()
@@ -58,7 +59,7 @@
 
 #pragma mark -
 
-- (void)renameOperation:(Folder *)file withNewName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
+- (void)renameOperation:(Folder *)file withNewName:(NSString *)newName withCompletion:(void (^)(Folder *updatedFile, NSError *error))complitionHandler{
     if ([file.isFolder boolValue]){
         [self renameFolder:file toNewName:newName withCompletion:complitionHandler];
     }else{
@@ -66,7 +67,7 @@
     }
 }
 
-- (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder* updatedFile))complitionHandler{
+- (void)renameToFile:(Folder *)file newName:(NSString *)newName withCompletion:(void (^)(Folder *updatedFile, NSError *error))complitionHandler{
     NSString * oldName = file.name;
     NSString * type = file.type;
     NSString * parentPath = file.parentPath ? file.parentPath : @"";
@@ -86,11 +87,16 @@
 
     if (!file)
     {
-        complitionHandler(nil);
+        NSError *error = [NSError new];
+        complitionHandler(nil,error);
         return ;
     }
     
-    [self.fileOperationsProvider renameFileFromName:oldName toName:fileNewName type:type atPath:parentPath isLink:isLink completion:^(BOOL success) {
+    [self.fileOperationsProvider renameFileFromName:oldName toName:fileNewName type:type atPath:parentPath isLink:isLink completion:^(BOOL success, NSError *error) {
+        if(error){
+            complitionHandler(nil,error);
+            return;
+        }
         if (success) {
             [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
                 if (file.isDownloaded){
@@ -108,16 +114,16 @@
                 NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",type,newFullPath];
                 file.prKey = primaryKey;
 
-                complitionHandler(file);
+                complitionHandler(file,nil);
             }];
         }else{
-            complitionHandler(nil);
+            complitionHandler(NO,nil);
         }
 
     }];
 }
 
-- (void)renameFolder:(Folder *) folder toNewName:(NSString *)newName withCompletion:(void (^)(Folder *))handler{
+- (void)renameFolder:(Folder *)folder toNewName:(NSString *)newName withCompletion:(void (^)(Folder *, NSError *error))handler{
     if (folder.isFault) {
         return;
     }
@@ -128,7 +134,12 @@
     BOOL isLink = folder.isLink.boolValue;
     
     
-    [self.fileOperationsProvider renameFolderFromName:oldName toName:newName type:type atPath:parentPath ? parentPath :@"" isLink:isLink completion:^(NSDictionary *result) {
+    [self.fileOperationsProvider renameFolderFromName:oldName toName:newName type:type atPath:parentPath ? parentPath :@"" isLink:isLink completion:^(NSDictionary *result, NSError *error) {
+        if(error){
+            handler(nil,error);
+            return;
+        }
+
         if (result) {
             [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
                 folder.name = newName;
@@ -154,42 +165,45 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^() {
                     if (handler) {
-                        handler(object);
+                        handler(object,nil);
                     }
                 });
             }];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^(){
                 if (handler) {
-                    handler(nil);
+                    handler(nil,nil);
                 }
             });
         }
     }];
 }
 
-- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success))complitionHandler{
-    [self.fileOperationsProvider  createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL success) {
-        complitionHandler(success);
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
+    [self.fileOperationsProvider  createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL success, NSError *error) {
+        complitionHandler(success,error);
     }];
 }
 
-- (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist))complitionHandler{
-    [self.fileOperationsProvider   checkItemExistanceOnServerByName:name path:path type:type completion:^(BOOL exist) {
-        complitionHandler(exist);
+- (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler{
+    [self.fileOperationsProvider   checkItemExistanceOnServerByName:name path:path type:type completion:^(BOOL exist, NSError *error) {
+        complitionHandler(exist,error);
     }];
 }
 
-- (void)deleteItem:(Folder *)item controller:(UIViewController *)controller isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess))handler{
+- (void)deleteItem:(Folder *)item controller:(UIViewController *)controller isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError *error))handler{
     
     NSString *confirmTitle = [NSString stringWithFormat:@"%@ %@ ?",NSLocalizedString(@"Delete", @"delete confirmation title text"),item.name];
     NSString *confirmMessage = NSLocalizedString(@"You cannot undo this action.", @"delete confirmation message text");
     UIAlertController *confirmController = [UIAlertController confirmationAlertWithTitle:confirmTitle
                                                                                  message:confirmMessage
                                                                           confirmHandler:^{
-                                                                              [self deleteItem:item];
-                                                                              [self.fileOperationsProvider deleteFile:item isCorporate:corporate completion:^(BOOL success) {
-                                                                                  handler(success);
+                                                                              [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
+                                                                              [self.fileOperationsProvider deleteFile:item isCorporate:corporate completion:^(BOOL success, NSError *error) {
+                                                                                  if(!error){
+                                                                                      [self deleteItem:item];
+                                                                                  }
+                                                                                  handler(success,error);
                                                                               }];
                                                                           }
                                                                            cancelHandler:nil];
@@ -202,32 +216,34 @@
     [self.fileOperationsProvider stopDownloadigThumbForFile:fileName];
 }
 
-- (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount))handler{
+- (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount, NSError *error))handler{
+
     if (folder.isFault) {
-        handler(0);
+        handler(0,nil);
         return;
     }
+
     NSString * folderPath = folder ? folder.fullpath : @"";
-//    NSBlockOperation *filesUpdateOperation = [NSBlockOperation blockOperationWithBlock:^{
-        [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
+        [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8, NSError *error){
+            if(error){
+                handler(0,error);
+                return;
+            }
             if (authorised) {
-                [self.fileOperationsProvider getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items) {
+                [self.fileOperationsProvider getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items, NSError *error) {
                     if (items) {
                         [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
                     }
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         if (handler) {
-                            handler(items.count);
+                            handler(items.count,nil);
                         }
                     });
                 }];
             }else{
-                
+                handler(0,nil);
             }
         }];
-//    }];
-//    [self.filesOperationsQueue addOperation:filesUpdateOperation];
-
 }
 
 - (void)saveItemsIntoDB:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type isP8:(BOOL)isP8{
@@ -306,27 +322,37 @@
     [Settings saveLastUsedFolder:folderSimpleRef];
 }
 
-- (void)getLastUsedFolderWithHandler:(void(^)(NSDictionary *result))complition{
+- (void)getLastUsedFolderWithHandler:(void (^)(NSDictionary *result, NSError *error))complition{
     NSDictionary *savedFolderRef = [Settings getLastUsedFolder];
     NSArray * lastUsedFolders;
     if ([savedFolderRef isKindOfClass:[NSArray class]]) {
         [Settings saveLastUsedFolder:nil];
         lastUsedFolders = @[];
-        complition (nil);
+        NSError *error = [NSError errorWithDomain:@"com.afterlogic"
+                                             code:-999
+                                         userInfo:nil];
+        complition (nil,error);
         return;
     }
     if (savedFolderRef.count == 0) {
         [Settings saveLastUsedFolder:nil];
         lastUsedFolders = @[];
-        complition (nil);
+        NSError *error = [NSError errorWithDomain:@"com.afterlogic"
+                                             code:-999
+                                         userInfo:nil];
+        complition (nil,error);
         return;
     }
 
-    [self checkItemExistanceonServerByName:savedFolderRef[@"Name"] path:savedFolderRef[@"ParrentPath"] type:savedFolderRef[@"Type"] completion:^(BOOL exist) {
+    [self checkItemExistanceonServerByName:savedFolderRef[@"Name"] path:savedFolderRef[@"ParrentPath"] type:savedFolderRef[@"Type"] completion:^(BOOL exist, NSError *error) {
+        if (error) {
+            complition(nil,error);
+            return;
+        }
         if(exist){
-            complition(savedFolderRef);
+            complition(savedFolderRef,nil);
         }else{
-            complition(nil);
+            complition(nil,nil);
         }
     }];
 }

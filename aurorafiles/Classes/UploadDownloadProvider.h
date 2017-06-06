@@ -37,13 +37,13 @@ static NSString * kResultPath = @"resultPath";
 - (void)startDownloadTaskForFile:(Folder *)file;
 - (NSDictionary *)prepareFileFromAsset:(ALAsset *)asset error:(NSError *)error;
 
-- (void)uploadFile:(NSData *)fileData
-              mimeType:(NSString *)mimeType
-      toFolderPath:(NSString *)uploadPath
-          withName:(NSString *)fileName
-       isCorporate:(BOOL)corporate
+- (void) uploadFile:(NSData *)fileData
+           mimeType:(NSString *)mimeType
+       toFolderPath:(NSString *)uploadPath
+           withName:(NSString *)fileName
+        isCorporate:(BOOL)corporate
 uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock
-        completion:(void (^)(BOOL result))handler;
+         completion:(void (^)(BOOL result, NSError *error))handler;
 
 - (void)prepareForShortcutUpload:(NSString *)pageLink success:(void (^)(NSDictionary *shortcutData))successHandler failure:(void(^)(NSError *error))failureHandler;
 

@@ -108,7 +108,7 @@ static const int imageNameMinimalLength = 1;
                                                              
                                                              defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  Folder * file = self.currentPage.item;
-                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
                                                                      if (updatedFile) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              self.title = updatedFile.name;
@@ -135,7 +135,7 @@ static const int imageNameMinimalLength = 1;
 //        Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         Folder * object = self.currentPage.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess) {
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
         }];
     }];

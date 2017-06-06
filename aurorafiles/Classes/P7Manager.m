@@ -77,16 +77,16 @@
         }];
     }];
 }
--(void)checkAuthorizeWithCompletion:(void (^)(BOOL, BOOL, BOOL))handler{
+-(void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler{
     [self.apiManager checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
         if (!error)
         {
             if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
             {
                 if (data[@"Result"][@"offlineMod"]) {
-                    handler (YES,YES, NO);
+                    handler (YES,YES, NO,error);
                 }
-                handler (YES,NO,NO);
+                handler (YES,NO,NO,error);
             }
             else
             {
@@ -98,11 +98,11 @@
                         if (email.length && password.length)
                         {
                             [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
-                                handler(success,NO, NO);
+                                handler(success,NO, NO,error);
                             }];
                             return;
                         }else{
-                            handler(NO,NO, NO);
+                            handler(NO,NO, NO, nil);
                             return;
                         }
                     }
@@ -110,7 +110,7 @@
                 }
                 else
                 {
-                    handler(NO,NO, NO);
+                    handler(NO,NO, NO,error);
                 }
             }
             return ;
@@ -122,15 +122,13 @@
             if (email.length && password.length)
             {
                 [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
-                    handler(success,NO, NO);
-                }];                            [self authorizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
-                    handler(success,NO, NO);
+                    handler(success,NO, NO,error);
                 }];
                 return;
             }
             else
             {
-                handler (NO,NO, NO);
+                handler (NO,NO, NO,error);
                 return;
             }
         }

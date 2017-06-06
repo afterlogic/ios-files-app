@@ -17,7 +17,6 @@
 #import "ApiP8.h"
 #import "ApiP7.h"
 #import "Settings.h"
-#import "UIAlertView+Errors.h"
 
 @interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
@@ -46,6 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [ErrorProvider instance].currentViewController = self;
     
     UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareFileAction:)];
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];
@@ -164,7 +164,11 @@
                                                              UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
                                                                  Folder * file = self.item;
-                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                      }
@@ -187,7 +191,11 @@
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object =  self.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess) {
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+            if(error){
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                return;
+            }
             if (succsess) {
                 [self deletePage];
             }
@@ -397,7 +405,7 @@
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
                         DDLogError(@"image download error -> %@", error);
-                        [UIAlertView generatePopupWithError:error];
+                        [[ErrorProvider instance] generatePopWithError:error controller:nil];
                     } else {
                         self.loadedImage = image;
                         [self prepareImageViewToShow];

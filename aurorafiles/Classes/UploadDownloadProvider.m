@@ -10,7 +10,6 @@
 #import "UploadDownloadProvider.h"
 #import "StorageManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "UIAlertView+Errors.h"
 #import <AFNetworking/AFNetworking.h>
 
 
@@ -77,7 +76,7 @@
 
 }
 
-- (void)uploadFile:(NSData *)fileData mimeType:(NSString *)mimeType toFolderPath:(NSString *)uploadPath withName:(NSString *)fileName isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result))handler {
+- (void)uploadFile:(NSData *)fileData mimeType:(NSString *)mimeType toFolderPath:(NSString *)uploadPath withName:(NSString *)fileName isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result, NSError *error))handler {
     if ([[Settings version]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData
                                    mime:mimeType
@@ -87,10 +86,11 @@
                     uploadProgressBlock:uploadProgressBlock
                              completion:^(BOOL result, NSError *error) {
                                  if(error){
-                                    [UIAlertView generatePopupWithError:error];
-                                     handler(NO);
+                                    [[ErrorProvider instance] generatePopWithError:error controller:nil];
+                                     handler(NO,error);
+                                     return;
                                  }else{
-                                     handler(result);
+                                     handler(result,nil);
                                  }
                              }];
     }else{
@@ -105,10 +105,11 @@
                     uploadProgressBlock:uploadProgressBlock
                              completion:^(NSDictionary *data, NSError *error) {
                                  if(error){
-                                     [UIAlertView generatePopupWithError:error];
-                                     handler(NO);
+                                     [[ErrorProvider instance] generatePopWithError:error controller:nil];
+                                     handler(NO,error);
+                                     nil;
                                  }else{
-                                     handler(YES);
+                                     handler(YES,nil);
                                  }
                              }];
 
@@ -162,7 +163,7 @@
 
          } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                 DDLogDebug(@"%@",error);
-                [UIAlertView generatePopupWithError:error];
+                [[ErrorProvider instance] generatePopWithError:error controller:nil];
                 failureHandler(error);
             }];
 
@@ -173,7 +174,7 @@
     [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
         if (downloadTask.error){
             DDLogError(@"download error -> %@",downloadTask.error);
-            [UIAlertView generatePopupWithError:downloadTask.error];
+            [[ErrorProvider instance] generatePopWithError:downloadTask.error controller:nil];
             [downloadTask cancel];
             return;
         }
@@ -197,7 +198,7 @@
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location{
     if (downloadTask.error){
         DDLogError(@"download error -> %@",downloadTask.error);
-        [UIAlertView generatePopupWithError:downloadTask.error];
+        [[ErrorProvider instance] generatePopWithError:downloadTask.error controller:nil];
         [downloadTask cancel];
         return;
     }
@@ -233,7 +234,7 @@
             if (!success)
             {
                 DDLogDebug(@"failed to download %@", [error userInfo]);
-                [UIAlertView generatePopupWithError:downloadTask.error];
+                [[ErrorProvider instance] generatePopWithError:downloadTask.error controller:nil];
                 return;
             }
 

@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */; };
+		5C7B50C2E7F87B7E350CA090 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
@@ -31,14 +32,13 @@
 		5C7B55D38C4C54085FEC8DE0 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
 		5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5762CBB3BC18C5F3041F /* MRDataBaseProvider.m */; };
 		5C7B569238FB61688ABDE377 /* Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5AFC49B3E804A3971C34 /* Folder.m */; };
+		5C7B57585443BF4F823302B5 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
 		5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */; };
 		5C7B5B8748A4BADA48349A24 /* Folder+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */; };
-		5C7B5D317CC88C5E4BC9DED7 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
+		5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
-		5C7B5F269CE57769465BF0D0 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
-		5C7B5FCE97DF5C7753492951 /* AuroraNetworkException.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
 		AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */; };
 		B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */; };
@@ -144,8 +144,6 @@
 		FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA861D061F1200238EB5 /* StorageManager.m */; };
 		FF9053761D9C03EF00A09A44 /* UIImage+Aurora.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7C1D061F1200238EB5 /* UIImage+Aurora.m */; };
 		FF9053791D9C313C00A09A44 /* TabBarWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9053781D9C313C00A09A44 /* TabBarWrapperViewController.m */; };
-		FF9FC9281EDF3D99000C97A0 /* UIAlertView+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */; };
-		FF9FC9291EDF3D9B000C97A0 /* UIAlertView+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */; };
 		FFA4BFDF1E55AD20008F4522 /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA4BFDE1E55AD20008F4522 /* ShareViewController.m */; };
 		FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFA4BFE01E55AD20008F4522 /* MainInterface.storyboard */; };
 		FFA4BFE61E55AD20008F4522 /* Save shortcut.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FFA4BFDB1E55AD1F008F4522 /* Save shortcut.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -211,7 +209,6 @@
 		FFAD03EC1DEC6E6C000C4AFF /* P7Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EA1DEC6E6C000C4AFF /* P7Manager.m */; };
 		FFAD03EF1DEC727A000C4AFF /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */; };
 		FFAD03F01DEC727A000C4AFF /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */; };
-		FFAD03F31DEC8871000C4AFF /* UIAlertView+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */; };
 		FFAD03F71DECA387000C4AFF /* FileOperationsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */; };
 		FFAD03F81DECA388000C4AFF /* FileOperationsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */; };
 		FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */; };
@@ -315,14 +312,14 @@
 		5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadDownloadProvider.m; sourceTree = "<group>"; };
 		5C7B57CD52847AE7B90D52B9 /* Folder+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Folder+CoreDataProperties.m"; sourceTree = "<group>"; };
 		5C7B585E359719D9DF9927ED /* SplashScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenController.h; sourceTree = "<group>"; };
-		5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuroraNetworkException.m; sourceTree = "<group>"; };
-		5C7B599C506B8192439A9547 /* AuroraNetworkException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuroraNetworkException.h; sourceTree = "<group>"; };
 		5C7B5A94AB86C54CAEA6CC15 /* Folder+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Folder+CoreDataProperties.h"; sourceTree = "<group>"; };
 		5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringPunycodeAdditions.m; sourceTree = "<group>"; };
 		5C7B5AFC49B3E804A3971C34 /* Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Folder.m; sourceTree = "<group>"; };
 		5C7B5C0895C7BFCAB1A0EE0D /* NSStringPunycodeAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringPunycodeAdditions.h; sourceTree = "<group>"; };
 		5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashScreenController.m; sourceTree = "<group>"; };
+		5C7B5C96FAE12EB8F9777E5B /* ErrorProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErrorProvider.h; sourceTree = "<group>"; };
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
+		5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorProvider.m; sourceTree = "<group>"; };
 		60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -490,8 +487,6 @@
 		FFAD03EA1DEC6E6C000C4AFF /* P7Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = P7Manager.m; sourceTree = "<group>"; };
 		FFAD03ED1DEC727A000C4AFF /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
 		FFAD03EE1DEC727A000C4AFF /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
-		FFAD03F11DEC8870000C4AFF /* UIAlertView+Errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Errors.h"; sourceTree = "<group>"; };
-		FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Errors.m"; sourceTree = "<group>"; };
 		FFAD03F51DECA386000C4AFF /* FileOperationsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOperationsProvider.h; sourceTree = "<group>"; };
 		FFAD03F61DECA386000C4AFF /* FileOperationsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileOperationsProvider.m; sourceTree = "<group>"; };
 		FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPDFilesViewController.h; sourceTree = "<group>"; };
@@ -600,15 +595,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		5C7B5324A01592781839DBD4 /* Exceptions */ = {
-			isa = PBXGroup;
-			children = (
-				5C7B599C506B8192439A9547 /* AuroraNetworkException.h */,
-				5C7B59474D56CD973ED034B6 /* AuroraNetworkException.m */,
-			);
-			path = Exceptions;
-			sourceTree = "<group>";
-		};
 		5C7B5461A64DB1CF8116F302 /* CustomAlert */ = {
 			isa = PBXGroup;
 			children = (
@@ -625,14 +611,6 @@
 				5C7B5AFC49B3E804A3971C34 /* Folder.m */,
 			);
 			path = Folder;
-			sourceTree = "<group>";
-		};
-		5C7B5852C5DA7E0DB3CB3CDA /* Error Layer */ = {
-			isa = PBXGroup;
-			children = (
-				5C7B5324A01592781839DBD4 /* Exceptions */,
-			);
-			path = "Error Layer";
 			sourceTree = "<group>";
 		};
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
@@ -748,7 +726,6 @@
 				DAC1CA831D061F1200238EB5 /* Settings.m */,
 				DAC1CA841D061F1200238EB5 /* StorageManager */,
 				DAC1CA871D061F1200238EB5 /* View */,
-				5C7B5852C5DA7E0DB3CB3CDA /* Error Layer */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -768,8 +745,6 @@
 				FF6A94C11DB66B4900543269 /* NSURLRequest+requestGenerator.m */,
 				FF5C01321DC87CAC00FDA424 /* NSString+Validators.h */,
 				FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */,
-				FFAD03F11DEC8870000C4AFF /* UIAlertView+Errors.h */,
-				FFAD03F21DEC8870000C4AFF /* UIAlertView+Errors.m */,
 				FF3F12331E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.h */,
 				FF3F12341E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m */,
 				5C7B5C0895C7BFCAB1A0EE0D /* NSStringPunycodeAdditions.h */,
@@ -1201,6 +1176,8 @@
 				FF9FC9231EDD7CFE000C97A0 /* FileOperationsProvider */,
 				5C7B5496076EC444253315BD /* UploadDownloadProvider.h */,
 				5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */,
+				5C7B5C96FAE12EB8F9777E5B /* ErrorProvider.h */,
+				5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -1956,7 +1933,6 @@
 				FFE6F0931E033FD9009141CA /* ImageViewController.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */,
-				FFAD03F31DEC8871000C4AFF /* UIAlertView+Errors.m in Sources */,
 				FFB959351DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
 				DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */,
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
@@ -2009,8 +1985,8 @@
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 				5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */,
-				5C7B5F269CE57769465BF0D0 /* AuroraNetworkException.m in Sources */,
 				5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */,
+				5C7B50C2E7F87B7E350CA090 /* ErrorProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2074,7 +2050,6 @@
 				FF9053091D9B1E9D00A09A44 /* NSObject+ScreenOrientation.m in Sources */,
 				FF90530E1D9BE53400A09A44 /* aurorafiles.xcdatamodeld in Sources */,
 				FF71D4911DA33162008690D5 /* MLNetworkLogger.m in Sources */,
-				FF9FC9281EDF3D99000C97A0 /* UIAlertView+Errors.m in Sources */,
 				FF5C01351DC87CAC00FDA424 /* NSString+Validators.m in Sources */,
 				FF9053741D9C02E600A09A44 /* ConnectionProvider.m in Sources */,
 				FF90530C1D9BDCCD00A09A44 /* CurrentFilePathViewController.m in Sources */,
@@ -2088,8 +2063,8 @@
 				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
 				5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */,
 				5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */,
-				5C7B5FCE97DF5C7753492951 /* AuroraNetworkException.m in Sources */,
 				5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */,
+				5C7B57585443BF4F823302B5 /* ErrorProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2158,9 +2133,8 @@
 				FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */,
 				FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */,
 				5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */,
-				FF9FC9291EDF3D9B000C97A0 /* UIAlertView+Errors.m in Sources */,
-				5C7B5D317CC88C5E4BC9DED7 /* AuroraNetworkException.m in Sources */,
 				5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */,
+				5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

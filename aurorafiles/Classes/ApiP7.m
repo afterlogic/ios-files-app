@@ -11,11 +11,10 @@
 #import "Folder.h"
 #import "AFNetworking.h"
 #import "NSString+URLEncode.h"
-#import "UIAlertView+Errors.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static  int retryCount = 1;
-static  int retryCountForFolderUpdate = 3;
+static  int retryCount = 0;
+static  int retryCountForFolderUpdate = 0;
 static  int retryInterval = 5;
 static NSString * errorFieldName = @"ErrorCode";
 
@@ -84,7 +83,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             [storage deleteCookie:cookie];
         }
         
-        retryCount = 3;
+//        retryCount = 3;
     }
     return self;
 }
@@ -461,12 +460,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            if (error)
-            {
-                DDLogError(@"%@",[error localizedDescription]);
-                handler(nil, error);
-                return ;
-            }
+            DDLogError(@"%@",[error localizedDescription]);
+            handler(nil, error);
         });
     }autoRetryOf:retryCount retryInterval:retryInterval];
     

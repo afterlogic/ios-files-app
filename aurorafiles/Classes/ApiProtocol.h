@@ -14,7 +14,7 @@
 - (instancetype)init;
 
 #pragma mark - User Operations
-- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler;
+- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler;
 - (void)authorizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler;
 - (void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler;
 

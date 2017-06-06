@@ -13,7 +13,6 @@
 #import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "NSString+Validators.h"
-#import "UIAlertView+Errors.h"
 #import "StorageManager.h"
 
 //#import "StorageProvider.h"
@@ -31,6 +30,7 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
+    [ErrorProvider instance].currentViewController = self;
     
     tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideKeyboard)];
     [self.scrollView addGestureRecognizer:tapRecognizer];
@@ -102,8 +102,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!alertViewIsShow) {
                 NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
-                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                [av show];
+                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    alertViewIsShow = NO;
+                }];
                 alertViewIsShow = YES;
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -116,8 +117,9 @@
             if(!alertViewIsShow){
                 
                 NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
-                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                [av show];
+                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    alertViewIsShow = NO;
+                }];
                 alertViewIsShow = YES;
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -133,8 +135,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                 if (error){
-                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                    [av show];
+                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                        alertViewIsShow = NO;
+                    }];
                     alertViewIsShow = YES;
                 }else{
                     [Settings setLogin:self.emailField.text];
@@ -152,8 +155,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
                     NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
-                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                    [av show];
+                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                        alertViewIsShow = NO;
+                    }];
                     [self clear];
                     alertViewIsShow = YES;
                 }
@@ -163,11 +167,11 @@
     }];
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == [alertView cancelButtonIndex]) {
-        alertViewIsShow = NO;
-    }
-}
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == [alertView cancelButtonIndex]) {
+//        alertViewIsShow = NO;
+//    }
+//}
 
 -(void)offlineAuth{
 //    [self dismissViewControllerAnimated:YES completion:^(){

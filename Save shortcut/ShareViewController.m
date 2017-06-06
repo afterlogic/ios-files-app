@@ -96,6 +96,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [ErrorProvider instance].currentViewController = self;
     BFLog(@"EXTENSION STARTED");
     self.uploadPathContainer.hidden = YES;
     [self setCurrentUploadFolder:@"" root:@""];
@@ -156,7 +157,17 @@
 }
 
 - (void)getLastUsedFolder:(AuroraHUD *)folderHud{
-    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
+    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result,NSError* error) {
+        if(error){
+            dispatch_async(dispatch_get_main_queue(), ^(){
+                [folderHud hideHUD];
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+            });
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [self setCurrentUploadFolder:@"" root:@"personal"];
+            [self showUploadFolders];
+            return;
+        }
         if (result) {
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [folderHud hideHUD];

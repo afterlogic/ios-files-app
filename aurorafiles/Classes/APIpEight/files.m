@@ -13,11 +13,10 @@
 #import "NSURLRequest+requestGenerator.h"
 #import "StorageManager.h"
 #import "NSString+URLEncode.h"
-#import "UIAlertView+Errors.h"
 
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static int retryCount = 1;
+static int retryCount = 0;
 static const int retryInterval = 5;
 
 @interface files(){
@@ -54,7 +53,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
         resultedFiles = [NSMutableArray new];
         operationsQueue = [NSMutableDictionary new];
         
-        retryCount = 3;
+//        retryCount = 3;
     }
     return self;
 }

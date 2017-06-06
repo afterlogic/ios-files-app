@@ -40,10 +40,15 @@
         return;
     }];
 }
--(void)checkAuthorizeWithCompletion:(void (^)(BOOL, BOOL, BOOL))handler{
+-(void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler{
     [[ApiP8 coreModule] getUserWithCompletion:^(NSString *publicID, NSError *error) {
+        if(error){
+            handler(NO,NO,YES,error);
+            return;
+        }
+
         if ([publicID isEqualToString:[Settings login]]) {
-            handler(YES,NO,YES);
+            handler(YES,NO,YES,nil);
         }else{
             NSString * email = [Settings login];
             NSString * password = [Settings password];
@@ -52,13 +57,13 @@
                 [[ApiP8 coreModule] signInWithEmail:email andPassword:password completion:^(NSDictionary *data, NSError *error) {
                     if (error)
                     {
-                        handler(NO,error,YES);
+                        handler(NO,NO,YES,error);
                         return;
                     }
-                    handler(YES,NO,YES);
+                    handler(YES,NO,YES,nil);
                 }];
             }else{
-                handler(NO,NO,YES);
+                handler(NO,NO,YES,nil);
             }
         }
     }];

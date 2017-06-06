@@ -85,6 +85,7 @@ static const int minimalStringLengthFiles = 1;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [ErrorProvider instance].currentViewController = self;
     [self setupView];
 }
 
@@ -137,7 +138,11 @@ static const int minimalStringLengthFiles = 1;
         return;
     }
 
-    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            return;
+        }
         self.isP8 = isP8;
         if(authorised && offline){
             [self userWasSigneInOffline];
@@ -454,6 +459,10 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)signOut{
     [self.sessionProvider logout:^(BOOL succsess, NSError *error) {
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            return;
+        }
         if (succsess) {
 //            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
 //            signIn.delegate = self;
@@ -473,7 +482,12 @@ static const int minimalStringLengthFiles = 1;
 - (void)updateFiles:(void (^)())completionHandler
 {
     if ([Settings domain]) {
-        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(NSInteger *itemsCount, NSError *error){
+            if(error){
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                [self stopRefresh];
+                return;
+            }
             if (completionHandler)
             {
                 [self fetchData];
@@ -750,7 +764,12 @@ static const int minimalStringLengthFiles = 1;
                                uploadProgressBlock:^(float progress) {
                                    hud.progress = progress;
                                }
-                                        completion:^(BOOL result) {
+                                        completion:^(BOOL result, NSError *error) {
+                                            if (error){
+                                                [hud hideAnimated:YES];
+                                                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                return;
+                                            }
                         if (result) {
                              [hud setMode:MBProgressHUDModeIndeterminate];
                              hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
@@ -766,13 +785,8 @@ static const int minimalStringLengthFiles = 1;
                     }];
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self updateFiles:^{
-                    hud.mode = MBProgressHUDModeCustomView;
-                    hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-                    hud.detailsLabel.text = @"";
-                    hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"hud error text");
-                    [hud hideAnimated:YES afterDelay:0.7f];
-                }];
+                [hud hideAnimated:YES];
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
             });
         }];
     }];
@@ -814,7 +828,12 @@ static const int minimalStringLengthFiles = 1;
                                 isCorporate:self.isCorporate
                         uploadProgressBlock:^(float progress) {
                             hud.progress = progress;
-                        } completion:^(BOOL result) {
+                        } completion:^(BOOL result, NSError *error) {
+                            if(error){
+                                [hud hideAnimated:YES];
+                                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                return;
+                            }
                 if (result) {
                     [self updateFiles:^(){
                         [hud hideAnimated:YES];
@@ -859,7 +878,12 @@ static const int minimalStringLengthFiles = 1;
                                                             style:UIAlertActionStyleDestructive
                                                           handler:^(UIAlertAction * action){
                                                               Folder * object = self.folderToOperate;
-                                                              [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+                                                              [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+                                                                  if(error){
+//                                                                      [hud hideAnimated:YES];
+                                                                      [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                      return;
+                                                                  }
                                                                   if (succsess) {
                                                                       DDLogDebug(@"file named %@ successfuly removed", object.name);
                                                                       [self updateFiles:^(){
@@ -902,10 +926,16 @@ static const int minimalStringLengthFiles = 1;
                                                                  
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                                                                         
-                                                                 [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                                 [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile, NSError *error) {
                                                                      dispatch_async(dispatch_get_main_queue(), ^{
                                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         
                                                                      });
+                                                                     if(error){
+                                                                         //                                                                      [hud hideAnimated:YES];
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile && !updatedFile.isFault) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                          self.folderToOperate = updatedFile;
@@ -956,10 +986,17 @@ static const int minimalStringLengthFiles = 1;
                                                              }];
                                                              
                                                               defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 
-                                                                 [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success, NSError *error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (success) {
-                                                                         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
                                                                          [self updateFiles:^(){
                                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                              [self.tableView reloadData];
@@ -1004,6 +1041,7 @@ static const int minimalStringLengthFiles = 1;
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+    [self.fetchedResultsController performFetch:nil];
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
     switch (index) {
         case 0:{
@@ -1029,10 +1067,14 @@ static const int minimalStringLengthFiles = 1;
                                                        _fetchedResultsController = nil;
                                                        
                                                        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                       [self.storageManager  renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                       [self.storageManager  renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder * updatedFile, NSError *error) {
                                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                                [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                            });
+                                                           if(error){
+                                                               [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                               return;
+                                                           }
                                                            if(updatedFile && !updatedFile.isFault){
                                                                [self updateFiles:^(){
                                                                    dispatch_async(dispatch_get_main_queue(), ^{
@@ -1058,7 +1100,14 @@ static const int minimalStringLengthFiles = 1;
             break;
         case 1:{
             DDLogDebug(@"Delete button pressed");
-            [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+            [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                });
+                if(error){
+                    [[ErrorProvider instance]generatePopWithError:error controller:self];
+                    return;
+                }
                 if (succsess) {
                     DDLogDebug(@"file named %@ successfuly removed", folder.name);
                     [self updateFiles:^(){
@@ -1114,7 +1163,14 @@ static const int minimalStringLengthFiles = 1;
 }
 
 - (void)removeItem:(Folder *)object{
-    [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+    [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            return;
+        }
         if (succsess) {
             DDLogDebug(@"file named %@ successfuly removed", object.name);
             [self.defaultMOC  save:nil];

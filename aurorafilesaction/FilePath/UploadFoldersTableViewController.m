@@ -60,6 +60,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    [ErrorProvider instance].currentViewController = self;
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -179,7 +180,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 {
     [super viewDidAppear:animated];
     
-    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8,NSError* error){
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;
@@ -324,7 +325,16 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 - (void)updateFiles:(void (^)())handler
 {
-    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount,NSError* error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.lineRefreshController finishRefresh];
+            [self.refreshController endRefreshing];
+            return;
+        }
         if (handler)
         {
             handler();
@@ -334,7 +344,14 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 }
 
 - (void)updateFilesWithSubsequentTransitionFromFolder:(Folder *)folder handler:(void (^)())handler{
-    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount,NSError* error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            return;
+        }
         if (handler)
         {
             handler();
@@ -523,6 +540,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+    [self.fetchedResultsController performFetch:nil];
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
     switch (index) {
         case 0:{
@@ -548,10 +566,17 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                        _fetchedResultsController = nil;
                                                        
                                                        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                       [[StorageManager sharedManager] renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                       [[StorageManager sharedManager] renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder *updatedFile,NSError* error) {
                                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                                [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                            });
+                                                           if(error){
+                                                               [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                               return;
+                                                           }
+//                                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                                               [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                                                           });
                                                            [self updateFiles:^(){
                                                                dispatch_async(dispatch_get_main_queue(), ^{
                                                                    
@@ -576,13 +601,22 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
             break;
         case 1:{
             DDLogDebug(@"Delete button pressed");
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            [[StorageManager sharedManager] deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//            });
+            [[StorageManager sharedManager] deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                });
+                if(error){
+                    [[ErrorProvider instance]generatePopWithError:error controller:self];
+                    return;
+                }
                 if (succsess) {
                     DDLogDebug(@"file named %@ successfuly removed", folder.name);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideHUDForView:self.view animated:YES];
-                    });
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                    });
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
 //                            [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -591,6 +625,9 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                     }];
                 }else{
                     DDLogDebug(@"file named %@ hasn't been removed", folder.name);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
                 }
             }];
         }
@@ -628,7 +665,14 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 -(void)removeFileFromCloud:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+    [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            return;
+        }
         if (succsess) {
             DDLogDebug(@"file named %@ successfuly removed", object.name);
             [self.managedObjectContext  save:nil];
@@ -701,51 +745,23 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-//- (UIAlertAction*)uploadFileAction
-//{
-//    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
-//                                                       handler:^(UIAlertAction * action) {
-//                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//                                                           picker.delegate = self;
-//                                                           picker.allowsEditing = YES;
-//                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
-//                                                           
-//                                                           [self presentViewController:picker animated:YES completion:NULL];
-//                                                       }];
-//    
-//    return uploadFile;
-//}
-//
-//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-//{
-//    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//    
-//    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
-//    [picker dismissViewControllerAnimated:YES completion:nil];
-//    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
-//    
-//    NSData * data = UIImagePNGRepresentation(image);
-//    NSString * path = self.isCorporate ? @"corporate" : @"personal";
-//    if (self.folder.fullpath)
-//    {
-//        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-//    }
-////    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-//        BFLog(@"%@",response);
-//        [self updateFiles:^(){
-////            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        }];
-//    }];
-//}
-
 - (UIAlertAction*)deleteFolderAction
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
-        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
+            if(error){
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                return;
+            }
             if(succsess){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                });
                 [self updateFiles:^(){
                     [self.tableView reloadData];
                 }];
@@ -776,17 +792,27 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                                  }
                                                                  _fetchedResultsController.delegate = nil;
                                                                  _fetchedResultsController = nil;
-                                                                 
-                                                                [[StorageManager sharedManager] renameOperation:self.folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile) {
+                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                [[StorageManager sharedManager] renameOperation:self.folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile,NSError* error) {
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                    });
+                                                                    if(error){
+                                                                        [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                        return;
+                                                                    }
                                                                      self.folderToOperate = updatedFile;
                                                                      self.folder = updatedFile;
                                                                      self.title = updatedFile.name;
-                                                                     NSError * error = nil;
+//                                                                     NSError * error = nil;
                                                                      [self.fetchedResultsController performFetch:&error];
                                                                      if (error)
                                                                      {
                                                                          BFLog(@"%@",[error userInfo]);
                                                                      }
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                    });
                                                                      [self updateFiles:^(){
 //                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                          
@@ -825,12 +851,26 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                              
                                                              __weak typeof (self)weakSelf = self;
                                                              defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 [[StorageManager sharedManager]createFolderWithName:weakSelf.folderName.text isCorporate:weakSelf.isCorporate andPath:weakSelf.folder.fullpath completion:^(BOOL success) {
+                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 [[StorageManager sharedManager]createFolderWithName:weakSelf.folderName.text isCorporate:weakSelf.isCorporate andPath:weakSelf.folder.fullpath completion:^(BOOL success,NSError* error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (success) {
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         });
                                                                          [self updateFilesWithSubsequentTransitionFromFolder:weakSelf.folder handler:^{
                                                                              
                                                                          }];
                                                                      }else{
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         });
                                                                          [self updateFiles:^{
                                                                              
                                                                          }];

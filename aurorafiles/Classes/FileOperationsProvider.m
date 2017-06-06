@@ -10,7 +10,6 @@
 #import "Settings.h"
 #import "ApiProtocol.h"
 #import "NetworkManager.h"
-#import "UIAlertView+Errors.h"
 
 @interface FileOperationsProvider(){
     
@@ -39,87 +38,87 @@
     return self;
 }
 
-- (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *))complitionHandler{
+- (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler{
     [self setupNetworkManager];
     [self.networkManager getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items, NSError *error) {
         if (error){
-            [UIAlertView generatePopupWithError:error];
-            complitionHandler(@[]);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(@[],error);
         }else{
-            complitionHandler(items);
+            complitionHandler(items,nil);
         }
     }];
 }
 
-- (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success))handler{
+- (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))handler{
     [self setupNetworkManager];
     [self.networkManager renameFileFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(BOOL success, NSError *error) {
         if (error){
-            [UIAlertView generatePopupWithError:error];
-            handler(NO);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            handler(NO,error);
         }else{
-            handler(success);
+            handler(success,nil);
         }
     }];
 }
 
-- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *result))handler{
+- (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *result, NSError *error))handler{
     [self setupNetworkManager];
     [self.networkManager renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(NSDictionary *result, NSError *error) {
         if(error){
-            [UIAlertView generatePopupWithError:error];
-            handler(nil);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            handler(nil,error);
         }else{
-            handler(result);
+            handler(result,nil);
         }
     }];
 }
 
-- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL))complitionHandler{
+- (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self setupNetworkManager];
     [self.networkManager createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL success, NSError *error) {
         if(error){
-            [UIAlertView generatePopupWithError:error];
-            complitionHandler(NO);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(NO,error);
         }else{
-            complitionHandler(success);
+            complitionHandler(success,nil);
         }
     }];
 }
 
-- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL, NSError *error))complitionHandler{
     [self setupNetworkManager];
     [self.networkManager deleteFile:folder isCorporate:corporate completion:^(BOOL success, NSError *error) {
         if(error){
-            [UIAlertView generatePopupWithError:error];
-            complitionHandler(NO);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(NO,error);
         }else{
-            complitionHandler(success);
+            complitionHandler(success,nil);
         }
     }];
 }
 
-- (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL))complitionHandler{
+- (void)deleteFiles:(NSArray<Folder *> *)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL, NSError *error))complitionHandler{
     [self setupNetworkManager];
     [self.networkManager deleteFiles:files isCorporate:corporate completion:^(BOOL success, NSError *error) {
         if(error){
-            [UIAlertView generatePopupWithError:error];
-            complitionHandler(NO);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(NO,error);
         }else{
-            complitionHandler(success);
+            complitionHandler(success,nil);
         }
     }];
 }
 
 //MARK: важная функция для работы экстеншена
-- (void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL))complitionHandler{
+- (void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler{
     [self setupNetworkManager];
     [self.networkManager checkItemExistenceOnServerByName:name path:path type:type completion:^(BOOL exist, NSError *error) {
         if(error){
-            [UIAlertView generatePopupWithError:error];
-            complitionHandler(NO);
+            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(NO,error);
         }else{
-            complitionHandler(exist);
+            complitionHandler(exist,nil);
         }
     }];
     
