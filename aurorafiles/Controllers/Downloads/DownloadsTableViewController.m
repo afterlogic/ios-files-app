@@ -13,7 +13,6 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIImage+Aurora.h"
 #import "FileDetailViewController.h"
-#import "FileGalleryCollectionViewController.h"
 #import "GalleryWrapperViewController.h"
 #import "Settings.h"
 #import "SessionProvider.h"

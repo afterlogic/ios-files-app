@@ -106,16 +106,24 @@ static const int imageNameMinimalLength = 1;
                                                                  textField.delegate = self;
                                                              }];
                                                              
-                                                             defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  Folder * file = self.currentPage.item;
                                                                  [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if (error) {
+                                                                         [[ErrorProvider instance]generatePopWithError:error
+                                                                                                            controller:self
+                                                                                                    customCancelAction:nil
+                                                                                                           retryAction:actionBlock];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              self.title = updatedFile.name;
                                                                          });
                                                                      }
                                                                  }];
-                                                             }];
+                                                             };
+                                                             defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -132,10 +140,12 @@ static const int imageNameMinimalLength = 1;
 - (UIAlertAction*)deleteFolderAction
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
-//        Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         Folder * object = self.currentPage.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
         [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+            if(error){
+                return;
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
         }];
     }];

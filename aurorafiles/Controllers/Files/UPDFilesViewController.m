@@ -10,7 +10,6 @@
 #import "FilesTableViewCell.h"
 #import "FileDetailViewController.h"
 #import "SessionProvider.h"
-#import "FileGalleryCollectionViewController.h"
 #import "DownloadsTableViewController.h"
 
 #import "GalleryWrapperViewController.h"
@@ -1112,9 +1111,6 @@ static const int minimalStringLengthFiles = 1;
         case 1:{
             DDLogDebug(@"Delete button pressed");
             [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideHUDForView:self.view animated:YES];
-                });
                 if(error){
                     return;
                 }
@@ -1174,9 +1170,9 @@ static const int minimalStringLengthFiles = 1;
 
 - (void)removeItem:(Folder *)object{
     [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        });
         if(error){
             [[ErrorProvider instance]generatePopWithError:error
                                                controller:self

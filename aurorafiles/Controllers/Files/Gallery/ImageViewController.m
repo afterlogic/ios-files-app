@@ -45,7 +45,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ErrorProvider instance].currentViewController = self;
     
     UIBarButtonItem * shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareFileAction:)];
     UIBarButtonItem * moreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more"] style:UIBarButtonItemStylePlain target:self action:@selector(moreItemAction:)];

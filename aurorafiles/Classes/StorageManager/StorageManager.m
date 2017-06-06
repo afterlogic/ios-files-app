@@ -201,6 +201,9 @@
             if(!error){
                 [self deleteItem:item];
             }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:controller.view animated:YES];
+                });
                 [[ErrorProvider instance]generatePopWithError:error
                                                    controller:controller
                                            customCancelAction:nil
