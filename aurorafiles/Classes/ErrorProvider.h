@@ -9,11 +9,11 @@
 
 
 @interface ErrorProvider : NSObject
-@property (nonatomic, weak) UIViewController * currentViewController;
 
 + (ErrorProvider *)instance;
 
 - (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc;
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *action))handler;
+- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler;
+- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler retryAction:(void (^ __nullable)(UIAlertAction *retryAction))retryHandler;
 
 @end

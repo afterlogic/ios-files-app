@@ -96,7 +96,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [ErrorProvider instance].currentViewController = self;
     BFLog(@"EXTENSION STARTED");
     self.uploadPathContainer.hidden = YES;
     [self setCurrentUploadFolder:@"" root:@""];

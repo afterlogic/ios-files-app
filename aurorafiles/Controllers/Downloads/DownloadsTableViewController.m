@@ -32,7 +32,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [ErrorProvider instance].currentViewController = self;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.managedObjectContext = [[[StorageManager sharedManager] DBProvider]defaultMOC];

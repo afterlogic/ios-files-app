@@ -30,7 +30,6 @@
 {
     [super viewDidLoad];
 	[self registerForKeyboardNotifications];
-    [ErrorProvider instance].currentViewController = self;
     
     tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideKeyboard)];
     [self.scrollView addGestureRecognizer:tapRecognizer];

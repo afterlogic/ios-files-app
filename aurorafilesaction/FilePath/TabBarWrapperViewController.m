@@ -137,7 +137,6 @@
         self.currentFolderController.editButton = self.editRightButton;
         self.selectedRootPath = self.currentFolderController.type;
         self.selectedFolderPath = @"";
-        [ErrorProvider instance].currentViewController = (UploadFoldersTableViewController *)viewController;
 //        [self.navigationController setTitle:self.selectedRootPath];
     }
 }

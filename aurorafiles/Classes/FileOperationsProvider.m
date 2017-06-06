@@ -42,7 +42,7 @@
     [self setupNetworkManager];
     [self.networkManager getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items, NSError *error) {
         if (error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             complitionHandler(@[],error);
         }else{
             complitionHandler(items,nil);
@@ -54,7 +54,7 @@
     [self setupNetworkManager];
     [self.networkManager renameFileFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(BOOL success, NSError *error) {
         if (error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             handler(NO,error);
         }else{
             handler(success,nil);
@@ -66,7 +66,7 @@
     [self setupNetworkManager];
     [self.networkManager renameFolderFromName:name toName:newName type:type atPath:path isLink:isLink completion:^(NSDictionary *result, NSError *error) {
         if(error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             handler(nil,error);
         }else{
             handler(result,nil);
@@ -78,7 +78,7 @@
     [self setupNetworkManager];
     [self.networkManager createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL success, NSError *error) {
         if(error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             complitionHandler(NO,error);
         }else{
             complitionHandler(success,nil);
@@ -90,7 +90,7 @@
     [self setupNetworkManager];
     [self.networkManager deleteFile:folder isCorporate:corporate completion:^(BOOL success, NSError *error) {
         if(error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             complitionHandler(NO,error);
         }else{
             complitionHandler(success,nil);
@@ -102,7 +102,7 @@
     [self setupNetworkManager];
     [self.networkManager deleteFiles:files isCorporate:corporate completion:^(BOOL success, NSError *error) {
         if(error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             complitionHandler(NO,error);
         }else{
             complitionHandler(success,nil);
@@ -115,7 +115,7 @@
     [self setupNetworkManager];
     [self.networkManager checkItemExistenceOnServerByName:name path:path type:type completion:^(BOOL exist, NSError *error) {
         if(error){
-            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
             complitionHandler(NO,error);
         }else{
             complitionHandler(exist,nil);

@@ -195,17 +195,24 @@
     
     NSString *confirmTitle = [NSString stringWithFormat:@"%@ %@ ?",NSLocalizedString(@"Delete", @"delete confirmation title text"),item.name];
     NSString *confirmMessage = NSLocalizedString(@"You cannot undo this action.", @"delete confirmation message text");
+    void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+        [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
+        [self.fileOperationsProvider deleteFile:item isCorporate:corporate completion:^(BOOL success, NSError *error) {
+            if(!error){
+                [self deleteItem:item];
+            }else{
+                [[ErrorProvider instance]generatePopWithError:error
+                                                   controller:controller
+                                           customCancelAction:nil
+                                                  retryAction:actionBlock];
+            }
+            handler(success,error);
+        }];
+    };
+    
     UIAlertController *confirmController = [UIAlertController confirmationAlertWithTitle:confirmTitle
                                                                                  message:confirmMessage
-                                                                          confirmHandler:^{
-                                                                              [MBProgressHUD showHUDAddedTo:controller.view animated:YES];
-                                                                              [self.fileOperationsProvider deleteFile:item isCorporate:corporate completion:^(BOOL success, NSError *error) {
-                                                                                  if(!error){
-                                                                                      [self deleteItem:item];
-                                                                                  }
-                                                                                  handler(success,error);
-                                                                              }];
-                                                                          }
+                                                                          confirmHandler:actionBlock
                                                                            cancelHandler:nil];
     [controller presentViewController:confirmController animated:YES completion:nil];
 }

@@ -65,7 +65,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [ErrorProvider instance].currentViewController = self;
     
     self.webView.alpha = 0;
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -141,11 +140,10 @@
                                                                  textField.text = [file.name stringByDeletingPathExtension];
                                                                  self.folderName = textField;
                                                              }];
-                                                             
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  [[StorageManager sharedManager] renameOperation:self.object withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
                                                                      if(error){
-                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self customCancelAction:nil retryAction:actionBlock];
                                                                          return;
                                                                      }
                                                                      if (updatedFile) {
@@ -153,7 +151,8 @@
                                                                          self.object = updatedFile;
                                                                      }
                                                                  }];
-                                                             }];
+                                                             };
+                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -175,7 +174,6 @@
       object.wasDeleted = @YES;
       [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
           if(error){
-              [[ErrorProvider instance]generatePopWithError:error controller:self];
               return;
           }
           if (succsess) {

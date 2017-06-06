@@ -62,9 +62,6 @@
 		DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA8E1D061F1200238EB5 /* FilesTableViewCell.m */; };
 		DAC1CAB81D061F1200238EB5 /* FilesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */; };
 		DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA921D061F1200238EB5 /* FileDetailViewController.m */; };
-		DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA981D061F1200238EB5 /* FileGalleryCollectionViewCell.m */; };
-		DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA991D061F1200238EB5 /* FileGalleryCollectionViewCell.xib */; };
-		DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA9B1D061F1200238EB5 /* FileGalleryCollectionViewController.m */; };
 		DAC1CABE1D061F1200238EB5 /* ViewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA9E1D061F1200238EB5 /* ViewImageController.m */; };
 		DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA11D061F1200238EB5 /* SignInViewController.m */; };
 		DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAA41D061F1200238EB5 /* ALTableViewController.m */; };
@@ -76,14 +73,10 @@
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
 		FF15736B1ECC897000972F33 /* UIApplication+openURL.m in Sources */ = {isa = PBXBuildFile; fileRef = FF15736A1ECC897000972F33 /* UIApplication+openURL.m */; };
-		FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
-		FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
-		FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF20F9A41E6A1E5300831874 /* ImageViewController.xib */; };
 		FF2773DC1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
 		FF2773DD1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
 		FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32025F1DACF2F7008F3B6A /* ANavigationController.m */; };
 		FF399D4B1DE7341B002071A9 /* AuroraHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FF399D4A1DE7341B002071A9 /* AuroraHUD.m */; };
-		FF3F12321E016433004B8ED1 /* GalleryCollectionFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3F12311E01641C004B8ED1 /* GalleryCollectionFlowLayout.m */; };
 		FF3F12351E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m in Sources */ = {isa = PBXBuildFile; fileRef = FF3F12341E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m */; };
 		FF4255F21D7EDBC0009B2E56 /* UploadedFile.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4255F11D7EDBC0009B2E56 /* UploadedFile.m */; };
 		FF42561B1D7F95DD009B2E56 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA831D061F1200238EB5 /* Settings.m */; };
@@ -226,9 +219,6 @@
 		FFCF0CA51E83B827005F87DE /* MainInterface.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFCF0C9A1E83B827005F87DE /* MainInterface.strings */; };
 		FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAD1D061F1200238EB5 /* STZPullToRefresh.m */; };
 		FFDA0B081E2D1B3600EB0E61 /* STZPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CAAF1D061F1200238EB5 /* STZPullToRefreshView.m */; };
-		FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */; };
-		FFE6F0931E033FD9009141CA /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F0911E033FD9009141CA /* ImageViewController.m */; };
-		FFE6F0971E04BD46009141CA /* GalleryWrapperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFE6F0961E04BD46009141CA /* GalleryWrapperViewController.m */; };
 		FFFFA5DF1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */; };
 		FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */; };
 		FFFFA5E11D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFFFA5DE1D9A5395006BA9FB /* EXFileGalleryCollectionViewController.m */; };
@@ -366,11 +356,6 @@
 		DAC1CA8F1D061F1200238EB5 /* FilesTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilesTableViewCell.xib; sourceTree = "<group>"; };
 		DAC1CA911D061F1200238EB5 /* FileDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDetailViewController.h; sourceTree = "<group>"; };
 		DAC1CA921D061F1200238EB5 /* FileDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDetailViewController.m; sourceTree = "<group>"; };
-		DAC1CA971D061F1200238EB5 /* FileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
-		DAC1CA981D061F1200238EB5 /* FileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
-		DAC1CA991D061F1200238EB5 /* FileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
-		DAC1CA9A1D061F1200238EB5 /* FileGalleryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileGalleryCollectionViewController.h; sourceTree = "<group>"; };
-		DAC1CA9B1D061F1200238EB5 /* FileGalleryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryCollectionViewController.m; sourceTree = "<group>"; };
 		DAC1CA9D1D061F1200238EB5 /* ViewImageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewImageController.h; sourceTree = "<group>"; };
 		DAC1CA9E1D061F1200238EB5 /* ViewImageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewImageController.m; sourceTree = "<group>"; };
 		DAC1CAA01D061F1200238EB5 /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
@@ -392,7 +377,6 @@
 		DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; sourceTree = "<group>"; };
 		FF1573691ECC897000972F33 /* UIApplication+openURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURL.h"; sourceTree = "<group>"; };
 		FF15736A1ECC897000972F33 /* UIApplication+openURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURL.m"; sourceTree = "<group>"; };
-		FF20F9A41E6A1E5300831874 /* ImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
 		FF2773DA1DF191000061C210 /* DataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseProvider.h; sourceTree = "<group>"; };
 		FF2773DB1DF191000061C210 /* DataBaseProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBaseProvider.m; sourceTree = "<group>"; };
 		FF2773DE1DF198EB0061C210 /* IDataBaseProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDataBaseProtocol.h; sourceTree = "<group>"; };
@@ -401,8 +385,6 @@
 		FF32025F1DACF2F7008F3B6A /* ANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANavigationController.m; sourceTree = "<group>"; };
 		FF399D491DE7341B002071A9 /* AuroraHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuroraHUD.h; path = SupportFiles/AuroraHUD.h; sourceTree = "<group>"; };
 		FF399D4A1DE7341B002071A9 /* AuroraHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuroraHUD.m; path = SupportFiles/AuroraHUD.m; sourceTree = "<group>"; };
-		FF3F12301E01641B004B8ED1 /* GalleryCollectionFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryCollectionFlowLayout.h; sourceTree = "<group>"; };
-		FF3F12311E01641C004B8ED1 /* GalleryCollectionFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryCollectionFlowLayout.m; sourceTree = "<group>"; };
 		FF3F12331E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionViewFlowLayout+NoFade.h"; sourceTree = "<group>"; };
 		FF3F12341E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UICollectionViewFlowLayout+NoFade.m"; sourceTree = "<group>"; };
 		FF4255F01D7EDBC0009B2E56 /* UploadedFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UploadedFile.h; path = Model/UploadedFile.h; sourceTree = "<group>"; };
@@ -415,7 +397,6 @@
 		FF4C76441DA7F21800AA5576 /* snapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = snapshotTest.swift; sourceTree = "<group>"; };
 		FF4C76461DA7F21800AA5576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF4C764C1DA7F24100AA5576 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
-		FF5927021E05DA3F00E4C58E /* GalleryPageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryPageDelegate.h; sourceTree = "<group>"; };
 		FF5C01321DC87CAC00FDA424 /* NSString+Validators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Validators.h"; sourceTree = "<group>"; };
 		FF5C01331DC87CAC00FDA424 /* NSString+Validators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Validators.m"; sourceTree = "<group>"; };
 		FF635FFF1E3A6235002ABF7C /* ApiOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiOperation.h; sourceTree = "<group>"; };
@@ -506,12 +487,6 @@
 		FFCF0C871E83B758005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MainInterface.strings; sourceTree = "<group>"; };
 		FFCF0C991E83B827005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		FFCF0C9B1E83B827005F87DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = MainInterface.strings; sourceTree = "<group>"; };
-		FFE6F08B1E033EA2009141CA /* FileGalleryPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileGalleryPageViewController.h; sourceTree = "<group>"; };
-		FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileGalleryPageViewController.m; sourceTree = "<group>"; };
-		FFE6F0901E033FD9009141CA /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
-		FFE6F0911E033FD9009141CA /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		FFE6F0951E04BD46009141CA /* GalleryWrapperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalleryWrapperViewController.h; sourceTree = "<group>"; };
-		FFE6F0961E04BD46009141CA /* GalleryWrapperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalleryWrapperViewController.m; sourceTree = "<group>"; };
 		FFFFA5DA1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXFileGalleryCollectionViewCell.h; sourceTree = "<group>"; };
 		FFFFA5DB1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXFileGalleryCollectionViewCell.m; sourceTree = "<group>"; };
 		FFFFA5DC1D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EXFileGalleryCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -813,7 +788,6 @@
 				DAC1CA901D061F1200238EB5 /* Detail */,
 				FFB9592A1DAD3B6D008031B3 /* UPDFilesViewController.h */,
 				FFB9592B1DAD3B6D008031B3 /* UPDFilesViewController.m */,
-				DAC1CA951D061F1200238EB5 /* Gallery */,
 				DAC1CA9C1D061F1200238EB5 /* ViewImage */,
 			);
 			path = Files;
@@ -836,25 +810,6 @@
 				DAC1CA921D061F1200238EB5 /* FileDetailViewController.m */,
 			);
 			path = Detail;
-			sourceTree = "<group>";
-		};
-		DAC1CA951D061F1200238EB5 /* Gallery */ = {
-			isa = PBXGroup;
-			children = (
-				FFE6F08E1E033EB9009141CA /* CollectionViewVariant */,
-				FFE6F08F1E033FA9009141CA /* PageControllerVariant */,
-			);
-			path = Gallery;
-			sourceTree = "<group>";
-		};
-		DAC1CA961D061F1200238EB5 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				DAC1CA971D061F1200238EB5 /* FileGalleryCollectionViewCell.h */,
-				DAC1CA981D061F1200238EB5 /* FileGalleryCollectionViewCell.m */,
-				DAC1CA991D061F1200238EB5 /* FileGalleryCollectionViewCell.xib */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 		DAC1CA9C1D061F1200238EB5 /* ViewImage */ = {
@@ -1342,33 +1297,6 @@
 			name = Api;
 			sourceTree = "<group>";
 		};
-		FFE6F08E1E033EB9009141CA /* CollectionViewVariant */ = {
-			isa = PBXGroup;
-			children = (
-				DAC1CA961D061F1200238EB5 /* Cell */,
-				DAC1CA9A1D061F1200238EB5 /* FileGalleryCollectionViewController.h */,
-				DAC1CA9B1D061F1200238EB5 /* FileGalleryCollectionViewController.m */,
-				FF3F12301E01641B004B8ED1 /* GalleryCollectionFlowLayout.h */,
-				FF3F12311E01641C004B8ED1 /* GalleryCollectionFlowLayout.m */,
-			);
-			name = CollectionViewVariant;
-			sourceTree = "<group>";
-		};
-		FFE6F08F1E033FA9009141CA /* PageControllerVariant */ = {
-			isa = PBXGroup;
-			children = (
-				FFE6F0951E04BD46009141CA /* GalleryWrapperViewController.h */,
-				FF5927021E05DA3F00E4C58E /* GalleryPageDelegate.h */,
-				FFE6F0961E04BD46009141CA /* GalleryWrapperViewController.m */,
-				FFE6F08B1E033EA2009141CA /* FileGalleryPageViewController.h */,
-				FFE6F08C1E033EA2009141CA /* FileGalleryPageViewController.m */,
-				FFE6F0901E033FD9009141CA /* ImageViewController.h */,
-				FFE6F0911E033FD9009141CA /* ImageViewController.m */,
-				FF20F9A41E6A1E5300831874 /* ImageViewController.xib */,
-			);
-			name = PageControllerVariant;
-			sourceTree = "<group>";
-		};
 		FFFFA5D81D9A5395006BA9FB /* Gallery */ = {
 			isa = PBXGroup;
 			children = (
@@ -1615,8 +1543,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC1CA761D061EF800238EB5 /* Images.xcassets in Resources */,
-				DAC1CABC1D061F1200238EB5 /* FileGalleryCollectionViewCell.xib in Resources */,
-				FF20F9A51E6A1E5400831874 /* ImageViewController.xib in Resources */,
 				FFA9B7391E41F65C00CBDF46 /* Main-iPad.storyboard in Resources */,
 				FFCF0C7A1E83B603005F87DE /* Localizable.strings in Resources */,
 				DAC1CA471D061D7500238EB5 /* Assets.xcassets in Resources */,
@@ -1650,7 +1576,6 @@
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0C911E83B758005F87DE /* MainInterface.strings in Resources */,
-				FF20F9A61E6A1E8000831874 /* ImageViewController.xib in Resources */,
 				FFCF0C901E83B758005F87DE /* Localizable.strings in Resources */,
 				FFFFA5E61D9A836C006BA9FB /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
 				FFA4C0231E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */,
@@ -1673,7 +1598,6 @@
 				FFA4C0201E55F149008F4522 /* FilesTableViewCell.xib in Resources */,
 				FFA4C01E1E55F131008F4522 /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0CA51E83B827005F87DE /* MainInterface.strings in Resources */,
-				FF20F9A71E6A1E9A00831874 /* ImageViewController.xib in Resources */,
 				FFCF0CA41E83B827005F87DE /* Localizable.strings in Resources */,
 				FFA4BFE21E55AD20008F4522 /* MainInterface.storyboard in Resources */,
 				FFA4C0241E57308D008F4522 /* ExtensionGetWebPageTitleJS.js in Resources */,
@@ -1930,7 +1854,6 @@
 				FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
-				FFE6F0931E033FD9009141CA /* ImageViewController.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
 				FFB9592C1DAD3B6D008031B3 /* UPDFilesViewController.m in Sources */,
 				FFB959351DAF8C74008031B3 /* NSObject+PerformSelectorWithCallback.m in Sources */,
@@ -1941,16 +1864,13 @@
 				FF3F12351E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m in Sources */,
 				FF15736B1ECC897000972F33 /* UIApplication+openURL.m in Sources */,
 				FF71D4901DA33162008690D5 /* MLNetworkLogger.m in Sources */,
-				DAC1CABD1D061F1200238EB5 /* FileGalleryCollectionViewController.m in Sources */,
 				DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */,
 				DAC1CAC31D061F1200238EB5 /* STZPullToRefresh.m in Sources */,
-				FFE6F0971E04BD46009141CA /* GalleryWrapperViewController.m in Sources */,
 				FF71D4881DA33162008690D5 /* MLNetworkLoggingAdapter.m in Sources */,
 				DAC1CAB91D061F1200238EB5 /* FileDetailViewController.m in Sources */,
 				DAC1CAB01D061F1200238EB5 /* ApiP7.m in Sources */,
 				FF6360011E3A6237002ABF7C /* ApiOperation.m in Sources */,
 				DAC1CAC01D061F1200238EB5 /* ALTableViewController.m in Sources */,
-				DAC1CABB1D061F1200238EB5 /* FileGalleryCollectionViewCell.m in Sources */,
 				FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */,
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				FFAD03F71DECA387000C4AFF /* FileOperationsProvider.m in Sources */,
@@ -1964,14 +1884,12 @@
 				DAC1CAB21D061F1200238EB5 /* KeychainWrapper.m in Sources */,
 				FF6A1D0D1DAD0265005CBA76 /* ARootViewController.m in Sources */,
 				FFAD03EF1DEC727A000C4AFF /* NetworkManager.m in Sources */,
-				FFE6F08D1E033EA2009141CA /* FileGalleryPageViewController.m in Sources */,
 				FF88DDC11ECECF0600D8DA00 /* UIAlertController+Confirmation.m in Sources */,
 				FF6A94C61DB67D8700543269 /* core.m in Sources */,
 				DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */,
 				FFAD03EB1DEC6E6C000C4AFF /* P7Manager.m in Sources */,
 				FF71D4861DA33162008690D5 /* MLAFNetworkingAdapter.m in Sources */,
 				DAC1CAB11D061F1200238EB5 /* UIImage+Aurora.m in Sources */,
-				FF3F12321E016433004B8ED1 /* GalleryCollectionFlowLayout.m in Sources */,
 				FF71D4D81DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
 				DAC1CA391D061D7500238EB5 /* main.m in Sources */,
 				DAC1CAB51D061F1200238EB5 /* StorageManager.m in Sources */,

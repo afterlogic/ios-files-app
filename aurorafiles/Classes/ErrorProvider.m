@@ -107,45 +107,46 @@ const NSString* UnknownError = @"999";
 
     return _instance;
 }
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *action))handler{
+
+- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc {
+    [self generatePopWithError:error controller:vc customCancelAction:nil retryAction:nil];
+}
+
+- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler{
+    [self generatePopWithError:error controller:vc customCancelAction:handler retryAction:nil];
+}
+
+- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc
+          customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler
+                 retryAction:(void (^ __nullable)(UIAlertAction *retryAction))retryHandler{
+    
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
     if ([errorCode isEqualToString:@"-999"]) {
         return;
     }
-    
+
     NSString *text = [[self getErrorList] valueForKey:errorCode];
     if(text.length == 0){
         text = error.localizedDescription;
     }
+    
     UIAlertController *aC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR", @"error popup label")
                                                                 message:text
                                                          preferredStyle:UIAlertControllerStyleAlert];
+    
     UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
                                                             style:UIAlertActionStyleCancel
                                                           handler:handler];
+    
+    UIAlertAction * retryAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"retry text")
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:retryHandler];
     [aC addAction:cancelAction];
-    [vc presentViewController:aC animated:YES completion:nil];
-}
-
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc {
-    NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
-    if ([errorCode isEqualToString:@"-999"]) {
-        return;
+    
+    if(retryHandler){
+        [aC addAction:retryAction];
     }
-
-    NSString *text = [[self getErrorList] valueForKey:errorCode];
-    if(text.length == 0){
-        text = error.localizedDescription;
-    }
-    UIAlertController *aC = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ERROR", @"error popup label")
-                                                                message:text
-                                                         preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
-                                                            style:UIAlertActionStyleCancel
-                                                          handler:^(UIAlertAction * action){
-                                                              
-                                                          }];
-    [aC addAction:cancelAction];
+    
     [vc presentViewController:aC animated:YES completion:nil];
 }
 
@@ -235,6 +236,5 @@ const NSString* UnknownError = @"999";
             UnknownError: NSLocalizedString(@"something goes wrong...",@"unknown error"),
     };
 }
-
 
 @end
