@@ -18,9 +18,10 @@
 #import "ApiP7.h"
 #import "Settings.h"
 
-@interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
     MBProgressHUD *hud;
+    UIAlertAction * defaultAction;
 }
 
 
@@ -158,9 +159,10 @@
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
                                                                  textField.text = [file.name stringByDeletingPathExtension];
                                                                  self.folderName = textField;
+                                                                 [textField setDelegate:self];
                                                              }];
                                                              
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
                                                                  Folder * file = self.item;
                                                                  [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
@@ -352,6 +354,26 @@
     }
 }
 
+#pragma mark - TextField Delegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
+    [defaultAction setEnabled:isActionEnabled] ;
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
+}
+
+
 #pragma mark - Private method
 
 - (void)downloadImageForItem:(Folder *)file {
@@ -394,7 +416,8 @@
         {
             
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
-            [manager downloadImageWithURL:[NSURL URLWithString:[file viewLink]] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            NSURL *viewURL = [NSURL URLWithString:[file viewLink]];
+            [manager downloadImageWithURL:viewURL options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
                 float fractionCompleted = (float)receivedSize/(float)expectedSize;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     hud.progress = fractionCompleted;
@@ -472,6 +495,10 @@
 
 - (void)deletePage{
     [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
+}
+
+-(void)hideHud{
+    [hud hideAnimated:YES];
 }
 
 #pragma mark - Public method

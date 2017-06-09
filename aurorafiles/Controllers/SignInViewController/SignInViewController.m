@@ -136,17 +136,14 @@
                 if (error){
                     [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
                         alertViewIsShow = NO;
+                        [self clear];
                     }];
                     alertViewIsShow = YES;
                 }else{
                     [Settings setLogin:self.emailField.text];
                     [Settings setPassword:self.passwordField.text];
-
+                    [Settings setIsLogedIn:YES];
                     [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-    //                [self dismissViewControllerAnimated:YES completion:^(){
-    //                    [self.delegate userWasSignedIn];
-    //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-    //                }];
                 }
             });
         }];

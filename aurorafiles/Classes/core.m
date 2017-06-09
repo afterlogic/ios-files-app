@@ -15,6 +15,7 @@
 
 static int retryCount = 0;
 static const int retryInterval = 5;
+static NSString * errorFieldName = @"ErrorCode";
 
 @interface core(){
     AFHTTPRequestOperationManager *manager;
@@ -289,7 +290,15 @@ static NSString *methodGetUser = @"GetUser";
                 else
                 {
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The username or password you entered is incorrect", @"")}];
+                    if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                        NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                    }
                 }
+            }else{
+                error = [NSError errorWithDomain:@"com.afterlogic" code:999 userInfo:nil];
+//                handler(json,error);
+//                return;
             }
             handler(json,error);
         });

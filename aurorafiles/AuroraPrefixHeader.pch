@@ -16,6 +16,13 @@
 #import <CocoaLumberjack/DDLog.h>
 #import "ErrorProvider.h"
 
+
+static const int shortcutCreationTexFieldTag = 100;
+static const int minimalStringLengthURL = 5;
+static const int minimalStringLengthFiles = 1;
+static NSString *forbiddenCharactersForFileName = @"\"/\\*?<>|:";
+
+
 #ifdef DEBUG
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #else

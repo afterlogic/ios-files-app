@@ -34,9 +34,9 @@
 #import "UploadDownloadProvider.h"
 
 
-static const int shortcutCreationTexFieldTag = 100;
-static const int minimalStringLengthURL = 5;
-static const int minimalStringLengthFiles = 1;
+//static const int shortcutCreationTexFieldTag = 100;
+//static const int minimalStringLengthURL = 5;
+//static const int minimalStringLengthFiles = 1;
 
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
@@ -139,6 +139,7 @@ static const int minimalStringLengthFiles = 1;
     [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
         if(error){
             [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
             return;
         }
         self.isP8 = isP8;
@@ -458,6 +459,7 @@ static const int minimalStringLengthFiles = 1;
 -(void)signOut{
     [self.sessionProvider logout:^(BOOL succsess, NSError *error) {
         if(error){
+            [self.fetchedResultsController performFetch:nil];
             [[ErrorProvider instance]generatePopWithError:error controller:self customCancelAction:nil retryAction:^(UIAlertAction *retryAction) {
                 [self signOut];
             }];
@@ -486,13 +488,14 @@ static const int minimalStringLengthFiles = 1;
             if(error){
                 [[ErrorProvider instance]generatePopWithError:error controller:self];
                 [self stopRefresh];
+                [self.fetchedResultsController performFetch:nil];
                 return;
             }
             if (completionHandler)
             {
                 [self fetchData];
 //                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
-                if (itemsCount==0) {
+                if (itemsCount ==0) {
                     noDataLabel.text = NSLocalizedString(@"Folder is empty", @"files view empty title");
                 }
             }
@@ -766,7 +769,9 @@ static const int minimalStringLengthFiles = 1;
                                             if (error){
                                                 [hud hideAnimated:YES];
                                                 [[ErrorProvider instance]generatePopWithError:error controller:self
-                                                                           customCancelAction:nil
+                                                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                               [self.fetchedResultsController performFetch:nil];
+                                                                           }
                                                                                   retryAction:actionBlock];
                                                 return;
                                             }
@@ -787,7 +792,9 @@ static const int minimalStringLengthFiles = 1;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [hud hideAnimated:YES];
                 [[ErrorProvider instance]generatePopWithError:error controller:self
-                                           customCancelAction:nil
+                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                               [self.fetchedResultsController performFetch:nil];
+                                           }
                                                   retryAction:actionBlock];
             });
         }];
@@ -835,7 +842,12 @@ static const int minimalStringLengthFiles = 1;
                         } completion:^(BOOL result, NSError *error) {
                             if(error){
                                 [hud hideAnimated:YES];
-                                [[ErrorProvider instance]generatePopWithError:error controller:self customCancelAction:nil retryAction:^(UIAlertAction *retryAction) {
+                                [[ErrorProvider instance]generatePopWithError:error
+                                                                   controller:self
+                                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                                               [self.fetchedResultsController performFetch:nil];
+                                                           }
+                                                                  retryAction:^(UIAlertAction *retryAction) {
                                     [self uploadAction:nil];
                                 }];
                                 return;
@@ -886,10 +898,12 @@ static const int minimalStringLengthFiles = 1;
         [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
             if(error){
                 //                                                                      [hud hideAnimated:YES];
-                [[ErrorProvider instance]generatePopWithError:error
-                                                   controller:self
-                                           customCancelAction:nil
-                                                  retryAction:actionBlock];
+//                [[ErrorProvider instance]generatePopWithError:error
+//                                                   controller:self
+//                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                               [self.fetchedResultsController performFetch:nil];
+//                                           }
+//                                                  retryAction:actionBlock];
                 return;
             }
             if (succsess) {
@@ -938,11 +952,13 @@ static const int minimalStringLengthFiles = 1;
                                                                  [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile, NSError *error) {
                                                                      dispatch_async(dispatch_get_main_queue(), ^{
                                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         
                                                                      });
+                                                                     
                                                                      if(error){
                                                                          [[ErrorProvider instance]generatePopWithError:error controller:self
-                                                                                                    customCancelAction:nil
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self fetchData];
+                                                                                                    }
                                                                                                            retryAction:actionBlock];
                                                                          return;
                                                                      }
@@ -996,7 +1012,9 @@ static const int minimalStringLengthFiles = 1;
                                                                      });
                                                                      if(error){
                                                                          [[ErrorProvider instance]generatePopWithError:error controller:self
-                                                                                                    customCancelAction:nil
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self.fetchedResultsController performFetch:nil];
+                                                                                                    }
                                                                                                            retryAction:actionBlock];
                                                                          return;
                                                                      }
@@ -1027,9 +1045,22 @@ static const int minimalStringLengthFiles = 1;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.tag != shortcutCreationTexFieldTag){
+        if(textField.text.length < text.length){
+            NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+            if (charRange.location != NSNotFound) {
+                return NO;
+            }
+        }
+    }
     int minimalStringLength = textField.tag == shortcutCreationTexFieldTag ? minimalStringLengthURL:minimalStringLengthFiles;
     [defaultAction setEnabled:text.length>=minimalStringLength];
+    
     return YES;
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
 }
 
 #pragma mark - SWTableViewCell Delegate
@@ -1078,7 +1109,9 @@ static const int minimalStringLengthFiles = 1;
                     if(error){
                         [[ErrorProvider instance]generatePopWithError:error
                                                            controller:self
-                                                   customCancelAction:nil
+                                                   customCancelAction:^(UIAlertAction *cancelAction) {
+                                                       [self.fetchedResultsController performFetch:nil];
+                                                   }
                                                           retryAction:actionBlock];
                         return;
                     }
@@ -1112,6 +1145,7 @@ static const int minimalStringLengthFiles = 1;
             DDLogDebug(@"Delete button pressed");
             [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
                 if(error){
+                    [self.fetchedResultsController performFetch:nil];
                     return;
                 }
                 if (succsess) {
@@ -1170,16 +1204,15 @@ static const int minimalStringLengthFiles = 1;
 
 - (void)removeItem:(Folder *)object{
     [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        });
         if(error){
-            [[ErrorProvider instance]generatePopWithError:error
-                                               controller:self
-                                       customCancelAction:nil
-                                              retryAction:^(UIAlertAction *retryAction) {
-                                                  [self removeItem:object];
-                                              }];
+//            [[ErrorProvider instance]generatePopWithError:error
+//                                               controller:self
+//                                       customCancelAction:^(UIAlertAction *cancelAction) {
+                                           [self.fetchedResultsController performFetch:nil];
+//                                       }
+//                                              retryAction:^(UIAlertAction *retryAction) {
+//                                                  [self removeItem:object];
+//                                              }];
             return;
         }
         if (succsess) {

@@ -100,26 +100,33 @@
     self.uploadPathContainer.hidden = YES;
     [self setCurrentUploadFolder:@"" root:@""];
     
-    AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
-    NSString *scheme = [Settings domainScheme];
-    if (scheme) {
-        [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            [connectionHud hideHUD];
-        });
+
+    
+    if(![Settings getIsLogedIn]){
+        [self hideLogoutView:NO];
+        [self hideContainers:YES];
     }else{
-        [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+        AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
+        NSString *scheme = [Settings domainScheme];
+        if (scheme) {
+            [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [connectionHud hideHUD];
             });
-            if(domain && domain.length > 0){
-                [Settings setDomain:domain];
-                [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
-            }else{
-                [self hideLogoutView:NO];
-                [self hideContainers:YES];
-            }
-        }];
+        }else{
+            [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    [connectionHud hideHUD];
+                });
+                if(domain && domain.length > 0){
+                    [Settings setDomain:domain];
+                    [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+                }else{
+                    [self hideLogoutView:NO];
+                    [self hideContainers:YES];
+                }
+            }];
+        }
     }
 }
 

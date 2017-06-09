@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <FastEasyMapping/FastEasyMapping.h>
+#import "NSString+URLEncode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -177,6 +177,7 @@ static const CGFloat SYPhotoBrowserPageControlHeight = 40.0;
         [self handleDissmissNotification:nil];
     }else{
         self.initialPageIndex = nextPageIdx;
+        [photoViewController hideHud];
         [self.imageSourceArray removeObjectAtIndex:currentPageIdx];
         [self createPhotoViewControllers];
 

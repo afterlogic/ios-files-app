@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Folder.h"
+#import "TabBarWrapperViewController.h"
 
 
 @protocol FolderDelegate
@@ -18,9 +19,9 @@
 @interface UploadFoldersTableViewController : UITableViewController
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (strong, nonatomic) IBOutlet UIView *activityView;
-
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
+
 @property (strong, nonatomic) Folder * folder;
 @property (nonatomic, assign) BOOL isCorporate;
 @property (strong, nonatomic) NSString * type;

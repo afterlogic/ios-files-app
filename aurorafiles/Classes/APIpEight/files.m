@@ -82,11 +82,12 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type searchPattern:(NSString *)pattern completion:(void (^)(NSArray *items, NSError *error))handler{
+    NSString *encodedName = [folderName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFiles,
 //                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":folderName,
+                                                                                    @"Path":encodedName,
                                                                                     @"Pattern":pattern}}].mutableCopy;
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     
@@ -416,12 +417,17 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 ///
 
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))handler{
+    
+    NSString *encodedName = [name urlEncodeUsingEncoding:NSUTF8StringEncoding];
+    NSString *encodedNewName = [newName urlEncodeUsingEncoding:NSUTF8StringEncoding];
+    NSString *encodedPath = path.length ? [path urlEncodeUsingEncoding:NSUTF8StringEncoding] : @"";
+    
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodRename,
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":path,
-                                                                                    @"Name":name,
-                                                                                    @"NewName":newName,
+                                                                                    @"Path":encodedPath,
+                                                                                    @"Name":encodedName,
+                                                                                    @"NewName":encodedNewName,
                                                                                     @"IsLink":isLink ? @"true" : @"false"}}].mutableCopy;
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -471,11 +477,13 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 ///
 - (void)getFileInfoForName:(NSString *)name path:(NSString *)path corporate:(NSString *)type completion:(void (^)(NSDictionary *result, NSError *error))handler{
+    NSString *encodedName = [name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
+    NSString *encodedPath = path.length ? [path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] : @"";
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodGetFileInfo,
                                                                     @"Parameters":@{@"Type":type,
-                                                                                    @"Path":path,
-                                                                                    @"Name":name,
+                                                                                    @"Path":encodedPath,
+                                                                                    @"Name":encodedName,
                                                                                     @"UserID":[Settings currentAccount]}}].mutableCopy;
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -528,12 +536,15 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 }
 ///
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL result, NSError *error))handler{
+    
+    NSString *encodedPath = path.length ? [path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] : @"";
+    NSString *encodedName = [name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                     @"Method":methodCreateFolder,
 //                                                                    @"AuthToken":[Settings authToken],
                                                                     @"Parameters":@{@"Type":corporate ? @"corporate" : @"personal",
-                                                                                    @"Path":path.length ? path : @"",
-                                                                                    @"FolderName":name}}].mutableCopy;
+                                                                                    @"Path":encodedPath,
+                                                                                    @"FolderName":encodedName}}].mutableCopy;
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -587,12 +598,13 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
 - (void)uploadFile:(NSData *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result, NSError *error))handler
 {
     
+    
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
 //    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString * scheme = [Settings domainScheme];
-    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,pathTmp,name];
-    NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,[pathTmp urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *testUrl = [[NSURL alloc]initWithString:Link];
     
     
     NSDictionary *headers = @{

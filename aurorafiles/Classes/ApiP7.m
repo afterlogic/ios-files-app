@@ -147,7 +147,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 - (NSMutableURLRequest*)requestWithUploadUrl:(NSString*)url
 {
-    NSURL *requestUrl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *requestUrl = [NSURL URLWithString:[url urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:requestUrl];
     [request setHTTPMethod:@"PUT"];
     [request setValue:[Settings authToken] forHTTPHeaderField:@"Auth-Token"];
@@ -211,7 +211,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
-    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":folderName ? folderName : @"", @"Type": type }];
+    NSString *encodedFolder = [folderName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Path":encodedFolder ? encodedFolder : @"", @"Type": type }];
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
@@ -364,16 +365,16 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:renameFolder forKey:@"Action"];
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
-    [newDict setObject:path forKey:@"Path"];
+    [newDict setObject:[path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Path"];
     if (isLink)
     {
-        [newDict setObject:[name stringByAppendingString:@".url"] forKey:@"Name"];
+        [newDict setObject:[[name stringByAppendingString:@".url"]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Name"];
     }
     else
     {
-        [newDict setObject:name forKey:@"Name"];
+        [newDict setObject:[name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Name"];
     }
-    [newDict setObject:newName forKey:@"NewName"];
+    [newDict setObject:newName != nil ? [newName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] : @"" forKey:@"NewName"];
     [newDict setObject:[NSNumber numberWithBool:isLink] forKey:@"IsLink"];
     
     NSURLRequest * request = [self requestWithDictionary:newDict];
@@ -427,8 +428,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [newDict addEntriesFromDictionary:[ApiP7 requestParams]];
     [newDict setObject:createFolder forKey:@"Action"];
     [newDict setObject:corporate ? @"corporate" : @"personal" forKey:@"Type"];
-    [newDict setObject:path forKey:@"Path"];
-    [newDict setObject:name forKey:@"FolderName"];
+    [newDict setObject:[path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Path"];
+    [newDict setObject:[name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"FolderName"];
     DDLogError(@"%@",newDict);
     NSURLRequest * request = [self requestWithDictionary:newDict];
     
@@ -601,8 +602,8 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [newDict setObject:folderInfo forKey:@"Action"];
     
     [newDict setObject:type forKey:@"Type"];
-    [newDict setObject:path forKey:@"Path"];
-    [newDict setObject:name forKey:@"Name"];
+    [newDict setObject:[path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Path"];
+    [newDict setObject:[name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]] forKey:@"Name"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -653,7 +654,10 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     NSString * scheme = [Settings domainScheme];
     NSString * urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? scheme : @"https://",[Settings domain],[folderPath urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     DDLogError(@"%@",urlString);
-    NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
+    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
+    [request setHTTPMethod:@"PUT"];
+    [request setValue:[Settings authToken] forHTTPHeaderField:@"Auth-Token"];
+//    NSMutableURLRequest * request = [self requestWithUploadUrl:urlString];
     [request setHTTPBodyStream:[[NSInputStream alloc]initWithData:file]];
 //    [request setValue:@"corporate" forHTTPHeaderField:@"Type"];
 //    [request setValue:@"{\"Type\":\"corporate\"}" forHTTPHeaderField:@"AdditionalData"];

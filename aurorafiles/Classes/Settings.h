@@ -40,5 +40,8 @@
 + (void)saveLastUsedFolder:(NSDictionary *)folder;
 + (NSDictionary *)getLastUsedFolder;
 
++ (void)setIsLogedIn:(BOOL)isLogedIn;
++ (BOOL)getIsLogedIn;
+
 + (void)clearSettings;
 @end

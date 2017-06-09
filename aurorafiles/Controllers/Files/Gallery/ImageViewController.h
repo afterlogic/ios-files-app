@@ -13,8 +13,8 @@
 
 @property (strong, nonatomic) Folder *item;
 @property (nonatomic, assign) NSUInteger pageIndex;
-@property (strong, nonatomic)  UIImageView *imageView;
+@property (strong, nonatomic) UIImageView *imageView;
 
 - (void)resetImageSize;
-
+- (void)hideHud;
 @end

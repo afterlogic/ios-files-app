@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Gallery/ImageViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Gallery/ImageViewController.m" />
     </list>
     <ignored path="Aurora-git.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -18,7 +16,7 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos_2f63d0723dc2bac8c04b8cf260546a0b344ef627" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos_7556c8ecdb5a0d98040591ecea79696dc0a5c49c" />
   <component name="FavoritesManager">
     <favorites_list name="aurorafiles" />
   </component>
@@ -28,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3240">
-              <caret line="216" column="1" lean-forward="false" selection-start-line="216" selection-start-column="1" selection-end-line="216" selection-end-column="1" />
+              <caret line="219" column="1" lean-forward="false" selection-start-line="219" selection-start-column="1" selection-end-line="219" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -132,17 +130,13 @@
       <file leaf-file-name="ErrorProvider.m" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="130" column="1" lean-forward="false" selection-start-line="130" selection-start-column="1" selection-end-line="130" selection-end-column="1" />
+            <state relative-caret-position="372">
+              <caret line="131" column="4" lean-forward="true" selection-start-line="131" selection-start-column="4" selection-end-line="131" selection-end-column="4" />
               <folding>
                 <element signature="e#139#164#0" expanded="true" />
                 <element signature="e#3349#3567#0" expanded="false" />
                 <element signature="e#4634#4683#0" expanded="true" />
                 <element signature="e#4934#4978#0" expanded="true" />
-                <marker date="1496742734000" expanded="false" signature="5670:5765" ph="@&quot;The host is not responding. Try connecting again later&quot;" />
-                <marker date="1496742734000" expanded="false" signature="5787:5889" ph="@&quot;You have entered an invalid e-mail address. Please try again&quot;" />
-                <marker date="1496742734000" expanded="false" signature="5911:6025" ph="@&quot;Host field should not be empty. Please, enter the host url and try again&quot;" />
-                <marker date="1496742734000" expanded="false" signature="6046:6134" ph="@&quot;The e-mail or password you entered is incorrect&quot;" />
               </folding>
             </state>
           </provider>
@@ -152,7 +146,7 @@
         <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
-              <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -317,6 +311,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Cidr.FilesView" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -479,7 +474,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Cidr.FilesView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -801,7 +795,8 @@
       <workItem from="1496054717149" duration="55675000" />
       <workItem from="1496391274270" duration="9263000" />
       <workItem from="1496739946947" duration="1318000" />
-      <workItem from="1496754144185" duration="23000" />
+      <workItem from="1496754144185" duration="238000" />
+      <workItem from="1496761202819" duration="11000" />
     </task>
     <servers />
   </component>
@@ -814,7 +809,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="413031000" />
+    <option name="totallyTimeSpent" value="413257000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -830,16 +825,16 @@
     <frame x="1280" y="-257" width="1920" height="1057" extended-state="6" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1569247" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1569247" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15742575" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2041096" sideWeight="0.5067514" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3035144" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14691943" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20396039" sideWeight="0.4932486" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31663975" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="-1308" y="-71" width="695" height="1010" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25247526" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -894,12 +889,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryWrapperViewController.m</url>
-          <line>148</line>
+          <line>158</line>
           <option name="timeStamp" value="147" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m</url>
-          <line>274</line>
+          <line>273</line>
           <option name="timeStamp" value="239" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -1280,7 +1275,7 @@
     <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3240">
-          <caret line="216" column="1" lean-forward="false" selection-start-line="216" selection-start-column="1" selection-end-line="216" selection-end-column="1" />
+          <caret line="219" column="1" lean-forward="false" selection-start-line="219" selection-start-column="1" selection-end-line="219" selection-end-column="1" />
           <folding />
         </state>
       </provider>
@@ -1320,16 +1315,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/UploadDownloadProvider.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="43" column="14" lean-forward="false" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
-          <folding>
-            <element signature="e#149#167#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIAlertController.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1340,24 +1325,30 @@
     <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/UploadDownloadProvider.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="43" column="14" lean-forward="false" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
+          <folding>
+            <element signature="e#149#167#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="130" column="1" lean-forward="false" selection-start-line="130" selection-start-column="1" selection-end-line="130" selection-end-column="1" />
+        <state relative-caret-position="372">
+          <caret line="131" column="4" lean-forward="true" selection-start-line="131" selection-start-column="4" selection-end-line="131" selection-end-column="4" />
           <folding>
             <element signature="e#139#164#0" expanded="true" />
             <element signature="e#3349#3567#0" expanded="false" />
             <element signature="e#4634#4683#0" expanded="true" />
             <element signature="e#4934#4978#0" expanded="true" />
-            <marker date="1496742734000" expanded="false" signature="5670:5765" ph="@&quot;The host is not responding. Try connecting again later&quot;" />
-            <marker date="1496742734000" expanded="false" signature="5787:5889" ph="@&quot;You have entered an invalid e-mail address. Please try again&quot;" />
-            <marker date="1496742734000" expanded="false" signature="5911:6025" ph="@&quot;Host field should not be empty. Please, enter the host url and try again&quot;" />
-            <marker date="1496742734000" expanded="false" signature="6046:6134" ph="@&quot;The e-mail or password you entered is incorrect&quot;" />
           </folding>
         </state>
       </provider>

@@ -23,7 +23,7 @@
 #import "AuroraHUD.h"
 #import "MBProgressHUD.h"
 
-static const int minimalStringLengthFiles = 1;
+//static const int minimalStringLengthFiles = 1;
 
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,
 UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,
@@ -133,26 +133,34 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.folder)
-    {
-        
-        self.title = self.folder.name;
-        UILabel * titleLabel = [[UILabel alloc] init];
-        titleLabel.text = self.folder.name;
-        
-        self.navigationItem.title = self.folder.name;
-        self.navigationItem.leftBarButtonItem = self.backButton;
-        self.navigationItem.rightBarButtonItems = @[self.doneButton, self.editButton];
-        
-        [self.delegate currentFolder:self.folder root:self.type];
+    
+    @try {
+        if (self.folder)
+        {
+            
+            self.title = self.folder.name;
+            UILabel * titleLabel = [[UILabel alloc] init];
+            titleLabel.text = self.folder.name;
+            
+            self.navigationItem.title = self.folder.name;
+            self.navigationItem.leftBarButtonItem = self.backButton;
+            self.navigationItem.rightBarButtonItems = @[self.doneButton, self.editButton];
+            
+            [self.delegate currentFolder:self.folder root:self.type];
+            
+        }
+        else
+        {
+            self.navigationItem.title = [self.type capitalizedString];
+            self.navigationItem.rightBarButtonItems = @[self.doneButton,self.editButton];
+            
+        }
+    } @catch (NSException *exception) {
+        DDLogDebug(@"UploadFoldersTableViewController exception in %s. Reason -  %@ ",__PRETTY_FUNCTION__,exception.reason);
+    } @finally {
         
     }
-    else
-    {
-        self.navigationItem.title = [self.type capitalizedString];
-        self.navigationItem.rightBarButtonItems = @[self.doneButton,self.editButton];
-        
-    }
+    
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
 
@@ -330,6 +338,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
         });
         if(error){
             [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
             [self.lineRefreshController finishRefresh];
             [self.refreshController endRefreshing];
             return;
@@ -349,6 +358,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
         });
         if(error){
             [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
             return;
         }
         if (handler)
@@ -569,7 +579,9 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                     });
                     if(error){
                         [[ErrorProvider instance]generatePopWithError:error controller:self
-                                                   customCancelAction:nil
+                                                   customCancelAction:^(UIAlertAction *cancelAction) {
+                                                      [self.fetchedResultsController performFetch:nil];
+                                                   }
                                                           retryAction:actionBlock];
                         return;
                     }
@@ -841,25 +853,27 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                                                                  [textField setDelegate:self];
                                                              }];
                                                              
-                                                             __weak typeof (self)weakSelf = self;
+//                                                             __weak typeof (self)weakSelf = self;
                                                              void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                                                 [[StorageManager sharedManager]createFolderWithName:weakSelf.folderName.text isCorporate:weakSelf.isCorporate andPath:weakSelf.folder.fullpath completion:^(BOOL success,NSError* error) {
+                                                                 
+                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success,NSError* error) {
                                                                      dispatch_async(dispatch_get_main_queue(), ^{
                                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                      });
                                                                      if(error){
                                                                          [[ErrorProvider instance]generatePopWithError:error
                                                                                                             controller:self
-                                                                                                            customCancelAction:nil
-                                                                                                           retryAction:actionBlock];
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self.fetchedResultsController performFetch:nil];
+                                                                                                    }retryAction:actionBlock];
                                                                          return;
                                                                      }
                                                                      if (success) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                          });
-                                                                         [self updateFilesWithSubsequentTransitionFromFolder:weakSelf.folder handler:^{
+                                                                         [self updateFilesWithSubsequentTransitionFromFolder:self.folder handler:^{
                                                                              
                                                                          }];
                                                                      }else{
@@ -890,13 +904,19 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     int minimalStringLength = minimalStringLengthFiles;
-    
-    NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"*|\":<>?/\\"]];
-    if (charRange.location != NSNotFound) {
-        return NO;
+    if(textField.text.length < text.length){
+        NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
     }
     [defaultAction setEnabled:text.length>=minimalStringLength];
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
 }
 
 #pragma mark - Navigation

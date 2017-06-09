@@ -15,8 +15,7 @@
 #import "Settings.h"
 #import "ApiP7.h"
 #import "ApiP8.h"
-
-static const int imageNameMinimalLength = 1;
+#import "MBProgressHUD.h"
 
 @interface GalleryWrapperViewController () <GalleryPageDelegate, UITextFieldDelegate>{
     UIAlertAction * defaultRenameAction;
@@ -101,7 +100,7 @@ static const int imageNameMinimalLength = 1;
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.currentPage.item;
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
-                                                                 textField.text = [file.name stringByDeletingPathExtension];
+                                                                 textField.text = file.name;
                                                                  self.folderName = textField;
                                                                  textField.delegate = self;
                                                              }];
@@ -146,6 +145,9 @@ static const int imageNameMinimalLength = 1;
             if(error){
                 return;
             }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+//            });
             [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
         }];
     }];
@@ -213,9 +215,20 @@ static const int imageNameMinimalLength = 1;
 #pragma mark - TextField Delegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    BOOL  isActionEnabled =  currentTextFieldText.length>=imageNameMinimalLength ? YES : NO;
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
     [defaultRenameAction setEnabled:isActionEnabled] ;
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultRenameAction.isEnabled;
+    return result;
 }
 #pragma mark - Page Delegate
 

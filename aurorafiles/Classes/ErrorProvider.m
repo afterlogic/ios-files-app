@@ -155,9 +155,11 @@ const NSString* UnknownError = @"999";
             @"401":NSLocalizedString(@"The host is not responding. Try connecting again later", @"401 error text"),
             @"4061":NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"4061 error text"),
             @"4062":NSLocalizedString(@"Host field should not be empty. Please, enter the host url and try again", @"4062 error text"),
+            
             @"500":NSLocalizedString(@"The e-mail or password you entered is incorrect", @"500 error text"),
             @"1":NSLocalizedString(@"",@""),
             @"9":NSLocalizedString(@"",@""),
+            
             InvalidToken: NSLocalizedString(@"invalid token", @"101 aurora error"),
             AuthError: NSLocalizedString(@"authentication failure",@"102 aurora error"),
             InvalidInputParameter: NSLocalizedString(@"invalid data",@"103 aurora error"),

@@ -121,6 +121,17 @@
     return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
 }
 
++(void)setIsLogedIn:(BOOL)isLogedIn{
+    NSNumber* numberWithBool = [NSNumber numberWithBool:isLogedIn];
+    [[Settings sharedDefaults]setValue:numberWithBool forKey:@"isLogedIn"];
+    [[Settings sharedDefaults]synchronize];
+}
+
++(BOOL)getIsLogedIn{
+    NSNumber* numberWithBool = [[Settings sharedDefaults] valueForKey:@"isLogedIn"];
+    return numberWithBool.boolValue;
+}
+
 +(void)clearSettings{
     [Settings setLastLoginServerVersion:nil];
     [Settings setCurrentAccount:nil];
@@ -128,6 +139,8 @@
     [Settings setPassword:nil];
     [Settings setAuthToken:nil];
     [Settings setDomainScheme:nil];
+    [Settings saveLastUsedFolder:nil];
+    [Settings setIsLogedIn:NO];
 
     NSString * lastLoginServerVersion = [Settings version];
     NSString * currentAccount = [Settings currentAccount];

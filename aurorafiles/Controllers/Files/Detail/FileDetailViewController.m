@@ -19,8 +19,9 @@
 #import "UIApplication+openURL.h"
 
 
-@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate,UITextFieldDelegate>{
     MBProgressHUD *hud;
+    UIAlertAction * defaultAction;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -134,10 +135,9 @@
                                                              UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.object;
-                                                                 
-                                                                 
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
-                                                                 textField.text = [file.name stringByDeletingPathExtension];
+                                                                 textField.text = file.name;
+                                                                 textField.delegate = self;
                                                                  self.folderName = textField;
                                                              }];
                                                              void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
@@ -152,7 +152,8 @@
                                                                      }
                                                                  }];
                                                              };
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
+                                                             
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -210,6 +211,25 @@
 {
     [self.webView reload];
 }
+#pragma mark - TextField Delegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
+    [defaultAction setEnabled:isActionEnabled] ;
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
+}
 
 #pragma mark - Documents Interaction Delegate
 
@@ -254,6 +274,7 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     self.scrollView.alpha = 1.0f;
     if (error){
+        self.imageView.contentMode = UIViewContentModeCenter;
         self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
         [[ErrorProvider instance] generatePopWithError:error controller:nil];
     }

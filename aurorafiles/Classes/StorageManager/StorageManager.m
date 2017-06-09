@@ -72,18 +72,19 @@
     NSString * type = file.type;
     NSString * parentPath = file.parentPath ? file.parentPath : @"";
     bool isLink = file.isLink.boolValue;
-    NSString *fileNewName;
-    NSString *ex = [oldName pathExtension];
-    NSString *newNameExtension = [newName pathExtension];
-    if ([newNameExtension length] == 0)
-    {
-        NSString *tmpName = [newName stringByAppendingPathExtension:ex];
-        fileNewName = tmpName;
-    }
-    else
-    {
-        fileNewName = newName;
-    }
+    
+    NSString *fileNewName = newName;
+//    NSString *ex = [oldName pathExtension];
+//    NSString *newNameExtension = [newName pathExtension];
+//    if ([newNameExtension length] == 0)
+//    {
+//        NSString *tmpName = [newName stringByAppendingPathExtension:ex];
+//        fileNewName = tmpName;
+//    }
+//    else
+//    {
+//        fileNewName = newName;
+//    }
 
     if (!file)
     {
@@ -141,11 +142,13 @@
         }
 
         if (result) {
-            [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+//            [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+                NSManagedObjectContext *context = self.DBProvider.defaultMOC;
                 folder.name = newName;
                 NSMutableDictionary * itemRefWithPrKey = result.mutableCopy;
                 NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",result[@"Type"],result[@"FullPath"]];
                 [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
+                
                 Folder *object = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:folder.isP8 ? [Folder P8RenameMapping] : [Folder renameMapping] context:context];
 
                 NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
@@ -159,16 +162,15 @@
                 if ([context objectWithID:folderID]) {
                     [self.DBProvider deleteObject:folder fromContext:context];
                 }
-                
                 NSManagedObjectContext *folderContext = folder.managedObjectContext;
                 DDLogDebug(@"%@",folderContext);
-                
+                [context save:nil];
                 dispatch_async(dispatch_get_main_queue(), ^() {
                     if (handler) {
                         handler(object,nil);
                     }
                 });
-            }];
+//            }];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^(){
                 if (handler) {

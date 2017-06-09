@@ -49,15 +49,19 @@
 - (void)loginEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler{
         if([Settings domain] && [Settings domain].length > 0){
             [self authroizeEmail:email withPassword:password completion:^(BOOL authorized, NSError * error) {
-                if (authorized)
-                {
-                    handler(authorized,nil);
-                }
-                else
-                {
-                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
+                if (error){
                     handler(NO,error);
+                    return;
                 }
+//                if (authorized)
+//                {
+                handler(authorized,nil);
+//                }
+//                else
+//                {
+//                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
+//                    handler(NO,error);
+//                }
             }];
             
         }else{

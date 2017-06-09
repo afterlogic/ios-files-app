@@ -259,7 +259,6 @@
     }else{
         viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
     }
-    
     return viewLink;
 }
 
