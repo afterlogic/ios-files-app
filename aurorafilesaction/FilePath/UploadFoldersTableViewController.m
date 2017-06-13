@@ -901,6 +901,30 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 #pragma mark - TextField Delegate
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     int minimalStringLength = minimalStringLengthFiles;

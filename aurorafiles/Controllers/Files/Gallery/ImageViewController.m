@@ -355,6 +355,31 @@
 }
 
 #pragma mark - TextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
     if(textField.text.length < currentTextFieldText.length){
@@ -396,7 +421,7 @@
                 [[SDWebImageDownloader sharedDownloader] setValue:nil forHTTPHeaderField:@"Authorization"];
             }
         }
-        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.mode = MBProgressHUDModeDeterminate;
         [hud setBackgroundColor:[UIColor clearColor]];
         
         hud.hidden = NO;
@@ -418,7 +443,7 @@
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
             NSURL *viewURL = [NSURL URLWithString:[file viewLink]];
             [manager downloadImageWithURL:viewURL options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                float fractionCompleted = (float)receivedSize/(float)expectedSize;
+                float fractionCompleted = (float)receivedSize/(float)file.size.floatValue;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     hud.progress = fractionCompleted;
                 });
@@ -504,7 +529,6 @@
 #pragma mark - Public method
 
 - (void)resetImageSize {
-    //重置图片的大小
     [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
 }
 
