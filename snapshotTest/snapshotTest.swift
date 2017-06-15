@@ -13,6 +13,7 @@ class snapshotTest: XCTestCase {
     
     let p7Host:String        = "p7.afterlogic.com"
     let p8DevHost:String     = "cloudtest.afterlogic.com"
+    let p8ReleaseHost:String = "aurora-files.afterlogic.com"
     
     let defaultLogin:String  = "a.kovalev@afterlogic.com"
     let p7Password:String = "starwars1992"
@@ -67,7 +68,7 @@ class snapshotTest: XCTestCase {
         passwordSecureTextField.tap()
         passwordSecureTextField.typeText(snapshotPass)
         
-        let scrollViewsQuery = app.scrollViews
+//        let scrollViewsQuery = app.scrollViews
 //        scrollViewsQuery.otherElements.containing(.textField, identifier:"Host").element.tap()
         
         
