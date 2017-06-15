@@ -22,6 +22,8 @@
 #import "IDataBaseProtocol.h"
 
 #import "SessionProvider.h"
+//#import <CocoaLumberjack/CocoaLumberjack.h>
+//#define LOG_LEVEL_DEF ddLogLevel
 
 @interface AppDelegate (){
 
@@ -35,9 +37,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [Fabric with:@[[Crashlytics class]]];
-    [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
-    [[AFNetworkActivityLogger sharedLogger] startLogging];
-    [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
+    [CrashlyticsKit setDebugMode:YES];
+    
+    [self configureLogger];
+    
+    
+
 
     self.dbProvider = [DataBaseProvider sharedProvider];
     
@@ -74,4 +79,32 @@
     [self.dbProvider endWork];
     
 }
+
+- (void)configureLogger{
+#ifdef DEBUG
+    static const AFHTTPRequestLoggerLevel networlLogLevel = AFLoggerLevelDebug;
+#else
+    static const AFHTTPRequestLoggerLevel networlLogLevel = AFLoggerLevelWarn;
+#endif
+    
+    [self configureMainLogger:ddLogLevel];
+    [self configureNetworkLogger:networlLogLevel];
+    [self configureRemoteLogging];
+    
+}
+
+- (void)configureMainLogger:(DDLogLevel)logLevel{
+    [DDLog addLogger:[DDTTYLogger sharedInstance] withLevel:logLevel];
+    [DDLog addLogger:[DDASLLogger sharedInstance] withLevel:logLevel];
+}
+
+- (void)configureNetworkLogger:(AFHTTPRequestLoggerLevel)logLevel{
+    [[AFNetworkActivityLogger sharedLogger] startLogging];
+    [[AFNetworkActivityLogger sharedLogger] setLevel:logLevel];
+}
+
+- (void)configureRemoteLogging{
+    [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
+}
+
 @end

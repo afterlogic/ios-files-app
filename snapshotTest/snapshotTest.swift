@@ -10,6 +10,20 @@ import XCTest
 //import SnapshotHelper
 
 class snapshotTest: XCTestCase {
+    
+    let p7Host:String        = "p7.afterlogic.com"
+    let p8DevHost:String     = "cloudtest.afterlogic.com"
+    let p8ReleaseHost:String = "aurora-files.afterlogic.com"
+    
+    let defaultLogin:String  = "a.kovalev@afterlogic.com"
+    let p7Password:String = "starwars1992"
+    let p8Password:String = "qwezxc"
+    
+    
+    let snapshotHost: String = "aurora.afterlogic.com"
+    let snapshotLog: String = "aurora@afterlogic.com"
+    let snapshotPass: String = "qwezxc"
+    
         
     override func setUp() {
         super.setUp()
@@ -46,64 +60,30 @@ class snapshotTest: XCTestCase {
         emailTextField.tap()
         deleteKey.press(forDuration: 5);
         hostTextField.tap()
-        hostTextField.typeText("aurora")
-        
-        let moreKey = app.keys["more"]
-        moreKey.tap()
-        moreKey.tap()
-        hostTextField.typeText(".")
-        
-        let moreKey2 = app.keys["more"]
-        moreKey2.tap()
-        moreKey2.tap()
-        hostTextField.typeText("afterlogic")
-        moreKey.tap()
-        hostTextField.typeText(".")
-        moreKey2.tap()
-        hostTextField.typeText("com")
+        hostTextField.typeText(snapshotHost)
         emailTextField.tap()
-        emailTextField.typeText("aurora@afterlogic.com")
+        emailTextField.typeText(snapshotLog)
         
         let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
         passwordSecureTextField.tap()
-        passwordSecureTextField.typeText("qwezxc")
+        passwordSecureTextField.typeText(snapshotPass)
         
-        let scrollViewsQuery = app.scrollViews
-        scrollViewsQuery.otherElements.containing(.textField, identifier:"Host").element.tap()
+//        let scrollViewsQuery = app.scrollViews
+//        scrollViewsQuery.otherElements.containing(.textField, identifier:"Host").element.tap()
         
         
         snapshot("01LoginScreen")
         
         hostTextField.tap()
-        
-        //        let deleteKey = app.keys["delete"]
         deleteKey.press(forDuration: 5);
-        hostTextField.typeText("p7.afterlogic.com")
-        
-//        //        let moreKey = app.keys["more"]
-//        moreKey.tap()
-//        moreKey.tap()
-//        hostTextField.typeText("7.")
-//        
-//        //        let moreKey2 = app.keys["more"]
-//        moreKey2.tap()
-//        moreKey2.tap()
-//        hostTextField.typeText("afterlogic")
-//        moreKey.tap()
-//        hostTextField.typeText(".")
-//        moreKey2.tap()
-//        hostTextField.typeText("com")
-        
-        //        let emailTextField = elementsQuery.textFields["Email"]
+        hostTextField.typeText(p7Host)
         emailTextField.tap()
         deleteKey.press(forDuration: 5);
-        emailTextField.typeText("a.kovalev@afterlogic.com")
-        
-        //        let passwordSecureTextField = elementsQuery.secureTextFields["Password"]
+        emailTextField.typeText(defaultLogin)
         passwordSecureTextField.tap()
         deleteKey.press(forDuration: 0.6);
         deleteKey.press(forDuration: 0.6);
-        passwordSecureTextField.typeText("starwars1992")
+        passwordSecureTextField.typeText(p7Password)
         elementsQuery.buttons["Sign In"].tap()
         
         

@@ -83,15 +83,15 @@
         if (![tmpContext save:&error])
         {
             //handle error
-            NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+            DDLogError(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
         }
 
         [self.defaultMOC performBlock:^{
             NSError *error = [NSError new];
             if ([self.defaultMOC save:&error]) {
-                NSLog(@"context saved -> ✅");
+                DDLogDebug(@"context saved -> ✅");
             }else{
-                NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+                DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
             }
         }];
 
@@ -100,17 +100,6 @@
 
 - (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block {
 
-//    [self.defaultMOC performBlock:^{
-//        if (block) {
-//            block(self.defaultMOC);
-//        }
-//        NSError *error = [NSError new];
-//        if ([self.defaultMOC save:&error]) {
-//            NSLog(@"context saved -> ✅");
-//        }else{
-//            NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
-//        }
-//    }];
     NSBlockOperation *saveOperation = [NSBlockOperation blockOperationWithBlock:^{
         NSManagedObjectContext *tmpContext = self.operationsMOC;
         [tmpContext performBlock:^{
@@ -122,14 +111,14 @@
             if (![tmpContext save:&error])
             {
                 //handle error
-                NSLog(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+                DDLogError(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
             }else{
                 [self.defaultMOC performBlock:^{
                     NSError *error = [NSError new];
                     if ([self.defaultMOC save:&error]) {
-                        NSLog(@"context saved -> ✅");
+                        DDLogDebug(@"context saved -> ✅");
                     }else{
-                        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+                        DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
                     }
                 }];
             }
@@ -152,9 +141,9 @@
     NSError *error = [NSError new];
     
     if ([context save:&error]) {
-        NSLog(@"context saved -> ✅");
+        DDLogDebug(@"context saved -> ✅");
     }else{
-        NSLog(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+        DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
     }
 
 }
@@ -162,9 +151,9 @@
 - (void)saveToPersistentStore {
     NSError *error = [NSError new];
     if ([self.defaultMOC save:&error]) {
-        NSLog(@"context saved before App close");
+        DDLogDebug(@"context saved before App close");
     }else{
-        NSLog(@"context wasn't save. Error is -> %@",error.localizedDescription);
+        DDLogError(@"context wasn't save. Error is -> %@",error.localizedDescription);
     }
 }
 
@@ -210,7 +199,7 @@
         error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
         // Replace this with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        DDLogError(@"Unresolved error %@, %@", error, [error userInfo]);
     }
 
     return _persistentStoreCoordinator;

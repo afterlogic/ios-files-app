@@ -16,10 +16,12 @@
 #import "ApiP8.h"
 #import "StorageManager.h"
 #import "MBProgressHUD.h"
+#import "UIApplication+openURL.h"
 
 
-@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate>{
+@interface FileDetailViewController () <UIWebViewDelegate,UIScrollViewDelegate, UIDocumentInteractionControllerDelegate,UITextFieldDelegate>{
     MBProgressHUD *hud;
+    UIAlertAction * defaultAction;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -64,8 +66,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.webView.alpha = 0;
     
+    self.webView.alpha = 0;
     hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeDeterminate;
     
@@ -76,23 +78,30 @@
     self.scrollView.alpha = 0;
 
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    if (self.object.isLink.boolValue)
-    {
-        self.viewLink = self.object.linkUrl;
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.object.linkUrl]
-                                           options:@{}
-                                 completionHandler:nil];
-        return;
+//    if (self.object.isLink.boolValue)
+//    {
+//        self.viewLink = self.object.linkUrl;
+//        [[UIApplication sharedApplication] openLink:[NSURL URLWithString:self.object.linkUrl]];
+//        return;
+//        
+//    }
+    
+    NSURL *url = [NSURL URLWithString:self.viewLink];
+    if (![self.object isZipArchive]){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
+        if (self.isP8){
+            [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+        }
+        self.webView.delegate = self;
+        [self.webView loadRequest:request];
+    }else{
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        self.scrollView.alpha = 1.0f;
+        self.imageView.contentMode = UIViewContentModeCenter;
+        self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
         
     }
     
-    NSURL *url = [NSURL URLWithString:self.viewLink];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:50.0f];
-    if (self.isP8){
-        [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
-    }
-    self.webView.delegate = self;
-    [self.webView loadRequest:request];
     [hud hideAnimated:YES];
 
     self.title = self.object.name;
@@ -126,21 +135,25 @@
                                                              UIAlertController * createFolder = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.object;
-                                                                 
-                                                                 
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
-                                                                 textField.text = [file.name stringByDeletingPathExtension];
+                                                                 textField.text = file.name;
+                                                                 textField.delegate = self;
                                                                  self.folderName = textField;
                                                              }];
-                                                             
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 [[StorageManager sharedManager] renameToFile:self.object newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+                                                                 [[StorageManager sharedManager] renameOperation:self.object withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self customCancelAction:nil retryAction:actionBlock];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                          self.object = updatedFile;
                                                                      }
                                                                  }];
-                                                             }];
+                                                             };
+                                                             
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -157,24 +170,20 @@
 - (UIAlertAction*)deleteFolderAction
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
-        Folder * object = self.object;
-        BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        object.wasDeleted = @YES;
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [self.object.managedObjectContext save:nil];
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-                [self.object.managedObjectContext save:nil];
-                [self.navigationController popViewControllerAnimated:YES];
-            }];
-        }
+      Folder * object = self.object;
+      BOOL isCorporate = [object.type isEqualToString:@"corporate"];
+      object.wasDeleted = @YES;
+      [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+          if(error){
+              return;
+          }
+          if (succsess) {
+              [self.object.managedObjectContext save:nil];
+              [self.navigationController popViewControllerAnimated:YES];
+          }
+
+      }];
     }];
-    
     return deleteFolder;
 }
 
@@ -201,6 +210,50 @@
 - (void)orientationChanged:(NSNotification*)notification
 {
     [self.webView reload];
+}
+#pragma mark - TextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
+    [defaultAction setEnabled:isActionEnabled] ;
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
 }
 
 #pragma mark - Documents Interaction Delegate
@@ -246,7 +299,9 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     self.scrollView.alpha = 1.0f;
     if (error){
+        self.imageView.contentMode = UIViewContentModeCenter;
         self.imageView.image =  [UIImage assetImageForContentType:[self.object contentType]];
+        [[ErrorProvider instance] generatePopWithError:error controller:nil];
     }
 
 }

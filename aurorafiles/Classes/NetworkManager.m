@@ -137,7 +137,7 @@ static int const kNUMBER_OF_RETRIES = 6;
     }
     [Settings setDomainScheme:scheme];
     NSString *domain = [NSString stringWithFormat:@"%@%@",[Settings domainScheme],resourceSpec];
-    NSLog(@"⚠️ current used domain is -> %@",domain);
+    DDLogDebug(@"⚠️ current used domain is -> %@",domain);
 }
 //
 
@@ -163,23 +163,23 @@ static int const kNUMBER_OF_RETRIES = 6;
     CheckConnectionOperation *checkAPIv8operation = [[CheckConnectionOperation alloc]initWithManager:[P8Manager new] Completion:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
         if (success) {
             handler(version,[Settings domain]);
-            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+            DDLogDebug(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
         }
         
         if (error || !success) {
             handler(nil,nil);
-            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+            DDLogDebug(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
         }
     }];
     
     CheckConnectionOperation *checkAPIv7operation = [[CheckConnectionOperation alloc]initWithManager:[P7Manager new] Completion:^(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager) {
         if (success) {
             handler(version,[Settings domain]);
-            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+            DDLogDebug(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
         }
         
         if (error || !success) {
-            NSLog(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
+            DDLogDebug(@"%@ %@ %@", [NSNumber numberWithBool:success],error,version);
             [self.checkHostOperations addOperation:checkAPIv8operation];
         }
     }];
@@ -204,11 +204,11 @@ static int const kNUMBER_OF_RETRIES = 6;
         NSURL *responseURL = [operation.response URL];
         NSString *responseScheme = [NSString stringWithFormat:@"%@://",[responseURL scheme]];
         [Settings setDomainScheme:responseScheme];
-        NSLog(@"%@",[Settings domainScheme]);
+        DDLogDebug(@"%@",[Settings domainScheme]);
         [self.checkHostOperations addOperation:checkAPIv7operation];
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         NSDictionary *headers = [operation.response allHeaderFields];
-        NSLog(@"%@ %@",headers,error);
+        DDLogDebug(@"%@ %@",headers,error);
         handler(nil,nil);
     }];
 }

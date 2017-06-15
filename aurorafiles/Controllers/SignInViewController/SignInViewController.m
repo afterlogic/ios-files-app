@@ -13,7 +13,6 @@
 #import "MBProgressHUD.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "NSString+Validators.h"
-#import "UIAlertView+Errors.h"
 #import "StorageManager.h"
 
 //#import "StorageProvider.h"
@@ -102,8 +101,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!alertViewIsShow) {
                 NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
-                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                [av show];
+                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    alertViewIsShow = NO;
+                }];
                 alertViewIsShow = YES;
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -116,8 +116,9 @@
             if(!alertViewIsShow){
                 
                 NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
-                UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                [av show];
+                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    alertViewIsShow = NO;
+                }];
                 alertViewIsShow = YES;
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -133,18 +134,16 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                 if (error){
-                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                    [av show];
+                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                        alertViewIsShow = NO;
+                        [self clear];
+                    }];
                     alertViewIsShow = YES;
                 }else{
                     [Settings setLogin:self.emailField.text];
                     [Settings setPassword:self.passwordField.text];
-
+                    [Settings setIsLogedIn:YES];
                     [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-    //                [self dismissViewControllerAnimated:YES completion:^(){
-    //                    [self.delegate userWasSignedIn];
-    //                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationSignIn" object:self];
-    //                }];
                 }
             });
         }];
@@ -152,8 +151,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
                     NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
-                    UIAlertView* av = [UIAlertView generatePopupWithError:error forVC:self];
-                    [av show];
+                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                        alertViewIsShow = NO;
+                    }];
                     [self clear];
                     alertViewIsShow = YES;
                 }
@@ -163,11 +163,11 @@
     }];
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == [alertView cancelButtonIndex]) {
-        alertViewIsShow = NO;
-    }
-}
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == [alertView cancelButtonIndex]) {
+//        alertViewIsShow = NO;
+//    }
+//}
 
 -(void)offlineAuth{
 //    [self dismissViewControllerAnimated:YES completion:^(){

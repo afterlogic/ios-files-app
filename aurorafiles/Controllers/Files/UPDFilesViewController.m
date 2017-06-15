@@ -10,7 +10,6 @@
 #import "FilesTableViewCell.h"
 #import "FileDetailViewController.h"
 #import "SessionProvider.h"
-#import "FileGalleryCollectionViewController.h"
 #import "DownloadsTableViewController.h"
 
 #import "GalleryWrapperViewController.h"
@@ -31,15 +30,20 @@
 #import <MagicalRecord/MagicalRecord.h>
 
 #import <AFNetworking/AFNetworking.h>
+#import "UIApplication+openURL.h"
+#import "UploadDownloadProvider.h"
 
 
-static const int shortcutCreationTexFieldTag = 100;
-static const int minimalStringLengthURL = 5;
-static const int minimalStringLengthFiles = 1;
+//static const int shortcutCreationTexFieldTag = 100;
+//static const int minimalStringLengthURL = 5;
+//static const int minimalStringLengthFiles = 1;
 
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
-        FilesTableViewCellDelegate,NSURLSessionDownloadDelegate, CRMediaPickerControllerDelegate,UITextFieldDelegate>
+        FilesTableViewCellDelegate,
+//        NSURLSessionDownloadDelegate,
+        CRMediaPickerControllerDelegate,UITextFieldDelegate,
+        SWTableViewCellDelegate,UploadDelegate,DownloadDelegate>
 {
     UILabel *noDataLabel;
     UIAlertController * alertController;
@@ -62,6 +66,7 @@ static const int minimalStringLengthFiles = 1;
 
 @property (strong, nonatomic) SessionProvider *sessionProvider;
 @property (strong, nonatomic) StorageManager *storageManager;
+@property (strong, nonatomic) UploadDownloadProvider *uploadDownloadManager;
 @end
 
 @implementation UPDFilesViewController
@@ -85,6 +90,12 @@ static const int minimalStringLengthFiles = 1;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+    self.uploadDownloadManager = [UploadDownloadProvider providerWithDefaultMOC:self.defaultMOC
+                                                                 storageManager:self.storageManager
+                                                       fetchedResultsController:self.fetchedResultsController];
+    self.uploadDownloadManager.uploadDelegate = self;
+    self.uploadDownloadManager.downloadDelegate = self;
 
     if (self.folder)
     {
@@ -125,7 +136,12 @@ static const int minimalStringLengthFiles = 1;
         return;
     }
 
-    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+    [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
+            return;
+        }
         self.isP8 = isP8;
         if(authorised && offline){
             [self userWasSigneInOffline];
@@ -154,7 +170,8 @@ static const int minimalStringLengthFiles = 1;
     self.sessionProvider = [SessionProvider sharedManager];
     self.storageManager = [StorageManager sharedManager];
     self.defaultMOC = [self.storageManager.DBProvider defaultMOC];
-    
+
+
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -238,10 +255,10 @@ static const int minimalStringLengthFiles = 1;
 - (void)fetchData{
     NSError * error = [NSError new];
     if([self.fetchedResultsController performFetch:&error]){
-        NSLog(@"✅ fetch success with items -> %@",self.fetchedResultsController.fetchedObjects);
+        DDLogDebug(@"✅ fetch success with items -> %@",self.fetchedResultsController.fetchedObjects);
         [self.tableView reloadData];
     }else{
-        NSLog(@"❌ fetch error desc -> %@",error.localizedDescription);
+        DDLogError(@"❌ fetch error desc -> %@",error.localizedDescription);
     }
 }
 
@@ -327,6 +344,9 @@ static const int minimalStringLengthFiles = 1;
     self.fetchedResultsController.fetchRequest.predicate = predicate;
     [self.fetchedResultsController performFetch:nil];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
+    if (newItems.count == 0){
+        noDataLabel.text = NSLocalizedString(@"Files not found..", @"files not found tableView label");
+    }
 
     NSMutableArray * indexPathsToInsert = [[NSMutableArray alloc] init];
 
@@ -338,9 +358,7 @@ static const int minimalStringLengthFiles = 1;
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-//    if (indexPathsToInsert.count > 0) {
-        [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
-//    }
+    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
 }
 
@@ -364,20 +382,14 @@ static const int minimalStringLengthFiles = 1;
         }
         else if([[object isLink] boolValue]){
             if([object.linkUrl rangeOfString:@"youtube"].location == NSNotFound){
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
-                                                   options:@{}
-                                         completionHandler:nil];
+                [[UIApplication sharedApplication] openLink:[NSURL URLWithString:object.linkUrl]];
             }else{
                 NSArray *arr = [object.linkUrl componentsSeparatedByString:@"//"];
                 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",youTubeSheme,[arr lastObject]]];
                 if ([[UIApplication sharedApplication]canOpenURL:url]) {
-                    [[UIApplication sharedApplication] openURL:url
-                                                       options:@{}
-                                             completionHandler:nil];
+                    [[UIApplication sharedApplication] openLink:url];
                 }else{
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:object.linkUrl]
-                                                       options:@{}
-                                             completionHandler:nil];
+                    [[UIApplication sharedApplication] openLink:[NSURL URLWithString:object.linkUrl]];
                 }
             }
         }
@@ -424,8 +436,10 @@ static const int minimalStringLengthFiles = 1;
     Folder * object = [objects objectAtIndex:indexPath.row];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
+    cell.filesDelegate = self;
     cell.delegate = self;
     [cell setupCellForFile:object];
+    cell.rightUtilityButtons = [self rightUtilityButtons];
     return cell;
 }
 
@@ -433,7 +447,7 @@ static const int minimalStringLengthFiles = 1;
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        [self removeFileFromCloud:indexPath];
+        [self removeFileByIndexPath:indexPath];
     }
 }
 
@@ -444,6 +458,13 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)signOut{
     [self.sessionProvider logout:^(BOOL succsess, NSError *error) {
+        if(error){
+            [self.fetchedResultsController performFetch:nil];
+            [[ErrorProvider instance]generatePopWithError:error controller:self customCancelAction:nil retryAction:^(UIAlertAction *retryAction) {
+                [self signOut];
+            }];
+            return;
+        }
         if (succsess) {
 //            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
 //            signIn.delegate = self;
@@ -463,12 +484,18 @@ static const int minimalStringLengthFiles = 1;
 - (void)updateFiles:(void (^)())completionHandler
 {
     if ([Settings domain]) {
-        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+        [self.storageManager updateFilesWithType:self.type forFolder:self.folder withCompletion:^(NSInteger *itemsCount, NSError *error){
+            if(error){
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                [self stopRefresh];
+                [self.fetchedResultsController performFetch:nil];
+                return;
+            }
             if (completionHandler)
             {
                 [self fetchData];
 //                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
-                if (itemsCount==0) {
+                if (itemsCount ==0) {
                     noDataLabel.text = NSLocalizedString(@"Folder is empty", @"files view empty title");
                 }
             }
@@ -520,47 +547,27 @@ static const int minimalStringLengthFiles = 1;
     [(FilesTableViewCell*)cell disclosureButton].hidden = NO;
     [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
 
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-    if (self.isP8){
-        [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
+    [self.uploadDownloadManager startDownloadTaskForFile:folder];
+}
+
+-(void)tableViewCell:(UITableViewCell *)cell fileReloadAction:(Folder *)file {
+    if (file.isDownloaded.boolValue)
+    {
+        return;
     }
-    NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    NSLog(@"%@",[NSURL URLWithString:[folder downloadLink]]);
-    NSURLSessionDownloadTask * downloadTask = [session downloadTaskWithURL:[NSURL URLWithString:[folder downloadLink]]];
-    NSNumber *downloadIdetifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-    folder.downloadIdentifier = downloadIdetifier;
-    NSError * error;
-    if ([folder.managedObjectContext save:&error]){
-        [downloadTask resume];
-    };
-    
+    [(FilesTableViewCell*)cell disclosureButton].enabled = YES;
+
+    [self.uploadDownloadManager startDownloadTaskForFile:file];
 }
 
 -(void)tableViewCellRemoveAction:(UITableViewCell *)cell{
     [self removeFileFromDevice:[self.tableView indexPathForCell:cell]];
 }
 
--(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite{
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-            NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-            fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO",[NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier]];
-            fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
-            fetchDownloadRequest.fetchLimit = 1;
-            NSError * error;
-            Folder * file = [[self.defaultMOC  executeFetchRequest:fetchDownloadRequest error:&error] firstObject];
-            if (file)
-            {
-                NSIndexPath * indxPath = [self.fetchedResultsController indexPathForObject:file];
-                if (indxPath)
-                {
-                    FilesTableViewCell * cell = [self.tableView cellForRowAtIndexPath:indxPath];
-                    
-                    [cell.downloadActivity startAnimating];
-                    cell.disclosureButton.hidden = YES;
-                }
-                
-            }
-        }];
+- (void)indexPathForDownloadingItem:(NSIndexPath *)indexPath {
+    FilesTableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [cell.downloadActivity startAnimating];
+    cell.disclosureButton.hidden = YES;
 }
 
 - (NSURL*)downloadURL
@@ -575,58 +582,9 @@ static const int minimalStringLengthFiles = 1;
     }
     if (error)
     {
-        NSLog(@"%@",error);
+        DDLogError(@"%@",error);
     }
     return [NSURL URLWithString:filePath];
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
-{
-    NSError * error;
-
-    NSFetchRequest * fetchDownloadRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-    NSNumber * taskIdentifier = [NSNumber numberWithUnsignedInteger:downloadTask.taskIdentifier];
-    fetchDownloadRequest.predicate = [NSPredicate predicateWithFormat:@"downloadIdentifier = %@ AND isDownloaded = NO", taskIdentifier];
-    fetchDownloadRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"downloadIdentifier" ascending:YES]];
-    fetchDownloadRequest.fetchLimit = 1;
-    NSArray * fetchedFiles = [[[[StorageManager sharedManager] DBProvider] defaultMOC] executeFetchRequest:fetchDownloadRequest error:&error];
-    Folder *file = [fetchedFiles lastObject];
-
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *destinationFilename = file.name;
-
-    NSURL *destinationURL = [[self downloadURL] URLByAppendingPathComponent:destinationFilename];
-    destinationURL = [NSURL fileURLWithPath:[destinationURL absoluteString]];
-    NSLog(@"%@",[self downloadURL]);
-    NSLog(@"%@",destinationURL);
-
-    if ([fileManager fileExistsAtPath:[destinationURL path]])
-    {
-        [fileManager removeItemAtURL:destinationURL error:nil];
-    }
-
-    BOOL success = [fileManager copyItemAtURL:location
-                                        toURL:destinationURL
-                                        error:&error];
-
-
-
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^(){
-
-        if (!success)
-        {
-            NSLog(@"failed to download %@", [error userInfo]);
-        }
-
-        file.downloadIdentifier = [NSNumber numberWithInt:-1];
-        file.isDownloaded = [NSNumber numberWithBool:success];
-        if(success)
-        {
-            file.downloadedName = destinationFilename;
-        }
-        NSError * error;
-        [file.managedObjectContext save:&error];
-    }];
 }
 
 - (void)tableViewCellMoreAction:(UITableViewCell *)cell
@@ -647,46 +605,7 @@ static const int minimalStringLengthFiles = 1;
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:nil];
     
-    NSLog(@"%s",__PRETTY_FUNCTION__);
-}
-
-#pragma mark - Help Methods
--(void)removeFileFromDevice:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSString * path = [[[object localURL] URLByAppendingPathComponent:object.name] absoluteString];
-    
-    NSFileManager * manager = [NSFileManager defaultManager];
-    NSError * error;
-    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
-    if (self.isP8){
-        [self.storageManager removeSavedFilesForItem:object];
-    }
-    object.isDownloaded = @NO;
-    
-    if (error)
-    {
-        NSLog(@"%@",[error userInfo]);
-    }
-    
-    [self.defaultMOC  save:nil];
-    
-}
-
--(void)removeFileFromCloud:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    object.wasDeleted = @YES;
-    if ([[Settings version] isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-            if (succsess) {
-                [self.defaultMOC  save:nil];
-            }
-        }];
-    }else{
-        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            NSLog(@"%@",handler);
-            [self.defaultMOC  save:nil];
-        }];
-    }
+    DDLogDebug(@"%s",__PRETTY_FUNCTION__);
 }
 
 
@@ -720,10 +639,10 @@ static const int minimalStringLengthFiles = 1;
         Folder *fold = anObject;
         switch (type) {
             case 1:
-                NSLog(@"insert fold name is -> %@",fold.name);
+                DDLogDebug(@"insert fold name is -> %@",fold.name);
                 break;
             case 2:
-                NSLog(@"deleted fold name is -> %@",fold.name);
+                DDLogDebug(@"deleted fold name is -> %@",fold.name);
                 break;
             case 3:
                 
@@ -739,10 +658,6 @@ static const int minimalStringLengthFiles = 1;
 }
 #pragma mark More Actions
 
-
-
-#pragma mark Edit Menu Actions
-
 - (IBAction)uploadAction:(id)sender {
     [self.pickerController show];
 }
@@ -752,6 +667,7 @@ static const int minimalStringLengthFiles = 1;
     alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"edit actions title text ")
                                                                     message:nil
                                                              preferredStyle:UIAlertControllerStyleActionSheet];
+    
     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
                                                             style:UIAlertActionStyleCancel
                                                           handler:^(UIAlertAction * action) {
@@ -822,108 +738,69 @@ static const int minimalStringLengthFiles = 1;
 
     }];
 
-    defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-        
+    void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
         _fetchedResultsController.delegate = nil;
         _fetchedResultsController = nil;
-
+        
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [hud setMode:MBProgressHUDModeIndeterminate];
         hud.label.text = NSLocalizedString(@"Checking URL...", @"hud cheking url text");
-//        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
-//        NSString *urlString = [[(UITextField *)alertController.textFields.lastObject text]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+        //        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        //        NSString *urlString = [[(UITextField *)alertController.textFields.lastObject text]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
         NSString *urlString = [(UITextField *)alertController.textFields.lastObject text].encodedURLString;
-        NSURL *url = [[NSURL alloc] initWithString:urlString];
-        NSString *fullUrl = urlString;
-        if (![url scheme]) {
-            fullUrl = [NSString stringWithFormat:@"http://%@",urlString];
-        }
-        
-        AFHTTPSessionManager *manager = [AFHTTPSessionManager new];
-        [manager setResponseSerializer:[AFHTTPResponseSerializer serializer]];
-        [manager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
-        
-        [manager GET:fullUrl
-          parameters:nil
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
-                 hud.label.text = NSLocalizedString(@"Creating shortuct...", @"hud creating shortcut text");
-                 NSLog(@"%@",responseObject);
-                 NSData *data = [NSData new];
-                 if ([responseObject isKindOfClass:[NSData class]]){
-                     data = responseObject;
-                 }
-                 
-                 NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                 NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
-                 NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : urlString;
-                 NSString *shortcutName = tmpShortcutName;
-                 if(![tmpShortcutName isEqualToString:urlString]){
-                     NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
-                     shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
-                 }
-                 
-                 NSURL *resourceUrl = task.originalRequest.URL;
-                 NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
-                 NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];
-                 NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutFileName];
-                 NSError * error = [NSError new];
-                 [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-                 NSURL *resultPath = [NSURL fileURLWithPath:filePath];
-                 NSString *MIMEType = [self mimeTypeForFileAtPath:resultPath.absoluteString];
-                 NSData * fileData = [[NSData alloc] initWithContentsOfURL:resultPath];
-
-                 [hud setMode:MBProgressHUDModeDeterminate];
-                 hud.label.text = [NSString stringWithFormat:@"%@ %@", shortcutFileName,NSLocalizedString(@"uploading", @"hud uploading text")];
-                 if ([[Settings version]isEqualToString:@"P8"]) {
-                     [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:shortcutFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
-                         hud.progress = progress;
-                     } completion:^(BOOL result) {
-                         if (result) {
-                             [hud setMode:MBProgressHUDModeIndeterminate];
-                             hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
-                             [self updateFiles:^(){
-                                 [hud hideAnimated:YES];
-                                 [self reloadTableData];
-                                 [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
-                             }];
-                         }else{
-                             [hud hideAnimated:YES];
-                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
-                         }
-
-                     }];
-                 }else{
-                     NSString * path = self.isCorporate ? @"corporate" : @"personal";
-                     if (self.folder.fullpath)
-                     {
-                         path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-                     }
-                     [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:shortcutFileName uploadProgressBlock:^(float progress) {
-                         hud.progress = progress;
-                     } completion:^(NSDictionary * response){
-                         NSLog(@"%@",response);
-                         [hud setMode:MBProgressHUDModeIndeterminate];
-                         hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
-                         [self updateFiles:^(){
-                             [hud hideAnimated:YES];
-                             [self removeShortcutFromDeviceHDD:resultPath.absoluteString];
-                         }];
-                     }];
-                 }
-        } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {NSLog(@"%@",error);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self updateFiles:^{
-                            hud.mode = MBProgressHUDModeCustomView;
-                            hud.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-                            hud.detailsLabel.text = @"";
-                            hud.label.text = NSLocalizedString(@"Something goes wrong. Please, try again later.", @"hud error text");
-                            [hud hideAnimated:YES afterDelay:0.7f];
-                        }];
-                    });
+        [self.uploadDownloadManager prepareForShortcutUpload:urlString success:^(NSDictionary *shortcutData) {
+            NSString * realFileName = shortcutData[kFileName];
+            NSString * MIMEType = shortcutData[kMIMEType];
+            NSData * fileData = shortcutData[kFileData];
+            NSString *resultPath = shortcutData[kResultPath];
+            
+            [hud setMode:MBProgressHUDModeDeterminate];
+            hud.label.text = [NSString stringWithFormat:@"%@ %@", realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
+            [self.uploadDownloadManager uploadFile:fileData
+                                          mimeType:MIMEType
+                                      toFolderPath:self.folder.fullpath
+                                          withName:realFileName
+                                       isCorporate:self.isCorporate
+                               uploadProgressBlock:^(float progress) {
+                                   hud.progress = progress;
+                               }
+                                        completion:^(BOOL result, NSError *error) {
+                                            if (error){
+                                                [hud hideAnimated:YES];
+                                                [[ErrorProvider instance]generatePopWithError:error controller:self
+                                                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                               [self.fetchedResultsController performFetch:nil];
+                                                                           }
+                                                                                  retryAction:actionBlock];
+                                                return;
+                                            }
+                                            if (result) {
+                                                [hud setMode:MBProgressHUDModeIndeterminate];
+                                                hud.label.text = NSLocalizedString(@"Updating files...", @"hud updating files text");
+                                                [self updateFiles:^(){
+                                                    [hud hideAnimated:YES];
+                                                    [self reloadTableData];
+                                                    [self removeShortcutFromDeviceHDD:resultPath];
+                                                }];
+                                            }else{
+                                                [hud hideAnimated:YES];
+                                                [self removeShortcutFromDeviceHDD:resultPath];
+                                            }
+                                        }];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hideAnimated:YES];
+                [[ErrorProvider instance]generatePopWithError:error controller:self
+                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                               [self.fetchedResultsController performFetch:nil];
+                                           }
+                                                  retryAction:actionBlock];
+            });
         }];
 
-    }];
+    };
+    defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:actionBlock];
 
     UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
                                                             style:UIAlertActionStyleCancel
@@ -936,48 +813,6 @@ static const int minimalStringLengthFiles = 1;
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (NSString *)scanString:(NSString *)string
-                startTag:(NSString *)startTag
-                  endTag:(NSString *)endTag
-{
-    
-    NSString* scanString = @"";
-    
-    if (string.length > 0) {
-        
-        NSScanner* scanner = [[NSScanner alloc] initWithString:string];
-        
-        @try {
-            [scanner scanUpToString:startTag intoString:nil];
-            scanner.scanLocation += [startTag length];
-            [scanner scanUpToString:endTag intoString:&scanString];
-        }
-        @catch (NSException *exception) {
-            return nil;
-        }
-        @finally {
-            return scanString;
-        }
-        
-    }
-    
-    return scanString;
-    
-}
-
-- (NSString*)mimeTypeForFileAtPath: (NSString *) path {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        return nil;
-    }
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
-    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
-    if (!mimeType) {
-        return @"application/octet-stream";
-    }
-    return ( __bridge NSString *)mimeType;
-}
-
 - (BOOL)removeShortcutFromDeviceHDD:(NSString *)path{
     if (![[NSFileManager defaultManager]fileExistsAtPath:path]) {
         return NO;
@@ -986,50 +821,46 @@ static const int minimalStringLengthFiles = 1;
     }
 }
 
-- (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error{
-    NSLog(@"current asset - > %@ ",asset.defaultRepresentation.url);
-    ALAssetRepresentation *rep = [asset defaultRepresentation];
-    Byte *buffer = (Byte*)malloc((NSUInteger)rep.size);
-    NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:(NSUInteger)rep.size error:nil];
-    NSData *fileData = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-    NSString *realFileName = asset.defaultRepresentation.filename;
-    NSLog(@"current fileData - > %@ ",fileData);
-    NSString* MIMEType = (__bridge_transfer NSString*)UTTypeCopyPreferredTagWithClass
-    ((__bridge CFStringRef)[rep UTI], kUTTagClassMIMEType);
+- (void)CRMediaPickerController:(CRMediaPickerController *)mediaPickerController didFinishPickingAsset:(ALAsset *)asset error:(NSError *)error {
 
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeDeterminate;
-        hud.label.text = [NSString stringWithFormat:@"%@ %@",realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
-    
-    if ([[Settings version]isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule] uploadFile:fileData mime:MIMEType toFolderPath:self.folder.fullpath withName:realFileName isCorporate:self.isCorporate uploadProgressBlock:^(float progress) {
-             hud.progress = progress;
-        } completion:^(BOOL result) {
-            if (result) {
-                [self updateFiles:^(){
+    NSDictionary * fileDataDictionary = [self.uploadDownloadManager prepareFileFromAsset:asset error:error];
+    NSString * realFileName = fileDataDictionary[kFileName];
+    NSString * MIMEType = fileDataDictionary[kMIMEType];
+    NSData * fileData = fileDataDictionary[kFileData];
+
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeDeterminate;
+    hud.label.text = [NSString stringWithFormat:@"%@ %@",realFileName, NSLocalizedString(@"uploading", @"hud uploading text")];
+
+    [self.uploadDownloadManager uploadFile:fileData
+                                   mimeType:MIMEType
+                               toFolderPath:self.folder.fullpath
+                                   withName:realFileName
+                                isCorporate:self.isCorporate
+                        uploadProgressBlock:^(float progress) {
+                            hud.progress = progress;
+                        } completion:^(BOOL result, NSError *error) {
+                            if(error){
+                                [hud hideAnimated:YES];
+                                [[ErrorProvider instance]generatePopWithError:error
+                                                                   controller:self
+                                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                                               [self.fetchedResultsController performFetch:nil];
+                                                           }
+                                                                  retryAction:^(UIAlertAction *retryAction) {
+                                    [self uploadAction:nil];
+                                }];
+                                return;
+                            }
+                if (result) {
+                    [self updateFiles:^(){
+                        [hud hideAnimated:YES];
+                        [self reloadTableData];
+                    }];
+                }else{
                     [hud hideAnimated:YES];
-                    [self reloadTableData];
-                }];
-            }else{
-                [hud hideAnimated:YES];
-            }
-
-        }];
-    }else{
-        NSString * path = self.isCorporate ? @"corporate" : @"personal";
-        if (self.folder.fullpath)
-        {
-            path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-        }
-        [[ApiP7 sharedInstance] putFile:fileData toFolderPath:path withName:realFileName uploadProgressBlock:^(float progress) {
-            hud.progress = progress;
-        } completion:^(NSDictionary * response){
-            NSLog(@"%@",response);
-            [self updateFiles:^(){
-                [hud hideAnimated:YES];
+                }
             }];
-        }];
-    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
@@ -1052,7 +883,7 @@ static const int minimalStringLengthFiles = 1;
 //    }
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 //    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-//        NSLog(@"%@",response);
+//        DDLogDebug(@"%@",response);
 //        [self updateFiles:^(){
 //            [MBProgressHUD hideHUDForView:self.view animated:YES];
 //        }];
@@ -1061,30 +892,33 @@ static const int minimalStringLengthFiles = 1;
 
 - (UIAlertAction*)deleteFolderAction
 {
-    UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"delete action title text")
-                                                            style:UIAlertActionStyleDestructive
-                                                          handler:^(UIAlertAction * action){
+    
+    void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
-//        object.wasDeleted = @YES;
-        [self.storageManager deleteItem:object];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [self updateFiles:^(){
-                        [self.navigationController popViewControllerAnimated:YES];
-//                        [self.tableView reloadData];
-                    }];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+            if(error){
+                //                                                                      [hud hideAnimated:YES];
+//                [[ErrorProvider instance]generatePopWithError:error
+//                                                   controller:self
+//                                           customCancelAction:^(UIAlertAction *cancelAction) {
+                                               [self.fetchedResultsController performFetch:nil];
+//                                           }
+//                                                  retryAction:actionBlock];
+                return;
+            }
+            if (succsess) {
+                DDLogDebug(@"file named %@ successfuly removed", object.name);
                 [self updateFiles:^(){
                     [self.navigationController popViewControllerAnimated:YES];
-//                    [self.tableView reloadData];
                 }];
-            }];
-        }
-    }];
+            }else{
+                DDLogDebug(@"file named %@ hasn't been removed", object.name);
+            }
+        }];
+    };
+    UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"delete action title text")
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:actionBlock];
     
     return deleteFolder;
 }
@@ -1094,6 +928,7 @@ static const int minimalStringLengthFiles = 1;
     NSString * text = [self.folderToOperate isEqual:self.folder] ? NSLocalizedString(@"Rename Current Folder", @"rename folder action title text") : NSLocalizedString(@"Rename", @"rename file action title text");
     UIAlertAction* renameFolder = [UIAlertAction actionWithTitle:text style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
+                                                             
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
                                                                                                                                     message:nil
                                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
@@ -1104,9 +939,7 @@ static const int minimalStringLengthFiles = 1;
                                                                  [textField setDelegate:self];
                                                              }];
                                                              
-                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
-                                                                                                                      style:UIAlertActionStyleDefault
-                                                                                                                    handler:^(UIAlertAction * action) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  if (!_folderToOperate)
                                                                  {
                                                                      return ;
@@ -1116,28 +949,35 @@ static const int minimalStringLengthFiles = 1;
                                                                  
                                                                  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                                                                  
-                                                                 [self.storageManager  renameFolder:_folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
-                                                                     if (folder && !folder.isFault) {
-                                                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                                                         self.folderToOperate = folder;
-                                                                         self.folder = folder;
-                                                                         self.title = folder.name;
-//                                                                         NSError * error = nil;
-                                                                         [self fetchData];
-                                                                         });
+                                                                 [self.storageManager  renameOperation:_folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile, NSError *error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self fetchData];
+                                                                                                    }
+                                                                                                           retryAction:actionBlock];
+                                                                         return;
                                                                      }
-                                                                    [self updateFiles:^(){
-                                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                            [self.tableView reloadData];
-                                                                        });
-
-                                                                     }];
-                                                                    
+                                                                     if (updatedFile && !updatedFile.isFault) {
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             self.folderToOperate = updatedFile;
+                                                                             self.folder = updatedFile;
+                                                                             self.title = updatedFile.name;
+                                                                             [self fetchData];
+                                                                         });
+                                                                     }else{
+                                                                         
+                                                                     }
                                                                  }];
-                                                                 
-                                                                 
-                                                             }];
+                                                             };
+                                                             
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
+                                                                                                                      style:UIAlertActionStyleDefault
+                                                                                                                    handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
                                                                                                                      style:UIAlertActionStyleCancel
@@ -1155,7 +995,6 @@ static const int minimalStringLengthFiles = 1;
 
 - (UIAlertAction*)createFolderAction
 {
-    
     UIAlertAction* createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Folder", @"") style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -1165,20 +1004,31 @@ static const int minimalStringLengthFiles = 1;
                                                                  self.folderName = textField;
                                                                  [textField setDelegate:self];
                                                              }];
-                                                             
-                                                              defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 
-                                                                 [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 [self.storageManager createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success, NSError *error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self.fetchedResultsController performFetch:nil];
+                                                                                                    }
+                                                                                                           retryAction:actionBlock];
+                                                                         return;
+                                                                     }
                                                                      if (success) {
-                                                                         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                         
                                                                          [self updateFiles:^(){
                                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                                              [self.tableView reloadData];
                                                                          }];
                                                                      }
                                                                  }];
-                                                                 
-                                                            }];
+                                                             };
+                                                            
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -1193,11 +1043,210 @@ static const int minimalStringLengthFiles = 1;
 
 #pragma mark - TextField Delegate
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.tag != shortcutCreationTexFieldTag){
+        if(textField.text.length < text.length){
+            NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+            if (charRange.location != NSNotFound) {
+                return NO;
+            }
+        }
+    }
     int minimalStringLength = textField.tag == shortcutCreationTexFieldTag ? minimalStringLengthURL:minimalStringLengthFiles;
     [defaultAction setEnabled:text.length>=minimalStringLength];
+    
     return YES;
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
+}
+
+#pragma mark - SWTableViewCell Delegate
+
+- (NSArray *)rightUtilityButtons{
+    NSMutableArray *buttons = [NSMutableArray new];
+    [buttons sw_addUtilityButtonWithColor:[UIColor grayColor] title:NSLocalizedString(@"Rename", @"cell Rename title")];
+    [buttons sw_addUtilityButtonWithColor:[UIColor redColor] title:NSLocalizedString(@"Delete", @"cell Delete title")];
+    return buttons;
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index{
+    
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+    [self.fetchedResultsController performFetch:nil];
+    Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+    switch (index) {
+        case 0:{
+            DDLogDebug(@"Rename button pressed");
+            alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
+                                                                  message:nil
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
+                textField.text = folder.name;
+                self.folderName = textField;
+                [textField setDelegate:self];
+            }];
+            
+            void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+                if (!folder)
+                {
+                    return ;
+                }
+                _fetchedResultsController.delegate = nil;
+                _fetchedResultsController = nil;
+                
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [self.storageManager  renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder * updatedFile, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
+                    if(error){
+                        [[ErrorProvider instance]generatePopWithError:error
+                                                           controller:self
+                                                   customCancelAction:^(UIAlertAction *cancelAction) {
+                                                       [self.fetchedResultsController performFetch:nil];
+                                                   }
+                                                          retryAction:actionBlock];
+                        return;
+                    }
+                    if(updatedFile && !updatedFile.isFault){
+                        [self updateFiles:^(){
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                
+                                [self.tableView reloadData];
+                            });
+                        }];
+                    }
+                }];
+            };
+            defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:actionBlock];
+            
+            UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                                    style:UIAlertActionStyleCancel
+                                                                  handler:^(UIAlertAction * action){
+                                                                      
+                                                                  }];
+            [alertController addAction:defaultAction];
+            [defaultAction setEnabled:NO];
+            [alertController addAction:cancelAction];
+            [self presentViewController:alertController animated:YES completion:nil];
+
+        }
+            break;
+        case 1:{
+            DDLogDebug(@"Delete button pressed");
+            [self.storageManager deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+                if(error){
+                    [self.fetchedResultsController performFetch:nil];
+                    return;
+                }
+                if (succsess) {
+                    DDLogDebug(@"file named %@ successfuly removed", folder.name);
+                    [self updateFiles:^(){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                            [self.tableView reloadData];
+                        });
+                    }];
+                }else{
+                    DDLogDebug(@"file named %@ hasn't been removed", folder.name);
+                }
+            }];
+        }
+            break;
+        default:
+            DDLogDebug(@"default");
+            break;
+    }
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state{
+    
+}
+
+#pragma mark - Utility Methods
+
+
+
+-(void)removeFileFromDevice:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSString * path = [object localPath];
+    
+    NSFileManager * manager = [NSFileManager defaultManager];
+    NSError * error;
+    [manager removeItemAtURL:[NSURL fileURLWithPath:path] error:&error];
+    if (self.isP8){
+        [self.storageManager removeSavedFilesForItem:object];
+    }
+    object.isDownloaded = @NO;
+    
+    if (error)
+    {
+        DDLogError(@"%@",[error userInfo]);
+    }
+    
+    [self.defaultMOC  save:nil];
+}
+
+-(void)removeFileByIndexPath:(NSIndexPath *)indexPath{
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    object.wasDeleted = @YES;
+    [self removeItem:object];
+}
+
+- (void)removeItem:(Folder *)object{
+    [self.storageManager deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess, NSError *error) {
+        if(error){
+//            [[ErrorProvider instance]generatePopWithError:error
+//                                               controller:self
+//                                       customCancelAction:^(UIAlertAction *cancelAction) {
+                                           [self.fetchedResultsController performFetch:nil];
+//                                       }
+//                                              retryAction:^(UIAlertAction *retryAction) {
+//                                                  [self removeItem:object];
+//                                              }];
+            return;
+        }
+        if (succsess) {
+            DDLogDebug(@"file named %@ successfuly removed", object.name);
+            [self.defaultMOC  save:nil];
+        }else{
+            DDLogDebug(@"file named %@ hasn't been removed", object.name);
+        }
+    }];
+
 }
 
 #pragma mark - Navigation

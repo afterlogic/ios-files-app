@@ -127,7 +127,7 @@
 
 -(void)setItems:(NSArray *)items{
     _items = items;
-    NSLog(@"preview items is -> %@", _items);
+    DDLogDebug(@"preview items is -> %@", _items);
     if (_items.count > 0){
         self.currentItem = [_items objectAtIndex:0];
     }
@@ -172,13 +172,13 @@
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
-    //NSLog(@"did select item at index -> %li",(long)indexPath.row);
+    //DDLogDebug(@"did select item at index -> %li",(long)indexPath.row);
     //EXPreviewFileGalleryCollectionViewCell *cell = (EXPreviewFileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
     //cell.selectedView.hidden = YES;
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    //NSLog(@"did select item at index -> %li",(long)indexPath.row);
+    //DDLogDebug(@"did select item at index -> %li",(long)indexPath.row);
     //[self collectionView:collectionView didSelectItemAtIndexPath:lastSelectedItem];
     //EXPreviewFileGalleryCollectionViewCell *cell = (EXPreviewFileGalleryCollectionViewCell*)[self.collectionView cellForItemAtIndexPath:indexPath];
     //cell.selectedView.hidden = NO;

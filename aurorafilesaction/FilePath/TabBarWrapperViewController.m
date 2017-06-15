@@ -52,11 +52,11 @@
 //            }
 
 //        }else{
-            self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
-            self.currentFolderController.delegate = self;
-            self.selectedFolderPath = @"";
-            self.selectedRootPath = self.currentFolderController.type;
-            
+    self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
+    self.currentFolderController.delegate = self;
+    self.selectedFolderPath = @"";
+    self.selectedRootPath = self.currentFolderController.type;
+    
 //        }
 //    }];
 
@@ -86,6 +86,7 @@
     self.navRightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(donePressed)];
     self.editRightButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"edit"] style:UIBarButtonItemStylePlain target:self.currentFolderController action:@selector(editAction:)];
     self.backButton = [[UIBarButtonItem alloc]initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self.currentFolderController action:@selector(backAction:)];
+    
     self.navigationItem.rightBarButtonItems = @[self.navRightButton,self.editRightButton];
     
     [self.navigationItem.backBarButtonItem setTarget:self.currentFolderController];
@@ -119,7 +120,7 @@
     NSMutableArray *pathParts = [folderPath componentsSeparatedByString:@"/"].mutableCopy;
     [pathParts removeLastObject];
     NSString *parrentPath = [pathParts componentsJoinedByString:@"/"];
-    NSLog(@"%@",parrentPath);
+    DDLogDebug(@"current folder parrent path -> %@",parrentPath);
     NSDictionary *lastSavedPath = @{@"Type":self.selectedRootPath,
                                     @"Name":name,
                                     @"ParrentPath":parrentPath,
@@ -134,11 +135,30 @@
         self.currentFolderController.delegate = self;
         self.currentFolderController.doneButton = self.navRightButton;
         self.currentFolderController.backButton = self.backButton;
+        
+        self.editRightButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"edit"] style:UIBarButtonItemStylePlain target:self.currentFolderController action:@selector(editAction:)];
+        self.navigationItem.rightBarButtonItems = @[self.navRightButton,self.editRightButton];
         self.currentFolderController.editButton = self.editRightButton;
+        
         self.selectedRootPath = self.currentFolderController.type;
         self.selectedFolderPath = @"";
+        
 //        [self.navigationController setTitle:self.selectedRootPath];
     }
+}
+
+#pragma mark - Public Methods
+
+-(UIBarButtonItem *)getNavRightBar{
+    return self.navRightButton;
+}
+
+-(UIBarButtonItem *)getBackButton{
+    return self.backButton;
+}
+
+-(UIBarButtonItem *)getEditButton{
+    return self.editRightButton;
 }
 
 #pragma mark - Folder
@@ -176,7 +196,7 @@
 //                [self getFolderWithName:name fullPath:fullPath type:type];
 //            }
 //        }else{
-//            NSLog(@"same log %@",folders);
+//            DDLogDebug(@"same log %@",folders);
 //            [self generateViewsStack:folders];
 //        }
 //    }

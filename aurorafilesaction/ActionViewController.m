@@ -99,31 +99,39 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     BFLog(@"EXTENSION STARTED");
     self.uploadPathContainer.hidden = YES;
     [self setCurrentUploadFolder:@"" root:@""];
     
-    AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
-//    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString *scheme = [Settings domainScheme];
-    if (scheme) {
-        [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            [connectionHud hideHUD];
-        });
+
+    
+    if(![Settings getIsLogedIn]){
+        [self hideLogoutView:NO];
+        [self hideContainers:YES];
+        
     }else{
-        [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+        AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
+        NSString *scheme = [Settings domainScheme];
+        if (scheme) {
+            [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [connectionHud hideHUD];
             });
-            if(domain && domain.length > 0){
-                [Settings setDomain:domain];
-                [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
-            }else{
-                [self hideLogoutView:NO];
-                [self hideContainers:YES];
-            }
-        }];
+        }else{
+            [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    [connectionHud hideHUD];
+                });
+                if(domain && domain.length > 0){
+                    [Settings setDomain:domain];
+                    [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+                }else{
+                    [self hideLogoutView:NO];
+                    [self hideContainers:YES];
+                }
+            }];
+        }
     }
 }
 
@@ -166,7 +174,7 @@
 }
 
 - (void)getLastUsedFolder:(AuroraHUD *)folderHud{
-    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result) {
+    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result, NSError *error) {
         if (result) {
             dispatch_async(dispatch_get_main_queue(), ^(){
                 [folderHud hideHUD];
@@ -182,7 +190,6 @@
             [self showUploadFolders];
         }
     }];
-
 }
 
 -(void)hideContainers:(BOOL) hide{
@@ -272,7 +279,7 @@
 //                            if([image isKindOfClass:[NSData class]]){
 //                                
 ////                                UIImage *currentImage =  [UIImage imageWithData:image];
-////                                NSLog(@"image is -> %@",currentImage);
+////                                DDLogDebug(@"image is -> %@",currentImage);
 //                                
 //                                NSData *data = image;
 //                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -339,11 +346,9 @@
                                 NSDictionary *pageInfo = [fileURLItem objectForKey:NSExtensionJavaScriptPreprocessingResultsKey];
                                 NSURL *pageLink = [NSURL URLWithString:[pageInfo objectForKey:@"link"]];
                                 NSString *webPageTitle = [pageInfo objectForKey:@"title"];
-                                NSLog(@"%@",webPageTitle);
-                                
+//                                DDLogDebug(@"%@",webPageTitle);
                                 fileExtension = @"url";
                                 mediaData = [self createInternetShortcutFile:webPageTitle ext:fileExtension link:pageLink];
-                                
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
                                 file.extension = fileExtension;
@@ -363,7 +368,6 @@
                     if(fileURLItem) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             if ([fileURLItem isKindOfClass:[NSURL class]]) {
-                                
                                 fileExtension = @"url";
                                 NSMutableArray *urlParts = [[(NSURL *) fileURLItem absoluteString] componentsSeparatedByString:@"/"].mutableCopy;
                                 NSMutableArray *urlPartsTmp = urlParts.mutableCopy;
@@ -373,9 +377,7 @@
                                     }
                                 }
                                 NSString *tmpFileName = [urlParts lastObject];
-                                
                                 mediaData = [self createInternetShortcutFile:tmpFileName ext:fileExtension link:fileURLItem];
-                                
                                 UploadedFile *file = [UploadedFile new];
                                 file.path = mediaData;
                                 file.extension = fileExtension;
@@ -456,7 +458,7 @@
 - (IBAction)uploadAction:(id)sender
 {
     urlString = @"";
-    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
+//    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     requestsForUpload = [NSMutableArray new];
     
     for (UploadedFile *file in self.filesForUpload){
@@ -472,7 +474,7 @@
         }else{
             NSURL * url = [NSURL URLWithString:[Settings domain]];
             NSString * scheme = [url scheme];
-            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[defaults valueForKey:@"mail_domain"],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
+            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
             file.request = [self generateRequestWithUrl:urlString data:file.path savedLocal:file.savedLocal];
         }
         
@@ -493,11 +495,7 @@
             fileName = currentFile.name;
         });
     }
-//    if ([[Settings version]isEqualToString:@"P8"]) {
-//        [self uploadP8File:currentFile];
-//    }else{
-        [self uploadFile:currentFile];
-//    }
+    [self uploadFile:currentFile];
 }
 
 -(NSMutableURLRequest *)generateRequestWithUrl:(NSString *)linkString data:(NSURL *)data savedLocal:(BOOL) isLocal
@@ -514,8 +512,8 @@
 
     [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:data.absoluteString] :[[NSInputStream alloc]initWithURL:data]];
     
-    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
-    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
+//    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
+//    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
     
    
     return request;
@@ -526,7 +524,7 @@
     
     NSString *storageType = [NSString stringWithString:rootPath];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"%@",path] : @""];
-    NSString *Link = [NSString stringWithFormat:@"http://cloudtest.afterlogic.com/?/upload/files/%@%@/%@",storageType,pathTmp,name];
+    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",[Settings domainScheme],[Settings domain],storageType,pathTmp,name];
     NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSDictionary *headers = @{ @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]],
@@ -546,8 +544,6 @@
     uploadStart = YES;
     if (!hud) {
         hud = [AuroraHUD uploadHUD:self.view];
-//        hud.mode = MBProgressHUDModeDeterminate;
-//        [hud showAnimated:YES];
     }
 
     [self requestLog:file.request];
@@ -584,7 +580,7 @@
                     hud.hudView.detailsLabel.text = @"";
                     hud.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
                     [hud hideHUDWithDelay:0.7f];
-//                    return ;
+//                    strongSelf.uploadButton.enabled = YES;
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
                     [strongSelf uploadAction:self];
@@ -622,7 +618,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
         hud.hudView.progress = progress;
         NSString *uploadStatus = [NSString stringWithFormat:@"%@ %@",[NSString transformedValue:[NSNumber numberWithLongLong:totalBytesForAllFilesSend]],[NSString transformedValue:[NSNumber numberWithLongLong:uploadSize]]];
         hud.hudView.detailsLabel.text = uploadStatus;
-        NSLog(@"fileName is -> %@",fileName);
+        DDLogDebug(@"fileName is -> %@",fileName);
         hud.hudView.label.text = fileName;
     });
 

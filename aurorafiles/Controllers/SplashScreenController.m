@@ -54,7 +54,7 @@
         return;
     }
     
-    [[SessionProvider sharedManager]checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8) {
+    [[SessionProvider sharedManager]checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
         if (authorised) {
             [self showFilesScreen];
         }else{

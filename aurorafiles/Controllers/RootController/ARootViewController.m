@@ -12,6 +12,7 @@
 #import "DownloadsTableViewController.h"
 #import "UploadFoldersTableViewController.h"
 #import "SessionProvider.h"
+#import "Settings.h"
 
 @interface ARootViewController ()
 {
@@ -172,8 +173,14 @@
 }
 
 -(void)signOutAction{
-    [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
+    [Settings clearSettings];
+//    [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
 
+    UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    UIViewController *vc = [board instantiateViewControllerWithIdentifier:@"SignInViewController"];
+    [self presentViewController:vc animated:YES completion:^{
+        self.navigationController.viewControllers = @[];
+    }];
 }
 
 #pragma mark - Navigation
@@ -190,7 +197,7 @@
     if([segue.identifier isEqualToString:@"downloads_embed"]){
 //        DownloadsTableViewController *vc = [segue destinationViewController];
 //        vc.loadType = loadTypeContainer;
-//        NSLog(@"%@",vc);
+//        DDLogDebug(@"%@",vc);
     }
 }
 

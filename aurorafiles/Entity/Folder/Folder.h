@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <FastEasyMapping/FastEasyMapping.h>
+#import "NSString+URLEncode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,7 +38,7 @@ typedef enum ActionType: int {
 - (NSString*)urlScheme;
 - (NSString*)validContentType;
 - (NSURL *)localURL;
-- (NSURL *)localPath;
+- (NSString *)localPath;
 - (NSDictionary *)folderMOC;
 
 + (Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
@@ -47,6 +48,9 @@ typedef enum ActionType: int {
 
 + (NSString *)getExistedFile:(Folder *)folder;
 + (NSURL*)downloadsDirectoryURL;
++ (BOOL)renameLocalFile:(Folder *)file newName:(NSString *)name;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
