@@ -20,10 +20,14 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "ApiP8.h"
 #import "STZPullToRefresh.h"
+#import "AuroraHUD.h"
+#import "MBProgressHUD.h"
 
-static const int minimalStringLengthFiles = 1;
+//static const int minimalStringLengthFiles = 1;
 
-@interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,NSURLSessionDownloadDelegate>{
+@interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,
+UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,
+NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     
     UIAlertController * alertController;
     UIAlertAction * defaultAction;
@@ -44,9 +48,9 @@ static const int minimalStringLengthFiles = 1;
 @implementation UploadFoldersTableViewController
 
 - (void)loadView{
-//    NSLog(@"self -> %@",self);
+//    DDLogDebug(@"self -> %@",self);
     [super loadView];
-//    NSLog(@"self after super load -> %@",self);
+//    DDLogDebug(@"self after super load -> %@",self);
 }
 
 - (void)awakeFromNib{
@@ -109,7 +113,7 @@ static const int minimalStringLengthFiles = 1;
             vc.doneButton = self.doneButton;
             vc.editButton = self.editButton;
         };
-        NSLog(@"curentControllersStack %@",curentControllersStack);
+        DDLogDebug(@"curentControllersStack %@",curentControllersStack);
         for (UploadFoldersTableViewController* vc in controllersStack) {
                 [self.navigationController pushViewController:vc animated:NO];
         }
@@ -129,26 +133,34 @@ static const int minimalStringLengthFiles = 1;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (self.folder)
-    {
-        
-        self.title = self.folder.name;
-        UILabel * titleLabel = [[UILabel alloc] init];
-        titleLabel.text = self.folder.name;
-        
-        self.navigationItem.title = self.folder.name;
-        self.navigationItem.leftBarButtonItem = self.backButton;
-        self.navigationItem.rightBarButtonItems = @[self.doneButton, self.editButton];
-        
-        [self.delegate currentFolder:self.folder root:self.type];
+    
+    @try {
+        if (self.folder)
+        {
+            
+            self.title = self.folder.name;
+            UILabel * titleLabel = [[UILabel alloc] init];
+            titleLabel.text = self.folder.name;
+            
+            self.navigationItem.title = self.folder.name;
+            self.navigationItem.leftBarButtonItem = self.backButton;
+            self.navigationItem.rightBarButtonItems = @[self.doneButton, self.editButton];
+            
+            [self.delegate currentFolder:self.folder root:self.type];
+            
+        }
+        else
+        {
+            self.navigationItem.title = [self.type capitalizedString];
+            self.navigationItem.rightBarButtonItems = @[self.doneButton,self.editButton];
+            
+        }
+    } @catch (NSException *exception) {
+        DDLogDebug(@"UploadFoldersTableViewController exception in %s. Reason -  %@ ",__PRETTY_FUNCTION__,exception.reason);
+    } @finally {
         
     }
-    else
-    {
-        self.navigationItem.title = [self.type capitalizedString];
-        self.navigationItem.rightBarButtonItems = @[self.doneButton,self.editButton];
-        
-    }
+    
     NSError * error = nil;
     [self.fetchedResultsController performFetch:&error];
 
@@ -175,7 +187,7 @@ static const int minimalStringLengthFiles = 1;
 {
     [super viewDidAppear:animated];
     
-    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8,NSError* error){
         if(authorised && offline){
             [self userWasSigneInOffline];
             return;
@@ -299,10 +311,13 @@ static const int minimalStringLengthFiles = 1;
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
+    cell.filesDelegate = self;
     cell.delegate = self;
+    cell.rightUtilityButtons = [self rightUtilityButtons];
     [cell setupCellForFile:object];
     [cell.disclosureButton setEnabled:NO];
     [cell.disclosureButton setHidden:YES];
+    
     return cell;
 }
 
@@ -317,14 +332,68 @@ static const int minimalStringLengthFiles = 1;
 
 - (void)updateFiles:(void (^)())handler
 {
-    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount){
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount,NSError* error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
+            [self.lineRefreshController finishRefresh];
+            [self.refreshController endRefreshing];
+            return;
+        }
+        if (handler)
+        {
+            handler();
+            [self reloadTableData];
+        }
+    }];
+}
+
+- (void)updateFilesWithSubsequentTransitionFromFolder:(Folder *)folder handler:(void (^)())handler{
+    [[StorageManager sharedManager] updateFilesWithType:self.isCorporate ? @"corporate" : @"personal" forFolder:self.folder withCompletion:^(NSInteger *itemsCount,NSError* error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [self.fetchedResultsController performFetch:nil];
+            return;
+        }
         if (handler)
         {
             handler();
             [self reloadTableData];
             
+            [self.fetchedResultsController performFetch:nil];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", self.folderName.text];
+            NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
+            DDLogDebug(@"%@ fetched folders after Folder Create Operations -> ", filteredArray);
+            if (filteredArray.count > 0){
+                self.folderToNavigate = [filteredArray lastObject];
+                [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+            }else{
+                BOOL isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+                NSDictionary *itemRef = [self generateSimpleItemRefUsingParentFolder:folder];
+                self.folderToNavigate = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folder.fullpath ? folder.fullpath : @"" InContext:self.managedObjectContext];
+                [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
+            }
+            
+
         }
     }];
+}
+
+- (NSDictionary *)generateSimpleItemRefUsingParentFolder:(Folder *)folder{
+    return @{@"Name":self.folderName.text,
+             @"Id":self.folderName.text,
+             @"Path":folder.fullpath ? folder.fullpath : @"",
+             @"IsLink":@'0',
+             @"IsFolder":@'1',
+             @"FullPath":[NSString stringWithFormat:@"%@/%@",folder.fullpath,self.folderName.text],
+             @"Type":self.isCorporate ? @"corporate": @"personal"
+             };
 }
 
 - (void)reloadTableData
@@ -465,6 +534,121 @@ static const int minimalStringLengthFiles = 1;
     
     BFLog(@"%s",__PRETTY_FUNCTION__);
 }
+#pragma mark - SWTableViewCell Delegate
+
+- (NSArray *)rightUtilityButtons{
+    NSMutableArray *buttons = [NSMutableArray new];
+    [buttons sw_addUtilityButtonWithColor:[UIColor grayColor] title:NSLocalizedString(@"Rename", @"cell Rename title")];
+    [buttons sw_addUtilityButtonWithColor:[UIColor redColor] title:NSLocalizedString(@"Delete", @"cell Delete title")];
+    return buttons;
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerLeftUtilityButtonWithIndex:(NSInteger)index{
+    
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
+    NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
+    [self.fetchedResultsController performFetch:nil];
+    Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+    switch (index) {
+        case 0:{
+            DDLogDebug(@"Rename button pressed");
+            alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
+                                                                  message:nil
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
+                textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
+                textField.text = folder.name;
+                self.folderName = textField;
+                [textField setDelegate:self];
+            }];
+            
+            void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+                if (!folder)
+                {
+                    return ;
+                }
+                _fetchedResultsController.delegate = nil;
+                _fetchedResultsController = nil;
+                
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                [[StorageManager sharedManager] renameOperation:folder withNewName:self.folderName.text withCompletion:^(Folder *updatedFile,NSError* error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
+                    if(error){
+                        [[ErrorProvider instance]generatePopWithError:error controller:self
+                                                   customCancelAction:^(UIAlertAction *cancelAction) {
+                                                      [self.fetchedResultsController performFetch:nil];
+                                                   }
+                                                          retryAction:actionBlock];
+                        return;
+                    }
+                    [self updateFiles:^(){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            
+                            [self.tableView reloadData];
+                        });
+                    }];
+                    
+                }];
+            };
+            defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"save action title text")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:actionBlock];
+            
+            UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel text")
+                                                                    style:UIAlertActionStyleCancel
+                                                                  handler:^(UIAlertAction * action){
+                                                                      
+                                                                  }];
+            [alertController addAction:defaultAction];
+            [defaultAction setEnabled:NO];
+            [alertController addAction:cancelAction];
+            [self presentViewController:alertController animated:YES completion:nil];
+            
+        }
+            break;
+        case 1:{
+            DDLogDebug(@"Delete button pressed");
+            [[StorageManager sharedManager] deleteItem:folder controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                });
+                if(error){
+                    return;
+                }
+                if (succsess) {
+                    DDLogDebug(@"file named %@ successfuly removed", folder.name);
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                    });
+                    [self updateFiles:^(){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            [MBProgressHUD hideHUDForView:self.view animated:YES];
+                            [self.tableView reloadData];
+                        });
+                    }];
+                }else{
+                    DDLogDebug(@"file named %@ hasn't been removed", folder.name);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    });
+                }
+            }];
+        }
+            break;
+        default:
+            DDLogDebug(@"default");
+            break;
+    }
+}
+
+- (void)swipeableTableViewCell:(SWTableViewCell *)cell scrollingToState:(SWCellState)state{
+    
+}
+
 
 #pragma mark - Help Methods
 
@@ -488,20 +672,20 @@ static const int minimalStringLengthFiles = 1;
 
 -(void)removeFileFromCloud:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    object.wasDeleted = @YES;
-    if ([[Settings version] isEqualToString:@"P8"]) {
-//        [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-//            if (succsess) {
-//            BFLog(@"%@",handler);
-//            [self.managedObjectContext save:nil];
-//            }
-//        }];
-    }else{
-        [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
-            BFLog(@"%@",handler);
-            [self.managedObjectContext save:nil];
-        }];
-    }
+    [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if(error){
+            return;
+        }
+        if (succsess) {
+            DDLogDebug(@"file named %@ successfuly removed", object.name);
+            [self.managedObjectContext  save:nil];
+        }else{
+            DDLogDebug(@"file named %@ hasn't been removed", object.name);
+        }
+    }];
 }
 
 
@@ -512,33 +696,16 @@ static const int minimalStringLengthFiles = 1;
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
-    
-//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-//    NSEntityDescription *entity = [NSEntityDescription
-//                                   entityForName:@"Folder" inManagedObjectContext:self.managedObjectContext];
-//    [fetchRequest setEntity:entity];
-    
+
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                                   initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-//    [fetchRequest setSortDescriptors:@[isFolder, title]];
-    
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
-//    [fetchRequest setReturnsObjectsAsFaults:NO];
-    
-//    NSFetchedResultsController *theFetchedResultsController =
-//    [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-//                                        managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil
-//                                                   cacheName:nil];
-//    self.fetchedResultsController = theFetchedResultsController;
-//    _fetchedResultsController.delegate = self;
     NSError * error;
 
-    
-    
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
+    [req setReturnsObjectsAsFaults:NO];
     
     _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
@@ -584,67 +751,27 @@ static const int minimalStringLengthFiles = 1;
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-//- (UIAlertAction*)uploadFileAction
-//{
-//    UIAlertAction* uploadFile = [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload File", @"") style:UIAlertActionStyleDefault
-//                                                       handler:^(UIAlertAction * action) {
-//                                                           UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-//                                                           picker.delegate = self;
-//                                                           picker.allowsEditing = YES;
-//                                                           picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//                                                           picker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, nil ];
-//                                                           
-//                                                           [self presentViewController:picker animated:YES completion:NULL];
-//                                                       }];
-//    
-//    return uploadFile;
-//}
-//
-//- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
-//{
-//    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//    
-//    NSURL *urlFile = [info objectForKey:UIImagePickerControllerReferenceURL];
-//    [picker dismissViewControllerAnimated:YES completion:nil];
-//    NSString *fileName = [NSString stringWithFormat:@"%@_%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],[[urlFile path] lastPathComponent]];
-//    
-//    NSData * data = UIImagePNGRepresentation(image);
-//    NSString * path = self.isCorporate ? @"corporate" : @"personal";
-//    if (self.folder.fullpath)
-//    {
-//        path = [NSString stringWithFormat:@"%@%@",path,self.folder.fullpath];
-//    }
-////    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [[ApiP7 sharedInstance] putFile:data toFolderPath:path withName:fileName completion:^(NSDictionary * response){
-//        BFLog(@"%@",response);
-//        [self updateFiles:^(){
-////            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        }];
-//    }];
-//}
-
 - (UIAlertAction*)deleteFolderAction
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object = self.folderToOperate;
-        object.wasDeleted = @YES;
-        [self.managedObjectContext save:nil];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:self.isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [self updateFiles:^(){
-        
-                        [self.tableView reloadData];
-                    }];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:self.isCorporate completion:^(NSDictionary* handler){
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:self.isCorporate completion:^(BOOL succsess,NSError* error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
+            if(error){
+                return;
+            }
+            if(succsess){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                });
                 [self updateFiles:^(){
                     [self.tableView reloadData];
                 }];
-            }];
-        }
+            }
+        }];
     }];
     
     return deleteFolder;
@@ -662,35 +789,44 @@ static const int minimalStringLengthFiles = 1;
                                                                  self.folderName = textField;
                                                                  [textField setDelegate:self];
                                                              }];
-                                                             
-                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  if (!self.folderToOperate)
                                                                  {
                                                                      return ;
                                                                  }
                                                                  _fetchedResultsController.delegate = nil;
                                                                  _fetchedResultsController = nil;
-
-                                                                 [[StorageManager sharedManager] renameFolder:self.folderToOperate toNewName:self.folderName.text withCompletion:^(Folder * folder) {
-                                                                     self.folderToOperate = folder;
-                                                                     self.folder = folder;
-                                                                     self.title = folder.name;
-                                                                     NSError * error = nil;
+                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 [[StorageManager sharedManager] renameOperation:self.folderToOperate withNewName:self.folderName.text withCompletion:^(Folder * updatedFile,NSError* error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error
+                                                                                                            controller:self
+                                                                                                    customCancelAction:nil
+                                                                                                           retryAction:actionBlock];
+                                                                         return;
+                                                                     }
+                                                                     self.folderToOperate = updatedFile;
+                                                                     self.folder = updatedFile;
+                                                                     self.title = updatedFile.name;
+                                                                     //                                                                     NSError * error = nil;
                                                                      [self.fetchedResultsController performFetch:&error];
                                                                      if (error)
                                                                      {
                                                                          BFLog(@"%@",[error userInfo]);
                                                                      }
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
                                                                      [self updateFiles:^(){
-//                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                                         
                                                                          [self.tableView reloadData];
                                                                      }];
                                                                      
                                                                  }];
-                                                                 
-                                                                 
-                                                             }];
+                                                             };
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -706,9 +842,9 @@ static const int minimalStringLengthFiles = 1;
 
 - (UIAlertAction*)createFolderAction
 {
-    
     UIAlertAction* createFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create Folder", @"") style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction * action) {
+                                                             
                                                              
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
                                                              [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
@@ -717,42 +853,40 @@ static const int minimalStringLengthFiles = 1;
                                                                  [textField setDelegate:self];
                                                              }];
                                                              
-                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-                                                                 __weak typeof (self)weakSelf = self;
-                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success) {
+//                                                             __weak typeof (self)weakSelf = self;
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+                                                                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                                                 
+                                                                 [[StorageManager sharedManager]createFolderWithName:self.folderName.text isCorporate:self.isCorporate andPath:self.folder.fullpath completion:^(BOOL success,NSError* error) {
+                                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                     });
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error
+                                                                                                            controller:self
+                                                                                                    customCancelAction:^(UIAlertAction *cancelAction) {
+                                                                                                        [self.fetchedResultsController performFetch:nil];
+                                                                                                    }retryAction:actionBlock];
+                                                                         return;
+                                                                     }
                                                                      if (success) {
-                                                                         [self updateFiles:^(){
-//                                                                             [self.tableView reloadData];
-                                                                             __strong typeof(self)self = weakSelf;
-                                                                             [weakSelf.fetchedResultsController performFetch:nil];
-                                                                             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ AND isFolder == YES", weakSelf.folderName.text];
-                                                                             NSArray *filteredArray = [[self.fetchedResultsController fetchedObjects]filteredArrayUsingPredicate:predicate];
-                                                                             NSLog(@"%@", filteredArray);
-                                                                             if (filteredArray.count > 0){
-                                                                                 self.folderToNavigate = [filteredArray lastObject];
-                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                             }else{
-                                                                                 self.folderToNavigate = [[Folder alloc]initWithContext:self.managedObjectContext];
-                                                                                 [self.folderToNavigate setName:weakSelf.folderName.text];
-                                                                                 [self.folderToNavigate setParentPath:weakSelf.folder.fullpath ? weakSelf.folder.fullpath : @""];
-                                                                                 [self.folderToNavigate setIsLink:[NSNumber numberWithBool:NO]];
-                                                                                 [self.folderToNavigate setIsFolder:[NSNumber numberWithBool:YES]];
-                                                                                 [self.folderToNavigate setFullpath:[NSString stringWithFormat:@"%@/%@",self.folderToNavigate.parentPath,weakSelf.folderName.text]];
-                                                                                 [self.folderToNavigate setIsP8:[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
-                                                                                 [self.folderToNavigate setType:self.isCorporate ? @"corporate": @"personal"];
-                                                                                 
-                                                                                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
-                                                                             }
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         });
+                                                                         [self updateFilesWithSubsequentTransitionFromFolder:self.folder handler:^{
                                                                              
-
                                                                          }];
                                                                      }else{
+                                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                                             [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                                         });
                                                                          [self updateFiles:^{
                                                                              
                                                                          }];
                                                                      }
                                                                  }];
-                                                             }];
+                                                             };
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Create", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -767,16 +901,46 @@ static const int minimalStringLengthFiles = 1;
 
 #pragma mark - TextField Delegate
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * text = [textField.text stringByReplacingCharactersInRange:range withString:string];
     int minimalStringLength = minimalStringLengthFiles;
-    
-    NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"*|\":<>?/\\"]];
-    if (charRange.location != NSNotFound) {
-        return NO;
+    if(textField.text.length < text.length){
+        NSRange charRange = [text rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
     }
     [defaultAction setEnabled:text.length>=minimalStringLength];
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
 }
 
 #pragma mark - Navigation

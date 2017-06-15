@@ -15,8 +15,7 @@
 #import "Settings.h"
 #import "ApiP7.h"
 #import "ApiP8.h"
-
-static const int imageNameMinimalLength = 1;
+#import "MBProgressHUD.h"
 
 @interface GalleryWrapperViewController () <GalleryPageDelegate, UITextFieldDelegate>{
     UIAlertAction * defaultRenameAction;
@@ -101,21 +100,29 @@ static const int imageNameMinimalLength = 1;
                                                              [createFolder addTextFieldWithConfigurationHandler:^(UITextField * textField) {
                                                                  Folder * file = self.currentPage.item;
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
-                                                                 textField.text = [file.name stringByDeletingPathExtension];
+                                                                 textField.text = file.name;
                                                                  self.folderName = textField;
                                                                  textField.delegate = self;
                                                              }];
                                                              
-                                                             defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                                                                  Folder * file = self.currentPage.item;
-                                                                 [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if (error) {
+                                                                         [[ErrorProvider instance]generatePopWithError:error
+                                                                                                            controller:self
+                                                                                                    customCancelAction:nil
+                                                                                                           retryAction:actionBlock];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          dispatch_async(dispatch_get_main_queue(), ^{
                                                                              self.title = updatedFile.name;
                                                                          });
                                                                      }
                                                                  }];
-                                                             }];
+                                                             };
+                                                             defaultRenameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:actionBlock];
                                                              
                                                              UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * action){
                                                                  
@@ -132,25 +139,17 @@ static const int imageNameMinimalLength = 1;
 - (UIAlertAction*)deleteFolderAction
 {
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
-//        Folder * object =  [self.items objectAtIndex:[[self.collectionView.indexPathsForVisibleItems firstObject] row]];
         Folder * object = self.currentPage.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-//                    [object.managedObjectContext save:nil];
-//                    [self.navigationController popViewControllerAnimated:YES];
-                    [[StorageManager sharedManager] deleteItem:object];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-                [[StorageManager sharedManager] deleteItem:object];
-//                [self.navigationController popViewControllerAnimated:YES];
-                [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
-            }];
-        }
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+            if(error){
+                return;
+            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+//            });
+            [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
+        }];
     }];
     
     return deleteFolder;
@@ -160,10 +159,10 @@ static const int imageNameMinimalLength = 1;
 {
     Folder * object = self.currentPage.item;
     if ([[Settings version] isEqualToString:@"P8"]) {
-        [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
-            NSLog(@"link is -> %@", publicLink);
+        [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink, NSError *error) {
+            DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
-            NSLog(@"link components -> %@",publicLinkComponents);
+            DDLogDebug(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/?",[Settings domain]]];
             [publicLinkComponents replaceObjectAtIndex:[publicLinkComponents indexOfObject:[publicLinkComponents lastObject]] withObject:@"view"];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
@@ -186,10 +185,10 @@ static const int imageNameMinimalLength = 1;
             [self presentViewController:activityVC animated:YES completion:nil];
         }];
     }else{
-        [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink) {
-            NSLog(@"link is -> %@", publicLink);
+        [[ApiP7 sharedInstance] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink, NSError *error) {
+            DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;
-            NSLog(@"link components -> %@",publicLinkComponents);
+            DDLogDebug(@"link components -> %@",publicLinkComponents);
             [publicLinkComponents replaceObjectAtIndex:2 withObject:[NSString stringWithFormat:@"%@/share",[Settings domain]]];
             publicLink = [publicLinkComponents componentsJoinedByString:@"/"];
             UIImage * image = self.currentPage.imageView.image;
@@ -214,11 +213,47 @@ static const int imageNameMinimalLength = 1;
 }
 
 #pragma mark - TextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    BOOL  isActionEnabled =  currentTextFieldText.length>=imageNameMinimalLength ? YES : NO;
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
     [defaultRenameAction setEnabled:isActionEnabled] ;
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultRenameAction.isEnabled;
+    return result;
 }
 #pragma mark - Page Delegate
 

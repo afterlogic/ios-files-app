@@ -13,8 +13,9 @@
 #import "NSURLRequest+requestGenerator.h"
 #import <AFNetworking+AutoRetry/AFHTTPRequestOperationManager+AutoRetry.h>
 
-static int retryCount = 3;
+static int retryCount = 0;
 static const int retryInterval = 5;
+static NSString * errorFieldName = @"ErrorCode";
 
 @interface core(){
     AFHTTPRequestOperationManager *manager;
@@ -38,7 +39,7 @@ static NSString *methodGetUser = @"GetUser";
         manager.securityPolicy.allowInvalidCertificates = YES;
         manager.securityPolicy.validatesDomainName = NO;
         
-        retryCount = 3;
+//        retryCount = 3;
     }
     return self;
 }
@@ -95,7 +96,7 @@ static NSString *methodGetUser = @"GetUser";
             }
             if (error)
             {
-                NSLog(@"%@",[error localizedDescription]);
+                DDLogError(@"%@",[error localizedDescription]);
                 handler(nil,error);
                 return ;
             }
@@ -104,7 +105,7 @@ static NSString *methodGetUser = @"GetUser";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];
@@ -155,7 +156,7 @@ static NSString *methodGetUser = @"GetUser";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             NSError *offlineError;
             if ([Settings domain] && [Settings login]) {
                  offlineError = [[NSError alloc]initWithDomain:@"NSURLDomain" code:666 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Something went wrong.Maybe you dont have internet connection =(", @"")}];
@@ -205,7 +206,7 @@ static NSString *methodGetUser = @"GetUser";
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             NSError *offlineError;
             if ([Settings domain] && [Settings login]) {
                 offlineError = [[NSError alloc]initWithDomain:@"NSURLDomain" code:666 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Something went wrong.Maybe you dont have internet connection =(", @"")}];
@@ -289,13 +290,21 @@ static NSString *methodGetUser = @"GetUser";
                 else
                 {
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"The username or password you entered is incorrect", @"")}];
+                    if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                        NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                    }
                 }
+            }else{
+                error = [NSError errorWithDomain:@"com.afterlogic" code:999 userInfo:nil];
+//                handler(json,error);
+//                return;
             }
             handler(json,error);
         });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         dispatch_async(dispatch_get_main_queue(), ^(){
-            NSLog(@"HTTP Request failed: %@", error);
+            DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
         });
     } autoRetryOf:retryCount retryInterval:retryInterval];

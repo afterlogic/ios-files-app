@@ -24,6 +24,12 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - BugfenderSDK (0.3.22)
+  - CocoaLumberjack (3.1.0):
+    - CocoaLumberjack/Default (= 3.1.0)
+    - CocoaLumberjack/Extensions (= 3.1.0)
+  - CocoaLumberjack/Default (3.1.0)
+  - CocoaLumberjack/Extensions (3.1.0):
+    - CocoaLumberjack/Default
   - Crashlytics (3.8.3):
     - Fabric (~> 1.6.3)
   - CRMediaPickerController (0.0.1)
@@ -46,11 +52,13 @@ PODS:
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
+  - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
   - AFNetworking (= 2.6)
   - AFNetworking+AutoRetry
   - BugfenderSDK (~> 0.3)
+  - CocoaLumberjack
   - Crashlytics
   - CRMediaPickerController
   - DZNEmptyDataSet
@@ -60,11 +68,13 @@ DEPENDENCIES:
   - MagicalRecord (~> 2.3.0)
   - Reachability (~> 3.2)
   - SDWebImage (= 3.7.3)
+  - SWTableViewCell (~> 0.3.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   AFNetworking+AutoRetry: 5987ec96155e58fe356f1a3e91e79e5f3be6296a
   BugfenderSDK: 05a168bd3a494528b41ec729d579724bffb84e7c
+  CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
   Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
   CRMediaPickerController: 65e1f968dea26a7759bb1fb4a1518f5b8cd6fba9
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
@@ -76,7 +86,8 @@ SPEC CHECKSUMS:
   ObjcAssociatedObjectHelpers: 686c291f292c26a49b9b1fa7d58130a8d35d59d2
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
-PODFILE CHECKSUM: 28f236967f1a6d9e66569037ed83f23fb4cb214f
+PODFILE CHECKSUM: a1471eb515e346aa56a8e4d6ac99f868f7b3c0ea
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1

@@ -20,7 +20,7 @@
 
 - (void)logout:(void (^)(BOOL succsess, NSError *error))handler;
 
-- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler;
+- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler;
 
 - (void)cancelAllOperations;
 

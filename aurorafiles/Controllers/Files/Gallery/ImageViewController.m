@@ -17,9 +17,11 @@
 #import "ApiP8.h"
 #import "ApiP7.h"
 #import "Settings.h"
-@interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
+
+@interface ImageViewController ()<UIScrollViewDelegate, UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
     MBProgressHUD *hud;
+    UIAlertAction * defaultAction;
 }
 
 
@@ -157,12 +159,17 @@
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"");
                                                                  textField.text = [file.name stringByDeletingPathExtension];
                                                                  self.folderName = textField;
+                                                                 [textField setDelegate:self];
                                                              }];
                                                              
-                                                             UIAlertAction * defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                             defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Save", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                  
                                                                  Folder * file = self.item;
-                                                                 [[StorageManager sharedManager] renameToFile:file newName:self.folderName.text withCompletion:^(Folder *updatedFile) {
+                                                                 [[StorageManager sharedManager] renameOperation:file withNewName:self.folderName.text withCompletion:^(Folder *updatedFile, NSError *error) {
+                                                                     if(error){
+                                                                         [[ErrorProvider instance]generatePopWithError:error controller:self];
+                                                                         return;
+                                                                     }
                                                                      if (updatedFile) {
                                                                          self.title = updatedFile.name;
                                                                      }
@@ -185,23 +192,15 @@
     UIAlertAction * deleteFolder = [UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action){
         Folder * object =  self.item;
         BOOL isCorporate = [object.type isEqualToString:@"corporate"];
-        if ([[Settings version] isEqualToString:@"P8"]) {
-            [[ApiP8 filesModule]deleteFile:object isCorporate:isCorporate completion:^(BOOL succsess) {
-                if (succsess) {
-                    [object.managedObjectContext save:nil];
-//                     [self.navigationController popViewControllerAnimated:YES];
-                    [self deletePage];
-
-                }
-            }];
-        }else{
-            [[ApiP7 sharedInstance] deleteFile:object isCorporate:isCorporate completion:^(NSDictionary* handler) {
-                object.wasDeleted = @YES;
-                [object.managedObjectContext save:nil];
-//                [self.navigationController popViewControllerAnimated:YES];
+        [[StorageManager sharedManager]deleteItem:object controller:self isCorporate:isCorporate completion:^(BOOL succsess, NSError *error) {
+            if(error){
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                return;
+            }
+            if (succsess) {
                 [self deletePage];
-            }];
-        }
+            }
+        }];
     }];
     
     return deleteFolder;
@@ -355,6 +354,51 @@
     }
 }
 
+#pragma mark - TextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    NSString *textFieldText = textField.text;
+    NSString *fileExtension = textFieldText.pathExtension;
+    NSRange fileExtensionRange = [textFieldText rangeOfString:fileExtension];
+    if (fileExtensionRange.location == NSNotFound) {
+        DDLogDebug(@"dot location is -> %lu",[textFieldText rangeOfString:@"."].location);
+        if ([textFieldText containsString:@"."] && [textFieldText rangeOfString:@"."].location == 0){
+            UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+            UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:0];
+            UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+            [textField setSelectedTextRange:selectionRange];
+            return;
+        }else{
+            [textField selectAll:nil];
+            return;
+        }
+    }
+    DDLogDebug(@"extension range for string %@ location -> %lu ,length -> %lu",textFieldText,(unsigned long)fileExtensionRange.location,(unsigned long)fileExtensionRange.length);
+    UITextPosition *startPosition = [textField positionFromPosition:[textField beginningOfDocument] offset:0];
+    UITextPosition *endPosition = [textField positionFromPosition:startPosition offset:textFieldText.length - fileExtensionRange.length-1];
+    UITextRange *selectionRange = [textField textRangeFromPosition:startPosition toPosition:endPosition];
+    [textField setSelectedTextRange:selectionRange];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString * currentTextFieldText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(textField.text.length < currentTextFieldText.length){
+        NSRange charRange = [currentTextFieldText rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:forbiddenCharactersForFileName]];
+        if (charRange.location != NSNotFound) {
+            return NO;
+        }
+    }
+    BOOL  isActionEnabled =  currentTextFieldText.length>=minimalStringLengthFiles ? YES : NO;
+    [defaultAction setEnabled:isActionEnabled] ;
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    BOOL result = defaultAction.isEnabled;
+    return result;
+}
+
+
 #pragma mark - Private method
 
 - (void)downloadImageForItem:(Folder *)file {
@@ -377,28 +421,29 @@
                 [[SDWebImageDownloader sharedDownloader] setValue:nil forHTTPHeaderField:@"Authorization"];
             }
         }
-        hud.mode = MBProgressHUDModeIndeterminate;
+        hud.mode = MBProgressHUDModeDeterminate;
         [hud setBackgroundColor:[UIColor clearColor]];
         
         hud.hidden = NO;
         [hud showAnimated:YES];
         if (file.isDownloaded.boolValue)
         {
-            NSString * string = [file localPath].absoluteString;
+            NSString * string = [file localPath];
             NSFileManager * manager = [NSFileManager defaultManager];
             if ([manager fileExistsAtPath:string])
             {
-                NSLog(@"exist");
+                DDLogDebug(@"exist");
             }
-            NSLog(@"collection view cell downloaded image - > %@", string);
+            DDLogDebug(@"collection view cell downloaded image - > %@", string);
             image = [UIImage imageWithData:[NSData dataWithContentsOfFile:string]];
         }
         if (!image)
         {
             
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
-            [manager downloadImageWithURL:[NSURL URLWithString:[file viewLink]] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                float fractionCompleted = (float)receivedSize/(float)expectedSize;
+            NSURL *viewURL = [NSURL URLWithString:[file viewLink]];
+            [manager downloadImageWithURL:viewURL options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                float fractionCompleted = (float)receivedSize/(float)file.size.floatValue;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     hud.progress = fractionCompleted;
                 });
@@ -406,7 +451,8 @@
                     if (error) {
                         [hud hideAnimated:YES];
                         hud.hidden = YES;
-                        NSLog(@"error %@", error);
+                        DDLogError(@"image download error -> %@", error);
+                        [[ErrorProvider instance] generatePopWithError:error controller:nil];
                     } else {
                         self.loadedImage = image;
                         [self prepareImageViewToShow];
@@ -476,10 +522,13 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:SYPhotoBrowserDeletePageNotification object:nil];
 }
 
+-(void)hideHud{
+    [hud hideAnimated:YES];
+}
+
 #pragma mark - Public method
 
 - (void)resetImageSize {
-    //重置图片的大小
     [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:YES];
 }
 

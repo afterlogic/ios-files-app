@@ -14,4 +14,9 @@
 @end
 @interface TabBarWrapperViewController : UIViewController
 @property (nonatomic, strong) id <UploadFolderDelegate> delegate;
+
+-(UIBarButtonItem *)getNavRightBar;
+-(UIBarButtonItem *)getBackButton;
+-(UIBarButtonItem *)getEditButton;
+
 @end

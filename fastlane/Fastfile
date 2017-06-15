@@ -19,6 +19,7 @@ platform :ios do
   before_all do
     # https://afterlogic.slack.com/apps/A0F7XDUAZ-incoming-webhooks - ссылка на подключение вебхука
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+    xcode_select = "/Applications/Xcode.app"
     # cocoapods
   end
 
@@ -126,7 +127,25 @@ platform :ios do
     )
   end
 
+  desc "Fake upload. Only for tests!!!"
+  lane :fakeUpload do |options|
 
+    version_number = options[:version_number]
+
+    build_number = increment_build_number
+
+
+    complete_version_number = version_string(version_number, build_number)
+
+    clean_build_artifacts
+    clear_derived_data
+
+    # забираем все коммиты из гита для ченджлога
+    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
+
+    #отправляем сообщение в слак
+    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
+  end
 
   # You can define as many lanes as you want
 
@@ -154,22 +173,4 @@ end
 
 
 #test lanes
-  desc "Fake upload. Only for tests!!!"
-  lane :fakeUpload do |options|
 
-    version_number = options[:version_number]
-
-    build_number = increment_build_number
-
-
-    complete_version_number = version_string(version_number, build_number)
-
-    clean_build_artifacts
-    clear_derived_data
-
-    # забираем все коммиты из гита для ченджлога
-    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
-
-    #отправляем сообщение в слак
-    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
-  end

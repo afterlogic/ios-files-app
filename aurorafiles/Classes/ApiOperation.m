@@ -89,7 +89,7 @@
         self.executing = YES;
         self.finished = NO;
         
-        NSLog(@"\"%@\" Operation Started.", self.name);
+        DDLogDebug(@"\"%@\" Operation Started.", self.name);
     }
 }
 
@@ -97,7 +97,7 @@
 {
     if (self.executing)
     {
-        NSLog(@"\"%@\" Operation Finished.", self.name);
+        DDLogDebug(@"\"%@\" Operation Finished.", self.name);
         
         self.executing = NO;
         self.finished = YES;

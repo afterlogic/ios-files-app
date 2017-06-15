@@ -123,7 +123,7 @@ static void * AFNetworkRequestStartDate = &AFNetworkRequestStartDate;
     }
 
     if (![[[request URL] absoluteString] containsString:@"bugfender"]) {
-//        NSLog(@"current url - > %@",[[request URL] absoluteString]);
+//        DDLogDebug(@"current url - > %@",[[request URL] absoluteString]);
         switch (self.level) {
             case AFLoggerLevelDebug:
                 BFLog(@"%@ '%@': %@ %@", [request HTTPMethod], [[request URL] absoluteString], [request allHTTPHeaderFields], body);

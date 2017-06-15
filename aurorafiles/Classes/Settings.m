@@ -28,7 +28,7 @@
 
 + (NSString *)domainScheme{
     NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
-    NSLog(@"⚠️ current domain Scheme is -> %@", sch);
+    DDLogInfo(@"⚠️ current domain Scheme is -> %@", sch);
     return sch;
 }
 
@@ -108,7 +108,7 @@
     [[Settings sharedDefaults] synchronize];
 }
 + (NSString *)version{
-    NSLog(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
+    DDLogInfo(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
     return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
 }
 
@@ -121,6 +121,17 @@
     return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
 }
 
++(void)setIsLogedIn:(BOOL)isLogedIn{
+    NSNumber* numberWithBool = [NSNumber numberWithBool:isLogedIn];
+    [[Settings sharedDefaults]setValue:numberWithBool forKey:@"isLogedIn"];
+    [[Settings sharedDefaults]synchronize];
+}
+
++(BOOL)getIsLogedIn{
+    NSNumber* numberWithBool = [[Settings sharedDefaults] valueForKey:@"isLogedIn"];
+    return numberWithBool.boolValue;
+}
+
 +(void)clearSettings{
     [Settings setLastLoginServerVersion:nil];
     [Settings setCurrentAccount:nil];
@@ -128,6 +139,8 @@
     [Settings setPassword:nil];
     [Settings setAuthToken:nil];
     [Settings setDomainScheme:nil];
+    [Settings saveLastUsedFolder:nil];
+    [Settings setIsLogedIn:NO];
 
     NSString * lastLoginServerVersion = [Settings version];
     NSString * currentAccount = [Settings currentAccount];
@@ -136,7 +149,7 @@
     NSString * authToken = [Settings authToken];
     NSString * domainScheme = [Settings domainScheme];
 
-    NSLog(@"%@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
+    DDLogInfo(@"Settings after clear ->  %@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
 }
 
 @end

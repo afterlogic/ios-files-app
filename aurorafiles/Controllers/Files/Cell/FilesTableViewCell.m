@@ -62,11 +62,12 @@
     {
         
         self.fileImageView.image = nil;
-        
-        if (folder.downloadIdentifier.integerValue != -1)
+
+        if (folder.isFolder.boolValue != NO && folder.downloadIdentifier.integerValue != -1)
         {
             [self.downloadActivity startAnimating];
             self.disclosureButton.hidden = YES;
+            [self.filesDelegate tableViewCell:self fileReloadAction:folder];
         }
         else
         {
@@ -135,7 +136,7 @@
 
 - (IBAction)moreAction:(id)sender
 {
-    [self.delegate tableViewCellMoreAction:self];
+    [self.filesDelegate tableViewCellMoreAction:self];
 }
 
 + (CGFloat)cellHeight
@@ -147,9 +148,9 @@
 {
     if (!self.fileDownloaded) {
         [self.downloadActivity startAnimating];
-        [self.delegate tableViewCellDownloadAction:self];
+        [self.filesDelegate tableViewCellDownloadAction:self];
     }else{
-        [self.delegate tableViewCellRemoveAction:self];
+        [self.filesDelegate tableViewCellRemoveAction:self];
     }
 }
 

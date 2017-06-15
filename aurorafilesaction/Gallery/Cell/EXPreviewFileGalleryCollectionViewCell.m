@@ -39,7 +39,7 @@
         self.imageView.userInteractionEnabled = YES;
         self.imageView.alpha = 0.0f;
         
-        NSLog(@"%@",[file path]);
+        DDLogDebug(@"%@",[file path]);
         self.imageView.image = nil;
         UIImage * image = nil;
         

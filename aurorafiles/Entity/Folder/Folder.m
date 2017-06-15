@@ -26,7 +26,6 @@
 {
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"prKey";
-    
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
@@ -260,7 +259,6 @@
     }else{
         viewLink = [NSString stringWithFormat:@"%@%@/?/Raw/FilesView/%@/%@/0/hash/%@",scheme ? @"" : @"https://",[Settings domain],[Settings currentAccount],[self folderHash],[Settings authToken]];
     }
-    
     return viewLink;
 }
 
@@ -290,7 +288,7 @@
     }
     if (error)
     {
-        NSLog(@"%@",error);
+        DDLogError(@"local file creation error -> %@",error);
         return nil;
     }
     return [NSURL URLWithString:filePath];
@@ -304,10 +302,8 @@
     return path;
 }
 
-- (NSURL *)localPath{
-    NSString *encodedName = [self.name stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
-    NSURLComponents *components = [NSURLComponents componentsWithURL: [[Folder downloadsDirectoryURL] URLByAppendingPathComponent:encodedName] resolvingAgainstBaseURL:YES];
-    NSURL *path = components.URL;
+- (NSString *)localPath{
+    NSString *path = [[Folder downloadsDirectoryURL].absoluteString stringByAppendingPathComponent:self.name];
     return path;
 }
 
@@ -336,7 +332,7 @@
 
 - (NSString*)validContentType
 {
-    NSLog(@"%@",[self.name pathExtension]);
+    DDLogDebug(@"%@",[self.name pathExtension]);
     if ([[self.name pathExtension] isEqualToString:@"pptx"] || [[self.name pathExtension] isEqualToString:@"ppt"])
     {
         return @"application/vnd.ms-powerpoint";
@@ -397,16 +393,13 @@
 #pragma mark - Folder Operations
 
 +(Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
-//    Folder *item = [Folder findObjectByItemRef:itemRef context:context];
-//    if (!item) {
-        NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
-        NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
-        [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
-        Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-        item.toRemove = [NSNumber numberWithBool:NO];
-        item.isP8 = [NSNumber numberWithBool:isP8];
-        item.parentPath = path;
-//    }
+    NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
+    NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
+    [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
+    Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+    item.toRemove = [NSNumber numberWithBool:NO];
+    item.isP8 = [NSNumber numberWithBool:isP8];
+    item.parentPath = path;
     return item;
 }
 
@@ -422,6 +415,22 @@
         filePath =  fullURL.path;
     }
     return filePath;
+}
+
++(BOOL)renameLocalFile:(Folder *)file newName:(NSString *)name{
+    BOOL result = NO;
+    NSString *localFilePath = file.localPath;
+    DDLogDebug(@"local filePath -> %@",localFilePath);
+    NSString *newLocalFilePath = [[Folder downloadsDirectoryURL].absoluteString stringByAppendingPathComponent:name];
+    DDLogDebug(@"new local filePath -> %@",newLocalFilePath);
+    if (localFilePath){
+        NSError *error = nil;
+        [[NSFileManager defaultManager] moveItemAtPath:localFilePath toPath:newLocalFilePath error:&error];
+        result = YES;
+    }else{
+
+    }
+    return result;
 }
 
 + (Folder *)findObjectByItemRef:(NSDictionary *)itemRef context:(NSManagedObjectContext *)ctx{

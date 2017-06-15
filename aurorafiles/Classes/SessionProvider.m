@@ -49,15 +49,19 @@
 - (void)loginEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler{
         if([Settings domain] && [Settings domain].length > 0){
             [self authroizeEmail:email withPassword:password completion:^(BOOL authorized, NSError * error) {
-                if (authorized)
-                {
-                    handler(authorized,nil);
-                }
-                else
-                {
-                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
+                if (error){
                     handler(NO,error);
+                    return;
                 }
+//                if (authorized)
+//                {
+                handler(authorized,nil);
+//                }
+//                else
+//                {
+//                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
+//                    handler(NO,error);
+//                }
             }];
             
         }else{
@@ -67,31 +71,31 @@
 }
 
 - (void)logout:(void (^)(BOOL succsess, NSError *error))handler{
-    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
+    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8, NSError *error){
         [self.actualApiManager logoutWithCompletion:^(BOOL succsess, NSError *error) {
             handler(succsess,error);
         }];
     }];
 }
 
-- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler{
+- (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler{
     NSString *scheme = [Settings domainScheme];
     if (!scheme) {
         [self checkSSLConnection:^(NSString *domain) {
             if(domain && domain.length > 0){
-                [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-                    handler(authorised,offline,isP8);
+                [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8,NSError *error){
+                    handler(authorised,offline,isP8,error);
                 }];
             }else{
-                handler(NO, NO, NO);
+                handler(NO, NO, NO, nil);
             }
         }];
     }else{
         if (!self.actualApiManager) {
             [self setupActualApiManager];
         }
-        [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8){
-            handler(authorised,offline,isP8);
+        [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8,NSError *error){
+            handler(authorised,offline,isP8,error);
         }];
     }
 }
@@ -100,18 +104,16 @@
     [self.actualApiManager cancelAllOperations];
 }
 
-- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8 ))handler
+- (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler
 {
-    [self.actualApiManager checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline, BOOL isP8) {
-        handler(authorised,offline,isP8);
+    [self.actualApiManager checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline, BOOL isP8,NSError *error) {
+        handler(authorised,offline,isP8,error);
     }];
 }
 
 - (void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
 {
-    [self.actualApiManager authroizeEmail:email withPassword:password completion:^(BOOL success, NSError *error) {
-        handler(success,error);
-    }];
+    [self.actualApiManager authorizeEmail:email withPassword:password completion:handler];
 }
 
 - (void)checkSSLConnection:(void (^)(NSString *))handler{
@@ -138,8 +140,8 @@
         [Settings setLastLoginServerVersion:domainVersion];
         self.actualApiManager =  [networkManager getNetworkManager];
     }
-    NSLog(@"ℹ️ host version is %@",[Settings version]);
-    NSLog(@"ℹ️ host is %@",[Settings domain]);
+    DDLogInfo(@"ℹ️ host version is %@",[Settings version]);
+    DDLogInfo(@"ℹ️ host is %@",[Settings domain]);
 }
 
 -(void)setupActualApiManager{
