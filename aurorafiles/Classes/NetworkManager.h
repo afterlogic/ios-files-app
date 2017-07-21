@@ -14,6 +14,8 @@
 
 
 + (instancetype)sharedManager;
++ (instancetype)sharedManagerWithSettings:(Class)settingsClass;
+
 - (id<ApiProtocol>)getNetworkManager;
 - (void)checkDomainVersionAndSSLConnection:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler;
 - (void)prepareForCheck;

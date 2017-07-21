@@ -12,8 +12,7 @@
 #import "KeychainWrapper.h"
 #import "ApiP8.h"
 #import "StorageManager.h"
-#import "ApiProtocol.h"
-#import "NetworkManager.h"
+
 
 @interface SessionProvider(){
     int operationCounter;
@@ -21,8 +20,18 @@
 }
 
 @property (nonatomic, strong) id<ApiProtocol> actualApiManager; //
+@property (nonatomic, strong) Class settings;
 @end
 @implementation SessionProvider
+
++ (instancetype)sharedManagerWithSettings:(Class)settingsClass{
+    static SessionProvider *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[SessionProvider alloc] initWithSettings:settingsClass];
+    });
+    return sharedInstance;
+}
 
 + (instancetype)sharedManager
 {
@@ -34,6 +43,21 @@
     return sharedInstance;
 }
 
++ (instancetype)initWithApiManager:(id<ApiProtocol>)manager networkManager:(NetworkManager *)networkManager{
+    SessionProvider *provider = [[SessionProvider alloc]initWithApiManager:manager networkManager:networkManager];
+    return provider;
+}
+
+- (instancetype)initWithApiManager:(id<ApiProtocol>)manager networkManager:(NetworkManager *)nManager{
+    self = [super init];
+    if(self){
+        operationCounter = 0;
+        networkManager = nManager;
+        self.actualApiManager = manager;
+    }
+    return self;
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -41,45 +65,49 @@
     {
         operationCounter = 0;
         networkManager = [NetworkManager sharedManager];
+        self.settings = [Settings class];
+        [self setupActualApiManager];
+    }
+    return self;
+}
+
+- (instancetype)initWithSettings:(Class)settingsClass
+{
+    self = [super init];
+    if (self)
+    {
+        operationCounter = 0;
+        networkManager = [NetworkManager sharedManager];
+        self.settings = settingsClass;
         [self setupActualApiManager];
     }
     return self;
 }
 
 - (void)loginEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler{
-        if([Settings domain] && [Settings domain].length > 0){
+        if([self.settings domain] && [self.settings domain].length > 0){
             [self authroizeEmail:email withPassword:password completion:^(BOOL authorized, NSError * error) {
                 if (error){
                     handler(NO,error);
                     return;
                 }
-//                if (authorized)
-//                {
                 handler(authorized,nil);
-//                }
-//                else
-//                {
-//                    NSError *error = [[NSError alloc]initWithDomain:@"" code:401 userInfo:@{}];
-//                    handler(NO,error);
-//                }
             }];
-            
         }else{
-            NSError *error = [[NSError alloc]initWithDomain:@"" code:500 userInfo:@{}];
+            NSError *error = [[NSError alloc]initWithDomain:@"com.auroraFiles.SessionProvider" code:5000 userInfo:@{}];
             handler(NO,error);
         }
 }
 
 - (void)logout:(void (^)(BOOL succsess, NSError *error))handler{
-    [self checkAuthorizeWithCompletion:^(BOOL authorised, BOOL offline,BOOL isP8, NSError *error){
-        [self.actualApiManager logoutWithCompletion:^(BOOL succsess, NSError *error) {
-            handler(succsess,error);
-        }];
+    handler(YES,nil);
+    [self.actualApiManager logoutWithCompletion:^(BOOL succsess, NSError *error) {
+//        handler(succsess,error);
     }];
 }
 
 - (void)checkUserAuthorization:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler{
-    NSString *scheme = [Settings domainScheme];
+    NSString *scheme = [self.settings domainScheme];
     if (!scheme) {
         [self checkSSLConnection:^(NSString *domain) {
             if(domain && domain.length > 0){
@@ -100,6 +128,20 @@
     }
 }
 
+-(void)userData:(void(^)(BOOL authorised, NSError *error))handler{
+    if(!self.actualApiManager){
+        self.actualApiManager = [networkManager getNetworkManager];
+        if (!self.actualApiManager) {
+            NSError * error = [NSError errorWithDomain:@"com.auroraFiles.SessionProvider"
+                                                  code:999
+                                              userInfo:nil];
+            handler(NO, error);
+            return;
+        }
+    }
+    [self.actualApiManager userData:handler];
+}
+
 - (void)cancelAllOperations{
     [self.actualApiManager cancelAllOperations];
 }
@@ -113,16 +155,18 @@
 
 - (void)authroizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL,NSError*))handler
 {
+    if(!self.actualApiManager){
+        self.actualApiManager = [networkManager getNetworkManager];
+    }
     [self.actualApiManager authorizeEmail:email withPassword:password completion:handler];
 }
 
 - (void)checkSSLConnection:(void (^)(NSString *))handler{
-    if ([Settings domainScheme] && [Settings domain]) {
-        handler([Settings domain]);
+    if ([_settings domainScheme] && [_settings domain]) {
+        handler([_settings domain]);
         return;
     }
-    [[NetworkManager sharedManager] prepareForCheck];
-    [[NetworkManager sharedManager] checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
+    [self checkDomainVersion:^(NSString *domainVersion, NSString *correctHostURL) {
         if (domainVersion && correctHostURL) {
             [self saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
         }else{
@@ -132,26 +176,44 @@
     }];
 }
 
+- (void)checkDomainVersion:(void(^)(NSString *domainVersion, NSString *correctHostURL))handler{
+    [[NetworkManager sharedManager] prepareForCheck];
+    [[NetworkManager sharedManager] checkDomainVersionAndSSLConnection:^(NSString *domainVersion, NSString *correctHostURL) {
+        handler(domainVersion,correctHostURL);
+    }];
+}
+
+- (void)updateDomainVersion:(void(^)())completionHandler{
+    [self checkDomainVersion:^(NSString *domainVersion, NSString *correctHostURL) {
+        if (domainVersion && correctHostURL) {
+            [self saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
+        }else{
+            [self clearDomainInfo];
+        }
+        completionHandler();
+    }];
+}
+
 - (void)saveDomainVersion:(NSString *)domainVersion domainCorrectHostUrl:(NSString *)correctURL{
     if (domainVersion) {
-        if (![[Settings version] isEqualToString:domainVersion]) {
+        if (![[self.settings lastLoginServerVersion] isEqualToString:domainVersion]) {
             [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
         }
-        [Settings setLastLoginServerVersion:domainVersion];
+        [self.settings setLastLoginServerVersion:domainVersion];
         self.actualApiManager =  [networkManager getNetworkManager];
     }
-    DDLogInfo(@"ℹ️ host version is %@",[Settings version]);
-    DDLogInfo(@"ℹ️ host is %@",[Settings domain]);
+    DDLogInfo(@"ℹ️ host version is %@",[self.settings lastLoginServerVersion]);
+    DDLogInfo(@"ℹ️ host is %@",[self.settings domain]);
 }
 
 -(void)setupActualApiManager{
-    if ([Settings version]) {
+    if ([self.settings lastLoginServerVersion]) {
         self.actualApiManager = [networkManager getNetworkManager];
     }
 }
 
 -(void)clearDomainInfo{
-    [Settings setDomainScheme:nil];
+    [self.settings setDomainScheme:nil];
 }
 
 

@@ -30,190 +30,151 @@
 #import "StorageManager.h"
 #import "DataBaseProvider.h"
 #import "FileOperationsProvider.h"
-
+#import "WormholeProvider.h"
 #import "AuroraHUD.h"
 
-@interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate> {
-    NSString *fileExtension;
-    NSURL *mediaData;
-    NSString * urlString;
-    
-    NSString *fileName;
-    
-    NSString *uploadFolderPath;
-    NSString *uploadRootPath;
-    
-    unsigned long long uploadSize;
-    
-    UIAlertController * alertController;
-    UIProgressView *pv;
-    
-    AuroraHUD *hud;
-    
-    NSMutableArray <NSMutableURLRequest *> *requestsForUpload;
-    
-    
-    int64_t totalBytesForAllFilesSend;
-    CGFloat previewLocalHeight;
-    UIViewController *currentModalView;
-    BOOL uploadStart;
-    
-    AFHTTPRequestOperationManager *manager;
-    
-    NSMutableArray *localSaveFileLinks;
-}
+@interface ActionViewController ()<NSURLSessionTaskDelegate, GalleryDelegate, UploadFolderDelegate>
 
-
-@property (strong, nonatomic) NSURL *movieURL;
-@property (strong, nonatomic) NSMutableArray <UploadedFile *> *filesForUpload;
-@property (nonatomic, retain) AVPlayerViewController *playerViewController;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
-@property (weak, nonatomic) IBOutlet UIView *userLoggedOutView;
-@property (weak, nonatomic) EXFileGalleryCollectionViewController *galleryController;
-@property (weak, nonatomic) EXPreviewFileGalleryCollectionViewController *previewController;
-@property (weak, nonatomic) CurrentFilePathViewController *currentUploadPathView;
-@property (weak, nonatomic) TabBarWrapperViewController *tabbarWrapController;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewHeight;
 @property (weak, nonatomic) IBOutlet UIView *galleryContainer;
 @property (weak, nonatomic) IBOutlet UIView *previewContainer;
 @property (weak, nonatomic) IBOutlet UIView *uploadPathContainer;
-
-
+@property (weak, nonatomic) IBOutlet UIView *userLoggedOutContainer;
 
 - (IBAction)uploadAction:(id)sender;
 
 @end
-//#import <AVKit/AVKit.h>
 
 @implementation ActionViewController
--(void)loadView{
+
+- (void)loadView{
     [super loadView];
-    [Bugfender enableAllWithToken:@"XjOPlmw9neXecfebLqUwiSfKOCLxwCHT"];
-    [[AFNetworkActivityLogger sharedLogger] startLogging];
-    [[AFNetworkActivityLogger sharedLogger] setLevel:AFLoggerLevelDebug];
-    
-    [[DataBaseProvider sharedProvider] setupCoreDataStack];
-    [[StorageManager sharedManager]setupDBProvider:[DataBaseProvider sharedProvider]];
-    [[StorageManager sharedManager]setupFileOperationsProvider:[FileOperationsProvider sharedProvider]];
+    [self searchFilesForUpload];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     BFLog(@"EXTENSION STARTED");
-    self.uploadPathContainer.hidden = YES;
+    self.navigationStack = self.navigationController.viewControllers;
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
+    self.uploadPathContainer.hidden = NO;
     [self setCurrentUploadFolder:@"" root:@""];
     
+    [self setupUserInterface];
+    [self setupObserving];
+}
 
+-(void)setupObserving{
+    [[WormholeProvider instance]cancelObservingNotification:AUWormholeNotificationUserSignOut];
+    [[WormholeProvider instance]cancelObservingNotification:AUWormholeNotificationUserSignIn];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"closeExtension" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"dismissModalView" object:nil];
     
-    if(![Settings getIsLogedIn]){
-        [self hideLogoutView:NO];
-        [self hideContainers:YES];
-        
-    }else{
-        AuroraHUD * connectionHud = [AuroraHUD checkConnectionHUD:self];
+    [[WormholeProvider instance]catchNotification:AUWormholeNotificationUserSignOut handler:^(id  _Nullable messageObject) {
+        [self closeExtension];
+    }];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(done) name:@"closeExtension" object:nil];
+}
+
+-(void)setupUserInterface{
+    hud = [AuroraHUD checkConnectionHUD:self];
+    [self prepareUserInterfaceDependingUserSessionState:^{
         NSString *scheme = [Settings domainScheme];
+        hud.hudView.label.text = NSLocalizedString(@"Check connection...", @"");
         if (scheme) {
-            [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+            [self setupInterfaceForP8:[[Settings lastLoginServerVersion]isEqualToString:@"P8"]];
             dispatch_async(dispatch_get_main_queue(), ^(){
-                [connectionHud hideHUD];
+                [hud hideHUD];
             });
         }else{
             [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
                 dispatch_async(dispatch_get_main_queue(), ^(){
-                    [connectionHud hideHUD];
+                    [hud hideHUD];
                 });
                 if(domain && domain.length > 0){
                     [Settings setDomain:domain];
-                    [self setupInterfaceForP8:[[Settings version]isEqualToString:@"P8"]];
+                    [self setupInterfaceForP8:[[Settings lastLoginServerVersion]isEqualToString:@"P8"]];
                 }else{
-                    [self hideLogoutView:NO];
+                    [self showLoggedOutView];
                     [self hideContainers:YES];
                 }
             }];
         }
-    }
+    } failure:^(NSError *error) {
+        [self showLoggedOutView];
+        [self hideContainers:YES];
+    }];
 }
 
 -(void)setupInterfaceForP8:(BOOL)isP8 {
-//    NSURL * url = [NSURL URLWithString:[Settings domain]];
     NSString *scheme = [Settings domainScheme];
     NSString *authToken = [Settings authToken];
     NSString *token = [Settings token];
     
-    AuroraHUD *folderHud = [AuroraHUD checkFileExistanceHUD:self];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
     if (isP8){
         if (authToken.length==0 || !scheme) {
-            [self hideLogoutView:NO];
+            [self showLoggedOutView];
             [self hideContainers:YES];
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                [folderHud hideHUD];
-            });
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-//            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
-            [self getLastUsedFolder:folderHud];
-//            }];
-            
+            [self getLastUsedFolder:hud];
         }
     }else{
         if (!token || !scheme) {
-            [self hideLogoutView:NO];
+            [self showLoggedOutView];
             [self hideContainers:YES];
         }else{
             [self hideContainers:NO];
             [self setupForUpload];
-//            [NSTimer scheduledTimerWithTimeInterval:5.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
-            [self getLastUsedFolder:folderHud];
-//            }];
+            [self getLastUsedFolder:hud];
         }
     }
-    
 }
 
 - (void)getLastUsedFolder:(AuroraHUD *)folderHud{
     [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(NSDictionary *result, NSError *error) {
-        if (result) {
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                [folderHud hideHUD];
-            });
-            [self.navigationController setNavigationBarHidden:NO animated:YES];
-            [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                [folderHud hideHUD];
-            });
-            [self.navigationController setNavigationBarHidden:NO animated:YES];
-            [self setCurrentUploadFolder:@"" root:@"personal"];
-            [self showUploadFolders];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^(){
+                if(error){
+                    [self.navigationController setNavigationBarHidden:NO animated:YES];
+                    [self setCurrentUploadFolder:@"" root:@"personal"];
+                    [folderHud setHudComplitionHandler:^{
+                        if(![[ErrorProvider instance]generatePopWithError:error controller:self]){
+                            [self showUploadFolders];
+                        }
+                    }];
+                    return;
+                }
+                if (result) {
+                    [self.navigationController setNavigationBarHidden:NO animated:YES];
+                    [self setCurrentUploadFolder:result[@"FullPath"] root:result[@"Type"]];
+                }else{
+                    [self.navigationController setNavigationBarHidden:NO animated:YES];
+                    [self setCurrentUploadFolder:@"" root:@"personal"];
+                    [folderHud setHudComplitionHandler:^{
+                        [self showUploadFolders];
+                    }];
+                }
+        });
+
     }];
 }
 
 -(void)hideContainers:(BOOL) hide{
-    self.galleryContainer.hidden = hide;
-    self.previewContainer.hidden = hide;
-    self.uploadPathContainer.hidden = hide;
+    self.uploadPathContainer.hidden = NO;
 }
 
--(void)hideLogoutView:(BOOL) hide{
-    self.uploadButton.enabled = !hide;
-    [self.uploadButton setTitle:@""];
-    [self.userLoggedOutView setHidden:hide];
+-(void)showLoggedOutView{
+    [self showLoggedOutModelView];
 }
+
 
 -(void)setupForUpload{
-    manager = [AFHTTPRequestOperationManager manager];
-    manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-    manager.securityPolicy.allowInvalidCertificates = YES;
-    manager.securityPolicy.validatesDomainName = NO;
-    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-    totalBytesForAllFilesSend = 0;
-    uploadStart = NO;
-    localSaveFileLinks = [[NSMutableArray alloc]init];
-    [self searchFilesForUpload];
+    [super setupForUpload];
 }
 
 -(void)searchFilesForUpload{
@@ -224,119 +185,6 @@
         for (NSItemProvider *itemProvider in item.attachments) {
             mediaData = nil;
             
-//TODO:Раскомментировать, если понадобятся картинки и видео.
-//            //image
-//            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-//                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeImage options:nil completionHandler:^(id image, NSError *error) {
-//                    if(image) {
-//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                            if([image isKindOfClass:[NSURL class]]) {
-//                                fileExtension = [[[(NSURL *)image absoluteString] componentsSeparatedByString:@"."]lastObject];
-//                                mediaData = image;
-//                                UploadedFile *file = [UploadedFile new];
-//                                file.path = mediaData;
-//                                file.extension = fileExtension;
-//                                file.type = (NSString *)kUTTypeImage;
-//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-//                                [self.filesForUpload addObject:file];
-//                                return ;
-//                            }
-//                            if ([image isKindOfClass:[UIImage class]]){
-////                                [NSFileManager defaultManager];
-////                                thumbnail = [json valueForKey:@"Result"];
-//                                NSData *data = [[NSData alloc]initWithData:UIImageJPEGRepresentation(image, 10.0)];
-//                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//                                
-//                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
-//                                NSError *error = [NSError new];
-//                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
-//                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
-//                                } //Create folder
-//                                
-//                                
-//                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
-//                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
-//                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-////                                [localSaveFileLinks addObject:path];
-//                                
-//                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
-//                                mediaData = [NSURL URLWithString:path];
-//                                UploadedFile *file = [UploadedFile new];
-//                                file.path = mediaData;
-//                                file.extension = fileExtension;
-//                                file.type = (NSString *)kUTTypeImage;
-//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-//                                file.savedLocal = YES;
-//                                
-////                                UIImage *resavedImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:mediaData.absoluteString]];
-//                                
-//                                [self.filesForUpload addObject:file];
-//                                return ;
-//                            }
-//                            
-//                            if([image isKindOfClass:[NSData class]]){
-//                                
-////                                UIImage *currentImage =  [UIImage imageWithData:image];
-////                                DDLogDebug(@"image is -> %@",currentImage);
-//                                
-//                                NSData *data = image;
-//                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//                                
-//                                NSString *uploadFileFolderPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"/UploadedFiles"];
-//                                NSError *error = [NSError new];
-//                                if (![[NSFileManager defaultManager] fileExistsAtPath:uploadFileFolderPath]){
-//                                    [[NSFileManager defaultManager] createDirectoryAtPath:uploadFileFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
-//                                } //Create folder
-//                                
-//                                
-//                                NSString *name = [NSString stringWithFormat:@"upldImage_%@.jpg",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]]];
-//                                NSString* path = [uploadFileFolderPath stringByAppendingPathComponent:name];
-//                                [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];
-//                                //                                [localSaveFileLinks addObject:path];
-//                                
-//                                fileExtension = [[name componentsSeparatedByString:@"."]lastObject];
-//                                mediaData = [[NSURL alloc ]initWithString:path];
-//                                UploadedFile *file = [UploadedFile new];
-//                                file.path = mediaData;
-//                                file.extension = fileExtension;
-//                                file.type = (NSString *)kUTTypeImage;
-//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-//                                file.savedLocal = YES;
-//                                [self.filesForUpload addObject:file];
-//                                return ;
-//                            }
-//                        }];
-//                    }
-//                }];
-//            }
-//            //video
-//            if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
-//                __weak AVPlayerViewController *player = self.playerViewController;
-//                [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie options:nil completionHandler:^(id videoItem, NSError *error) {
-//                    if(videoItem) {
-//                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                            if ([videoItem isKindOfClass:[NSURL class]]) {
-//                                fileExtension = [[[(NSURL *)videoItem absoluteString] componentsSeparatedByString:@"."]lastObject];
-//                                mediaData = videoItem;
-//                                player.player  = [AVPlayer playerWithURL:(NSURL *)videoItem];
-//                                player.view.alpha = 0.0f;
-//                                
-//                                UploadedFile *file = [UploadedFile new];
-//                                file.path = mediaData;
-//                                file.extension = fileExtension;
-//                                file.type = (NSString *)kUTTypeMovie;
-//                                file.size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[mediaData path] error:nil] fileSize];
-//                                file.MIMEType = [self mimeTypeForFileAtPath:mediaData.path];
-//                                [self.filesForUpload addObject:file];
-//                            }
-//                        }];
-//                    }
-//                }];
-//            }
-            
             //internet shortcut from webPage
             if ([itemProvider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePropertyList]) {
                 [itemProvider loadItemForTypeIdentifier:(NSString *)kUTTypePropertyList options:nil completionHandler:^(id fileURLItem, NSError *error) {
@@ -346,7 +194,6 @@
                                 NSDictionary *pageInfo = [fileURLItem objectForKey:NSExtensionJavaScriptPreprocessingResultsKey];
                                 NSURL *pageLink = [NSURL URLWithString:[pageInfo objectForKey:@"link"]];
                                 NSString *webPageTitle = [pageInfo objectForKey:@"title"];
-//                                DDLogDebug(@"%@",webPageTitle);
                                 fileExtension = @"url";
                                 mediaData = [self createInternetShortcutFile:webPageTitle ext:fileExtension link:pageLink];
                                 UploadedFile *file = [UploadedFile new];
@@ -411,18 +258,12 @@
          [self setPreviewGalleryHeightForOrientation:InterfaceOrientationTypeLandscape];
     }
     
+    [self setupObserving];
 }
 
 - (void)setCurrentUploadFolder:(NSString *)folderPath root:(NSString *)root{
     [self generatePath:folderPath root:root];
     [self.navigationController popToRootViewControllerAnimated:YES];
-}
-
--(void)generatePath:(NSString *)folderPath root:(NSString *)root{
-    uploadFolderPath = folderPath;
-    uploadRootPath = root;
-    NSString *targetPath = [folderPath componentsSeparatedByString:@"/"].lastObject;
-    [self.currentUploadPathView setUploadPath:[NSString stringWithFormat:@"%@ : %@",root,targetPath]];
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -436,106 +277,43 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(void)showUploadFolders{
-    [self performSegueWithIdentifier:@"push_files" sender:self];
+    DDLogDebug(@"%@", self.navigationStack);
+    UIStoryboard *board = [UIStoryboard storyboardWithName:@"MainInterface" bundle:nil];
+    TabBarWrapperViewController *vc = [board instantiateViewControllerWithIdentifier:@"TabBarWrapperViewController"];
+    vc.delegate = self;
+    self.tabbarWrapController = vc;
+    [self.navigationController pushViewController:self.tabbarWrapController animated:YES];
+    self.navigationStack = self.navigationController.viewControllers;
+    DDLogDebug(@"%@", self.navigationStack);
 }
 - (IBAction)logoutCloseButton:(id)sender {
-    [self done];
+    [self closeExtension];
 }
 
 - (IBAction)done
 {
-    BFLog(@"EXTENSION END WORK");
-    [manager.operationQueue cancelAllOperations];
-    [self.extensionContext completeRequestReturningItems:self.extensionContext.inputItems completionHandler:nil];
+    [self closeExtension];
 }
 
 #pragma mark - Upload
 
 - (IBAction)uploadAction:(id)sender
 {
-    urlString = @"";
-//    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
-    requestsForUpload = [NSMutableArray new];
-    
-    for (UploadedFile *file in self.filesForUpload){
-        if ([file.type isEqualToString:(NSString *)kUTTypeURL]) {
-            NSString *lastPathComponent = [file.path lastPathComponent];
-//            file.name = [NSString stringWithFormat:@"InternetShortcut%@.%@",[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],file.extension];
-            file.name = lastPathComponent;
-        }else{
-            file.name = [[[file.path absoluteString] componentsSeparatedByString:@"/"]lastObject];
-        }
-        if ([[Settings version]isEqualToString:@"P8"]) {
-            file.request = [self generateP8RequestWithFile:file.path mime:file.MIMEType toFolderPath:uploadFolderPath withName:file.name rootPath:uploadRootPath savedLocal:file.savedLocal];
-        }else{
-            NSURL * url = [NSURL URLWithString:[Settings domain]];
-            NSString * scheme = [url scheme];
-            urlString = [NSString stringWithFormat:@"%@%@/index.php?Upload/File/%@/%@",scheme ? @"" : @"https://",[Settings domain],[[NSString stringWithFormat:@"%@%@",uploadRootPath,uploadFolderPath] urlEncodeUsingEncoding:NSUTF8StringEncoding],file.name];
-            file.request = [self generateRequestWithUrl:urlString data:file.path savedLocal:file.savedLocal];
-        }
-        
-        if(!uploadStart){
-            uploadSize += file.size;
-        }
-    }
+    hud = nil;
+    [self runUpload];
+}
+
+-(void)runUpload{
+    [self upload];
     self.uploadButton.enabled = NO;
     [self startUploadingForFiles:self.filesForUpload];
 }
 
 -(void)startUploadingForFiles:(NSArray *)files{
-    
-    UploadedFile *currentFile = files.firstObject;
-    fileName = currentFile.name;
-    if (uploadStart) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            fileName = currentFile.name;
-        });
-    }
-    [self uploadFile:currentFile];
-}
-
--(NSMutableURLRequest *)generateRequestWithUrl:(NSString *)linkString data:(NSURL *)data savedLocal:(BOOL) isLocal
-{
-    
-    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
-    NSURL *url = [NSURL URLWithString:[linkString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
-    
-    [request setHTTPMethod:@"PUT"];
-    
-    NSString *authToken = [defaults valueForKey:@"auth_token"];
-    [request setValue:authToken forHTTPHeaderField:@"Auth-Token"];
-
-    [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:data.absoluteString] :[[NSInputStream alloc]initWithURL:data]];
-    
-//    [request setValue:uploadRootPath forHTTPHeaderField:@"Type"];
-//    [request setValue:[NSString stringWithFormat:@"{\"Type\":\"%@\"}",uploadRootPath]  forHTTPHeaderField:@"AdditionalData"];
-    
-   
-    return request;
-}
-
--(NSMutableURLRequest *)generateP8RequestWithFile:(NSURL *)file mime:(NSString *)mime toFolderPath:(NSString *)path withName:(NSString *)name rootPath:(NSString *)rootPath savedLocal:(BOOL) isLocal
-{
-    
-    NSString *storageType = [NSString stringWithString:rootPath];
-    NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"%@",path] : @""];
-    NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",[Settings domainScheme],[Settings domain],storageType,pathTmp,name];
-    NSURL *testUrl = [[NSURL alloc]initWithString:[Link stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    
-    NSDictionary *headers = @{ @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]],
-                               @"cache-control": @"no-cache"};
-    
-    NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:testUrl];
-    [request setHTTPMethod:@"POST"];
-    [request setAllHTTPHeaderFields:headers];
-    [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:file.absoluteString] : [NSInputStream inputStreamWithURL:file]];
-    
-    return request;
+    [self uploadFile:[super prepareFilesForUpload:files]];
 }
 
 
@@ -549,8 +327,8 @@
     [self requestLog:file.request];
     __weak ActionViewController * weakSelf = self;
     NSURLSessionDataTask * task = [session dataTaskWithRequest:file.request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
-            NSError * error = nil;
+
+            NSError  *localError = error;
             NSString *result;
             BOOL handlResult = false;
             ActionViewController *strongSelf = weakSelf;
@@ -566,21 +344,19 @@
                 handlResult = [result isEqualToString:@"true"];
                 if (!handlResult)
                 {
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
                 }else{
-                    error = nil;
+                    localError = nil;
                 }
             }
             
-            if (error)
+            if (localError)
             {
                 if (self.filesForUpload.count == 1) {
-                    hud.hudView.mode = MBProgressHUDModeCustomView;
-                    hud.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
-                    hud.hudView.detailsLabel.text = @"";
-                    hud.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
-                    [hud hideHUDWithDelay:0.7f];
-//                    strongSelf.uploadButton.enabled = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [hud uploadError];
+                        [hud hideHUDWithDelay:0.7f];
+                    });
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
                     [strongSelf uploadAction:self];
@@ -588,19 +364,17 @@
 
             }else{
                 if (self.filesForUpload.count == 1) {
-                    hud.hudView.mode = MBProgressHUDModeCustomView;
-                    hud.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
-                    hud.hudView.detailsLabel.text = @"";
-                    hud.hudView.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
-                    [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
-                    
+                    dispatch_async(dispatch_get_main_queue(), ^(){
+                        [hud uploadSuccess];
+                        [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
+                    });
                 }else{
                     [strongSelf.filesForUpload removeObject:file];
                     [strongSelf uploadAction:self];
                 }
             }
             
-        });
+
     }];
     [task resume];
 }
@@ -621,31 +395,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
         DDLogDebug(@"fileName is -> %@",fileName);
         hud.hudView.label.text = fileName;
     });
-
-    
-}
-
-
-
--(void)requestLog:(NSURLRequest *)request {
-    BFLog(@"Method: %@", request.HTTPMethod);
-    BFLog(@"URL: %@", request.URL.absoluteString);
-    BFLog(@"Body: %@", [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
-    BFLog(@"Head: %@",request.allHTTPHeaderFields);
-}
-
--(NSURL *)createInternetShortcutFile:(NSString *)name ext:(NSString *)extension link:(NSURL *)link{
-    NSError *error;
-    
-    NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@",link.absoluteString]] componentsJoinedByString:@"\n"];
-
-    NSString *shortcutName = [NSString stringWithFormat:@"%@.%@",name,extension];
-    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:shortcutName];
-    [stringToWrite writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-    
-    NSURL *resultPath = [NSURL fileURLWithPath:filePath];
-    BFLog(@"%@", resultPath);
-    return resultPath;
 }
 
 #pragma mark - HUD
@@ -692,9 +441,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
 - (void)selectGalleryItem:(UploadedFile *)item{
     [self.previewController highlightItem:item];
 }
-
-
-
 #pragma mark - Navigation
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"gallery_embed"]) {
@@ -708,25 +454,15 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend{
         self.currentUploadPathView = (CurrentFilePathViewController *)[segue destinationViewController];
     }
     
+    if ([segue.identifier isEqualToString:@"loggedOut_embed"]){
+        self.loggedOutController = (UserLoggedOutViewController *)[segue destinationViewController];
+    }
+    
     if ([segue.identifier isEqualToString:@"push_files"]){
         TabBarWrapperViewController *vc = (TabBarWrapperViewController *)[segue destinationViewController];
         vc.delegate = self;
         self.tabbarWrapController = vc;
     }
-}
-
-#pragma maerk - Helpers
-- (NSString*)mimeTypeForFileAtPath: (NSString *) path {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        return nil;
-    }
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[path pathExtension], NULL);
-    CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
-    if (!mimeType) {
-        return @"application/octet-stream";
-    }
-    return ( __bridge NSString *)mimeType;
 }
 
 @end

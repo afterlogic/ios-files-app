@@ -1,38 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="h1S-wA-BEz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="h1S-wA-BEz">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="ceB-am-kn3">
-            <objects>
-                <viewController id="j1y-V4-xli" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="8bI-gs-bmD"/>
-                        <viewControllerLayoutGuide type="bottom" id="d5i-Ba-RvD"/>
-                    </layoutGuides>
-                    <view key="view" opaque="NO" contentMode="scaleToFill" id="wbc-yd-nQP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CEy-Cv-SGf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-417" y="1057"/>
-        </scene>
         <!--Share View Controller-->
         <scene sceneID="m28-2i-HS3">
             <objects>
-                <viewController id="7FB-nA-bVx" customClass="ShareViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="shareViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7FB-nA-bVx" customClass="ShareViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ClV-KO-Ych"/>
                         <viewControllerLayoutGuide type="bottom" id="p44-AC-hg1"/>
@@ -48,62 +30,12 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="483"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mTC-6U-jXu" userLabel="login error view">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ep-Rp-5N4">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rFU-A1-wnS">
-                                        <rect key="frame" x="20" y="8" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="WhW-XC-oKH"/>
-                                            <constraint firstAttribute="width" constant="40" id="dkH-pf-B9j"/>
-                                        </constraints>
-                                        <state key="normal" image="error"/>
-                                        <connections>
-                                            <action selector="logoutCloseButton:" destination="7FB-nA-bVx" eventType="touchUpInside" id="jdq-hU-BUW"/>
-                                        </connections>
-                                    </button>
-                                    <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="9Gt-Ge-8z0">
-                                        <rect key="frame" x="92" y="206" width="191" height="191"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="9Gt-Ge-8z0" secondAttribute="height" multiplier="1:1" id="C4c-dz-7qO"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in Aurora.Files" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qql-ir-6ry">
-                                        <rect key="frame" x="68" y="511" width="239" height="21"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="239" id="IbO-Na-sXf"/>
-                                            <constraint firstAttribute="height" constant="21" id="Vz2-h9-DzX"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To continue, click Aurora.Files app and sign in" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bll-ea-evg">
-                                        <rect key="frame" x="84" y="540" width="207" height="36"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="207" id="6GQ-lb-9dk"/>
-                                            <constraint firstAttribute="height" constant="36" id="SPd-cZ-nUR"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="9Gt-Ge-8z0" firstAttribute="centerY" secondItem="mTC-6U-jXu" secondAttribute="centerY" constant="-0.5" id="7DI-Ne-aZ3"/>
-                                    <constraint firstItem="Bll-ea-evg" firstAttribute="top" secondItem="Qql-ir-6ry" secondAttribute="bottom" constant="8" id="DRu-cE-VqG"/>
-                                    <constraint firstItem="Bll-ea-evg" firstAttribute="centerX" secondItem="mTC-6U-jXu" secondAttribute="centerX" id="Dhe-GG-P8q"/>
-                                    <constraint firstItem="9Gt-Ge-8z0" firstAttribute="centerX" secondItem="mTC-6U-jXu" secondAttribute="centerX" id="MH6-9N-49e"/>
-                                    <constraint firstItem="Qql-ir-6ry" firstAttribute="centerX" secondItem="mTC-6U-jXu" secondAttribute="centerX" id="OT5-cP-Acz"/>
-                                    <constraint firstItem="rFU-A1-wnS" firstAttribute="leading" secondItem="mTC-6U-jXu" secondAttribute="leading" constant="20" id="WGT-Gh-Y3G"/>
-                                    <constraint firstItem="rFU-A1-wnS" firstAttribute="top" secondItem="mTC-6U-jXu" secondAttribute="top" constant="8" id="d7J-At-02s"/>
-                                    <constraint firstItem="Qql-ir-6ry" firstAttribute="top" relation="lessThanOrEqual" secondItem="9Gt-Ge-8z0" secondAttribute="bottom" constant="114" id="txQ-FZ-KIP"/>
-                                    <constraint firstAttribute="bottom" secondItem="Bll-ea-evg" secondAttribute="bottom" constant="27" id="ynh-iL-0dT"/>
-                                </constraints>
-                            </view>
+                                <connections>
+                                    <segue destination="7cc-ob-ymu" kind="embed" identifier="loggedOut_embed" id="rPG-dJ-kW7"/>
+                                </connections>
+                            </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fwi-Ua-XGV" userLabel="Gallery Container">
                                 <rect key="frame" x="0.0" y="100" width="375" height="447"/>
                                 <connections>
@@ -131,28 +63,28 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="5Ep-Rp-5N4" secondAttribute="trailing" id="4vI-SG-Itk"/>
                             <constraint firstItem="Fwi-Ua-XGV" firstAttribute="top" secondItem="LVs-IU-tb6" secondAttribute="bottom" constant="1" id="6Dk-ed-qqU"/>
-                            <constraint firstItem="mTC-6U-jXu" firstAttribute="trailing" secondItem="VIa-SN-rGx" secondAttribute="trailing" id="7gM-ey-hkr"/>
                             <constraint firstItem="cH8-Ok-Tw5" firstAttribute="bottom" secondItem="p44-AC-hg1" secondAttribute="top" constant="-120" id="8m5-V0-Xz4"/>
                             <constraint firstItem="p44-AC-hg1" firstAttribute="top" secondItem="VIa-SN-rGx" secondAttribute="bottom" id="94F-SJ-QFo"/>
                             <constraint firstItem="Fwi-Ua-XGV" firstAttribute="leading" secondItem="6XC-FB-YKk" secondAttribute="leading" id="9Vi-GY-1z0"/>
                             <constraint firstItem="cH8-Ok-Tw5" firstAttribute="top" secondItem="VIa-SN-rGx" secondAttribute="top" id="CiN-a6-RtF"/>
+                            <constraint firstItem="5Ep-Rp-5N4" firstAttribute="leading" secondItem="6XC-FB-YKk" secondAttribute="leading" id="FMe-jN-tUf"/>
                             <constraint firstItem="LVs-IU-tb6" firstAttribute="leading" secondItem="6XC-FB-YKk" secondAttribute="leading" id="G4B-N0-vpQ"/>
+                            <constraint firstItem="Bc7-oH-7sp" firstAttribute="trailing" secondItem="Fwi-Ua-XGV" secondAttribute="trailing" id="HNb-5p-8pw"/>
                             <constraint firstItem="VIa-SN-rGx" firstAttribute="leading" secondItem="6XC-FB-YKk" secondAttribute="leading" id="KPy-T7-vUA"/>
                             <constraint firstAttribute="trailing" secondItem="LVs-IU-tb6" secondAttribute="trailing" id="LBG-It-lEy"/>
-                            <constraint firstItem="mTC-6U-jXu" firstAttribute="bottom" secondItem="p44-AC-hg1" secondAttribute="top" id="PcD-rc-ji6"/>
-                            <constraint firstItem="mTC-6U-jXu" firstAttribute="top" secondItem="VIa-SN-rGx" secondAttribute="top" id="QxA-CV-3Nh"/>
                             <constraint firstAttribute="trailing" secondItem="VIa-SN-rGx" secondAttribute="trailing" id="R1h-jk-qEQ"/>
                             <constraint firstItem="cH8-Ok-Tw5" firstAttribute="trailing" secondItem="VIa-SN-rGx" secondAttribute="trailing" id="RzP-aG-utJ"/>
                             <constraint firstAttribute="trailing" secondItem="Fwi-Ua-XGV" secondAttribute="trailing" id="Xc8-8g-ZuA"/>
                             <constraint firstItem="LVs-IU-tb6" firstAttribute="top" secondItem="ClV-KO-Ych" secondAttribute="bottom" id="Ykv-sh-HZ3"/>
                             <constraint firstItem="Bc7-oH-7sp" firstAttribute="bottom" secondItem="p44-AC-hg1" secondAttribute="top" id="cHF-bL-FvC"/>
-                            <constraint firstItem="mTC-6U-jXu" firstAttribute="leading" secondItem="VIa-SN-rGx" secondAttribute="leading" id="gqe-3W-pQd"/>
                             <constraint firstItem="Bc7-oH-7sp" firstAttribute="top" secondItem="Fwi-Ua-XGV" secondAttribute="bottom" id="oCd-Xz-2f8"/>
+                            <constraint firstItem="p44-AC-hg1" firstAttribute="top" secondItem="5Ep-Rp-5N4" secondAttribute="bottom" id="otP-7k-2Hz"/>
                             <constraint firstItem="VIa-SN-rGx" firstAttribute="top" secondItem="ClV-KO-Ych" secondAttribute="bottom" id="rrY-UU-nBI"/>
                             <constraint firstItem="cH8-Ok-Tw5" firstAttribute="leading" secondItem="VIa-SN-rGx" secondAttribute="leading" id="syX-J3-yoB"/>
+                            <constraint firstItem="5Ep-Rp-5N4" firstAttribute="top" secondItem="ClV-KO-Ych" secondAttribute="bottom" id="vtD-pu-D7S"/>
                             <constraint firstItem="Bc7-oH-7sp" firstAttribute="leading" secondItem="cH8-Ok-Tw5" secondAttribute="leading" id="wA8-1w-HJX"/>
-                            <constraint firstItem="Bc7-oH-7sp" firstAttribute="trailing" secondItem="mTC-6U-jXu" secondAttribute="trailing" id="yd4-G6-zQf"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="trl-Ia-F4L">
@@ -173,7 +105,7 @@
                         <outlet property="previewHeight" destination="7Mt-2F-fSy" id="EtZ-Qz-ARx"/>
                         <outlet property="uploadButton" destination="WQB-hQ-B9I" id="Bmm-xS-anm"/>
                         <outlet property="uploadPathContainer" destination="LVs-IU-tb6" id="Gnv-El-rLQ"/>
-                        <outlet property="userLoggedOutView" destination="mTC-6U-jXu" id="agg-nr-ZIO"/>
+                        <outlet property="userLoggedOutContainer" destination="5Ep-Rp-5N4" id="EZA-mZ-574"/>
                         <outlet property="view" destination="6XC-FB-YKk" id="Ya9-X2-cgi"/>
                         <segue destination="oCG-gi-LIc" kind="push" identifier="push_files" id="Fcl-OJ-JWx"/>
                     </connections>
@@ -373,7 +305,7 @@
         <!--Tab Bar Wrapper View Controller-->
         <scene sceneID="QrB-1X-xvC">
             <objects>
-                <viewController id="oCG-gi-LIc" customClass="TabBarWrapperViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TabBarWrapperViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oCG-gi-LIc" customClass="TabBarWrapperViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4Wp-xE-duT"/>
                         <viewControllerLayoutGuide type="bottom" id="Nqc-eV-ISq"/>
@@ -570,6 +502,77 @@
                 </view>
             </objects>
             <point key="canvasLocation" x="2214" y="2039"/>
+        </scene>
+        <!--User Logged Out View Controller-->
+        <scene sceneID="sRH-fr-OaS">
+            <objects>
+                <viewController storyboardIdentifier="UserLoggedOutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7cc-ob-ymu" customClass="UserLoggedOutViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gIB-6W-aGh"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Ng-gr-60q"/>
+                    </layoutGuides>
+                    <view key="view" hidden="YES" contentMode="scaleToFill" id="jSP-hH-MDP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GqC-Ha-SLA">
+                                <rect key="frame" x="20" y="20" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="5ic-hd-TnK"/>
+                                    <constraint firstAttribute="width" constant="40" id="RA8-fB-Yuf"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="error"/>
+                                <connections>
+                                    <action selector="closeAction:" destination="7cc-ob-ymu" eventType="touchUpInside" id="U7j-KS-jvL"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appLogo" translatesAutoresizingMaskIntoConstraints="NO" id="T5U-O8-dzF">
+                                <rect key="frame" x="124" y="206" width="127" height="127"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="T5U-O8-dzF" secondAttribute="height" multiplier="1:1" id="zTs-pA-HvT"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in Aurora.Files" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JUB-qn-vYv">
+                                <rect key="frame" x="68" y="447" width="239" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="Uoa-HX-emy"/>
+                                    <constraint firstAttribute="width" constant="239" id="qbX-gn-ZhP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To continue, click Aurora.Files app and sign in" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIL-ck-bYt">
+                                <rect key="frame" x="84" y="476" width="207" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="L2L-ss-PkR"/>
+                                    <constraint firstAttribute="width" constant="207" id="NMT-xO-jf0"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4Ng-gr-60q" firstAttribute="top" secondItem="hIL-ck-bYt" secondAttribute="bottom" constant="91" id="4OK-sw-lTu"/>
+                            <constraint firstItem="hIL-ck-bYt" firstAttribute="top" secondItem="JUB-qn-vYv" secondAttribute="bottom" constant="8" id="BVa-oU-bOb"/>
+                            <constraint firstItem="GqC-Ha-SLA" firstAttribute="top" secondItem="jSP-hH-MDP" secondAttribute="top" constant="20" id="Sl4-Ss-pFI"/>
+                            <constraint firstItem="JUB-qn-vYv" firstAttribute="top" relation="lessThanOrEqual" secondItem="T5U-O8-dzF" secondAttribute="bottom" constant="114" id="WvT-PU-LDu"/>
+                            <constraint firstItem="T5U-O8-dzF" firstAttribute="centerX" secondItem="jSP-hH-MDP" secondAttribute="centerX" id="Ylv-DT-eIl"/>
+                            <constraint firstItem="GqC-Ha-SLA" firstAttribute="leading" secondItem="jSP-hH-MDP" secondAttribute="leading" constant="20" id="cXW-ud-QuO"/>
+                            <constraint firstItem="hIL-ck-bYt" firstAttribute="centerX" secondItem="jSP-hH-MDP" secondAttribute="centerX" id="duz-mM-uqw"/>
+                            <constraint firstItem="JUB-qn-vYv" firstAttribute="centerX" secondItem="jSP-hH-MDP" secondAttribute="centerX" id="pew-za-mfZ"/>
+                            <constraint firstItem="T5U-O8-dzF" firstAttribute="centerY" secondItem="jSP-hH-MDP" secondAttribute="centerY" constant="-32" id="z2V-Kn-vRF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="closeButton" destination="GqC-Ha-SLA" id="G6q-6G-ogx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N2q-bM-B7e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1790" y="-565"/>
         </scene>
     </scenes>
     <resources>

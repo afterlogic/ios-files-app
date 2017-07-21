@@ -41,7 +41,7 @@
 #pragma mark - Public methods
 - (void)startDownloadTaskForFile:(Folder *)file {
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-    if([[Settings version] isEqualToString:@"P8"]){
+    if([[Settings lastLoginServerVersion] isEqualToString:@"P8"]){
         [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
     }
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
@@ -77,7 +77,7 @@
 }
 
 - (void)uploadFile:(NSData *)fileData mimeType:(NSString *)mimeType toFolderPath:(NSString *)uploadPath withName:(NSString *)fileName isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result, NSError *error))handler {
-    if ([[Settings version]isEqualToString:@"P8"]) {
+    if ([[Settings lastLoginServerVersion]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData
                                    mime:mimeType
                            toFolderPath:uploadPath

@@ -15,8 +15,13 @@
 
 +(AuroraHUD *)checkConnectionHUD:(UIViewController *)vc;
 +(AuroraHUD *)checkFileExistanceHUD:(UIViewController *)vc;
++(AuroraHUD *)addHUDCheckFileExistanceHUD:(UIViewController *)vc;
 +(AuroraHUD *)uploadHUD:(UIView *)view;
 
+- (void)uploadError;
+- (void)uploadSuccess;
+
 -(void)hideHUD;
+-(void)setHudComplitionHandler:(MBProgressHUDCompletionBlock)handler;
 -(void)hideHUDWithDelay:(CGFloat)delay;
 @end

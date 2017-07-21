@@ -14,6 +14,7 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "NSString+Validators.h"
 #import "StorageManager.h"
+#import "WormholeProvider.h"
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
@@ -22,6 +23,7 @@
     UITapGestureRecognizer *tapRecognizer;
     BOOL alertViewIsShow;
 }
+@property (strong, nonatomic) __block SessionProvider *sessionProvider;
 @end
 
 @implementation SignInViewController
@@ -53,12 +55,15 @@
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
     
     alertViewIsShow = NO;
+    
+    [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignOut object:nil];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.sessionProvider = [SessionProvider sharedManager];
     [self clear];
 
 }
@@ -97,6 +102,50 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     });
+    
+//    if (self.emailField.text.length == 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!alertViewIsShow) {
+//                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+//                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                    alertViewIsShow = NO;
+//                }];
+//                alertViewIsShow = YES;
+//            }
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//            return;
+//        });
+//    }
+    
+//    if (self.domainField.text.length == 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if(!alertViewIsShow){
+//                
+//                NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
+//                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                    alertViewIsShow = NO;
+//                }];
+//                alertViewIsShow = YES;
+//            }
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        });
+//        return;
+//    }
+    
+    if (![self checkEmail]) {
+        return;
+    }
+    
+    if (![self checkDomain]) {
+        return;
+    }
+    
+    [Settings setDomain:self.domainField.text];
+    
+    [self connectToHost];
+}
+
+- (BOOL)checkEmail{
     if (self.emailField.text.length == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (!alertViewIsShow) {
@@ -107,10 +156,13 @@
                 alertViewIsShow = YES;
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
-            return;
         });
+        return NO;
     }
-    
+    return YES;
+}
+
+- (BOOL)checkDomain{
     if (self.domainField.text.length == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if(!alertViewIsShow){
@@ -123,46 +175,47 @@
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
         });
-        return;
+        return NO;
     }
-    
-	[Settings setDomain:self.domainField.text];
-    
-    [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+    return YES;
+}
+
+- (void)connectToHost{
+    [self.sessionProvider checkSSLConnection:^(NSString *domain) {
         if (domain && domain.length) {
-        [[SessionProvider sharedManager]loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if (error){
-                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-                        alertViewIsShow = NO;
-                        [self clear];
-                    }];
-                    alertViewIsShow = YES;
-                }else{
-                    [Settings setLogin:self.emailField.text];
-                    [Settings setPassword:self.passwordField.text];
-                    [Settings setIsLogedIn:YES];
-                    [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-                }
-            });
-        }];
+            [self.sessionProvider loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    if (error){
+                        [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                            alertViewIsShow = NO;
+                            [self clear];
+                        }];
+                        alertViewIsShow = YES;
+                    }else{
+                        [Settings setLogin:self.emailField.text];
+                        [Settings setPassword:self.passwordField.text];
+                        [Settings setIsLogedIn:YES];
+                        [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignIn object:nil];
+                        [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+                    }
+                });
+            }];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
-                    NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
+                    NSError *error = [[ErrorProvider instance]generateError:@"4001"];
                     [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
                         alertViewIsShow = NO;
                     }];
                     [self clear];
                     alertViewIsShow = YES;
                 }
-                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
             });
         }
     }];
 }
-
 //-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 //    if (buttonIndex == [alertView cancelButtonIndex]) {
 //        alertViewIsShow = NO;
@@ -233,7 +286,7 @@
 -(void)clear{
     [Settings clearSettings];
     [[StorageManager sharedManager]clear];
-    [[SessionProvider sharedManager]clear];
+    [self.sessionProvider clear];
 }
 
 @end

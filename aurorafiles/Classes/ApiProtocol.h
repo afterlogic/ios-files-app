@@ -16,7 +16,9 @@
 #pragma mark - User Operations
 - (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler;
 - (void)authorizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler;
+- (void)userData:(void(^)(BOOL authorised, NSError *error))handler;
 - (void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler;
+
 
 #pragma mark - Files Operations
 - (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))completionHandler;

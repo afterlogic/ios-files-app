@@ -134,8 +134,39 @@
         }
     }];
 }
+
+- (void)userData:(void (^)(BOOL isAuthorized, NSError *error))handler{
+    [self.apiManager checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
+        if (error){
+            handler(NO, error);
+            return;
+        }else if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+        {
+            if (data[@"Result"][@"offlineMod"]) {
+                handler (NO,error);
+            }
+            handler (YES,error);
+        }
+        else
+        {
+            if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
+                NSNumber *errorCode = data[@"ErrorCode"];
+                NSError *error = [[ErrorProvider instance]generateError:errorCode.stringValue];
+                if (error) {
+                    handler(NO, error);
+                }
+            }
+            else
+            {
+                handler(NO,error);
+            }
+        }
+        return ;
+    }];
+}
+
 -(void)logoutWithCompletion:(void (^)(BOOL, NSError *))handler{
-    handler(YES, nil);
+    [self.apiManager signOut:handler];
 }
 #pragma mark - Files Operations
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{

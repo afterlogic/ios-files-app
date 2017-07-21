@@ -374,7 +374,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                 self.folderToNavigate = [filteredArray lastObject];
                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
             }else{
-                BOOL isP8 = [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]];
+                BOOL isP8 = [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]];
                 NSDictionary *itemRef = [self generateSimpleItemRefUsingParentFolder:folder];
                 self.folderToNavigate = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folder.fullpath ? folder.fullpath : @"" InContext:self.managedObjectContext];
                 [self performSegueWithIdentifier:@"GoToFolderSegue" sender:self];
@@ -700,7 +700,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                                   initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     NSError * error;
 
     NSManagedObjectContext *moc = self.managedObjectContext;

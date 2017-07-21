@@ -1,4 +1,4 @@
-//
+ //
 //  AuroraHUD.m
 //  aurorafiles
 //
@@ -7,6 +7,7 @@
 //
 
 #import "AuroraHUD.h"
+#import "ErrorProvider.h"
 
 
 @interface AuroraHUD ()
@@ -23,18 +24,22 @@
     }
     return self;
 }
-
 +(AuroraHUD *)checkFileExistanceHUD:(UIViewController *)vc{
     AuroraHUD *hud = [AuroraHUD new];
     if (hud) {
         hud.customView = [[UIView alloc]initWithFrame:vc.view.frame];
         [hud.customView setBackgroundColor:[UIColor colorWithRed:0.21 green:0.24 blue:0.25 alpha:0.8]];
-        [vc.view addSubview:hud.customView];
-        [vc.view bringSubviewToFront:hud.customView];
         hud.hudView = [MBProgressHUD showHUDAddedTo:hud.customView animated:YES];
         hud.hudView.mode = MBProgressHUDModeIndeterminate;
         hud.hudView.label.text = NSLocalizedString(@"Check saved folder existance...", @"");
     }
+    return hud;
+}
+
++(AuroraHUD *)addHUDCheckFileExistanceHUD:(UIViewController *)vc{
+    AuroraHUD *hud = [AuroraHUD checkFileExistanceHUD:vc];
+    [vc.view addSubview:hud.customView];
+    [vc.view bringSubviewToFront:hud.customView];
     return hud;
 }
 
@@ -65,7 +70,6 @@
     return hud;
 }
 
-
 +(void)showError:(NSError *) error view:(UIView *)view{
     
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
@@ -94,6 +98,25 @@
     [hud hideHUDWithDelay:3.0f];
 }
 
+
+-(void)uploadError{
+    if (self.hudView.mode != MBProgressHUDModeCustomView){
+        self.hudView.mode = MBProgressHUDModeCustomView;
+    }
+    self.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"error"]];
+    self.hudView.detailsLabel.text = @"";
+    self.hudView.label.text = NSLocalizedString(@"Files uploaded with some errors...", @"");
+}
+
+-(void)uploadSuccess{
+    if (self.hudView.mode != MBProgressHUDModeCustomView){
+        self.hudView.mode = MBProgressHUDModeCustomView;
+    }
+    self.hudView.customView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success"]];
+    self.hudView.detailsLabel.text = @"";
+    self.hudView.label.text = NSLocalizedString(@"Files succesfully uploaded!", @"");
+}
+
 -(void)showHUD{
     [self.hudView showAnimated:YES];
 }
@@ -103,23 +126,15 @@
     [self.customView removeFromSuperview];
 }
 
+-(void)setHudComplitionHandler:(MBProgressHUDCompletionBlock)handler{
+    self.hudView.completionBlock = handler;
+}
+
 -(void)hideHUDWithDelay:(CGFloat)delay{
     [self performSelector:@selector(hideHUD) withObject:self afterDelay:delay];
 }
 
 +(NSDictionary *)getErrorList{
-    return @{
-             @"401":NSLocalizedString(@"The host is not responding. Try connecting again later", @"401 error text"),
-             @"4061":NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"4061 error text"),
-             @"4062":NSLocalizedString(@"Host field should not be empty. Please, enter the host url and try again", @"4062 error text"),
-             @"500":NSLocalizedString(@"The e-mail or password you entered is incorrect", @"500 error text"),
-             @"1":@"",
-             @"9":@"",
-             @"101":@"invalid token",
-             @"102":@"authentication failure",
-             @"103":@"invalid data",
-             @"104":@"database error",
-             @"999":@"something goes wrong..."
-             };
+    return [[ErrorProvider instance]getErrorList];
 }
 @end

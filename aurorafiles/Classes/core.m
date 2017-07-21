@@ -31,6 +31,7 @@ static NSString *methodLogout = @"Logout";
 static NSString *methodLogin = @"Login";
 static NSString *methodGetUser = @"GetUser";
 
+
 -(id)init{
     self = [super init ];
     if(self){
@@ -60,8 +61,7 @@ static NSString *methodGetUser = @"GetUser";
 
 - (void)getUserWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
-                                                                    @"Method":methodGetUser,
-//                                                                    @"AuthToken":[Settings authToken]
+                                                                           @"Method":methodGetUser,
                                                                            }].mutableCopy;
     
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];

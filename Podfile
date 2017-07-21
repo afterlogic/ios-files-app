@@ -2,6 +2,7 @@ platform :ios, "8.0"
 
 inhibit_all_warnings!
 
+
 # Uncomment this line if you're using Swift
 # use_frameworks!
 
@@ -18,13 +19,13 @@ abstract_target 'Application' do
     pod 'Crashlytics'
     pod 'CocoaLumberjack'
     pod 'SWTableViewCell', '~> 0.3.7'
+    pod 'MMWormhole', '~> 2.0.0'
+    pod 'Reveal-SDK', :configurations => ['Debug']
     
     target 'aurorafiles' do
         pod 'MagicalRecord','~> 2.3.0'
         pod 'Reachability', '~> 3.2'
         pod 'CRMediaPickerController'
-        
-        
         #этот под не используется. Нужно согласовать его использование (текст и картинка-плейсхолдер для пустого датасета)
         pod 'DZNEmptyDataSet'
     end
@@ -43,13 +44,22 @@ abstract_target 'Application' do
     
 end
 
-
+#abstract_target 'Unit_tests' do
 target 'aurorafilesTests' do
+    inherit! :search_paths
     
+    pod 'Specta'
+    pod 'OCMockito'      # OCMock
 end
 
-target 'aurorafilesUITests' do
-    
+#end
+
+abstract_target 'UI-tests' do
+    target 'aurorafilesUITests' do
+        
+    end
 end
+
+
 
 

@@ -158,7 +158,7 @@
 - (IBAction)shareFileAction:(id)sender
 {
     Folder * object = self.currentPage.item;
-    if ([[Settings version] isEqualToString:@"P8"]) {
+    if ([[Settings lastLoginServerVersion] isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] getPublicLinkForFileNamed:object.name filePath:object.fullpath type:object.type size:object.size.stringValue isFolder:NO completion:^(NSString *publicLink, NSError *error) {
             DDLogDebug(@"link is -> %@", publicLink);
             NSMutableArray *publicLinkComponents = [publicLink componentsSeparatedByString:@"/"].mutableCopy;

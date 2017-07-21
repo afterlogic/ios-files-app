@@ -70,6 +70,7 @@ static NSString *createFolder       = @"FilesFolderCreate";
 static NSString *renameFolder       = @"FilesRename";
 static NSString *folderInfo         = @"FileInfo";
 static NSString *publicLink         = @"FilesCreatePublicLink";
+static NSString *logOutAction       = @"SystemLogout";
 
 -(id)init{
     self=[super init];
@@ -312,6 +313,41 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     }autoRetryOf:retryCount retryInterval:retryInterval];
     
+    [manager.operationQueue addOperation:operation];
+}
+
+- (void)signOut:(void(^)(BOOL success, NSError *error))handler{
+    NSDictionary *params = [NSDictionary new];
+    params = @{@"Action":logOutAction};
+    NSURLRequest * request = [self requestWithDictionary:params];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *error;
+            NSNumber *result;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if ([json isKindOfClass:[NSDictionary class]])
+            {
+                result = [NSNumber numberWithBool:[json valueForKey:@"Result"]];
+                if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }
+            }
+            BOOL success = result.boolValue;
+            handler(success,error);
+
+        });
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            handler(NO,error);
+        });
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     [manager.operationQueue addOperation:operation];
 }
 

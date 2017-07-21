@@ -45,7 +45,7 @@
 
 - (void)checkAppState{
     
-    if (![Settings version] || ![Settings domain]){
+    if (![Settings lastLoginServerVersion] || ![Settings domain]){
         [self showSignInScreen];
         return;
     }

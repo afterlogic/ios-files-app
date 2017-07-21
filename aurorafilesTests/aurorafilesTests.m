@@ -6,45 +6,95 @@
 //  Copyright © 2016 afterlogic. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-//#import "UPDFilesViewController.h"
-//#import "SessionProvider.h"
 
-@interface aurorafilesTests : XCTestCase{
-    
-}
-//@property (nonatomic) UPDFilesViewController * vcToTest;
 
-@end
+#import <Specta/Specta.h>
+#import <OCMockito/OCMockito.h>
+#import <OCHamcrest/OCHamcrest.h>
 
-@implementation aurorafilesTests
+#import "ApiProtocol.h"
+#import "ErrorProvider.h"
 
-- (void)setUp {
-    [super setUp];
-//    self.vcToTest = [[UPDFilesViewController alloc]init];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
+SpecBegin(ApiProtocol);
+describe(@"User session status", ^{
+    __block id<ApiProtocol> mockManager;
+    __block NSError *testError;
+    __block NSError *nilError;
+    __block void (^mockedBlock)(BOOL, NSError *) = ^void(BOOL isAuthorized, NSError *error){};
+    __block void (^userDataBlock)(BOOL, NSError *) = ^void(BOOL isAuthorized, NSError *error){};
+    describe(@"Check user status", ^{
+        beforeAll(^{
+            mockManager = mockProtocol(@protocol(ApiProtocol));
+            testError = [[ErrorProvider instance]generateError:@"070915"];
+            nilError = nil;
+            userDataBlock = nil;
+        });
+        context(@"Without error", ^{
+            before(^{
+                [givenVoid([mockManager userData:mockedBlock])willDo:^id _Nonnull(NSInvocation *args) {
+                    NSArray *arguments = [args mkt_arguments];
+                    NSLog(@"arg 0 is -> %@",arguments[0]);
+                    userDataBlock = arguments[0];
+                    userDataBlock(YES,nil);
+                    return nil;
+                }];
+            });
+            it(@"Signed in", ^{
+                [mockManager userData:^(BOOL authorised, NSError *error) {
+                    assertThatBool(authorised, isTrue());
+                    assertThat(error, nilValue());
+                }];
+            });
+            
+            before(^{
+                [givenVoid([mockManager userData:mockedBlock])willDo:^id _Nonnull(NSInvocation *args) {
+                    NSArray *arguments = [args mkt_arguments];
+                    userDataBlock = arguments[0];
+                    userDataBlock(NO,nil);
+                    return nil;
+                }];
+            });
+            it(@"Signed out", ^{
+                [mockManager userData:^(BOOL authorised, NSError *error) {
+                    assertThatBool(authorised, isFalse());
+                    assertThat(error, nilValue());
+                }];
+            });
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
+        });
+        
+        context(@"With error", ^{
+            before(^{
+                [givenVoid([mockManager userData:mockedBlock])willDo:^id _Nonnull(NSInvocation *args) {
+                    NSArray *arguments = [args mkt_arguments];
+                    userDataBlock = arguments[0];
+                    userDataBlock(YES,testError);
+                    return nil;
+                }];
+            });
+            it(@"Signed in", ^{
+                [mockManager userData:^(BOOL authorised, NSError *error) {
+                    assertThatBool(authorised, isTrue());
+                    assertThat(error, equalTo(testError));
+                }];
+            });
+            before(^{
+                [givenVoid([mockManager userData:mockedBlock])willDo:^id _Nonnull(NSInvocation *args) {
+                    NSArray *arguments = [args mkt_arguments];
+                    userDataBlock = arguments[0];
+                    userDataBlock(NO,testError);
+                    return nil;
+                }];
+            });
+            it(@"Signed out", ^{
+                [mockManager userData:^(BOOL authorised, NSError *error) {
+                    assertThatBool(authorised, isFalse());
+                    assertThat(error, equalTo(testError));
+                }];
+            });
 
-- (void)testCheckAuthorizeWithCompletion{
-//    XCTestExpectation *copletionExpectation = [self expectationWithDescription:@""];
-//    [SessionProvider checkAuthorizeWithCompletion]
-}
-
-//- (void)testPerformanceExample {
-//    // This is an example of a performance test case.
-//    [self measureBlock:^{
-//        // Put the code you want to measure the time of here.
-//    }];
-//}
-
-@end
+        });
+    });
+});
+SpecEnd

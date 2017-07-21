@@ -10,6 +10,8 @@
 
 @interface Settings : NSObject
 
++ (NSUserDefaults*)sharedDefaults;
+
 + (NSString*)domain;
 + (void)setDomain:(NSString *)domain;
 
@@ -35,7 +37,7 @@
 + (NSString *)isFirstRun;
 
 + (void)setLastLoginServerVersion:(NSString *)version;
-+ (NSString *)version;
++ (NSString *)lastLoginServerVersion;
 
 + (void)saveLastUsedFolder:(NSDictionary *)folder;
 + (NSDictionary *)getLastUsedFolder;
@@ -44,4 +46,5 @@
 + (BOOL)getIsLogedIn;
 
 + (void)clearSettings;
+
 @end

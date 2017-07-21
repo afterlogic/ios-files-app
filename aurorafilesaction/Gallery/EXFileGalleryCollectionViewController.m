@@ -51,14 +51,6 @@
     itemsCount = 0;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
-    //self.manager = [StorageManager sharedManager];
-    //NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
-    //fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-    //fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@",self.folder.fullpath,[Folder imageContentTypes],self.currentItem.type];
-    //NSError * error = nil;
-    
-    //self.panCollectionGesture.delegate = self;
-    //[self.collectionView addGestureRecognizer:self.panCollectionGesture];
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapsOnImage:)];
     self.tapGesture.delegate = self;
     
@@ -149,15 +141,8 @@
 
 -(BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    //if ([gestureRecognizer isEqual:self.panCollectionGesture])
-    //{
-    //    CGPoint translation =[gestureRecognizer translationInView:self.view];
-        
-    //    return(translation.x * translation.x < translation.y * translation.y);
-    //}
-    
     return YES;
-    
+
 }
 
 - (IBAction)moreItemAction:(id)sender
