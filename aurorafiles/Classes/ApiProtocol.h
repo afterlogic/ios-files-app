@@ -21,6 +21,7 @@
 
 
 #pragma mark - Files Operations
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void(^)(NSArray *items, NSError *error))completionHandler;
 - (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))completionHandler;
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))completionHandler;
 - (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))completionHandler;

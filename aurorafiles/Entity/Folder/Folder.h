@@ -24,9 +24,13 @@ typedef enum ActionType: int {
 
 // Insert code here to declare functionality of your managed object subclass
 + (FEMMapping*)defaultMapping;
++ (FEMMapping*)defaultMappingForNonCD;
 + (FEMMapping*)renameMapping;
+
 + (FEMMapping*)P8DefaultMapping;
++ (FEMMapping*)defaultP8MappingForNonCD;
 + (FEMMapping*)P8RenameMapping;
+
 - (BOOL)canEdit;
 - (BOOL)isImageContentType;
 - (BOOL)isZippedFile;
@@ -41,6 +45,7 @@ typedef enum ActionType: int {
 - (NSString *)localPath;
 - (NSDictionary *)folderMOC;
 
++ (Folder *)createSearchFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 InContext:(NSManagedObjectContext *) context;
 + (Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context;
 + (NSFetchRequest *)getFetchRequestInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
 + (NSArray *)fetchFoldersInContext:(NSManagedObjectContext *)context descriptors:(NSArray *)descriptors predicate:(NSPredicate *)predicate;
@@ -49,6 +54,7 @@ typedef enum ActionType: int {
 + (NSString *)getExistedFile:(Folder *)folder;
 + (NSURL*)downloadsDirectoryURL;
 + (BOOL)renameLocalFile:(Folder *)file newName:(NSString *)name;
++ (NSString *)generateParentPath:(NSString *)itemFullpath;
 
 
 @end

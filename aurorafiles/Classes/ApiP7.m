@@ -210,6 +210,45 @@ static NSString *logOutAction       = @"SystemLogout";
     [manager.operationQueue addOperation:operation];
 }
 
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSDictionary *data, NSError *))completionHandler{
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Pattern":searchPattern,@"Type": type}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+            }
+            if (error)
+            {
+                DDLogError(@"%@",[error localizedDescription]);
+                completionHandler(nil,error);
+                return ;
+            }
+            
+            completionHandler(json,error);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            completionHandler(nil, error);
+        });
+    }autoRetryOf:retryCountForFolderUpdate retryInterval:retryInterval];
+    
+    [manager.operationQueue addOperation:operation];
+}
+
 - (void)getFilesForFolder:(NSString *)folderName withType:(NSString *)type completion:(void (^)(NSDictionary *data, NSError* error))handler
 {
     NSString *encodedFolder = [folderName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
@@ -248,8 +287,6 @@ static NSString *logOutAction       = @"SystemLogout";
     }autoRetryOf:retryCountForFolderUpdate retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
-
-
 }
 
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password  loginType:(NSString *) type completion:(void (^)(NSDictionary *data, NSError *error))handler

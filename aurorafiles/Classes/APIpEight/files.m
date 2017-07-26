@@ -77,6 +77,10 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     [self getFilesForFolder:folderName withType:type searchPattern:@"" completion:handler];
 }
 
+
+- (void)searchFilesInSection:(NSString *)type pattern:(NSString *)searchPattern completion:(void (^)(NSArray *, NSError *))handler{
+    [self getFilesForFolder:@"" withType:type searchPattern:searchPattern completion:handler];
+}
 - (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items, NSError *error))handler{
     [self getFilesForFolder:folderName withType:type searchPattern:fileName completion:handler];
 }

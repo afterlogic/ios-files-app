@@ -22,42 +22,15 @@
 }
 
 #pragma mark - Folder Mapping
-+ (FEMMapping*)renameMapping
-{
++ (FEMMapping*)defaultMapping{
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"prKey";
-    [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
-    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
-    [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
-    [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
-    [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
-    [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
-    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
-    [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
-    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
-    [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
-    [mapping addAttributesFromDictionary:@{@"thumb":@"Thumb"}];
-    [mapping addAttributesFromDictionary:@{@"thumbnailLink":@"ThumbnailLink"}];
-    [mapping addAttributesFromDictionary:@{@"oembedHtml":@"OembedHtml"}];
-    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
-    [mapping addAttributesFromDictionary:@{@"isShared": @"IsShared"}];
-    [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
-    [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
-    [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
-
-    [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
-    
-    return mapping;
-
+    return [Folder setupDefaultMaping:mapping];
 }
 
-+ (FEMMapping*)defaultMapping
-{
-    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
-    mapping.primaryKey = @"prKey";
-    
++ (FEMMapping *)setupDefaultMaping:(FEMMapping *)mapping{
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
-//    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+    //    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
     [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
@@ -65,7 +38,10 @@
     [mapping addAttributesFromDictionary:@{@"isFolder":@"IsFolder"}];
     [mapping addAttributesFromDictionary:@{@"isLink": @"IsLink"}];
     FEMAttribute *linkType = [[FEMAttribute alloc]initWithProperty:@"linkType" keyPath:@"LinkType" map:^id _Nullable(id  _Nonnull value) {
-        if ([value isKindOfClass:[NSString class]]) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return value;
+        }
+        else if ([value isKindOfClass:[NSString class]]) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
             NSNumber *myNumber = [f numberFromString:(NSString *)value];
@@ -85,16 +61,20 @@
     [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
     [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
-
+    
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
     return mapping;
 }
 
-+ (FEMMapping*)P8DefaultMapping
-{
+
+
++ (FEMMapping*)P8DefaultMapping{
     FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
     mapping.primaryKey = @"prKey";
-    
+    return [Folder setupP8DefaultMaping:mapping];
+}
+
++ (FEMMapping *)setupP8DefaultMaping:(FEMMapping *)mapping{
     [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
     [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
     [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
@@ -124,7 +104,7 @@
     [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
     [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
     
-//    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
+    //    [mapping addAttributesFromDictionary:@{@"mainAction":@"MainAction"}];
     FEMAttribute *actionType = [[FEMAttribute alloc]initWithProperty:@"mainAction" keyPath:@"Actions" map:^id _Nullable(id  _Nonnull value) {
         NSString *resultAction = @"";
         if ([value isKindOfClass:[NSDictionary class]]) {
@@ -138,12 +118,12 @@
         return resultAction;
     } reverseMap:NULL];
     [mapping addAttribute:actionType];
-
+    
     [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
-
+    
     [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
     
-//    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
+    //    [mapping addAttributesFromDictionary:@{@"downloadUrl":@"DownloadUrl"}];
     FEMAttribute *downloadURL = [[FEMAttribute alloc] initWithProperty:@"downloadUrl" keyPath:@"Actions" map:^id(id value) {
         NSString *resultURL = @"";
         if ([value isKindOfClass:[NSDictionary class]]) {
@@ -157,7 +137,7 @@
         return resultURL;
     } reverseMap:nil];
     [mapping addAttribute:downloadURL];
-//    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
+    //    [mapping addAttributesFromDictionary:@{@"viewUrl":@"ViewUrl"}];
     FEMAttribute *viewURL = [[FEMAttribute alloc] initWithProperty:@"viewUrl" keyPath:@"Actions" map:^id(id value) {
         NSString *resultURL = @"";
         if ([value isKindOfClass:[NSDictionary class]]) {
@@ -172,9 +152,41 @@
     } reverseMap:nil];
     [mapping addAttribute:viewURL];
     [mapping addAttributesFromDictionary:@{@"thumbnailUrl":@"ThumbnailUrl"}];
-
+    
     
     return mapping;
+
+}
+
+
+
++ (FEMMapping*)renameMapping
+{
+    FEMMapping * mapping = [[FEMMapping alloc] initWithEntityName:@"Folder"];
+    mapping.primaryKey = @"prKey";
+    [mapping addAttributesFromDictionary:@{@"identifier":@"Id"}];
+    [mapping addAttributesFromDictionary:@{@"ownerId":@"OwnerId"}];
+    [mapping addAttributesFromDictionary:@{@"type":@"Type"}];
+    [mapping addAttributesFromDictionary:@{@"fullpath":@"FullPath"}];
+    [mapping addAttributesFromDictionary:@{@"name": @"Name"}];
+    [mapping addAttributesFromDictionary:@{@"size":@"Size"}];
+    [mapping addAttributesFromDictionary:@{@"linkType":@"LinkType"}];
+    [mapping addAttributesFromDictionary:@{@"linkUrl":@"LinkUrl"}];
+    [mapping addAttributesFromDictionary:@{@"contentType": @"ContentType"}];
+    [mapping addAttributesFromDictionary:@{@"iFramed": @"Iframed"}];
+    [mapping addAttributesFromDictionary:@{@"thumb":@"Thumb"}];
+    [mapping addAttributesFromDictionary:@{@"thumbnailLink":@"ThumbnailLink"}];
+    [mapping addAttributesFromDictionary:@{@"oembedHtml":@"OembedHtml"}];
+    [mapping addAttributesFromDictionary:@{@"folderHash":@"Hash"}];
+    [mapping addAttributesFromDictionary:@{@"isShared": @"IsShared"}];
+    [mapping addAttributesFromDictionary:@{@"owner":@"Owner"}];
+    [mapping addAttributesFromDictionary:@{@"content":@"Content"}];
+    [mapping addAttributesFromDictionary:@{@"isExternal":@"IsExternal"}];
+
+    [mapping addAttributesFromDictionary:@{@"prKey":@"primaryKey"}];
+    
+    return mapping;
+
 }
 
 + (FEMMapping*)P8RenameMapping
@@ -392,6 +404,18 @@
 
 #pragma mark - Folder Operations
 
++(Folder *)createSearchFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 InContext:(NSManagedObjectContext *) context{
+    NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
+    NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
+    [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
+    Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
+    item.toRemove = [NSNumber numberWithBool:NO];
+    item.isP8 = [NSNumber numberWithBool:isP8];
+    NSString *itemParentPath = [Folder generateParentPath:itemRef[@"FullPath"]];
+    item.parentPath = itemParentPath;
+    return item;
+}
+
 +(Folder *)createFolderFromRepresentation:(NSDictionary *)itemRef type:(BOOL )isP8 parrentPath:(NSString *)path InContext:(NSManagedObjectContext *) context{
     NSMutableDictionary * itemRefWithPrKey = itemRef.mutableCopy;
     NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
@@ -459,6 +483,16 @@
             break;
     }
     return result;
+}
+
++ (NSString *)generateParentPath:(NSString *)itemFullpath{
+    NSMutableArray *pathParts = [itemFullpath componentsSeparatedByString:@"/"].mutableCopy;
+    DDLogDebug(@"%@",pathParts);
+    [pathParts removeObject:[pathParts lastObject]];
+    if (pathParts.count == 1) {
+        return [pathParts lastObject];
+    }
+    return [pathParts componentsJoinedByString:@"/"];
 }
 
 @end

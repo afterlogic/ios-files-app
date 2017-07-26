@@ -169,6 +169,8 @@
     [self.apiManager signOut:handler];
 }
 #pragma mark - Files Operations
+
+
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self.apiManager createFolderWithName:name isCorporate:corporate andPath:path ? path : @"" completion:^(NSDictionary* data, NSError* error){
         if ([[data objectForKey:@"Result"]boolValue]) {
@@ -239,6 +241,25 @@
             items = @[];
         }
         complitionHandler(items,nil);
+    }];
+}
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))completionHandler{
+    [self.apiManager findFilesWithPattern:searchPattern type:type completion:^(NSDictionary* data, NSError *error) {
+        if(error){
+            completionHandler(@[],error);
+            return;
+        }
+        NSArray * items;
+        if (data && [data isKindOfClass:[NSDictionary class]] && [[data objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+        {
+            items = [[[data objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[data objectForKey:@"Result"] objectForKey:@"Items"] : @[];
+        }
+        else
+        {
+            items = @[];
+        }
+        completionHandler(items,nil);
     }];
 }
 

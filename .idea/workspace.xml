@@ -2,47 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3af01d9-5f83-4c91-bede-c08f74508665" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafilesTests/SessionProviderTest.m" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafilesaction/UserLoggedOutViewController.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/aurorafilesaction/UserLoggedOutViewController.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Podfile" afterPath="$PROJECT_DIR$/Podfile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Podfile.lock" afterPath="$PROJECT_DIR$/Podfile.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Save shortcut/Base.lproj/MainInterface.storyboard" afterPath="$PROJECT_DIR$/Save shortcut/Base.lproj/MainInterface.storyboard" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Save shortcut/ShareViewController.h" afterPath="$PROJECT_DIR$/Save shortcut/ShareViewController.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Save shortcut/ShareViewController.m" afterPath="$PROJECT_DIR$/Save shortcut/ShareViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/aurorafiles.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/AppDelegate.m" afterPath="$PROJECT_DIR$/aurorafiles/AppDelegate.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/P8Manager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/P8Manager.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/APIpEight/files.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiP7.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ApiProtocol.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ApiProtocol.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/ErrorProvider.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/NetworkManager.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/FileOperationsProvider.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/IFileOperationsProtocol.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/IFileOperationsProtocol.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/P7Manager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/P7Manager.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/SessionProvider.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/Settings.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/Settings.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/Settings.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/Settings.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/UploadDownloadProvider.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/UploadDownloadProvider.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/core.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/core.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Downloads/DownloadsTableViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryWrapperViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/Gallery/GalleryWrapperViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h" afterPath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" afterPath="$PROJECT_DIR$/aurorafiles/Classes/StorageManager/StorageManager.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/Files/UPDFilesViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/RootController/ARootViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/SignInViewController/SignInViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m" afterPath="$PROJECT_DIR$/aurorafiles/Controllers/SplashScreenController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesTests/aurorafilesTests.m" afterPath="$PROJECT_DIR$/aurorafilesTests/aurorafilesTests.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/ActionViewController.h" afterPath="$PROJECT_DIR$/aurorafilesaction/ActionViewController.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/ActionViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/ActionViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Base.lproj/MainInterface.storyboard" afterPath="$PROJECT_DIR$/aurorafilesaction/Base.lproj/MainInterface.storyboard" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/FilePath/TabBarWrapperViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/FilePath/UploadFoldersTableViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/Gallery/EXFileGalleryCollectionViewController.m" afterPath="$PROJECT_DIR$/aurorafilesaction/Gallery/EXFileGalleryCollectionViewController.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.h" afterPath="$PROJECT_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.m" afterPath="$PROJECT_DIR$/aurorafilesaction/SupportFiles/AuroraHUD.m" />
     </list>
     <ignored path="Aurora-git.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -79,8 +52,8 @@
               <caret line="163" column="7" lean-forward="false" selection-start-line="163" selection-start-column="7" selection-end-line="163" selection-end-column="7" />
               <folding>
                 <element signature="e#151#190#0" expanded="true" />
-                <marker date="1500484199000" expanded="true" signature="7489:7854" ph="..." />
-                <marker date="1500484199000" expanded="true" signature="7691:7851" ph="{...}" />
+                <marker date="1500644888000" expanded="true" signature="7489:7854" ph="..." />
+                <marker date="1500644888000" expanded="true" signature="7691:7851" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -89,11 +62,11 @@
       <file leaf-file-name="ShareViewController.m" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Save shortcut/ShareViewController.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2985">
-              <caret line="199" column="28" lean-forward="false" selection-start-line="199" selection-start-column="28" selection-end-line="199" selection-end-column="28" />
+            <state relative-caret-position="2760">
+              <caret line="184" column="28" lean-forward="false" selection-start-line="184" selection-start-column="28" selection-end-line="184" selection-end-column="28" />
               <folding>
                 <element signature="e#146#177#0" expanded="true" />
-                <marker date="1500398993000" expanded="true" signature="22036:22038" ph="..." />
+                <marker date="1500644888000" expanded="true" signature="21718:21720" ph="..." />
               </folding>
             </state>
           </provider>
@@ -105,8 +78,8 @@
             <state relative-caret-position="1755">
               <caret line="117" column="14" lean-forward="false" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
               <folding>
-                <marker date="1500571258000" expanded="true" signature="18446:18448" ph="{...}" />
-                <marker date="1500571258000" expanded="true" signature="18446:18450" ph="..." />
+                <marker date="1500644888000" expanded="true" signature="18206:18208" ph="{...}" />
+                <marker date="1500644888000" expanded="true" signature="18206:18210" ph="..." />
               </folding>
             </state>
           </provider>
@@ -128,7 +101,7 @@
             <state relative-caret-position="150">
               <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding>
-                <marker date="1499756574000" expanded="true" signature="463:887" ph="..." />
+                <marker date="1500644888000" expanded="true" signature="463:887" ph="..." />
               </folding>
             </state>
           </provider>
@@ -137,8 +110,8 @@
       <file leaf-file-name="WormholeProvider.m" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/WormholeProvider.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="31" column="5" lean-forward="false" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+            <state relative-caret-position="255">
+              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -255,8 +228,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="width" value="1920" />
-    <option name="height" value="1080" />
+    <option name="x" value="4" />
+    <option name="y" value="23" />
+    <option name="width" value="1916" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -339,11 +314,163 @@
     <property name="js.eslint.eslintPackage" value="" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="FullScreen" value="true" />
   </component>
   <component name="RestClientSettings">
     <option name="REQUEST_HISTORY">
       <list>
+        <RestClientRequest>
+          <option name="biscuits">
+            <list>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7tenantHash" />
+                <option name="path" value="/" />
+                <option name="value" value="aef90136" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="1503583067000" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7token" />
+                <option name="path" value="/" />
+                <option name="value" value="f3e2fc48b2bd1a9877ad7a35f53ea92c" />
+              </Biscuit>
+            </list>
+          </option>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Content-Type" />
+                <option name="value" value="application/x-www-form-urlencoded" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="Token=e5a549278a3949e8910ca21074751257&amp;AuthToken=7cf391e460030640389a11303d2945cf&amp;Type=personal&amp;Action=Files&amp;AccountID=382&amp;Path=&amp;" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="biscuits">
+            <list>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7tenantHash" />
+                <option name="path" value="/" />
+                <option name="value" value="aef90136" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="1503583067000" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7token" />
+                <option name="path" value="/" />
+                <option name="value" value="f3e2fc48b2bd1a9877ad7a35f53ea92c" />
+              </Biscuit>
+            </list>
+          </option>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="Token=e5a549278a3949e8910ca21074751257&amp;AuthToken=7cf391e460030640389a11303d2945cf&amp;Type=personal&amp;Action=Files&amp;AccountID=382&amp;Path=&amp;" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="Token=e5a549278a3949e8910ca21074751257&amp;AuthToken=7cf391e460030640389a11303d2945cf&amp;Type=personal&amp;Action=Files&amp;AccountID=382&amp;Path=&amp;" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+        <RestClientRequest>
+          <option name="biscuits">
+            <list>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7lang" />
+                <option name="path" value="/" />
+                <option name="value" value="English" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="-1" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7tenantHash" />
+                <option name="path" value="/" />
+                <option name="value" value="aef90136" />
+              </Biscuit>
+              <Biscuit>
+                <option name="date" value="1485094449000" />
+                <option name="domain" value="p7.afterlogic.com" />
+                <option name="name" value="p7token" />
+                <option name="path" value="/" />
+                <option name="value" value="63835a8445e34be5d946c21264e95d18" />
+              </Biscuit>
+            </list>
+          </option>
+          <option name="httpMethod" value="POST" />
+          <option name="urlBase" value="https://p7.afterlogic.com" />
+          <option name="urlPath" value="/" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="*/*" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Cache-Control" />
+                <option name="value" value="no-cache" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parameters">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="AuthToken" />
+                <option name="value" value="7cf391e460030640389a11303d2945cf" />
+              </KeyValuePair>
+              <KeyValuePair>
+                <option name="key" value="Token" />
+                <option name="value" value="e5a549278a3949e8910ca21074751257" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="parametersEnabled" value="true" />
+          <option name="haveTextToSend" value="true" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
         <RestClientRequest>
           <option name="biscuits">
             <list>
@@ -684,7 +811,7 @@
       <workItem from="1499171412311" duration="10364000" />
       <workItem from="1500465307640" duration="531000" />
       <workItem from="1500591778634" duration="152000" />
-      <workItem from="1500624836367" duration="127000" />
+      <workItem from="1500624836367" duration="2202000" />
     </task>
     <servers />
   </component>
@@ -697,7 +824,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="424953000" />
+    <option name="totallyTimeSpent" value="427028000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -710,25 +837,26 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
+    <frame x="4" y="23" width="1916" height="1057" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15481833" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15688367" sideWeight="0.4878049" order="2" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15742575" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25247526" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2041096" sideWeight="0.5067514" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3035144" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30416223" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14691943" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20396039" sideWeight="0.4932486" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23267327" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" x="-1308" y="-71" width="695" height="1010" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16986156" sideWeight="0.5121951" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25247526" sideWeight="0.48402557" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35682818" sideWeight="0.49604222" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="REST Client" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35643566" sideWeight="0.49604222" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32970297" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32772276" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1124,11 +1252,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Save shortcut/ShareViewController.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2985">
-          <caret line="199" column="28" lean-forward="false" selection-start-line="199" selection-start-column="28" selection-end-line="199" selection-end-column="28" />
+        <state relative-caret-position="2760">
+          <caret line="184" column="28" lean-forward="false" selection-start-line="184" selection-start-column="28" selection-end-line="184" selection-end-column="28" />
           <folding>
             <element signature="e#146#177#0" expanded="true" />
-            <marker date="1500398993000" expanded="true" signature="22036:22038" ph="..." />
+            <marker date="1500644888000" expanded="true" signature="21718:21720" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1146,8 +1274,8 @@
           <caret line="163" column="7" lean-forward="false" selection-start-line="163" selection-start-column="7" selection-end-line="163" selection-end-column="7" />
           <folding>
             <element signature="e#151#190#0" expanded="true" />
-            <marker date="1500484199000" expanded="true" signature="7489:7854" ph="..." />
-            <marker date="1500484199000" expanded="true" signature="7691:7851" ph="{...}" />
+            <marker date="1500644888000" expanded="true" signature="7489:7854" ph="..." />
+            <marker date="1500644888000" expanded="true" signature="7691:7851" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1157,8 +1285,8 @@
         <state relative-caret-position="1755">
           <caret line="117" column="14" lean-forward="false" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
           <folding>
-            <marker date="1500571258000" expanded="true" signature="18446:18448" ph="{...}" />
-            <marker date="1500571258000" expanded="true" signature="18446:18450" ph="..." />
+            <marker date="1500644888000" expanded="true" signature="18206:18208" ph="{...}" />
+            <marker date="1500644888000" expanded="true" signature="18206:18210" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1176,15 +1304,15 @@
         <state relative-caret-position="150">
           <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
-            <marker date="1499756574000" expanded="true" signature="463:887" ph="..." />
+            <marker date="1500644888000" expanded="true" signature="463:887" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aurorafiles/Classes/WormholeProvider.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="31" column="5" lean-forward="false" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+        <state relative-caret-position="255">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>

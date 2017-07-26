@@ -92,6 +92,13 @@
 }
 
 #pragma mark - Files Operations
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSArray *, NSError *))completionHandler{
+    [[ApiP8 filesModule]searchFilesInSection:type pattern:searchPattern completion:^(NSArray *result, NSError *error) {
+        completionHandler(result,error);
+    }];
+}
+
 -(void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [[ApiP8 filesModule]createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL result, NSError *error) {
         complitionHandler(result,error);

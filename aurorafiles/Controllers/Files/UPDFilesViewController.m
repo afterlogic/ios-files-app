@@ -50,12 +50,13 @@
     UIAlertAction * defaultAction;
 }
 
-@property (strong, nonatomic) NSURLSession * session;
-@property (strong, nonatomic) NSString * type;
-@property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
+@property (strong, nonatomic) NSURLSession *session;
+@property (strong, nonatomic) NSString *type;
+@property (strong, nonatomic) STZPullToRefresh *lineRefreshController;
 @property (strong, nonatomic) STZPullToRefreshView *refreshView;
 @property (strong, nonatomic) NSManagedObjectContext * defaultMOC;
-@property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSArray* folderSubFolders;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -67,6 +68,7 @@
 @property (strong, nonatomic) SessionProvider *sessionProvider;
 @property (strong, nonatomic) StorageManager *storageManager;
 @property (strong, nonatomic) UploadDownloadProvider *uploadDownloadManager;
+@property (nonatomic, assign) BOOL searchState;
 @end
 
 @implementation UPDFilesViewController
@@ -79,6 +81,7 @@
     [super awakeFromNib];
     self.isCorporate = NO;
     self.isP8 = NO;
+    self.searchState = NO;
 }
 
 - (void)viewDidLoad
@@ -179,7 +182,6 @@
     self.pickerController.delegate = self;
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
-    
     
     self.toolbar.hidden = NO;
     
@@ -309,7 +311,21 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    [self updateSearchResultsWithQuery:searchText];
+    if (searchText.length > 0) {
+        [self.storageManager searchFilesUsingPattern:searchText type:self.type handler:^(NSArray *items, NSError *error) {
+            if (error) {
+                self.searchState = NO;
+                [[ErrorProvider instance]generatePopWithError:error controller:self];
+                return;
+            }
+            self.searchState = YES;
+            [self updateSearchResultWithItems:items];
+        }];
+    }else{
+        self.searchState = NO;
+        [self updateSearchResultWithItems:nil];
+    }
+    
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -322,8 +338,14 @@
     [searchBar resignFirstResponder];
 }
 
+- (void)updateSearchResultWithItems:(NSArray *)items{
+    self.folderSubFolders = items;
+    [self.tableView reloadData];
+}
+
 - (void)updateSearchResultsWithQuery:(NSString*)text
 {
+    
     NSArray * existItems = self.fetchedResultsController.fetchedObjects;
     NSMutableArray * indexPathsToDelete = [[NSMutableArray alloc] init];
     
@@ -334,7 +356,7 @@
     NSPredicate * predicate;
     if (text && text.length)
     {
-         predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"",text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"",text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     else
     {
@@ -366,7 +388,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+//    Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+    Folder* object = [self.folderSubFolders objectAtIndex:indexPath.row];
     
     [self.sessionProvider cancelAllOperations];
     
@@ -395,7 +418,7 @@
         }
         else
         {
-                [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+            [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
         }
         
     }
@@ -409,15 +432,15 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[section];
-    if ([info numberOfObjects]==0) {
+//    id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[section];
+    if (self.folderSubFolders.count == 0) {
         self.tableView.backgroundView = noDataLabel;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.tableView.backgroundView = nil;
     }
-    return [info numberOfObjects];
+    return self.folderSubFolders.count;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -432,7 +455,7 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray * objects = [self.fetchedResultsController fetchedObjects];
+    NSArray * objects = self.folderSubFolders;
     Folder * object = [objects objectAtIndex:indexPath.row];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
     cell.imageView.image = nil;
@@ -494,7 +517,6 @@
             if (completionHandler)
             {
                 [self fetchData];
-//                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
                 if (itemsCount ==0) {
                     noDataLabel.text = NSLocalizedString(@"Folder is empty", @"files view empty title");
                 }
@@ -538,7 +560,8 @@
 }
 
 -(void)tableViewCellDownload:(UITableViewCell *)cell{
-    Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+//    Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+    Folder * folder = [self.folderSubFolders objectAtIndex:[self.tableView indexPathForCell:cell].row];
     if (folder.isDownloaded.boolValue)
     {
         return;
@@ -589,7 +612,8 @@
 
 - (void)tableViewCellMoreAction:(UITableViewCell *)cell
 {
-    Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+//    Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+    Folder * folder = [self.folderSubFolders objectAtIndex:[self.tableView indexPathForCell:cell].row];
     self.folderToOperate = folder;
     alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"more action popup title text")
                                                                     message:nil
@@ -611,6 +635,20 @@
 
 #pragma mark NSFetchedResultsController
 
+- (NSArray *)folderSubFolders{
+    
+    if(self.searchState){
+        return _folderSubFolders;
+    }
+    
+    if(!_folderSubFolders){
+        _folderSubFolders = [[NSArray alloc]init];
+    }
+    [self.fetchedResultsController performFetch:nil];
+    _folderSubFolders = [self.fetchedResultsController fetchedObjects];
+    return _folderSubFolders;
+}
+
 - (NSFetchedResultsController *)fetchedResultsController{
     
     if (_fetchedResultsController) {
@@ -631,6 +669,7 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
+    DDLogDebug(@"Something did chage");
     [self.tableView reloadData];
 }
 
@@ -1103,7 +1142,8 @@
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
     [self.fetchedResultsController performFetch:nil];
-    Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+//    Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+    Folder * folder = [self.folderSubFolders objectAtIndex:cellIndexPath.row];
     switch (index) {
         case 0:{
             DDLogDebug(@"Rename button pressed");
@@ -1201,7 +1241,8 @@
 
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Folder * object = [self.folderSubFolders objectAtIndex:indexPath.row];
     NSString * path = [object localPath];
     
     NSFileManager * manager = [NSFileManager defaultManager];
@@ -1221,7 +1262,8 @@
 }
 
 -(void)removeFileByIndexPath:(NSIndexPath *)indexPath{
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Folder * object = [self.folderSubFolders objectAtIndex:indexPath.row];
     object.wasDeleted = @YES;
     [self removeItem:object];
 }
@@ -1255,14 +1297,16 @@
 {
     if ([segue.identifier isEqualToString:@"UPDGoToFolderSegue"])
     {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+//        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         UPDFilesViewController * vc = [segue destinationViewController];
         vc.folder = object;
         vc.isCorporate = self.isCorporate;
     }
     if ([segue.identifier isEqualToString:@"OpenFileSegue"])
     {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+//        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         FileDetailViewController * vc = [segue destinationViewController];
         NSString *viewLink = nil;
         if ([[Settings lastLoginServerVersion]isEqualToString:@"P8"]) {
@@ -1282,7 +1326,8 @@
     }
     if ([segue.identifier isEqualToString:@"OpenFileGallerySegue"])
     {
-        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+//        Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];

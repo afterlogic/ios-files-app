@@ -17,6 +17,7 @@
 - (void)renameFolderFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(NSDictionary *result, NSError *error))handler;
 - (void)checkItemExistanceOnServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler;
 - (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler;
+- (void)findFilesUsingPattern:(NSString *)searchPattern withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler;
 - (void)stopDownloadigThumbForFile:(NSString *)fileName;
 
 - (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL, NSError *error))complitionHandler;

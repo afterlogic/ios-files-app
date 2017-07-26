@@ -42,7 +42,16 @@
     [self setupNetworkManager];
     [self.networkManager getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items, NSError *error) {
         if (error){
-//            [[ErrorProvider instance] generatePopWithError:error controller:nil];
+            complitionHandler(@[],error);
+        }else{
+            complitionHandler(items,nil);
+        }
+    }];
+}
+
+- (void)findFilesUsingPattern:(NSString *)searchPattern withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))complitionHandler{
+    [self.networkManager findFilesWithPattern:searchPattern type:type completion:^(NSArray *items, NSError *error) {
+        if (error){
             complitionHandler(@[],error);
         }else{
             complitionHandler(items,nil);
