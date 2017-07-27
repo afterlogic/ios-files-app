@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="GaS-GA-SMA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -468,6 +468,7 @@
                         <outlet property="backButton" destination="drg-oh-tJj" id="5nm-Fi-hCi"/>
                         <outlet property="doneButton" destination="T6f-RQ-OkT" id="ttt-qX-CjN"/>
                         <outlet property="editButton" destination="iJm-ms-mGI" id="gez-tR-NPr"/>
+                        <outlet property="searchBar" destination="ay3-OO-7rw" id="pHv-9J-t9m"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKR-bn-oJu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -553,6 +554,7 @@
                         <outlet property="backButton" destination="2EC-o2-eyC" id="oFV-qz-KN8"/>
                         <outlet property="doneButton" destination="ApG-Pq-3FI" id="KTH-LH-Ch9"/>
                         <outlet property="editButton" destination="RfH-Hx-DRX" id="Hmh-Ij-6yk"/>
+                        <outlet property="searchBar" destination="zyA-19-EXD" id="Oeo-Iy-Otj"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xHp-N4-7ff" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -25,12 +25,17 @@
 
 //static const int minimalStringLengthFiles = 1;
 
+static const int minSearchStringLength = 2;
+static const CGFloat searchDelay = 1.2f;
+
 @interface UploadFoldersTableViewController () <UITableViewDataSource, UITableViewDelegate,STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,
 UISearchBarDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, FilesTableViewCellDelegate,
 NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     
     UIAlertController * alertController;
     UIAlertAction * defaultAction;
+    NSTimer *userSearchRequestTimer;
+    NSString *searchQuery;
 }
 
 @property (strong, nonatomic) NSURLSession * session;
@@ -42,6 +47,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 @property (strong, nonatomic) Folder * folderToNavigate;
 @property (weak, nonatomic) IBOutlet UIRefreshControl *refreshController;
 @property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
+@property (nonatomic, assign) BOOL searchState;
 
 @end
 
@@ -56,6 +62,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 - (void)awakeFromNib{
     [super awakeFromNib];
     self.isCorporate = NO;
+    self.searchState = NO;
 }
 
 - (void)viewDidLoad {
@@ -80,6 +87,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     self.lineRefreshController = [[STZPullToRefresh alloc] initWithTableView:nil refreshView:refreshView tableViewDelegate:self];
     
     [self.refreshController addTarget:self action:@selector(tableViewPullToRefresh:) forControlEvents:UIControlEventValueChanged];
+    
     self.searchBar.delegate = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"FilesTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:[FilesTableViewCell cellId]];
@@ -222,11 +230,48 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    [self updateSearchResultsWithQuery:searchText];
+    if (searchText.length > minSearchStringLength) {
+        [userSearchRequestTimer invalidate];
+        userSearchRequestTimer = nil;
+        searchQuery = searchText;
+        userSearchRequestTimer = [NSTimer scheduledTimerWithTimeInterval:searchDelay target:self selector:@selector(runSearch) userInfo:nil repeats:NO];
+        
+        //        [self runSearch];
+    }else{
+        [userSearchRequestTimer invalidate];
+        userSearchRequestTimer = nil;
+        self.searchState = NO;
+        //        [self updateSearchResultWithItems:nil];
+        [self updateSearchResultsWithQuery:nil];
+    }
 }
+
+-(void)runSearch{
+    __block UIActivityIndicatorView *searchBarActivityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    CGFloat searchBarX = CGRectGetWidth(self.searchBar.frame) - CGRectGetWidth(searchBarActivityView.frame) - 40;
+    CGFloat searchBarY = CGRectGetHeight(self.searchBar.frame) - CGRectGetHeight(searchBarActivityView.frame) - 12.5;
+    [searchBarActivityView setFrame:CGRectMake(searchBarX, searchBarY, CGRectGetWidth(searchBarActivityView.frame), CGRectGetHeight(searchBarActivityView.frame))];
+    
+    [self.searchBar addSubview:searchBarActivityView];
+    [searchBarActivityView startAnimating];
+    [[StorageManager sharedManager] searchFilesUsingPattern:searchQuery type:self.type handler:^(NSInteger itemsCount, NSError *error) {
+        if (error) {
+            self.searchState = NO;
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [searchBarActivityView stopAnimating];
+            return;
+        }
+        self.searchState = YES;
+        [searchBarActivityView stopAnimating];
+        [searchBarActivityView removeFromSuperview];
+        [self updateSearchResultsWithQuery:searchQuery];
+    }];
+}
+
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    self.searchState = NO;
     [self updateSearchResultsWithQuery:nil];
 }
 
@@ -247,12 +292,12 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     NSPredicate * predicate;
     if (text && text.length)
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath,text];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND isFolder = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]], [NSNumber numberWithBool:YES]];
         
     }
     else
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     
     self.fetchedResultsController.fetchRequest.predicate = predicate;

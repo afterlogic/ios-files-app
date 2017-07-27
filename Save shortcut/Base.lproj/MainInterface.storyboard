@@ -397,6 +397,7 @@
                         <outlet property="backButton" destination="1Bo-1j-vPp" id="Iwy-jM-EHM"/>
                         <outlet property="doneButton" destination="z4b-wJ-ttB" id="HO2-Qb-SMv"/>
                         <outlet property="editButton" destination="lZ8-GU-ywo" id="vli-wQ-opf"/>
+                        <outlet property="searchBar" destination="ye3-22-MwR" id="Kyd-rV-Ydh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0UH-sN-eFG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -482,6 +483,7 @@
                         <outlet property="backButton" destination="hc8-A1-dza" id="BO4-UV-Og9"/>
                         <outlet property="doneButton" destination="mG8-nR-uCy" id="Shg-za-cub"/>
                         <outlet property="editButton" destination="mZB-yf-E2k" id="GVX-Uq-7sf"/>
+                        <outlet property="searchBar" destination="Mz1-yk-OVS" id="lcX-pY-WzD"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vKS-wk-nxg" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -26,6 +26,7 @@
 #pragma mark - Managed Object Operations
 
 - (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block;
+- (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block completionBlock:(void(^)()) completionBlock;
 - (void)saveWithBlockUsingTmpContext:(void(^)(NSManagedObjectContext *context))block;
 - (void)deleteObject:(id)object fromContext:(NSManagedObjectContext *)context;
 

@@ -257,17 +257,22 @@
         }];
 }
 
-- (void)searchFilesUsingPattern:(NSString *)pattern type:(NSString *) type handler:(void(^)(NSArray *items, NSError *error ))complitionHandler{
+- (void)searchFilesUsingPattern:(NSString *)pattern type:(NSString *) type handler:(void(^)(NSInteger itemsCount, NSError *error ))complitionHandler{
     [self.fileOperationsProvider findFilesUsingPattern:pattern withType:type completion:^(NSArray *items, NSError *error) {
         if(error){
-            complitionHandler(@[], error);
+            complitionHandler(0, error);
         }else{
-            NSMutableArray *searchItems = [NSMutableArray new];
-            for (NSDictionary *itemRef in items ) {
-                Folder *searchFolder = [Folder createSearchFolderFromRepresentation:itemRef type:[[Settings lastLoginServerVersion] isEqualToString:@"P8"] InContext:self.DBProvider.defaultMOC];
-                [searchItems addObject:searchFolder];
-            }
-            complitionHandler(searchItems.copy, nil);
+            __block NSMutableArray *searchItems = [NSMutableArray new];
+            [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+                for (NSDictionary *itemRef in items ) {
+                        Folder *searchFolder = [Folder createSearchFolderFromRepresentation:itemRef type:[[Settings lastLoginServerVersion] isEqualToString:@"P8"] InContext:self.DBProvider.defaultMOC];
+                        [searchItems addObject:searchFolder];
+                }
+            } completionBlock:^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    complitionHandler(items.count, nil);
+                });
+            }];
         }
     }];
 }

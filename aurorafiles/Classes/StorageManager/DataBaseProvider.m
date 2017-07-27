@@ -100,13 +100,47 @@
 
 - (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block {
 
+//    NSBlockOperation *saveOperation = [NSBlockOperation blockOperationWithBlock:^{
+//        NSManagedObjectContext *tmpContext = self.operationsMOC;
+//        [tmpContext performBlock:^{
+//            if (block){
+//                block(tmpContext);
+//            }
+//
+//            NSError *error = [NSError new];
+//            if (![tmpContext save:&error])
+//            {
+//                //handle error
+//                DDLogError(@"context saved in childContext- ❌. Error is -> %@",error.localizedDescription);
+//            }else{
+//                [self.defaultMOC performBlock:^{
+//                    NSError *error = [NSError new];
+//                    if ([self.defaultMOC save:&error]) {
+//                        DDLogDebug(@"context saved -> ✅");
+//                    }else{
+//                        DDLogError(@"context saved - ❌. Error is -> %@",error.localizedDescription);
+//                    }
+//                }];
+//            }
+//        }];
+//    }];
+//
+//    [saveOperation setCompletionBlock:^{
+//
+//    }];
+//
+//    [self.dataBaseOperationsQueue addOperation:saveOperation];
+    [self saveWithBlock:block completionBlock:nil];
+}
+
+- (void)saveWithBlock:(void (^)(NSManagedObjectContext *context))block completionBlock:(void(^)()) completionBlock{
     NSBlockOperation *saveOperation = [NSBlockOperation blockOperationWithBlock:^{
         NSManagedObjectContext *tmpContext = self.operationsMOC;
         [tmpContext performBlock:^{
             if (block){
                 block(tmpContext);
             }
-
+            
             NSError *error = [NSError new];
             if (![tmpContext save:&error])
             {
@@ -124,11 +158,9 @@
             }
         }];
     }];
-
-    [saveOperation setCompletionBlock:^{
-
-    }];
-
+    
+    [saveOperation setCompletionBlock:completionBlock];
+    
     [self.dataBaseOperationsQueue addOperation:saveOperation];
 }
 
