@@ -235,13 +235,10 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
         userSearchRequestTimer = nil;
         searchQuery = searchText;
         userSearchRequestTimer = [NSTimer scheduledTimerWithTimeInterval:searchDelay target:self selector:@selector(runSearch) userInfo:nil repeats:NO];
-        
-        //        [self runSearch];
     }else{
         [userSearchRequestTimer invalidate];
         userSearchRequestTimer = nil;
         self.searchState = NO;
-        //        [self updateSearchResultWithItems:nil];
         [self updateSearchResultsWithQuery:nil];
     }
 }
@@ -292,7 +289,7 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     NSPredicate * predicate;
     if (text && text.length)
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND isFolder = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]], [NSNumber numberWithBool:YES]];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND isFolder = YES AND wasDeleted= NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
         
     }
     else
@@ -310,10 +307,11 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
         [indexPathsToInsert addObject:[self.fetchedResultsController indexPathForObject:obj]];
     }
     
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+//    [self.tableView beginUpdates];
+//    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView endUpdates];
+    [self.tableView reloadData];
 }
 
 
@@ -625,14 +623,17 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                     if(error){
                         [[ErrorProvider instance]generatePopWithError:error controller:self
                                                    customCancelAction:^(UIAlertAction *cancelAction) {
-                                                      [self.fetchedResultsController performFetch:nil];
+                                                       if(self.searchState){
+                                                           [self runSearch];
+                                                       }else{
+                                                           [self.fetchedResultsController performFetch:nil];
+                                                       }
                                                    }
                                                           retryAction:actionBlock];
                         return;
                     }
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            
                             [self.tableView reloadData];
                         });
                     }];
@@ -672,7 +673,11 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
 //                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-                            [self.tableView reloadData];
+                            if (self.searchState){
+                                [self runSearch];
+                            }else{
+                                [self.tableView reloadData];
+                            }
                         });
                     }];
                 }else{
@@ -745,7 +750,15 @@ NSURLSessionDownloadDelegate,SWTableViewCellDelegate>{
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc]
                                   initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+    
+    
+    NSPredicate *predicate;
+    if(self.searchState){
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND wasDeleted = NO AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),searchQuery, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+    }else{
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];    }
+    
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted= NO AND isP8 = %@ AND isFolder = YES",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     NSError * error;
 
     NSManagedObjectContext *moc = self.managedObjectContext;

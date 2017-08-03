@@ -321,13 +321,10 @@ static const CGFloat searchDelay = 1.2f;
         userSearchRequestTimer = nil;
         searchQuery = searchText;
         userSearchRequestTimer = [NSTimer scheduledTimerWithTimeInterval:searchDelay target:self selector:@selector(runSearch) userInfo:nil repeats:NO];
-        
-//        [self runSearch];
     }else{
         [userSearchRequestTimer invalidate];
         userSearchRequestTimer = nil;
         self.searchState = NO;
-//        [self updateSearchResultWithItems:nil];
         [self updateSearchResultsWithQuery:nil];
     }
 }
@@ -365,11 +362,6 @@ static const CGFloat searchDelay = 1.2f;
     [searchBar resignFirstResponder];
 }
 
-- (void)updateSearchResultWithItems:(NSArray *)items{
-    self.folderSubFolders = items;
-    [self.tableView reloadData];
-}
-
 - (void)updateSearchResultsWithQuery:(NSString*)text
 {
     
@@ -380,17 +372,23 @@ static const CGFloat searchDelay = 1.2f;
     {
         [indexPathsToDelete addObject:[self.fetchedResultsController indexPathForObject:obj]];
     }
+    NSSortDescriptor *isFolder = [[NSSortDescriptor alloc] initWithKey:@"isFolder" ascending:NO];
+    NSSortDescriptor *title = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     NSPredicate * predicate;
     if (text && text.length)
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND wasDeleted = NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     else
     {
         predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     
-    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    NSManagedObjectContext *moc = self.defaultMOC;
+    NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
+//    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
+    _fetchedResultsController.delegate = self;
     [self.fetchedResultsController performFetch:nil];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
     if (newItems.count == 0){
@@ -405,10 +403,12 @@ static const CGFloat searchDelay = 1.2f;
         [indexPathsToInsert addObject:[self.fetchedResultsController indexPathForObject:obj]];
     }
     
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+//    [self.tableView beginUpdates];
+//    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView endUpdates];
+    [self.tableView reloadData];
+    
 }
 
 #pragma mark TableView
@@ -1195,7 +1195,7 @@ static const CGFloat searchDelay = 1.2f;
                 [textField setDelegate:self];
             }];
             
-            void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+           void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                 if (!folder)
                 {
                     return ;
@@ -1212,18 +1212,26 @@ static const CGFloat searchDelay = 1.2f;
                         [[ErrorProvider instance]generatePopWithError:error
                                                            controller:self
                                                    customCancelAction:^(UIAlertAction *cancelAction) {
-                                                       [self.fetchedResultsController performFetch:nil];
+                                                       if(self.searchState){
+                                                           [self runSearch];
+                                                       }else{
+                                                           [self.fetchedResultsController performFetch:nil];
+                                                       }
+                                                       
                                                    }
                                                           retryAction:actionBlock];
                         return;
                     }
                     if(updatedFile && !updatedFile.isFault){
-                        [self updateFiles:^(){
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                
-                                [self.tableView reloadData];
-                            });
-                        }];
+                        if(self.searchState){
+                            [self runSearch];
+                        }else{
+                            [self updateFiles:^(){
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [self.tableView reloadData];
+                                });
+                            }];
+                        }
                     }
                 }];
             };
@@ -1255,7 +1263,11 @@ static const CGFloat searchDelay = 1.2f;
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [MBProgressHUD hideHUDForView:self.view animated:YES];
-                            [self.tableView reloadData];
+                            if (self.searchState){
+                                [self runSearch];
+                            }else{
+                                [self.tableView reloadData];
+                            }
                         });
                     }];
                 }else{
@@ -1370,7 +1382,7 @@ static const CGFloat searchDelay = 1.2f;
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
         if (self.searchState){
-            fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND contentType IN (%@)",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),searchQuery, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]],[Folder imageContentTypes]];
+            fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND wasDeleted = NO AND contentType IN (%@)",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),searchQuery, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]],[Folder imageContentTypes]];
         }else{
             fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.type, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
         }

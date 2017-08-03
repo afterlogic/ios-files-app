@@ -409,7 +409,7 @@
     NSString *primaryKey = [NSString stringWithFormat:@"%@:%@",itemRef[@"Type"],itemRef[@"FullPath"]];
     [itemRefWithPrKey setObject:primaryKey forKey:@"primaryKey"];
     Folder *item = [FEMDeserializer objectFromRepresentation:itemRefWithPrKey mapping:isP8 ? [Folder P8DefaultMapping]:[Folder defaultMapping] context:context];
-    item.toRemove = [NSNumber numberWithBool:NO];
+    item.toRemove = [NSNumber numberWithBool:YES];
     item.isP8 = [NSNumber numberWithBool:isP8];
     NSString *itemParentPath = [Folder generateParentPath:itemRef[@"FullPath"]];
     item.parentPath = itemParentPath;
