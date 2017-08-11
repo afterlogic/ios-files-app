@@ -801,6 +801,7 @@ static NSString *logOutAction       = @"SystemLogout";
     [newDict setObject:[NSNumber numberWithBool:isFolder].stringValue forKey:@"IsFolder"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
     
+   __block NSString * linkHostName = @"localhostshare";
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -817,6 +818,7 @@ static NSString *logOutAction       = @"SystemLogout";
             {
                 if ([[json objectForKey:@"Result"] isKindOfClass:[NSString class]]) {
                     result = [json objectForKey:@"Result"];
+                    result = [result stringByReplacingOccurrencesOfString:linkHostName withString:[Settings domain]];
                 }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
                     NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];

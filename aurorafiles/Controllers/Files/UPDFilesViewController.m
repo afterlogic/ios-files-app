@@ -98,7 +98,7 @@ static const CGFloat searchDelay = 1.2f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
     self.uploadDownloadManager = [UploadDownloadProvider providerWithDefaultMOC:self.defaultMOC
                                                                  storageManager:self.storageManager
                                                        fetchedResultsController:self.fetchedResultsController];
@@ -249,6 +249,10 @@ static const CGFloat searchDelay = 1.2f;
         self.title = _folder.name;
     }
 }
+
+//- (Folder *)folder{
+//    return _folder;
+//}
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
@@ -698,7 +702,7 @@ static const CGFloat searchDelay = 1.2f;
     
     NSManagedObjectContext *moc = self.defaultMOC;
     NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
-    
+    [req setReturnsObjectsAsFaults:NO];
     _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
     
@@ -751,7 +755,13 @@ static const CGFloat searchDelay = 1.2f;
                                                               
                                                           }];
     
-    self.folderToOperate = _folder;
+    if ([self.folder isFault]){
+        DDLogDebug(@"folder is fault");
+    }else{
+        self.folderToOperate = self.folder;
+    }
+    
+    
     if (![self.folder isZippedFile] && ![self.folder isZipArchive]){
         [alertController addAction:[self createFolderAction]];
         [alertController addAction:[self createShortcutAction]];
@@ -1009,6 +1019,7 @@ static const CGFloat searchDelay = 1.2f;
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
                                                                                                                                     message:nil
                                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                                                             
                                                              [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
                                                                  textField.text = _folderToOperate.name;
@@ -1348,7 +1359,6 @@ static const CGFloat searchDelay = 1.2f;
     if ([segue.identifier isEqualToString:@"UPDGoToFolderSegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-//        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         UPDFilesViewController * vc = [segue destinationViewController];
         vc.folder = object;
         vc.isCorporate = self.isCorporate;
@@ -1356,7 +1366,6 @@ static const CGFloat searchDelay = 1.2f;
     if ([segue.identifier isEqualToString:@"OpenFileSegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-//        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         FileDetailViewController * vc = [segue destinationViewController];
         NSString *viewLink = nil;
         if ([[Settings lastLoginServerVersion]isEqualToString:@"P8"]) {
@@ -1377,7 +1386,6 @@ static const CGFloat searchDelay = 1.2f;
     if ([segue.identifier isEqualToString:@"OpenFileGallerySegue"])
     {
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
-//        Folder * object = [self.folderSubFolders objectAtIndex:self.tableView.indexPathForSelectedRow.row];
         
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];

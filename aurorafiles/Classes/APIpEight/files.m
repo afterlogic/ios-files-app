@@ -791,7 +791,8 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     }].mutableCopy;
     
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
-
+//    __block NSString * linkHostName = @"localhostshare";
+    
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -813,6 +814,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
                 {
                     if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodGetPublicLink]) {
                         result = [json valueForKey:@"Result"];
+                        result = [NSString stringWithFormat:@"%@/%@", [Settings domain],result];
                     }
                 }
                 else

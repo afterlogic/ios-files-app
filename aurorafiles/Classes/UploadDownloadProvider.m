@@ -138,11 +138,25 @@
              NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
              NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
              NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : pageLink;
-             NSString *shortcutName = tmpShortcutName;
+             
+//             NSString *shortcutName = tmpShortcutName;
+             NSString *shortcutName;
+             
              if(![tmpShortcutName isEqualToString:pageLink]){
                  NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
                  shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
              }
+             
+             NSURL *tmpShortcutUrl = [NSURL URLWithString:tmpShortcutName];
+             if([tmpShortcutUrl scheme]){
+                 NSString *urlScheme = [NSString stringWithFormat:@"%@://",[tmpShortcutUrl scheme]];
+                 tmpShortcutName = [[tmpShortcutUrl absoluteString] stringByReplacingOccurrencesOfString:urlScheme withString:@""];
+             }
+             
+             if (shortcutName == nil  ){
+                 shortcutName = tmpShortcutName;
+             }
+             
              NSURL *resourceUrl = task.originalRequest.URL;
              NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
              NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];
