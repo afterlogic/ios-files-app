@@ -98,7 +98,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="0.92549019610000005" green="0.91372549020000005" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.92518109083175659" green="0.91415047645568848" blue="0.87903958559036255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cWj-pv-6kf" firstAttribute="centerY" secondItem="RSU-jQ-CwF" secondAttribute="centerY" id="0TB-Ii-c0j"/>
                             <constraint firstItem="DKH-v5-lX9" firstAttribute="top" secondItem="cWj-pv-6kf" secondAttribute="bottom" id="GKs-xf-2yG"/>
@@ -114,12 +114,173 @@
                         <outlet property="passwordField" destination="l28-wP-U8W" id="AzM-CA-Jlu"/>
                         <outlet property="scrollView" destination="cWj-pv-6kf" id="M71-WD-XPx"/>
                         <outlet property="signInButton" destination="8Vv-6p-Vpd" id="6MI-km-4gB"/>
-                        <segue destination="5Ps-Gh-DS5" kind="show" identifier="succeedLogin" id="6nU-wd-HxJ"/>
+                        <segue destination="h40-kx-V7f" kind="show" identifier="hostHasBeenAllowed" id="O5g-Av-MMR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="goW-XZ-iGM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2764" y="695"/>
+            <point key="canvasLocation" x="-3359" y="671"/>
+        </scene>
+        <!--Sign In Step Two View Controller-->
+        <scene sceneID="EmA-CD-v5k">
+            <objects>
+                <viewController id="h40-kx-V7f" customClass="SignInStepTwoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nsl-aL-jPP"/>
+                        <viewControllerLayoutGuide type="bottom" id="HNK-D8-Yqo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="59c-hs-MCi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BZk-ce-3aE">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3e5-qW-Qfc">
+                                        <rect key="frame" x="20" y="111" width="335" height="136"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="a5R-JS-fr2" customClass="UITextFieldCustomEdges">
+                                                <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="t7g-cT-ZxL"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TWh-YI-QUX" customClass="UITextFieldCustomEdges">
+                                                <rect key="frame" x="0.0" y="48" width="335" height="40"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="Qef-eF-uQY"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reb-7F-Pud">
+                                                <rect key="frame" x="0.0" y="96" width="335" height="40"/>
+                                                <color key="backgroundColor" red="0.50588235290000005" green="0.7725490196" blue="0.29411764709999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="HFN-wQ-Bh9"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Sign In">
+                                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="auth:" destination="h40-kx-V7f" eventType="touchUpInside" id="6gc-0v-IvL"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="136" id="5KT-5K-fcr"/>
+                                            <constraint firstItem="TWh-YI-QUX" firstAttribute="centerY" secondItem="3e5-qW-Qfc" secondAttribute="centerY" id="7BQ-Yv-y3c"/>
+                                            <constraint firstItem="reb-7F-Pud" firstAttribute="centerY" secondItem="3e5-qW-Qfc" secondAttribute="centerY" constant="48" id="Fdj-Yi-qY3"/>
+                                            <constraint firstItem="reb-7F-Pud" firstAttribute="leading" secondItem="3e5-qW-Qfc" secondAttribute="leading" id="JtU-Pd-zHI"/>
+                                            <constraint firstItem="a5R-JS-fr2" firstAttribute="centerX" secondItem="3e5-qW-Qfc" secondAttribute="centerX" id="LLT-FA-gld"/>
+                                            <constraint firstItem="a5R-JS-fr2" firstAttribute="leading" secondItem="3e5-qW-Qfc" secondAttribute="leading" id="OsF-GV-p8G"/>
+                                            <constraint firstAttribute="trailing" secondItem="reb-7F-Pud" secondAttribute="trailing" id="UWt-04-bDI"/>
+                                            <constraint firstAttribute="trailing" secondItem="a5R-JS-fr2" secondAttribute="trailing" id="WVQ-Vz-dzA"/>
+                                            <constraint firstItem="a5R-JS-fr2" firstAttribute="centerY" secondItem="3e5-qW-Qfc" secondAttribute="centerY" constant="-48" id="Z5P-3t-0kz"/>
+                                            <constraint firstItem="TWh-YI-QUX" firstAttribute="centerX" secondItem="3e5-qW-Qfc" secondAttribute="centerX" id="ax4-Fz-0vW"/>
+                                            <constraint firstAttribute="trailing" secondItem="TWh-YI-QUX" secondAttribute="trailing" id="fgA-BJ-S5C"/>
+                                            <constraint firstItem="reb-7F-Pud" firstAttribute="centerX" secondItem="3e5-qW-Qfc" secondAttribute="centerX" id="imR-iu-kXN"/>
+                                            <constraint firstItem="TWh-YI-QUX" firstAttribute="leading" secondItem="3e5-qW-Qfc" secondAttribute="leading" id="w0A-aZ-5th"/>
+                                        </constraints>
+                                    </view>
+                                    <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PKD-4F-rD2">
+                                        <rect key="frame" x="20" y="282" width="335" height="377"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="377" id="HcT-0H-7SK"/>
+                                        </constraints>
+                                        <dataDetectorType key="dataDetectorTypes"/>
+                                    </webView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="PKD-4F-rD2" firstAttribute="top" secondItem="3e5-qW-Qfc" secondAttribute="bottom" constant="35" id="00k-Ke-1QU"/>
+                                    <constraint firstItem="3e5-qW-Qfc" firstAttribute="top" secondItem="BZk-ce-3aE" secondAttribute="top" constant="111" id="2Fq-56-Hug"/>
+                                    <constraint firstAttribute="trailing" secondItem="PKD-4F-rD2" secondAttribute="trailing" constant="20" id="DVz-vc-elj"/>
+                                    <constraint firstItem="3e5-qW-Qfc" firstAttribute="centerX" secondItem="BZk-ce-3aE" secondAttribute="centerX" id="RtG-Qx-yL5"/>
+                                    <constraint firstItem="3e5-qW-Qfc" firstAttribute="leading" secondItem="BZk-ce-3aE" secondAttribute="leading" constant="20" id="XS1-tj-7x0"/>
+                                    <constraint firstItem="PKD-4F-rD2" firstAttribute="leading" secondItem="BZk-ce-3aE" secondAttribute="leading" constant="20" id="frV-C2-ZxL"/>
+                                    <constraint firstAttribute="trailing" secondItem="3e5-qW-Qfc" secondAttribute="trailing" constant="20" id="jOb-zh-DBc"/>
+                                    <constraint firstAttribute="bottom" secondItem="3e5-qW-Qfc" secondAttribute="bottom" constant="420" id="xCe-f5-6hA"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92549019610000005" green="0.91372549020000005" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="HNK-D8-Yqo" firstAttribute="top" secondItem="BZk-ce-3aE" secondAttribute="bottom" id="27n-xC-cUH"/>
+                            <constraint firstAttribute="trailing" secondItem="BZk-ce-3aE" secondAttribute="trailing" id="T0z-WR-sFi"/>
+                            <constraint firstItem="BZk-ce-3aE" firstAttribute="top" secondItem="59c-hs-MCi" secondAttribute="top" id="biX-6u-j7Z"/>
+                            <constraint firstItem="BZk-ce-3aE" firstAttribute="leading" secondItem="59c-hs-MCi" secondAttribute="leading" id="duI-UQ-hNm"/>
+                            <constraint firstItem="BZk-ce-3aE" firstAttribute="centerX" secondItem="59c-hs-MCi" secondAttribute="centerX" id="jet-bU-naY"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="SignInButton" destination="reb-7F-Pud" id="YEd-CR-a4U"/>
+                        <outlet property="emailField" destination="a5R-JS-fr2" id="Niu-xW-nuZ"/>
+                        <outlet property="loginWebView" destination="PKD-4F-rD2" id="5GD-26-do3"/>
+                        <outlet property="passwordField" destination="TWh-YI-QUX" id="xvC-Sz-lgF"/>
+                        <outlet property="scrollView" destination="BZk-ce-3aE" id="tem-lc-hR6"/>
+                        <segue destination="5Ps-Gh-DS5" kind="show" identifier="succeedLogin" id="csQ-jN-aNf"/>
+                        <segue destination="90P-py-Wgc" kind="presentation" identifier="showModalWebView" id="noE-IO-hhH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5t3-aJ-q28" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2543.1999999999998" y="673.31334332833592"/>
+        </scene>
+        <!--Social Login Web Popup View Controller-->
+        <scene sceneID="7J5-nL-9FF">
+            <objects>
+                <viewController id="90P-py-Wgc" customClass="SocialLoginWebPopupViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vbv-fg-fZS"/>
+                        <viewControllerLayoutGuide type="bottom" id="HaO-ap-3y8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="e8U-L0-ANh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cOc-dg-UCR">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gsx-UP-F3X">
+                                <rect key="frame" x="325" y="20" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="3zl-ej-Pr1"/>
+                                    <constraint firstAttribute="width" constant="50" id="CHY-Vj-5Pr"/>
+                                </constraints>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="closePopUpAction:" destination="90P-py-Wgc" eventType="touchUpInside" id="JFK-Aw-XGz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92549019610000005" green="0.91372549020000005" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="HaO-ap-3y8" firstAttribute="top" secondItem="cOc-dg-UCR" secondAttribute="bottom" id="4fw-Bg-GGS"/>
+                            <constraint firstItem="cOc-dg-UCR" firstAttribute="leading" secondItem="e8U-L0-ANh" secondAttribute="leading" id="5zh-e9-ELz"/>
+                            <constraint firstItem="Gsx-UP-F3X" firstAttribute="top" secondItem="vbv-fg-fZS" secondAttribute="bottom" id="NKw-a5-mPW"/>
+                            <constraint firstAttribute="trailing" secondItem="cOc-dg-UCR" secondAttribute="trailing" id="lOJ-hK-kLj"/>
+                            <constraint firstAttribute="trailing" secondItem="Gsx-UP-F3X" secondAttribute="trailing" id="meg-jG-FzL"/>
+                            <constraint firstItem="cOc-dg-UCR" firstAttribute="top" secondItem="vbv-fg-fZS" secondAttribute="bottom" id="yLq-GQ-4Xg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="closeButton" destination="Gsx-UP-F3X" id="gGh-JV-zDK"/>
+                        <outlet property="webView" destination="cOc-dg-UCR" id="JIe-YZ-4jq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6KU-K8-JBv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1612" y="672.41379310344837"/>
         </scene>
         <!--File Detail View Controller-->
         <scene sceneID="mQT-rN-aNZ">
@@ -790,12 +951,12 @@
         <image name="sigh_out" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Biu-mK-C6o"/>
-        <segue reference="6nU-wd-HxJ"/>
         <segue reference="hay-3m-SKe"/>
-        <segue reference="cxU-mB-ke1"/>
+        <segue reference="csQ-jN-aNf"/>
+        <segue reference="Biu-mK-C6o"/>
+        <segue reference="jAr-Pg-PJz"/>
         <segue reference="4nH-co-v4q"/>
         <segue reference="XCZ-oO-tnN"/>
-        <segue reference="jAr-Pg-PJz"/>
+        <segue reference="cxU-mB-ke1"/>
     </inferredMetricsTieBreakers>
 </document>

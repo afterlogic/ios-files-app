@@ -40,6 +40,8 @@
 		5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
+		68C8A0451F5EB87500C33A74 /* SignInStepTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */; };
+		68C8A0481F5F088400C33A74 /* SocialLoginWebPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
 		87C164BC0C7AEEA74C61A980 /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A0173E1D910D9B022118E9 /* libPods-aurorafilesTests.a */; };
 		9503EC351F1E742700F2CD9B /* SessionProviderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9503EC341F1E742600F2CD9B /* SessionProviderTest.m */; };
@@ -325,6 +327,10 @@
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
 		5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorProvider.m; sourceTree = "<group>"; };
 		60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		68C8A0431F5EB87500C33A74 /* SignInStepTwoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInStepTwoViewController.h; sourceTree = "<group>"; };
+		68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInStepTwoViewController.m; sourceTree = "<group>"; };
+		68C8A0461F5F088300C33A74 /* SocialLoginWebPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialLoginWebPopupViewController.h; sourceTree = "<group>"; };
+		68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialLoginWebPopupViewController.m; sourceTree = "<group>"; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9503EC341F1E742600F2CD9B /* SessionProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionProviderTest.m; sourceTree = "<group>"; };
@@ -818,7 +824,7 @@
 			children = (
 				DA37112A1D21EFD20067B124 /* Downloads */,
 				DAC1CA8B1D061F1200238EB5 /* Files */,
-				DAC1CA9F1D061F1200238EB5 /* SignInViewController */,
+				DAC1CA9F1D061F1200238EB5 /* Sign In */,
 				DAC1CAA21D061F1200238EB5 /* TableController */,
 				FF6A1D0E1DAD026F005CBA76 /* RootController */,
 				5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */,
@@ -868,12 +874,17 @@
 			path = ViewImage;
 			sourceTree = "<group>";
 		};
-		DAC1CA9F1D061F1200238EB5 /* SignInViewController */ = {
+		DAC1CA9F1D061F1200238EB5 /* Sign In */ = {
 			isa = PBXGroup;
 			children = (
 				DAC1CAA01D061F1200238EB5 /* SignInViewController.h */,
 				DAC1CAA11D061F1200238EB5 /* SignInViewController.m */,
+				68C8A0431F5EB87500C33A74 /* SignInStepTwoViewController.h */,
+				68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */,
+				68C8A0461F5F088300C33A74 /* SocialLoginWebPopupViewController.h */,
+				68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */,
 			);
+			name = "Sign In";
 			path = SignInViewController;
 			sourceTree = "<group>";
 		};
@@ -1759,7 +1770,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1777,7 +1788,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -1975,6 +1986,7 @@
 				FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */,
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				FFAD03F71DECA387000C4AFF /* FileOperationsProvider.m in Sources */,
+				68C8A0481F5F088400C33A74 /* SocialLoginWebPopupViewController.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
 				FF6A94C21DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */,
 				FF42B1E61DB77F88005A2B0C /* files.m in Sources */,
@@ -2007,6 +2019,7 @@
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 				5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */,
+				68C8A0451F5EB87500C33A74 /* SignInStepTwoViewController.m in Sources */,
 				5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */,
 				5C7B50C2E7F87B7E350CA090 /* ErrorProvider.m in Sources */,
 				E5782B3E3D36CC3EFDC9F47B /* WormholeProvider.m in Sources */,

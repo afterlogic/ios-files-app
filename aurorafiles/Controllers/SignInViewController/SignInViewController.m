@@ -76,18 +76,22 @@
 {
 	if ([textField isEqual:self.domainField])
 	{
-		[self.emailField becomeFirstResponder];
+        [self.passwordField resignFirstResponder];
+        [self auth:self.signInButton];
+        activeField = nil;
 	}
-	if ([textField isEqual:self.emailField])
-	{
-		[self.passwordField becomeFirstResponder];
-	}
-	if ([textField isEqual:self.passwordField])
-	{
-		[self.passwordField resignFirstResponder];
-		[self auth:self.signInButton];
-		activeField = nil;
-	}
+    
+    
+//	if ([textField isEqual:self.emailField])
+//	{
+//		[self.passwordField becomeFirstResponder];
+//	}
+//	if ([textField isEqual:self.passwordField])
+//	{
+//		[self.passwordField resignFirstResponder];
+//		[self auth:self.signInButton];
+//		activeField = nil;
+//	}
 	return YES;
 }
 
@@ -132,9 +136,9 @@
 //        return;
 //    }
     
-    if (![self checkEmail]) {
-        return;
-    }
+//    if (![self checkEmail]) {
+//        return;
+//    }
     
     if (![self checkDomain]) {
         return;
@@ -183,24 +187,26 @@
 - (void)connectToHost{
     [self.sessionProvider checkSSLConnection:^(NSString *domain) {
         if (domain && domain.length) {
-            [self.sessionProvider loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideHUDForView:self.view animated:YES];
-                    if (error){
-                        [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-                            alertViewIsShow = NO;
-                            [self clear];
-                        }];
-                        alertViewIsShow = YES;
-                    }else{
-                        [Settings setLogin:self.emailField.text];
-                        [Settings setPassword:self.passwordField.text];
-                        [Settings setIsLogedIn:YES];
-                        [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignIn object:nil];
-                        [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-                    }
-                });
-            }];
+            [self performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
+            
+//            [self.sessionProvider loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+//                    if (error){
+//                        [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                            alertViewIsShow = NO;
+//                            [self clear];
+//                        }];
+//                        alertViewIsShow = YES;
+//                    }else{
+//                        [Settings setLogin:self.emailField.text];
+//                        [Settings setPassword:self.passwordField.text];
+//                        [Settings setIsLogedIn:YES];
+//                        [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignIn object:nil];
+//                        [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+//                    }
+//                });
+//            }];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
@@ -282,6 +288,8 @@
              name:UIKeyboardWillHideNotification object:nil];
  
 }
+
+#pragma mark - Utilities
 
 -(void)clear{
     [Settings clearSettings];

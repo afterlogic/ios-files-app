@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UITextFieldCustomEdges.h"
 @protocol SignControllerDelegate <NSObject>
+
 @required
 - (void)userWasSignedIn;
 - (void)userWasSigneInOffline;

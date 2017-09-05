@@ -22,6 +22,8 @@ static const int minimalStringLengthURL = 5;
 static const int minimalStringLengthFiles = 1;
 static NSString *forbiddenCharactersForFileName = @"\"/\\*?<>|:";
 
+static NSString *socialLoginEndPoint = @"/?external-clients-login-form";
+
 
 #ifdef DEBUG
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
