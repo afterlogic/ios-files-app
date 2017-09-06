@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SignControllerDelegate.h"
 
 @interface SocialLoginWebPopupViewController : UIViewController
 @property (nonatomic, weak) NSURLRequest *authRequest;
+@property (weak, nonatomic) id<SocialLoginDelegate> delegate;
 @end

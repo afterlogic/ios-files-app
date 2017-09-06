@@ -17,11 +17,12 @@
 #import "WormholeProvider.h"
 #import "SocialLoginWebPopupViewController.h"
 
-@interface SignInStepTwoViewController () <UIWebViewDelegate, UITextFieldDelegate>{
+@interface SignInStepTwoViewController () <UIWebViewDelegate, UITextFieldDelegate, SocialLoginDelegate>{
     UITextField *activeField;
     UITapGestureRecognizer *tapRecognizer;
     BOOL alertViewIsShow;
     NSURLRequest *authRequest;
+    SocialLoginWebPopupViewController *socialLoginWebView;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *emailField;
@@ -104,11 +105,11 @@
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView{
-    DDLogDebug(@"webView did start load ->  %@",webView.request.URL);
+//    DDLogDebug(@"webView did start load ->  %@",webView.request.URL);
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
-    DDLogDebug(@"webView did finish load ->  %@",webView.request.URL);
+//    DDLogDebug(@"webView did finish load ->  %@",webView.request.URL);
 //    CGFloat webViewHeight = self.loginWebView.scrollView.contentSize.height;
 //    DDLogDebug(@"webView height is -> %f", webViewHeight);
 }
@@ -152,12 +153,9 @@
     if (![self checkEmail]) {
         return;
     }
-    
 //    if (![self checkDomain]) {
 //        return;
 //    }
-    
-    
     [self logInAction];
 }
 
@@ -228,13 +226,21 @@
     
 }
 
+#pragma mark - SocialLoginDelegate Methods
+
+-(void)authToken:(NSString *)token{
+    DDLogDebug(@"new token -> %@", token);
+    [Settings setToken:token];
+    [socialLoginWebView dismissViewControllerAnimated:YES completion:nil];
+}
 
 #pragma mark - Navigation
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"showModalWebView"]) {
-        SocialLoginWebPopupViewController *vc = segue.destinationViewController;
-        vc.authRequest = authRequest;
+        socialLoginWebView = segue.destinationViewController;
+        socialLoginWebView.authRequest = authRequest;
+        socialLoginWebView.delegate = self;
     }
 }
 

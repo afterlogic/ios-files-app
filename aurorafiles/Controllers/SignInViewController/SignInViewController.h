@@ -8,12 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UITextFieldCustomEdges.h"
-@protocol SignControllerDelegate <NSObject>
-
-@required
-- (void)userWasSignedIn;
-- (void)userWasSigneInOffline;
-@end
+#import "SignControllerDelegate.h"
 
 @interface SignInViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *domainField;

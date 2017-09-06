@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UITextFieldCustomEdges.h"
+#import "SignControllerDelegate.h"
 
 @interface SignInStepTwoViewController : UIViewController 
 

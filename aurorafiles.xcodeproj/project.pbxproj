@@ -331,6 +331,7 @@
 		68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInStepTwoViewController.m; sourceTree = "<group>"; };
 		68C8A0461F5F088300C33A74 /* SocialLoginWebPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialLoginWebPopupViewController.h; sourceTree = "<group>"; };
 		68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialLoginWebPopupViewController.m; sourceTree = "<group>"; };
+		68C8A2021F60529500C33A74 /* SignControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignControllerDelegate.h; sourceTree = "<group>"; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9503EC341F1E742600F2CD9B /* SessionProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionProviderTest.m; sourceTree = "<group>"; };
@@ -877,6 +878,7 @@
 		DAC1CA9F1D061F1200238EB5 /* Sign In */ = {
 			isa = PBXGroup;
 			children = (
+				68C8A2021F60529500C33A74 /* SignControllerDelegate.h */,
 				DAC1CAA01D061F1200238EB5 /* SignInViewController.h */,
 				DAC1CAA11D061F1200238EB5 /* SignInViewController.m */,
 				68C8A0431F5EB87500C33A74 /* SignInStepTwoViewController.h */,

@@ -52,6 +52,7 @@
     [[StorageManager sharedManager]setupFileOperationsProvider:[FileOperationsProvider sharedProvider]];
 
 //    [self.dbProvider removeAll];
+    
     return YES;
 }
 
