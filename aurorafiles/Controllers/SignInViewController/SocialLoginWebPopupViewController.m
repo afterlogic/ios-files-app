@@ -8,8 +8,11 @@
 
 #import "SocialLoginWebPopupViewController.h"
 #import "Settings.h"
+#import "MBProgressHUD.h"
 
-@interface SocialLoginWebPopupViewController ()<UIWebViewDelegate>
+@interface SocialLoginWebPopupViewController ()<UIWebViewDelegate>{
+    NSURLRequest *previousRequest;
+}
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UIButton *closeButton;
 
@@ -20,6 +23,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.webView.delegate = self;
+    self.webView.scrollView.bounces = NO;
+    
     
 //    NSMutableDictionary *currentHeaderFields = self.authRequest.allHTTPHeaderFields.mutableCopy;
 //    [currentHeaderFields removeObjectForKey:@"User-Agent"];
@@ -33,6 +38,7 @@
 //    [updatedRequest addValue:fakeUserAgent forHTTPHeaderField:@"User-Agent"];
 //    [updatedRequest addValue:@"0" forHTTPHeaderField:@"Upgrade-Insecure-Requests"];
 //    DDLogDebug(@"updated request headers - > %@",updatedRequest.allHTTPHeaderFields);
+    [MBProgressHUD showHUDAddedTo:self.webView animated:YES];
     [self.webView loadRequest:self.authRequest];
     
     // Do any additional setup after loading the view.
@@ -52,27 +58,24 @@
 #pragma mark - WebView Delegates
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-//    DDLogDebug(@"current request URL - > %@",request.URL);
     DDLogDebug(@"current request host - > %@",request.URL.host);
     BOOL shouldStart = NO;
-    NSString * currentRequestHost = request.URL.host;
-    if ([currentRequestHost containsString:[Settings domain]]){
-        NSHTTPCookie *cookie;
-        NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-        NSArray *hostCookies = [cookieJar cookies];
-        for (cookie in hostCookies){
-            if([cookie.name isEqualToString:@"AuthToken"]){
-                shouldStart = NO;
-                DDLogDebug(@"AuthCoockie is -> %@",cookie);
-                [self.delegate authToken:cookie.value];
-            }
+    NSString *currentRequestHost = request.URL.host;
+    NSString *previousRequestHost = previousRequest.URL.host;
+    if (previousRequestHost!=nil && [previousRequestHost containsString:[Settings domain]] && [currentRequestHost containsString:[Settings domain]]){
+        NSString *authToken = [self getAuthTokenFromCookie];
+        if (authToken != nil) {
+            shouldStart = NO;
+            [self.delegate authToken:authToken];
+        }else{
+            shouldStart = NO;
+            NSError *webAuthError = [[ErrorProvider instance]generateError:@"902"];
+            [self.delegate loginError:webAuthError];
         }
-        DDLogDebug(@"%@",hostCookies);
-        shouldStart = YES;
     }else{
         shouldStart = YES;
     }
-    
+    previousRequest = request;
     return shouldStart;
 }
 
@@ -81,11 +84,27 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    
+    [MBProgressHUD hideHUDForView:webView animated:YES];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    
+    [MBProgressHUD hideHUDForView:webView animated:YES];
+}
+
+- (NSString *)getAuthTokenFromCookie{
+    NSString *authToken = nil;
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *hostCookies = [cookieJar cookies];
+    DDLogDebug(@"%@",hostCookies);
+    for (cookie in hostCookies){
+        if([cookie.name isEqualToString:@"AuthToken"]){
+            DDLogDebug(@"AuthCoockie is -> %@",cookie);
+            authToken = cookie.value;
+        }
+    }
+
+    return authToken;
 }
 
 /*

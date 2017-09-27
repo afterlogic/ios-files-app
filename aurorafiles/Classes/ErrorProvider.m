@@ -86,9 +86,12 @@ const NSString* FileAlreadyExists = @"813";
 const NSString* FileNotFound = @"814";
 
 const NSString* MailServerError = @"901";
+const NSString* WebAuthError = @"902";
 const NSString* UnknownError = @"999";
 
 const NSString* UnitTestError = @"070915";
+
+
 
 const NSString *apiDomain = @"com.afterlogic.api";
 @interface ErrorProvider(){
@@ -258,6 +261,7 @@ const NSString *apiDomain = @"com.afterlogic.api";
             FileAlreadyExists:NSLocalizedString(@"File Already Exists",@""),
             FileNotFound:NSLocalizedString(@"File Not Found",@""),
             MailServerError :NSLocalizedString(@"Mail Server Error",@""),
+            WebAuthError :NSLocalizedString(@"This account is not allowed to log in.", @""),
             UnknownError: NSLocalizedString(@"something goes wrong...",@"unknown error"),
             
 #pragma mark - Unit-test Errors

@@ -12,4 +12,6 @@
 
 @interface SignInStepTwoViewController : UIViewController 
 
+@property (nonatomic) BOOL haveWebAuth;
+
 @end

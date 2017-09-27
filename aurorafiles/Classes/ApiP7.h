@@ -43,4 +43,6 @@ typedef void (^UploadProgressBlock)(float progress);
 
 - (void)cancelAllOperations;
 
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler;
+
 @end

@@ -13,6 +13,7 @@
 #import "SessionProvider.h"
 #import "Settings.h"
 #import "WormholeProvider.h"
+#import "SignInViewController.h"
 
 @interface ARootViewController ()
 {
@@ -178,10 +179,17 @@
 //    [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
 
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController *vc = [board instantiateViewControllerWithIdentifier:@"SignInViewController"];
-    [self presentViewController:vc animated:YES completion:^{
-        self.navigationController.viewControllers = @[];
-    }];
+    UINavigationController *nc = [board instantiateViewControllerWithIdentifier:@"SignInNavController"];
+    
+    
+    NSArray *vcStack = [self.navigationController viewControllers];
+    DDLogDebug(@"%@",vcStack);
+    SignInViewController *vc = (SignInViewController *)[[nc viewControllers] firstObject];
+    [self.navigationController setViewControllers:@[vc] animated:YES];
+//    [self.navigationController popToViewController:vc animated:YES];
+//    [self presentViewController:vc animated:YES completion:^{
+//        self.navigationController.viewControllers = @[];
+//    }];
 }
 
 #pragma mark - Navigation

@@ -15,4 +15,5 @@
 - (void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler;
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler;
 - (void)getUserWithCompletion:(void(^)(NSString *publicID, NSError *error))handler;
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler;
 @end

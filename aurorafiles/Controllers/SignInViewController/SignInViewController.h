@@ -12,8 +12,8 @@
 
 @interface SignInViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *domainField;
-@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *emailField;
-@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *passwordField;
+//@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *emailField;
+//@property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *passwordField;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *contentHeight;
 @property (weak, nonatomic) IBOutlet UIButton *signInButton;

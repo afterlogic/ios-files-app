@@ -161,6 +161,13 @@
     [self.actualApiManager authorizeEmail:email withPassword:password completion:handler];
 }
 
+- (void)checkWebAuthExistance:(void (^)(BOOL haveWebAuth, NSError *error))handler{
+    if(!self.actualApiManager){
+        self.actualApiManager = [networkManager getNetworkManager];
+    }
+    [self.actualApiManager getWebAuthExistanceCompletionHandler:handler];
+}
+
 - (void)checkSSLConnection:(void (^)(NSString *))handler{
     if ([_settings domainScheme] && [_settings domain]) {
         handler([_settings domain]);
@@ -199,7 +206,10 @@
         if (![[self.settings lastLoginServerVersion] isEqualToString:domainVersion]) {
             [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
         }
-        [self.settings setLastLoginServerVersion:domainVersion];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.settings setLastLoginServerVersion:domainVersion];
+        });
+        
         self.actualApiManager =  [networkManager getNetworkManager];
     }
     DDLogInfo(@"ℹ️ host version is %@",[self.settings lastLoginServerVersion]);

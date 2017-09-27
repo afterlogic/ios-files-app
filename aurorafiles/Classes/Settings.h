@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KeychainWrapper.h"
 
 @interface Settings : NSObject
 

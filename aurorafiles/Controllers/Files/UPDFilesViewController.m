@@ -130,19 +130,29 @@ static const CGFloat searchDelay = 1.2f;
 {
     [super viewDidAppear:animated];
 
+    NSLog(@"logged version - %@",[Settings lastLoginServerVersion]);
+    NSLog(@"logged domain - %@",[Settings domain]);
     if (![Settings lastLoginServerVersion] || ![Settings domain]){
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
+//        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//        signIn.delegate = self;
+//        [self presentViewController:signIn animated:YES completion:nil];
+        
+        [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
+        
         return;
     }
 
-    if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
-        return;
+    if ([[Settings lastLoginServerVersion] isEqualToString:@"P7"]){
+        if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
+//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//            signIn.delegate = self;
+//            [self presentViewController:signIn animated:YES completion:nil];
+            
+            [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
+            return;
+        }
     }
+
 
     [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
         if(error){
@@ -523,10 +533,10 @@ static const CGFloat searchDelay = 1.2f;
             return;
         }
         if (succsess) {
-//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-//            signIn.delegate = self;
-            [self.navigationController popToRootViewControllerAnimated:YES];
-//            [self presentViewController:signIn animated:YES completion:^(){}];
+//            NSArray *navigationControllerStack = [self.navigationController viewControllers];
+//            DDLogDebug(@"navController views stack -> %@",navigationControllerStack);
+//            [self.navigationController popToRootViewControllerAnimated:YES];
+
             [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
         }
     }];
@@ -1406,6 +1416,12 @@ static const CGFloat searchDelay = 1.2f;
     if([segue.identifier isEqualToString:@"ShowDownloadsSegue"]){
         DownloadsTableViewController *vc = [segue destinationViewController];
         vc.loadType = loadTypeView;
+    }
+    
+    if ([segue.identifier isEqualToString:@""]){
+        UINavigationController *nc = [segue destinationViewController];
+        SignInViewController *vc = [nc viewControllers].firstObject;
+        vc.delegate = self;
     }
 }
 @end

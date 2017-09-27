@@ -19,6 +19,8 @@
 - (void)userData:(void(^)(BOOL authorised, NSError *error))handler;
 - (void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler;
 
+#pragma mark - Auth Operations
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler;
 
 #pragma mark - Files Operations
 - (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void(^)(NSArray *items, NSError *error))completionHandler;

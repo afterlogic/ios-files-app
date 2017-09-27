@@ -32,6 +32,9 @@ static NSString *methodLogin = @"Login";
 static NSString *methodGetUser = @"GetUser";
 
 
+static NSString *webAuthModule = @"ExternalClientsLoginFormWebclient";
+static NSString *webAuthMethod = @"IsAvailable";
+
 -(id)init{
     self = [super init ];
     if(self){
@@ -59,7 +62,7 @@ static NSString *methodGetUser = @"GetUser";
     return moduleName;
 }
 
-- (void)getUserWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
+-(void)getUserWithCompletion:(void(^)(NSString *publicID, NSError *error))handler{
     NSMutableURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,
                                                                            @"Method":methodGetUser,
                                                                            }].mutableCopy;
@@ -92,7 +95,6 @@ static NSString *methodGetUser = @"GetUser";
                 }else if([[json objectForKey:@"Result"] isKindOfClass:[NSNumber class]]){
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
                 }
-                
             }
             if (error)
             {
@@ -112,6 +114,59 @@ static NSString *methodGetUser = @"GetUser";
     
     [manager.operationQueue addOperation:operation];
     
+    
+}
+
+-(void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler{
+    NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":webAuthModule,
+                                                                    @"Method":webAuthMethod}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            BOOL haveWebAuth = NO;
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (json && [json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSNumber class]])
+                {
+                    // дописать логику определения наличия WebAuth
+                    haveWebAuth = [[json valueForKey:@"Result"]boolValue];
+                }
+                
+                if([[json valueForKey:@"ErrorCode"] isKindOfClass:[NSString class]]){
+                    NSString *errorCode = [json valueForKey:@"ErrorCode"] ;
+                    error = [[ErrorProvider instance]generateError:errorCode];
+                }
+//                else
+//                {
+//                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"server is unavailable now", @"")}];
+//                }
+            }else{
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:9 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Can't get access to API", @"")}];
+            }
+            handler(haveWebAuth,error);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            NSError *offlineError;
+            if ([Settings domain] && [Settings login]) {
+                offlineError = [[NSError alloc]initWithDomain:@"NSURLDomain" code:666 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Something went wrong.Maybe you dont have internet connection =(", @"")}];
+                handler(NO,offlineError);
+                return ;
+            }
+            handler(NO,error);
+        });
+    }];
+    
+    [manager.operationQueue addOperation:operation];
+
     
 }
 
@@ -220,7 +275,7 @@ static NSString *methodGetUser = @"GetUser";
     [manager.operationQueue addOperation:operation];
 }
 
-- (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler{
+-(void)signInWithEmail:(NSString *)email andPassword:(NSString *)password completion:(void (^)(NSDictionary *data, NSError *error))handler{
     
     //    NSURLRequest * request = [self requestWithDictionary:@{@"Action":signInAction,@"Email":email, @"IncPassword":password}];
     NSURLRequest *request = [NSURLRequest p8RequestWithDictionary:@{@"Module":moduleName,

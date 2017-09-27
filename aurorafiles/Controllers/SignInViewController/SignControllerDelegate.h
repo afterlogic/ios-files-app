@@ -17,5 +17,6 @@
 @protocol SocialLoginDelegate <NSObject>
 
 - (void)authToken:(NSString *)token;
+- (void)loginError:(NSError *)error;
 
 @end

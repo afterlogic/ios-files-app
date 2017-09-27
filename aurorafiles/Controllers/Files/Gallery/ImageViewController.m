@@ -414,7 +414,8 @@
         self.imageView.image = [UIImage imageNamed:@"appLogo"];
         UIImage * image = nil;
         if ([file.isP8 boolValue]) {
-            [[SDWebImageDownloader sharedDownloader] setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
+            NSString *authToken = [Settings authToken];
+            [[SDWebImageDownloader sharedDownloader] setValue:[NSString stringWithFormat:@"Bearer %@",authToken] forHTTPHeaderField:@"Authorization"];
         }else{
             NSString *authHeaderValue = [[SDWebImageDownloader sharedDownloader] valueForHTTPHeaderField:@"Authorization"];
             if (authHeaderValue) {

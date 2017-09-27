@@ -295,6 +295,10 @@
     }];
 }
 
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL, NSError *))handler{
+    [self.apiManager getWebAuthExistanceCompletionHandler:handler];
+}
+
 -(void)cancelAllOperations{
     [self.apiManager cancelAllOperations];
 }

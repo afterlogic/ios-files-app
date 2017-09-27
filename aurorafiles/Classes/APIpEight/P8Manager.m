@@ -170,6 +170,10 @@
 }
 #pragma mark - Helpers
 
+-(void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL, NSError *))handler{
+    [[ApiP8 coreModule] getWebAuthExistanceCompletionHandler:handler];
+}
+
 -(void)checkConnection:(void (^)(BOOL, NSError *, NSString *, id<ApiProtocol>))complitionHandler{
     [[ApiP8 coreModule]pingHostWithCompletion:^(BOOL isP8, NSError *error) {
         

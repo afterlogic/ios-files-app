@@ -7,8 +7,109 @@
 //
 
 #import "Settings.h"
+#import "FXKeychain.h"
+
+static NSString  *serviceName = @"auroraFiles";
+static NSString  *accessGroupName = @"com.afterlogic.aurorafiles";
+
+
+static NSString  *lk_login = @"login";
+static NSString  *lk_password = @"password";
+static NSString  *lk_authToken = @"authToken";
+static NSString  *lk_p7token = @"p7Token";
+
+@interface Settings (){
+    
+}
+
+@end
 
 @implementation Settings
+
+
+#pragma mark - Keychain settings
+
++(FXKeychain *)keychainWrapper{
+    static FXKeychain *keychainItem = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        keychainItem = [FXKeychain defaultKeychain];
+    });
+    return keychainItem;
+}
+
++(void)saveItem:(id<NSCoding>)item forKey: (NSString *)key{
+//        NSError *error = nil;
+//        [[Settings keychainWrapper]saveItem:item
+//                      forKey:key
+//                  forService:serviceName
+//               inAccessGroup:accessGroupName
+//           withAccessibility:FDKeychainAccessibleWhenUnlocked
+//                       error:&error];
+    [[Settings keychainWrapper]setObject:item forKey:key];
+}
+
++(id)itemforKey: (NSString *)key{
+//    dispatch_async(dispatch_get_main_queue(), ^id(){
+//        NSError *error = nil;
+//        return  [FDKeychain itemForKey:key
+//                            forService:serviceName
+//                         inAccessGroup:accessGroupName
+//                                 error:&error];
+//    });
+    return [[Settings keychainWrapper]objectForKey:key];
+}
+
++(void)deleteItemForKey: (NSString *)key{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSError *error = nil;
+//        [FDKeychain deleteItemForKey:key
+//                          forService:serviceName
+//                       inAccessGroup:accessGroupName
+//                               error:&error];
+//    });
+    [[Settings keychainWrapper]removeObjectForKey:key];
+}
+
++ (void)setLogin:(NSString*)login{
+    [Settings saveItem:login forKey:lk_login];
+}
+
++ (NSString*)login{
+    return [Settings itemforKey:lk_login];
+}
+
++ (void)setPassword:(NSString*)password{
+    [Settings saveItem:password forKey:lk_password];
+}
+
++ (NSString*)password{
+    return [Settings itemforKey:lk_password];
+}
+
++ (void)setAuthToken:(NSString *)authToken{
+    [Settings saveItem:authToken forKey:lk_authToken];
+}
+
++ (NSString*)authToken{
+    NSString *token = [Settings itemforKey:lk_authToken];
+    return token ? token :@"";
+}
+
++ (void)setToken:(NSString *)token{
+    [Settings saveItem:token forKey:lk_p7token];
+}
+
++ (NSString*)token{
+    NSString *token = [Settings itemforKey:lk_p7token];
+    return token ? token :@"";
+}
+
+#pragma mark - info.Plist settings
+
+
+
+#pragma mark - UserDefault settings
 
 + (NSUserDefaults*)sharedDefaults{
     return [[NSUserDefaults alloc] initWithSuiteName:@"group.afterlogic.aurorafiles"];
@@ -36,47 +137,6 @@
     [[Settings sharedDefaults] synchronize];
 }
 
-+ (void)setAuthToken:(NSString *)authToken{
-    [[Settings sharedDefaults] setValue:authToken forKey:@"auth_token"];
-    DDLogInfo(@"⚠️ current authToken setted to -> %@", authToken);
-    [[Settings sharedDefaults] synchronize];
-}
-
-+ (NSString*)authToken{
-    NSString *token = [[Settings sharedDefaults] valueForKey:@"auth_token"];
-    
-    return token ? token :@"";
-}
-
-+ (void)setLogin:(NSString*)login{
-    [[Settings sharedDefaults] setValue:login forKey:@"auth_login"];
-    DDLogInfo(@"⚠️ current login setted to -> %@", login);
-    [[Settings sharedDefaults] synchronize];
-}
-
-+ (NSString*)login{
-    return [[Settings sharedDefaults] valueForKey:@"auth_login"];
-}
-
-+ (void)setPassword:(NSString*)password{
-    [[Settings sharedDefaults] setValue:password forKey:@"auth_password"];
-    DDLogInfo(@"⚠️ current password setted to -> %@", password);
-    [[Settings sharedDefaults] synchronize];
-}
-
-+ (NSString*)password{
-    return [[Settings sharedDefaults] valueForKey:@"auth_password"];
-}
-
-+ (void)setToken:(NSString *)token{
-    [[Settings sharedDefaults] setValue:token forKey:@"token"];
-    DDLogInfo(@"⚠️ current token setted to -> %@", token);
-    [[Settings sharedDefaults] synchronize];
-}
-
-+ (NSString*)token{
-    return [[Settings sharedDefaults] valueForKey:@"token"];
-}
 
 + (void)setCurrentAccount:(NSNumber *)currentAccount{
     [[Settings sharedDefaults] setValue:currentAccount forKey:@"current_account"];
@@ -98,10 +158,16 @@
 }
 
 + (void)setLastLoginServerVersion:(NSString *)version{
-    [[Settings sharedDefaults] setValue:version forKey:@"hostVersion"];
-    DDLogInfo(@"⚠️ current host Version setted to -> %@", version);
-    [[Settings sharedDefaults] synchronize];
+    NSString *hostVersion = [NSString stringWithFormat:@"%@",version];
+    [[Settings sharedDefaults] setValue:hostVersion forKey:@"hostVersion"];
+    
+    if ([[Settings sharedDefaults] synchronize]){
+        DDLogInfo(@"⚠️ current host Version setted to -> %@", hostVersion);
+    }else{
+        DDLogInfo(@"⚠️ something goes wrong with host -> %@", hostVersion);
+    }
 }
+
 + (NSString *)lastLoginServerVersion{
 //    DDLogInfo(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
     return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
@@ -129,30 +195,27 @@
 }
 
 +(void)clearSettings{
-    NSArray *filedsForRemove = @[@"hostVersion",@"current_account",@"token",@"auth_password",@"auth_token",@"domain_sсheme",@"lastUsedFolder",@"isLogedIn"];
+    [Settings clearKeychainSettings];
+    NSArray *fieldsForRemove = @[@"hostVersion",@"current_account",@"domain_sсheme",@"lastUsedFolder",@"isLogedIn"];
     NSDictionary * dict = [[Settings sharedDefaults] dictionaryRepresentation];
     for (NSString* key in dict) {
-        if ([filedsForRemove containsObject:key]) {
+        if ([fieldsForRemove containsObject:key]) {
             [[Settings sharedDefaults]removeObjectForKey:key];
         }
     }
-//    [Settings setLastLoginServerVersion:nil];
-//    [Settings setCurrentAccount:nil];
-//    [Settings setToken:nil];
-//    [Settings setPassword:nil];
-//    [Settings setAuthToken:nil];
-//    [Settings setDomainScheme:nil];
-//    [Settings saveLastUsedFolder:nil];
-//    [Settings setIsLogedIn:NO];
 
     NSString * lastLoginServerVersion = [Settings lastLoginServerVersion];
     NSString * currentAccount = [Settings currentAccount].stringValue;
-    NSString * token = [Settings token];
-    NSString * password = [Settings password];
-    NSString * authToken = [Settings authToken];
     NSString * domainScheme = [Settings domainScheme];
 
-    DDLogInfo(@"Settings after clear ->  %@ %@ %@ %@ %@ %@",lastLoginServerVersion,currentAccount,token,password,authToken,domainScheme);
+    DDLogInfo(@"Settings after clear ->  1%@ 2%@ 3%@",lastLoginServerVersion,currentAccount,domainScheme);
+}
+
++(void)clearKeychainSettings{
+    [Settings deleteItemForKey:lk_login];
+    [Settings deleteItemForKey:lk_password];
+    [Settings deleteItemForKey:lk_authToken];
+    [Settings deleteItemForKey:lk_p7token];
 }
 
 @end

@@ -23,13 +23,17 @@
     BOOL alertViewIsShow;
     NSURLRequest *authRequest;
     SocialLoginWebPopupViewController *socialLoginWebView;
+    BOOL webViewShouldStartLoadRequest;
+    NSString *socialLoginLink;
 }
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *emailField;
 @property (weak, nonatomic) IBOutlet UITextFieldCustomEdges *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *SignInButton;
 @property (weak, nonatomic) IBOutlet UIWebView *loginWebView;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) NSLayoutConstraint *contentHeight;
+@property (strong, nonatomic) __block SessionProvider *sessionProvider;
 @end
 
 @implementation SignInStepTwoViewController
@@ -56,20 +60,39 @@
     self.passwordField.delegate = self;
     self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
     
+    
+    [self.backButton addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
+    
     alertViewIsShow = NO;
+    webViewShouldStartLoadRequest = NO;
     
     [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignOut object:nil];
     
     DDLogDebug(@"scheme -> %@ domain -> %@",[Settings domainScheme], [Settings domain]);
-    NSURL *socialLoginPageUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",[Settings domainScheme],[Settings domain],socialLoginEndPoint]];
+    socialLoginLink = [NSString stringWithFormat:@"%@%@%@",[Settings domainScheme],[Settings domain],socialLoginEndPoint];
+    NSURL *socialLoginPageUrl = [NSURL URLWithString:socialLoginLink];
     NSURLRequest *webViewRequest = [NSURLRequest requestWithURL:socialLoginPageUrl];
-    self.loginWebView.delegate = self;
-    [self.loginWebView.scrollView setScrollEnabled: NO];
-    [self.loginWebView loadRequest:webViewRequest];
+//    NSURLRequest *webViewRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://0.0.0.0:8080"]];
+    
+    if (self.haveWebAuth){
+        [self.scrollView setScrollEnabled:YES];
+        self.loginWebView.delegate = self;
+        [self.loginWebView.scrollView setScrollEnabled: NO];
+        self.loginWebView.opaque = NO;
+        self.loginWebView.backgroundColor = [UIColor clearColor];
+        [self.loginWebView loadRequest:webViewRequest];
+        [MBProgressHUD showHUDAddedTo:self.loginWebView animated:YES];
+    }else{
+        self.loginWebView.alpha = 0;
+        [self.scrollView setScrollEnabled:NO];
+    }
+
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-
+    self.sessionProvider = [SessionProvider sharedManager];
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -87,21 +110,30 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+#pragma mark - Button Actions
+
+- (void)backAction{
+    DDLogDebug(@"navigation item -> %@",self.navigationItem);
+    DDLogDebug(@"navigation controller -> %@",self.navigationController);
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 #pragma mark - WebView Delegates
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    
-    BOOL shouldStart = NO;
-    DDLogDebug(@"webView start load ->  %@",request.URL);
-    DDLogDebug(@"base url is -> %@",request.URL.host);
-    NSString * currentRequestHost = request.URL.host;
-    if ([currentRequestHost containsString:[Settings domain]]){
-        shouldStart = YES;
+    NSLog(@"webView start load ->  %@",request.URL);
+    NSLog(@"base url host is -> %@",request.URL.host);
+    NSString * currentRequestURL = request.URL.absoluteString;
+    if ([currentRequestURL isEqualToString:socialLoginLink]){
+        webViewShouldStartLoadRequest = YES;
     }else{
+        webViewShouldStartLoadRequest = NO;
         authRequest = request;
         [self performSegueWithIdentifier:@"showModalWebView" sender:nil];
     }
-    return shouldStart;
+    return webViewShouldStartLoadRequest;
+//    return YES;
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView{
@@ -112,13 +144,16 @@
 //    DDLogDebug(@"webView did finish load ->  %@",webView.request.URL);
 //    CGFloat webViewHeight = self.loginWebView.scrollView.contentSize.height;
 //    DDLogDebug(@"webView height is -> %f", webViewHeight);
+    [MBProgressHUD hideHUDForView:webView animated:YES];
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-        alertViewIsShow = NO;
-    }];
-    alertViewIsShow = YES;
+    if (webViewShouldStartLoadRequest){
+        [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+            alertViewIsShow = NO;
+        }];
+        alertViewIsShow = YES;
+    }
 }
 
 #pragma mark - TextField Delegates
@@ -147,16 +182,14 @@
 {
     [activeField resignFirstResponder];
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (![self checkEmail]) {
+            return;
+        }
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [self logInAction];
     });
     
-    if (![self checkEmail]) {
-        return;
-    }
-//    if (![self checkDomain]) {
-//        return;
-//    }
-    [self logInAction];
+
 }
 
 - (BOOL)checkEmail{
@@ -177,7 +210,24 @@
 }
 
 - (void)logInAction{
-    
+    [self.sessionProvider loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if (error){
+                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    alertViewIsShow = NO;
+                    [self clear];
+                }];
+                alertViewIsShow = YES;
+            }else{
+                [Settings setLogin:self.emailField.text];
+                [Settings setPassword:self.passwordField.text];
+                [Settings setIsLogedIn:YES];
+                [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignIn object:nil];
+                [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+            }
+        });
+    }];
 }
 
 
@@ -230,8 +280,16 @@
 
 -(void)authToken:(NSString *)token{
     DDLogDebug(@"new token -> %@", token);
-    [Settings setToken:token];
-    [socialLoginWebView dismissViewControllerAnimated:YES completion:nil];
+    [Settings setAuthToken:token];
+    [socialLoginWebView dismissViewControllerAnimated:YES completion:^{
+        [self performSegueWithIdentifier:@"succeedLogin" sender:self];
+    }];
+}
+
+- (void)loginError:(NSError *)error{
+    [socialLoginWebView dismissViewControllerAnimated:YES completion:^{
+        [[ErrorProvider instance]generatePopWithError:error controller:self];
+    }];
 }
 
 #pragma mark - Navigation
@@ -244,5 +302,22 @@
     }
 }
 
+
+#pragma mark - Utilities
+
+-(void)clear{
+    [Settings clearSettings];
+    [[StorageManager sharedManager]clear];
+    [self.sessionProvider clear];
+}
+
+-(void)removeAllCookies{
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [cookieJar cookies];
+    for (cookie in cookies) {
+        [cookieJar deleteCookie:cookie];
+    }
+}
 
 @end

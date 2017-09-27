@@ -211,6 +211,54 @@ static NSString *logOutAction       = @"SystemLogout";
 }
 
 
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler
+{
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request  success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            BOOL haveWebAuth = NO;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (json && [json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+                {
+                    haveWebAuth = [[json valueForKeyPath:@"Result.App.AllowExternalClientCustomAuthentication"]boolValue];
+                    if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                        NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+//                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                        error = [[ErrorProvider instance] generateError:errorCode.stringValue];
+                    }
+                }
+                else
+                {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
+            }
+//            if(error){
+//                handler(nil,error);
+//                return;
+//            }
+            handler(haveWebAuth,error);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            handler(NO,error);
+        });
+    }];
+    
+    [manager.operationQueue addOperation:operation];
+}
+
+
+
 - (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSDictionary *data, NSError *))completionHandler{
     NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Pattern":searchPattern,@"Type": type}];
     
@@ -338,7 +386,7 @@ static NSString *logOutAction       = @"SystemLogout";
                 }
                 if ([(NSDictionary *)json objectForKey:errorFieldName]){
                     NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                    error = [[ErrorProvider instance]generateError:errorCode.stringValue];
                 }
             }
             handler(json,error);

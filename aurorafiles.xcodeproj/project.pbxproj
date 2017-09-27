@@ -40,6 +40,8 @@
 		5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
+		685F4BCB1F6C1C32004E5E9B /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7F1D061F1200238EB5 /* KeychainWrapper.m */; };
+		685F4BCC1F6C1C33004E5E9B /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7F1D061F1200238EB5 /* KeychainWrapper.m */; };
 		68C8A0451F5EB87500C33A74 /* SignInStepTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */; };
 		68C8A0481F5F088400C33A74 /* SocialLoginWebPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
@@ -1558,6 +1560,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 						};
 					};
 					DAC1CA4F1D061D7500238EB5 = {
@@ -1574,6 +1579,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 						};
@@ -1595,6 +1603,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 						};
@@ -2080,6 +2091,7 @@
 				FF6A94C71DB67D8700543269 /* core.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,
 				FFB959311DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
+				685F4BCB1F6C1C32004E5E9B /* KeychainWrapper.m in Sources */,
 				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
 				FF6A94BF1DB666FC00543269 /* standardAuth.m in Sources */,
@@ -2142,6 +2154,7 @@
 				FFA4C00D1E55E9D8008F4522 /* MRDataBaseProvider.m in Sources */,
 				FFA4BFF91E55E5FB008F4522 /* CheckConnectionOperation.m in Sources */,
 				FFA4BFF31E55E4FE008F4522 /* UIImage+ImageCompress.m in Sources */,
+				685F4BCC1F6C1C33004E5E9B /* KeychainWrapper.m in Sources */,
 				FFA4C00E1E55E9FD008F4522 /* Folder+CoreDataProperties.m in Sources */,
 				FFA4C0121E55EA6F008F4522 /* MLNetworkLoggingAdapter.m in Sources */,
 				FFA4C0191E55EAA2008F4522 /* STZPullToRefresh.m in Sources */,

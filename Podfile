@@ -21,6 +21,7 @@ abstract_target 'Application' do
     pod 'SWTableViewCell', '~> 0.3.7'
     pod 'MMWormhole', '~> 2.0.0'
     pod 'Reveal-SDK', :configurations => ['Debug']
+    pod 'FXKeychain'
     
     target 'aurorafiles' do
         pod 'MagicalRecord','~> 2.3.0'
