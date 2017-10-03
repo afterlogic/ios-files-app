@@ -8,15 +8,16 @@
 
 #import "Settings.h"
 #import "FXKeychain.h"
+#import "AuroraSettings.h"
 
 static NSString  *serviceName = @"auroraFiles";
 static NSString  *accessGroupName = @"com.afterlogic.aurorafiles";
 
 
-static NSString  *lk_login = @"login";
-static NSString  *lk_password = @"password";
-static NSString  *lk_authToken = @"authToken";
-static NSString  *lk_p7token = @"p7Token";
+static NSString  *kc_login = @"login";
+static NSString  *kc_password = @"password";
+static NSString  *kc_authToken = @"authToken";
+static NSString  *kc_p7token = @"p7Token";
 
 @interface Settings (){
     
@@ -39,75 +40,57 @@ static NSString  *lk_p7token = @"p7Token";
 }
 
 +(void)saveItem:(id<NSCoding>)item forKey: (NSString *)key{
-//        NSError *error = nil;
-//        [[Settings keychainWrapper]saveItem:item
-//                      forKey:key
-//                  forService:serviceName
-//               inAccessGroup:accessGroupName
-//           withAccessibility:FDKeychainAccessibleWhenUnlocked
-//                       error:&error];
     [[Settings keychainWrapper]setObject:item forKey:key];
 }
 
 +(id)itemforKey: (NSString *)key{
-//    dispatch_async(dispatch_get_main_queue(), ^id(){
-//        NSError *error = nil;
-//        return  [FDKeychain itemForKey:key
-//                            forService:serviceName
-//                         inAccessGroup:accessGroupName
-//                                 error:&error];
-//    });
     return [[Settings keychainWrapper]objectForKey:key];
 }
 
 +(void)deleteItemForKey: (NSString *)key{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        NSError *error = nil;
-//        [FDKeychain deleteItemForKey:key
-//                          forService:serviceName
-//                       inAccessGroup:accessGroupName
-//                               error:&error];
-//    });
     [[Settings keychainWrapper]removeObjectForKey:key];
 }
 
 + (void)setLogin:(NSString*)login{
-    [Settings saveItem:login forKey:lk_login];
+    [Settings saveItem:login forKey:kc_login];
 }
 
 + (NSString*)login{
-    return [Settings itemforKey:lk_login];
+    return [Settings itemforKey:kc_login];
 }
 
 + (void)setPassword:(NSString*)password{
-    [Settings saveItem:password forKey:lk_password];
+    [Settings saveItem:password forKey:kc_password];
 }
 
 + (NSString*)password{
-    return [Settings itemforKey:lk_password];
+    return [Settings itemforKey:kc_password];
 }
 
 + (void)setAuthToken:(NSString *)authToken{
-    [Settings saveItem:authToken forKey:lk_authToken];
+    [Settings saveItem:authToken forKey:kc_authToken];
 }
 
 + (NSString*)authToken{
-    NSString *token = [Settings itemforKey:lk_authToken];
+    NSString *token = [Settings itemforKey:kc_authToken];
     return token ? token :@"";
 }
 
 + (void)setToken:(NSString *)token{
-    [Settings saveItem:token forKey:lk_p7token];
+    [Settings saveItem:token forKey:kc_p7token];
 }
 
 + (NSString*)token{
-    NSString *token = [Settings itemforKey:lk_p7token];
+    NSString *token = [Settings itemforKey:kc_p7token];
     return token ? token :@"";
 }
 
-#pragma mark - info.Plist settings
-
-
++(void)clearKeychainSettings{
+    [Settings deleteItemForKey:kc_login];
+    [Settings deleteItemForKey:kc_password];
+    [Settings deleteItemForKey:kc_authToken];
+    [Settings deleteItemForKey:kc_p7token];
+}
 
 #pragma mark - UserDefault settings
 
@@ -115,107 +98,114 @@ static NSString  *lk_p7token = @"p7Token";
     return [[NSUserDefaults alloc] initWithSuiteName:@"group.afterlogic.aurorafiles"];
 }
 
-+ (NSString*)domain{
-    return [[Settings sharedDefaults] valueForKey:@"mail_domain"];
++ (void)setDomain:(NSString *)domain{
+//    [[Settings sharedDefaults] setValue:domain forKey:@"mail_domain"];
+//    DDLogInfo(@"⚠️ current domain setted to -> %@", domain);
+    //    [[Settings sharedDefaults] synchronize];
+    
+    [[AuroraSettings sharedSettings]setDomain:domain];
 }
 
-+ (void)setDomain:(NSString *)domain{
-    [[Settings sharedDefaults] setValue:domain forKey:@"mail_domain"];
-    DDLogInfo(@"⚠️ current domain setted to -> %@", domain);
-    [[Settings sharedDefaults] synchronize];
++ (NSString*)domain{
+//    return [[Settings sharedDefaults] valueForKey:@"mail_domain"];
+    return [[AuroraSettings sharedSettings]domain];
 }
+
+
 
 + (NSString *)domainScheme{
-    NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
-//    DDLogInfo(@"⚠️ current domain Scheme is -> %@", sch);
+//    NSString *sch = [[Settings sharedDefaults] valueForKey:@"domain_sсheme"];
+    NSString *sch = [[AuroraSettings sharedSettings]domainScheme];
     return sch;
 }
 
 + (void)setDomainScheme:(NSString *)scheme{
-    [[Settings sharedDefaults] setValue:scheme forKey:@"domain_sсheme"];
+//    [[Settings sharedDefaults] setValue:scheme forKey:@"domain_sсheme"];
+    [[AuroraSettings sharedSettings]setDomainScheme:scheme];
     DDLogInfo(@"⚠️ current domain Scheme setted to -> %@", scheme);
-    [[Settings sharedDefaults] synchronize];
+//    [[Settings sharedDefaults] synchronize];
 }
 
 
-+ (void)setCurrentAccount:(NSNumber *)currentAccount{
-    [[Settings sharedDefaults] setValue:currentAccount forKey:@"current_account"];
++ (void)setCurrentAccount:(NSString *)currentAccount{
+    NSString *currentAccID = [NSString stringWithString:currentAccount];
+    [[AuroraSettings sharedSettings] setCurrentAccaunt:currentAccID];
     DDLogInfo(@"⚠️ current account setted to -> %@", currentAccount);
-    [[Settings sharedDefaults] synchronize];
 }
 
-+ (NSNumber*)currentAccount{
-    return [[Settings sharedDefaults] valueForKey:@"current_account"];
++ (NSString*)currentAccount{
+    return [[AuroraSettings sharedSettings] currentAccaunt];
 }
 
 + (void)setFirstRun:(NSString *)isFirstRun{
-    [[Settings sharedDefaults] setValue:isFirstRun forKey:@"first_run"];
-    [[Settings sharedDefaults] synchronize];
+    [[AuroraSettings sharedSettings]setFirstRun:isFirstRun];
 }
 
 + (NSString *)isFirstRun{
-    return [[Settings sharedDefaults] valueForKey:@"first_run"];
+    return [[AuroraSettings sharedSettings] firstRun];
 }
 
 + (void)setLastLoginServerVersion:(NSString *)version{
     NSString *hostVersion = [NSString stringWithFormat:@"%@",version];
-    [[Settings sharedDefaults] setValue:hostVersion forKey:@"hostVersion"];
-    
-    if ([[Settings sharedDefaults] synchronize]){
-        DDLogInfo(@"⚠️ current host Version setted to -> %@", hostVersion);
-    }else{
-        DDLogInfo(@"⚠️ something goes wrong with host -> %@", hostVersion);
-    }
+    [[AuroraSettings sharedSettings] setLastLoginServerVersion:hostVersion];
 }
 
 + (NSString *)lastLoginServerVersion{
-//    DDLogInfo(@"⚠️ current host Version is -> %@", [[Settings sharedDefaults] valueForKey:@"hostVersion"]);
-    return [[Settings sharedDefaults] valueForKey:@"hostVersion"];
+    NSString *version = [[AuroraSettings sharedSettings] lastLoginServerVersion];
+    return version;
 }
 
 + (void)saveLastUsedFolder:(NSDictionary *)folder{
-    [[Settings sharedDefaults]setValue:folder forKey:@"lastUsedFolder"];
+//    [[Settings sharedDefaults]setValue:folder forKey:@"lastUsedFolder"];
+    
+//    [[Settings sharedDefaults]synchronize];
+    [[AuroraSettings sharedSettings] setLastUsedFolder:folder];
     DDLogInfo(@"⚠️ current lastUsedFolder setted to -> %@", folder);
-    [[Settings sharedDefaults]synchronize];
 }
 
 +(NSDictionary *)getLastUsedFolder{
-    return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
+//    return [[Settings sharedDefaults] valueForKey:@"lastUsedFolder"];
+    return [[AuroraSettings sharedSettings]lastUsedFolder];
 }
 
 +(void)setIsLogedIn:(BOOL)isLogedIn{
     NSNumber* numberWithBool = [NSNumber numberWithBool:isLogedIn];
-    [[Settings sharedDefaults]setValue:numberWithBool forKey:@"isLogedIn"];
-    [[Settings sharedDefaults]synchronize];
+//    [[Settings sharedDefaults]setValue:numberWithBool forKey:@"isLogedIn"];
+    
+    [[AuroraSettings sharedSettings]setIsLogedIn:numberWithBool];
+//    [[Settings sharedDefaults]synchronize];
 }
 
 +(BOOL)getIsLogedIn{
-    NSNumber* numberWithBool = [[Settings sharedDefaults] valueForKey:@"isLogedIn"];
-    return numberWithBool.boolValue;
+//    NSNumber* numberWithBool = [[Settings sharedDefaults] valueForKey:@"isLogedIn"];
+//    return numberWithBool.boolValue;
+    return [[AuroraSettings sharedSettings]isLogedIn].boolValue;
+}
+
++ (void)saveAuroraSettingsToUserDefaults{
+    NSMutableArray *settings = [NSMutableArray new];
+    [settings addObject:[AuroraSettings sharedSettings]];
+    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:settings];
+    [[Settings sharedDefaults]setObject:encodedObject  forKey:auroraSettingsKey];
+    [[Settings sharedDefaults]synchronize];
+}
+
++(void)saveSettings{
+    [Settings saveAuroraSettingsToUserDefaults];
 }
 
 +(void)clearSettings{
     [Settings clearKeychainSettings];
-    NSArray *fieldsForRemove = @[@"hostVersion",@"current_account",@"domain_sсheme",@"lastUsedFolder",@"isLogedIn"];
-    NSDictionary * dict = [[Settings sharedDefaults] dictionaryRepresentation];
-    for (NSString* key in dict) {
-        if ([fieldsForRemove containsObject:key]) {
-            [[Settings sharedDefaults]removeObjectForKey:key];
-        }
-    }
+    [[AuroraSettings sharedSettings]clearAuroraSettings];
+//    [[Settings sharedDefaults]removeObjectForKey:auroraSettingsKey];
 
     NSString * lastLoginServerVersion = [Settings lastLoginServerVersion];
-    NSString * currentAccount = [Settings currentAccount].stringValue;
+    NSString * currentAccount = [Settings currentAccount];
     NSString * domainScheme = [Settings domainScheme];
 
     DDLogInfo(@"Settings after clear ->  1%@ 2%@ 3%@",lastLoginServerVersion,currentAccount,domainScheme);
 }
 
-+(void)clearKeychainSettings{
-    [Settings deleteItemForKey:lk_login];
-    [Settings deleteItemForKey:lk_password];
-    [Settings deleteItemForKey:lk_authToken];
-    [Settings deleteItemForKey:lk_p7token];
-}
+
 
 @end

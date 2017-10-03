@@ -204,4 +204,7 @@
     [[ApiP8 filesModule]stopFileThumb:folderName];
 }
 
+- (NSString *)managerName{
+    return @"P8 manager";
+}
 @end

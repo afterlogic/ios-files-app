@@ -31,6 +31,7 @@
 }
 
 @property (nonatomic) id<IDataBaseProtocol> dbProvider;
+@property (nonatomic) id<IDataBaseProtocol> settingsDBProvider;
 @end
 
 @implementation AppDelegate
@@ -42,11 +43,7 @@
     
     [self configureLogger];
     
-    
-
-
-    self.dbProvider = [DataBaseProvider sharedProvider];
-    
+    self.dbProvider = [DataBaseProvider init];
     [self.dbProvider setupCoreDataStack];
     [[StorageManager sharedManager]setupDBProvider:self.dbProvider];
     [[StorageManager sharedManager]setupFileOperationsProvider:[FileOperationsProvider sharedProvider]];
@@ -64,7 +61,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [[Settings sharedDefaults]synchronize];
+    [Settings saveSettings];
     [self.dbProvider endWork];
 }
 
@@ -79,9 +76,12 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
+    [Settings saveSettings];
     [self.dbProvider endWork];
     
 }
+
+#pragma mark - Loggers
 
 - (void)configureLogger{
 #ifdef DEBUG

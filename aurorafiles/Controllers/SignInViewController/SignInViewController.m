@@ -188,28 +188,22 @@
 }
 
 - (void)connectToHost{
+    __weak typeof (self) weakSelf = self;
     [self.sessionProvider checkSSLConnection:^(NSString *domain) {
+        typeof(self)strongSelf = weakSelf;
+        
         if (domain && domain.length) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                [self.sessionProvider checkWebAuthExistance:^(BOOL haveWebAuth, NSError *error) {
+                [MBProgressHUD hideHUDForView:strongSelf.view animated:YES];
+            
+                [strongSelf.sessionProvider checkWebAuthExistance:^(BOOL haveWebAuth, NSError *error) {
                     if (error){
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-//                            if (!alertViewIsShow) {
-//                                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-//                                    alertViewIsShow = NO;
-//                                }];
-//                                [self clear];
-//                                alertViewIsShow = YES;
-//                            }
-//                            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//                        });
                         secondStepHaveWebAuth = NO;
-                        [self performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
+                        [strongSelf performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
                     }
                     else{
                         secondStepHaveWebAuth = haveWebAuth;
-                        [self performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
+                        [strongSelf performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
                     }
                 }];
             });
@@ -217,13 +211,13 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
                     NSError *error = [[ErrorProvider instance]generateError:@"4001"];
-                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    [[ErrorProvider instance] generatePopWithError:error controller:strongSelf customCancelAction:^(UIAlertAction *action) {
                         alertViewIsShow = NO;
                     }];
-                    [self clear];
+                    [strongSelf clear];
                     alertViewIsShow = YES;
                 }
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD hideHUDForView:strongSelf.view animated:YES];
             });
         }
     }];

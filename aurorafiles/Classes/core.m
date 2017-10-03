@@ -214,11 +214,11 @@ static NSString *webAuthMethod = @"IsAvailable";
             DDLogError(@"HTTP Request failed: %@", error);
             NSError *offlineError;
             if ([Settings domain] && [Settings login]) {
-                 offlineError = [[NSError alloc]initWithDomain:@"NSURLDomain" code:666 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Something went wrong.Maybe you dont have internet connection =(", @"")}];
-                handler(nil,offlineError);
-                return ;
+                offlineError = [[NSError alloc]initWithDomain:@"NSURLDomain" code:666 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Something went wrong.Maybe you dont have internet connection =(", @"")}];
+                handler(NO,offlineError);
+            }else{
+                handler(NO,error);
             }
-            handler(nil,error);
         });
     }];
     
@@ -305,7 +305,7 @@ static NSString *webAuthMethod = @"IsAvailable";
                             }
                         }
                     }
-                    NSNumber * accountID = [json objectForKey:@"AuthenticatedUserId"];
+                    NSString * accountID = [json objectForKey:@"AuthenticatedUserId"];
                     if (accountID)
                     {
                         [Settings setCurrentAccount:accountID];
@@ -330,7 +330,7 @@ static NSString *webAuthMethod = @"IsAvailable";
                     NSNumber * accountID = [json objectForKey:@"AuthenticatedUserId"];
                     if (accountID)
                     {
-                        [Settings setCurrentAccount:accountID];
+                        [Settings setCurrentAccount:accountID.stringValue];
                     }
                     if (token.length)
                     {

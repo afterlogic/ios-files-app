@@ -173,11 +173,13 @@
         handler([_settings domain]);
         return;
     }
+    __weak typeof (self) weakSelf = self;
     [self checkDomainVersion:^(NSString *domainVersion, NSString *correctHostURL) {
+        typeof(self)strongSelf = weakSelf;
         if (domainVersion && correctHostURL) {
-            [self saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
+            [strongSelf saveDomainVersion:domainVersion domainCorrectHostUrl:correctHostURL];
         }else{
-            [self clearDomainInfo];
+            [strongSelf clearDomainInfo];
         }
         handler(correctHostURL);
     }];
@@ -206,14 +208,14 @@
         if (![[self.settings lastLoginServerVersion] isEqualToString:domainVersion]) {
             [[StorageManager sharedManager]deleteAllObjects:@"Folder"];
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.settings setLastLoginServerVersion:domainVersion];
-        });
+//        dispatch_async(dispatch_get_main_queue(), ^{
+        [self.settings setLastLoginServerVersion:domainVersion];
+//        });
         
         self.actualApiManager =  [networkManager getNetworkManager];
     }
-    DDLogInfo(@"ℹ️ host version is %@",[self.settings lastLoginServerVersion]);
-    DDLogInfo(@"ℹ️ host is %@",[self.settings domain]);
+    DDLogInfo(@"ℹ️ host version is %@",domainVersion);
+    DDLogInfo(@"ℹ️ host is %@",correctURL);
 }
 
 -(void)setupActualApiManager{

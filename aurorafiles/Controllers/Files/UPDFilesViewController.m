@@ -137,8 +137,7 @@ static const CGFloat searchDelay = 1.2f;
 //        signIn.delegate = self;
 //        [self presentViewController:signIn animated:YES completion:nil];
         
-        [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
-        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
         return;
     }
 
@@ -148,7 +147,7 @@ static const CGFloat searchDelay = 1.2f;
 //            signIn.delegate = self;
 //            [self presentViewController:signIn animated:YES completion:nil];
             
-            [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
+            [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
             return;
         }
     }

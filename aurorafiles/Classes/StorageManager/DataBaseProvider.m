@@ -9,8 +9,13 @@
 #import "DataBaseProvider.h"
 #import "Folder.h"
 
+static NSString * const defaultManagedObjectModelname  = @"aurorafiles";
+static NSString * const defaultPersistantStoreName  = @"aurorafiles.sqlite";
+
+
 @interface DataBaseProvider(){
-    
+    NSString *managedObjectModelName;
+    NSString *persistantStoreName;
 }
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -36,6 +41,14 @@
     return provider;
 }
 
++ (instancetype)init{
+    return [[DataBaseProvider alloc]init];
+}
+
++ (instancetype)initWithStoreName:(NSString *)storeName modelName:(NSString *)modelName{
+    return [[DataBaseProvider alloc]initWithStoreName:storeName modelName:modelName];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -57,17 +70,42 @@
          }];
         self.dataBaseOperationsQueue = [[NSOperationQueue alloc]init];
         [self.dataBaseOperationsQueue setName:@"com.AuroraFiles.ClearCoreDataOperationsQueue"];
+        managedObjectModelName = defaultManagedObjectModelname;
+        persistantStoreName = defaultPersistantStoreName;
     }
     return self;
 }
 
+- (instancetype)initWithStoreName:(NSString *)storeName modelName:(NSString *)modelName{
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter]
+         addObserverForName:NSManagedObjectContextDidSaveNotification
+         object:nil
+         queue:nil
+         usingBlock:^(NSNotification* note) {
+             NSManagedObjectContext *moc = _defaultMOC;
+             if (note && note.object != moc)
+                 //             if (note)
+             {
+                 [moc performBlock:^(){
+                     [moc mergeChangesFromContextDidSaveNotification:note];
+                 }];
+             }
+             
+         }];
+        self.dataBaseOperationsQueue = [[NSOperationQueue alloc]init];
+        [self.dataBaseOperationsQueue setName:@"com.AuroraFiles.ClearCoreDataOperationsQueue"];
+        managedObjectModelName = modelName;
+        persistantStoreName = storeName;
+    }
+    return self;
+}
 
 -(void)setupCoreDataStack{
     _managedObjectModel = [self managedObjectModel];
     _persistentStoreCoordinator = [self persistentStoreCoordinator];
     _defaultMOC = [self defaultMOC];
-
-    
 }
 
 #pragma mark - Managed Object Operations
@@ -207,7 +245,7 @@
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"aurorafiles" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:managedObjectModelName withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -219,7 +257,7 @@
     }
     // Create the coordinator and store
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"aurorafiles.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:persistantStoreName];
     DDLogDebug(@"Curent sqlite file path is -> %@", storeURL);
     NSError *error = nil;
     NSString *failureReason = @"There was an error creating or loading the application's saved data.";

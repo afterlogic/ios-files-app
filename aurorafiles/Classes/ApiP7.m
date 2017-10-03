@@ -162,7 +162,7 @@ static NSString *logOutAction       = @"SystemLogout";
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request  success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
+//        dispatch_async(dispatch_get_main_queue(), ^(){
         NSError *error;
         NSData *data = [NSData new];
         if ([responseObject isKindOfClass:[NSData class]]) {
@@ -199,12 +199,12 @@ static NSString *logOutAction       = @"SystemLogout";
                 return;
             }
             handler(json,error);
-        });
+//        });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-         dispatch_async(dispatch_get_main_queue(), ^(){
+//         dispatch_async(dispatch_get_main_queue(), ^(){
             DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
-         });
+//         });
     }];
 
     [manager.operationQueue addOperation:operation];
@@ -365,10 +365,10 @@ static NSString *logOutAction       = @"SystemLogout";
                 if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
                 {
                     NSString *token = [json valueForKeyPath:@"Result.AuthToken"];
-                    NSNumber * accountID = [json objectForKey:@"AccountID"];
+                    NSNumber *accountID = [json objectForKey:@"AccountID"];
                     if (accountID)
                     {
-                        [Settings setCurrentAccount:accountID];
+                        [Settings setCurrentAccount:accountID.stringValue];
                     }
                     if (token.length)
                     {

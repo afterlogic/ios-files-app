@@ -40,6 +40,8 @@
 - (void)stopFileThumb:(NSString *)folderName;
 - (void)cancelAllOperations;
 
+- (NSString *)managerName;
+
 @end
 
 

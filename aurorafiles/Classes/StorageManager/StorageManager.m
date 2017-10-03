@@ -38,7 +38,6 @@
 }
 
 
-
 + (instancetype)sharedManager
 {
     static StorageManager *sharedInstance = nil;

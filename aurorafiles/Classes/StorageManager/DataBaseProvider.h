@@ -17,7 +17,8 @@
 //@property (nonatomic, readonly, strong) NSManagedObjectContext *operationsMOC;
 #pragma mark - Init
 + (instancetype)sharedProvider;
-
++ (instancetype)init;
++ (instancetype)initWithStoreName:(NSString *)storeName modelName:(NSString *)modelName;
 
 #pragma mark - Core Data
 - (void)setupCoreDataStack;

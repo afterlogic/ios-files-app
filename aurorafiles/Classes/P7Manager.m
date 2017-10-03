@@ -307,4 +307,8 @@
     
 }
 
+- (NSString *)managerName{
+    return @"P7 manager";
+}
+
 @end

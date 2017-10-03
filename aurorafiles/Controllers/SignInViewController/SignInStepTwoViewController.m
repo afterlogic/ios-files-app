@@ -216,7 +216,7 @@
             if (error){
                 [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
                     alertViewIsShow = NO;
-                    [self clear];
+//                    [self clear];
                 }];
                 alertViewIsShow = YES;
             }else{
