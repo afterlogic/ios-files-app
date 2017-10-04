@@ -8,7 +8,7 @@
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.afterlogic.aurorafiles</string>
+		<string>$(AppIdentifierPrefix)auroraKeychainGroup</string>
 	</array>
 </dict>
 </plist>

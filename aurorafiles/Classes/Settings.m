@@ -11,8 +11,7 @@
 #import "AuroraSettings.h"
 
 static NSString  *serviceName = @"auroraFiles";
-static NSString  *accessGroupName = @"com.afterlogic.aurorafiles";
-
+static NSString  *accessGroup  = @"J7AW6VHJK4.auroraKeychainGroup";
 
 static NSString  *kc_login = @"login";
 static NSString  *kc_password = @"password";
@@ -34,7 +33,7 @@ static NSString  *kc_p7token = @"p7Token";
     static FXKeychain *keychainItem = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        keychainItem = [FXKeychain defaultKeychain];
+        keychainItem = [[FXKeychain alloc]initWithService:serviceName accessGroup:accessGroup];
     });
     return keychainItem;
 }
