@@ -374,29 +374,45 @@
     __weak ShareViewController * weakSelf = self;
     NSURLSessionDataTask * task = [session dataTaskWithRequest:file.request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
         
-        NSError  *localError = error;
+        NSError  *localError = nil;
         NSString *result;
-        BOOL handlResult = false;
         ShareViewController *strongSelf = weakSelf;
         id json = nil;
+        id stringResult = nil;
+        
         if (data)
         {
-            json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            stringResult = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         }
         
-        if (![json isKindOfClass:[NSDictionary class]])
-        {
-            result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            handlResult = [result isEqualToString:@"true"];
-            if (!handlResult)
-            {
-                localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+        if([[Settings lastLoginServerVersion]isEqualToString:@"P8"]){
+            if (stringResult != nil){
+                BOOL uploadResult = [stringResult isEqualToString:@"true"];
+                DDLogError(@"%@",result);
+                
+                if (!uploadResult)
+                {
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
             }else{
-                localError = nil;
+                localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+        }else{
+            if (json != nil){
+                if (![json isKindOfClass:[NSDictionary class]])
+                {
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }else if ([(NSDictionary *)json objectForKey:@"ErrorCode"]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:@"ErrorCode"];
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }
+            }else{
+                localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
             }
         }
         
-        if (localError)
+        if (localError || error)
         {
             if (self.filesForUpload.count == 1) {
                 dispatch_async(dispatch_get_main_queue(), ^(){

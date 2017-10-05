@@ -138,14 +138,12 @@
 
 -(NSMutableURLRequest *)generateRequestWithUrl:(NSString *)linkString data:(NSURL *)data savedLocal:(BOOL) isLocal
 {
-    
-    NSUserDefaults * defaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.afterlogic.aurorafiles"];
     NSURL *url = [NSURL URLWithString:[linkString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSMutableURLRequest * request = [[NSMutableURLRequest alloc] initWithURL:url];
     
     [request setHTTPMethod:@"PUT"];
     
-    NSString *authToken = [defaults valueForKey:@"auth_token"];
+    NSString *authToken = [Settings authToken];
     [request setValue:authToken forHTTPHeaderField:@"Auth-Token"];
     
     [request setHTTPBodyStream:isLocal ? [NSInputStream inputStreamWithFileAtPath:data.absoluteString] :[[NSInputStream alloc]initWithURL:data]];

@@ -328,51 +328,67 @@
     __weak ActionViewController * weakSelf = self;
     NSURLSessionDataTask * task = [session dataTaskWithRequest:file.request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
 
-            NSError  *localError = error;
-            NSString *result;
-            BOOL handlResult = false;
-            ActionViewController *strongSelf = weakSelf;
-            id json = nil;
-            if (data)
-            {
-                json =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            }
-            
-            if (![json isKindOfClass:[NSDictionary class]])
-            {
-                result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                handlResult = [result isEqualToString:@"true"];
-                if (!handlResult)
+        NSError  *localError = nil;
+        NSString *result;
+        ActionViewController *strongSelf = weakSelf;
+        id json = nil;
+        id stringResult = nil;
+        
+        if (data)
+        {
+            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            stringResult = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        }
+        
+        if([[Settings lastLoginServerVersion]isEqualToString:@"P8"]){
+            if (stringResult != nil){
+                BOOL uploadResult = [stringResult isEqualToString:@"true"];
+                DDLogError(@"%@",result);
+                
+                if (!uploadResult)
                 {
                     localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                }else{
-                    localError = nil;
                 }
-            }
-            
-            if (localError)
-            {
-                if (self.filesForUpload.count == 1) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        [hud uploadError];
-                        [hud hideHUDWithDelay:0.7f];
-                    });
-                }else{
-                    [strongSelf.filesForUpload removeObject:file];
-                    [strongSelf uploadAction:self];
-                }
-
             }else{
-                if (self.filesForUpload.count == 1) {
-                    dispatch_async(dispatch_get_main_queue(), ^(){
-                        [hud uploadSuccess];
-                        [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
-                    });
-                }else{
-                    [strongSelf.filesForUpload removeObject:file];
-                    [strongSelf uploadAction:self];
-                }
+                localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
             }
+        }else{
+            if (json != nil){
+                if (![json isKindOfClass:[NSDictionary class]])
+                {
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }else if ([(NSDictionary *)json objectForKey:@"ErrorCode"]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:@"ErrorCode"];
+                    localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }
+            }else{
+                localError = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }
+        }
+            
+        if (localError||error)
+        {
+            if (self.filesForUpload.count == 1) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    [hud uploadError];
+                    [hud hideHUDWithDelay:0.7f];
+                });
+            }else{
+                [strongSelf.filesForUpload removeObject:file];
+                [strongSelf uploadAction:self];
+            }
+
+        }else{
+            if (self.filesForUpload.count == 1) {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    [hud uploadSuccess];
+                    [strongSelf performSelector:@selector(hideHud) withObject:nil afterDelay:0.7];
+                });
+            }else{
+                [strongSelf.filesForUpload removeObject:file];
+                [strongSelf uploadAction:self];
+            }
+        }
             
 
     }];

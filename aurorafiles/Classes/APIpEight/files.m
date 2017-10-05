@@ -605,14 +605,12 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
     NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
-//    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [Settings domainScheme];
+    NSString *scheme = [Settings domainScheme];
     NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,[pathTmp urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSURL *testUrl = [[NSURL alloc]initWithString:Link];
     
     
     NSDictionary *headers = @{
-//                              @"auth-token": [Settings authToken],
                                @"cache-control": @"no-cache",
                                @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]]};
     
@@ -646,7 +644,6 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             if (!handlResult)
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                
             }
             if (error)
             {
