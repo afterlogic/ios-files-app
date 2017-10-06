@@ -604,7 +604,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     
     
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
-    NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
+    NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"%@",path] : @""];
     NSString *scheme = [Settings domainScheme];
     NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,[pathTmp urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSURL *testUrl = [[NSURL alloc]initWithString:Link];
@@ -637,7 +637,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             if (data)
             {
                 result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                handlResult = [result isEqualToString:@"true"];
+                handlResult = [result containsString:@"true"];
                 DDLogError(@"%@",result);
             }
             
