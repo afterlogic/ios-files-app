@@ -17,8 +17,6 @@ default_platform :ios
 
 platform :ios do
   before_all do
-    # https://afterlogic.slack.com/apps/A0F7XDUAZ-incoming-webhooks - ссылка на подключение вебхука
-    ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
     xcode_select = "/Applications/Xcode.app"
     # cocoapods
   end
@@ -29,7 +27,7 @@ platform :ios do
   end
 
   desc "Run snapshot only"
-  lane :screenshots do 
+  lane :screenshots do
     snapshot
   end
 
@@ -86,12 +84,12 @@ platform :ios do
 
     # забираем все коммиты из гита для ченджлога
     change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
-    
+
     # Пушим в гит новый тэг и все коммиты
     push_to_git_remote
 
     # Собираем билд
-    gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true) 
+    gym(scheme: "aurorafiles", workspace: "aurorafiles.xcworkspace",include_bitcode: true)
 
     #pilot
 
@@ -100,9 +98,6 @@ platform :ios do
       changelog: change_log,
       skip_submission: true
     )
-
-    #отправляем кастомное сообщение в слак
-    MrHandyMessage(slackMessage:"Submitted build to TestFlight: \n #{change_log} \n")
 
   end
 
@@ -113,38 +108,6 @@ platform :ios do
     gym(scheme: "aurorafiles") # Build your app - more options available
     deliver(force: true)
     # frameit
-  end
-
-  desc "send message to slack"
-  lane :MrHandyMessage do |options|
-    #отправляем сообщение в слак
-    slack(
-      message: options[:slackMessage],
-      channel: "#iosdev",
-      use_webhook_configured_username_and_icon: false,
-      username: "Mr.Handy from Fastlane",
-      icon_url:"http://vignette2.wikia.nocookie.net/fallout/images/3/39/FoS_Mister_Handy.png/revision/latest?cb=20150904224359"
-    )
-  end
-
-  desc "Fake upload. Only for tests!!!"
-  lane :fakeUpload do |options|
-
-    version_number = options[:version_number]
-
-    build_number = increment_build_number
-
-
-    complete_version_number = version_string(version_number, build_number)
-
-    clean_build_artifacts
-    clear_derived_data
-
-    # забираем все коммиты из гита для ченджлога
-    change_log = "CHANGELOG TBD. Version: #{complete_version_number} \nChanges:\n  #{change_log_since_last_tag}"
-
-    #отправляем сообщение в слак
-    MrHandyMessage(slackMessage:"Test Message. Submitted build to TestFlight: \n#{change_log}\n")
   end
 
   # You can define as many lanes as you want
@@ -173,4 +136,3 @@ end
 
 
 #test lanes
-

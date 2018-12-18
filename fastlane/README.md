@@ -51,17 +51,9 @@ This will also make sure the profile is up to date
 ```
 fastlane ios release
 ```
-Deploy a new version to the App Store
-### ios MrHandyMessage
-```
-fastlane ios MrHandyMessage
-```
-send message to slack
-### ios fakeUpload
-```
-fastlane ios fakeUpload
-```
-Fake upload. Only for tests!!!
+
+
+
 
 ----
 
