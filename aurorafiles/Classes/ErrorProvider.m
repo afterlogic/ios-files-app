@@ -86,8 +86,14 @@ const NSString* FileAlreadyExists = @"813";
 const NSString* FileNotFound = @"814";
 
 const NSString* MailServerError = @"901";
+const NSString* WebAuthError = @"902";
 const NSString* UnknownError = @"999";
 
+const NSString* UnitTestError = @"070915";
+
+
+
+const NSString *apiDomain = @"com.afterlogic.api";
 @interface ErrorProvider(){
 
 }
@@ -108,21 +114,21 @@ const NSString* UnknownError = @"999";
     return _instance;
 }
 
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc {
-    [self generatePopWithError:error controller:vc customCancelAction:nil retryAction:nil];
+- (BOOL)generatePopWithError:(NSError *)error controller:(UIViewController *)vc {
+    return [self generatePopWithError:error controller:vc customCancelAction:nil retryAction:nil];
 }
 
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler{
-    [self generatePopWithError:error controller:vc customCancelAction:handler retryAction:nil];
+- (BOOL)generatePopWithError:(NSError *)error controller:(UIViewController *)vc customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler{
+   return  [self generatePopWithError:error controller:vc customCancelAction:handler retryAction:nil];
 }
 
-- (void)generatePopWithError:(NSError *)error controller:(UIViewController *)vc
+- (BOOL)generatePopWithError:(NSError *)error controller:(UIViewController *)vc
           customCancelAction:(void (^ __nullable)(UIAlertAction *cancelAction))handler
                  retryAction:(void (^ __nullable)(UIAlertAction *retryAction))retryHandler{
     
     NSString *errorCode = [NSString stringWithFormat:@"%li",(long)error.code];
     if ([errorCode isEqualToString:@"-999"]) {
-        return;
+        return NO;
     }
 
     NSString *text = [[self getErrorList] valueForKey:errorCode];
@@ -148,18 +154,38 @@ const NSString* UnknownError = @"999";
     }
     
     [vc presentViewController:aC animated:YES completion:nil];
+    
+    return YES;
+}
+
+- (NSError *)generateError:(NSString *)errorCode{
+    NSString *localizedDescription = [[self getErrorList] valueForKey:errorCode];
+    if (localizedDescription.length == 0 || localizedDescription == nil) {
+        return nil;
+    }
+    NSError *newError = [NSError errorWithDomain:apiDomain
+                                            code:errorCode.intValue
+                                        userInfo:@{
+                                                   NSLocalizedDescriptionKey : localizedDescription
+                                                   }];
+    return newError;
 }
 
 - (NSDictionary *)getErrorList{
     return @{
-            @"401":NSLocalizedString(@"The host is not responding. Try connecting again later", @"401 error text"),
+             
+#pragma mark - Application Errors
+            @"4001":NSLocalizedString(@"The host is not responding. Try connecting again later", @"4001 error text"),
             @"4061":NSLocalizedString(@"You have entered an invalid e-mail address. Please try again", @"4061 error text"),
             @"4062":NSLocalizedString(@"Host field should not be empty. Please, enter the host url and try again", @"4062 error text"),
             
-            @"500":NSLocalizedString(@"The e-mail or password you entered is incorrect", @"500 error text"),
+            @"5000":NSLocalizedString(@"The e-mail or password you entered is incorrect", @"5000 error text"),
             @"1":NSLocalizedString(@"",@""),
             @"9":NSLocalizedString(@"",@""),
             
+            @"1001":NSLocalizedString(@"User is logged out", @""),
+            
+#pragma mark - Server Errors
             InvalidToken: NSLocalizedString(@"invalid token", @"101 aurora error"),
             AuthError: NSLocalizedString(@"authentication failure",@"102 aurora error"),
             InvalidInputParameter: NSLocalizedString(@"invalid data",@"103 aurora error"),
@@ -235,7 +261,11 @@ const NSString* UnknownError = @"999";
             FileAlreadyExists:NSLocalizedString(@"File Already Exists",@""),
             FileNotFound:NSLocalizedString(@"File Not Found",@""),
             MailServerError :NSLocalizedString(@"Mail Server Error",@""),
+            WebAuthError :NSLocalizedString(@"This account is not allowed to log in.", @""),
             UnknownError: NSLocalizedString(@"something goes wrong...",@"unknown error"),
+            
+#pragma mark - Unit-test Errors
+            UnitTestError: NSLocalizedString(@"This error need only for unit-tests!", @"unit test error"),
     };
 }
 

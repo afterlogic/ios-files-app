@@ -27,7 +27,7 @@
     if (self)
     {
         self.completion = completion;
-        self.name = @"P7-Check";
+        self.name = [NSString stringWithFormat:@"%@ - check", [manager managerName]];
         self.manager = manager;
     }
     

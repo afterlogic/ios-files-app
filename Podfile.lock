@@ -23,35 +23,44 @@ PODS:
   - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - BugfenderSDK (0.3.22)
-  - CocoaLumberjack (3.1.0):
-    - CocoaLumberjack/Default (= 3.1.0)
-    - CocoaLumberjack/Extensions (= 3.1.0)
-  - CocoaLumberjack/Default (3.1.0)
-  - CocoaLumberjack/Extensions (3.1.0):
+  - BugfenderSDK (0.3.27)
+  - CocoaLumberjack (3.2.1):
+    - CocoaLumberjack/Default (= 3.2.1)
+    - CocoaLumberjack/Extensions (= 3.2.1)
+  - CocoaLumberjack/Default (3.2.1)
+  - CocoaLumberjack/Extensions (3.2.1):
     - CocoaLumberjack/Default
-  - Crashlytics (3.8.3):
+  - Crashlytics (3.8.6):
     - Fabric (~> 1.6.3)
   - CRMediaPickerController (0.0.1)
   - DZNEmptyDataSet (1.8.1)
-  - Fabric (1.6.7)
-  - FastEasyMapping (1.0.2)
+  - Fabric (1.6.12)
+  - FastEasyMapping (1.2.2)
+  - FXKeychain (1.5.3)
   - HTMLReader (2.0.5)
   - LinkPreviewKit (0.4.1):
     - HTMLReader
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
+  - MMWormhole (2.0.0):
+    - MMWormhole/Core (= 2.0.0)
+  - MMWormhole/Core (2.0.0)
   - ObjcAssociatedObjectHelpers (2.0.1):
     - ObjcAssociatedObjectHelpers/Core (= 2.0.1)
     - ObjcAssociatedObjectHelpers/NSObject+Dictionary (= 2.0.1)
   - ObjcAssociatedObjectHelpers/Core (2.0.1)
   - ObjcAssociatedObjectHelpers/NSObject+Dictionary (2.0.1):
     - ObjcAssociatedObjectHelpers/Core
+  - OCHamcrest (7.0.1)
+  - OCMockito (5.0.0):
+    - OCHamcrest (~> 7.0)
   - Reachability (3.2)
+  - Reveal-SDK (10)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
+  - Specta (1.0.6)
   - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
@@ -64,30 +73,41 @@ DEPENDENCIES:
   - DZNEmptyDataSet
   - Fabric
   - FastEasyMapping (~> 1.0)
+  - FXKeychain
   - LinkPreviewKit
   - MagicalRecord (~> 2.3.0)
+  - MMWormhole (~> 2.0.0)
+  - OCMockito
   - Reachability (~> 3.2)
+  - Reveal-SDK
   - SDWebImage (= 3.7.3)
+  - Specta
   - SWTableViewCell (~> 0.3.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   AFNetworking+AutoRetry: 5987ec96155e58fe356f1a3e91e79e5f3be6296a
-  BugfenderSDK: 05a168bd3a494528b41ec729d579724bffb84e7c
-  CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
-  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
+  BugfenderSDK: c95d72531e7638c72c0aa51903c2225636c8812a
+  CocoaLumberjack: 2800c03334042fe80589423c8d80e582dcaec482
+  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
   CRMediaPickerController: 65e1f968dea26a7759bb1fb4a1518f5b8cd6fba9
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
-  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  FastEasyMapping: 77d566a817ca73304af3e7fbed130850238f1cb4
+  Fabric: f050464eac45a2ce5a8e6e6a07e977c0df32fe28
+  FastEasyMapping: cc13aa6608aeb171bc0ea895876434a7328a153a
+  FXKeychain: 2fe54573946ffef634f4e2a2851e6c8f4ea15e76
   HTMLReader: 979c66cd2b23c67e0b45a4b3e0ab8ce933a3e71a
   LinkPreviewKit: d16933bdb90ad21bde386285abcb9dc207fabfdb
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
+  MMWormhole: 0cd3fd35a9118b2e2d762b499f54eeaace0be791
   ObjcAssociatedObjectHelpers: 686c291f292c26a49b9b1fa7d58130a8d35d59d2
+  OCHamcrest: 7c2229e7ea96eecd6e43dbef7c68e1dfbd6928b8
+  OCMockito: 2598f5d43f6e74964d3ec3b9dea8b4fde3ea2c43
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  Reveal-SDK: 7869ddf1f902cabbb07a1f0dd06bd25861a126f7
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  Specta: f506f3a8361de16bc0dcf3b17b75e269072ba465
   SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
-PODFILE CHECKSUM: a1471eb515e346aa56a8e4d6ac99f868f7b3c0ea
+PODFILE CHECKSUM: a9855b7ad263df3522b4c2b2ed9f20aa06992a3c
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1

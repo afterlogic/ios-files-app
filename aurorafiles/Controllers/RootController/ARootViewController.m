@@ -10,9 +10,10 @@
 #import "Constants.h"
 #import "UPDFilesViewController.h"
 #import "DownloadsTableViewController.h"
-#import "UploadFoldersTableViewController.h"
 #import "SessionProvider.h"
 #import "Settings.h"
+#import "WormholeProvider.h"
+#import "SignInViewController.h"
 
 @interface ARootViewController ()
 {
@@ -41,7 +42,7 @@
     [self.childViewControllers makeObjectsPerformSelector:@selector(viewDidLoad)];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showOfflineButtons) name:CPNotificationConnectionLost object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(signOutAction) name:NNotificationUserSignOut object:nil];
-    
+
     // Do any additional setup after loading the view.
 }
 
@@ -173,14 +174,22 @@
 }
 
 -(void)signOutAction{
+    [[WormholeProvider instance] sendNotification:@"logOutAction" object:nil];
     [Settings clearSettings];
 //    [self performSegueWithIdentifier:@"showSignInFromFilesView" sender:self];
 
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController *vc = [board instantiateViewControllerWithIdentifier:@"SignInViewController"];
-    [self presentViewController:vc animated:YES completion:^{
-        self.navigationController.viewControllers = @[];
-    }];
+    UINavigationController *nc = [board instantiateViewControllerWithIdentifier:@"SignInNavController"];
+    
+    
+    NSArray *vcStack = [self.navigationController viewControllers];
+    DDLogDebug(@"%@",vcStack);
+    SignInViewController *vc = (SignInViewController *)[[nc viewControllers] firstObject];
+    [self.navigationController setViewControllers:@[vc] animated:YES];
+//    [self.navigationController popToViewController:vc animated:YES];
+//    [self presentViewController:vc animated:YES completion:^{
+//        self.navigationController.viewControllers = @[];
+//    }];
 }
 
 #pragma mark - Navigation

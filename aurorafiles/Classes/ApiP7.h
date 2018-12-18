@@ -19,9 +19,13 @@ typedef void (^UploadProgressBlock)(float progress);
 
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password  loginType:(NSString *) type completion:(void (^)(NSDictionary *data, NSError *error))handler;
 
+- (void)signOut:(void(^)(BOOL success, NSError *error))handler;
+
 - (void)checkIsAccountAuthorisedWithCompletion:(void (^)(NSDictionary *data, NSError *error)) handler;
 
 - (void)getFilesForFolder:(NSString*)folderName withType:(NSString*)type completion:(void (^)(NSDictionary *data, NSError* error)) handler;
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSDictionary *data, NSError *error))completionHandler;
 
 - (void)deleteFiles:(NSArray<Folder *>*)files isCorporate:(BOOL)corporate completion:(void (^)(BOOL succsess, NSError* error))handler;
 
@@ -38,5 +42,7 @@ typedef void (^UploadProgressBlock)(float progress);
 - (void)getPublicLinkForFileNamed:(NSString *)name filePath:(NSString *)filePath type:(NSString *)type size:(NSString *)size isFolder:(BOOL)isFolder completion:(void (^)(NSString *publicLink, NSError* error))completion;
 
 - (void)cancelAllOperations;
+
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler;
 
 @end

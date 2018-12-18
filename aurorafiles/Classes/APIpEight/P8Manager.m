@@ -67,8 +67,24 @@
             }
         }
     }];
-
 }
+
+- (void)userData:(void (^)(BOOL isAuthorized, NSError *error))handler{
+    [[ApiP8 coreModule] getUserWithCompletion:^(NSString *publicID, NSError *error) {
+        if (error){
+            handler(NO, error);
+            return;
+        }
+        if ([publicID isEqualToString:[Settings login]]){
+            handler(YES, nil);
+            return;
+        }else{
+            handler(NO, nil);
+            return;
+        }
+    }];
+}
+
 -(void)logoutWithCompletion:(void (^)(BOOL, NSError *))handler{
     [[ApiP8 coreModule]logoutWithCompletion:^(BOOL succsess, NSError *error) {
         handler(succsess, error);
@@ -76,6 +92,13 @@
 }
 
 #pragma mark - Files Operations
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSArray *, NSError *))completionHandler{
+    [[ApiP8 filesModule]searchFilesInSection:type pattern:searchPattern completion:^(NSArray *result, NSError *error) {
+        completionHandler(result,error);
+    }];
+}
+
 -(void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [[ApiP8 filesModule]createFolderWithName:name isCorporate:corporate andPath:path completion:^(BOOL result, NSError *error) {
         complitionHandler(result,error);
@@ -147,6 +170,10 @@
 }
 #pragma mark - Helpers
 
+-(void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL, NSError *))handler{
+    [[ApiP8 coreModule] getWebAuthExistanceCompletionHandler:handler];
+}
+
 -(void)checkConnection:(void (^)(BOOL, NSError *, NSString *, id<ApiProtocol>))complitionHandler{
     [[ApiP8 coreModule]pingHostWithCompletion:^(BOOL isP8, NSError *error) {
         
@@ -177,4 +204,7 @@
     [[ApiP8 filesModule]stopFileThumb:folderName];
 }
 
+- (NSString *)managerName{
+    return @"P8 manager";
+}
 @end

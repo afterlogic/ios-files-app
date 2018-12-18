@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ExtensionParentViewController.h"
 
-@interface ActionViewController : UIViewController
+@interface ActionViewController : ExtensionParentViewController
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <Social/Social.h>
+#import "ExtensionParentViewController.h"
 
 //@interface ShareViewController : SLComposeServiceViewController
-@interface ShareViewController : UIViewController
+@interface ShareViewController : ExtensionParentViewController
 
 @end

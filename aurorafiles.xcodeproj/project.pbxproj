@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3CA109C258D0D15F3CE8170C /* libPods-UI-tests-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3D42CFA34AB3C58515AD3BA /* libPods-UI-tests-aurorafilesUITests.a */; };
 		49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */; };
 		5C7B50C2E7F87B7E350CA090 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
@@ -39,10 +40,24 @@
 		5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */; };
 		5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */; };
 		5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7B5A9B8DD89D089E9E8ECE /* NSStringPunycodeAdditions.m */; };
+		6804D4791F7BDB7C003BC12A /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6804D4781F7BDB7C003BC12A /* Settings.plist */; };
+		6804D47A1F7BDB7C003BC12A /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6804D4781F7BDB7C003BC12A /* Settings.plist */; };
+		6804D47B1F7BDB7C003BC12A /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6804D4781F7BDB7C003BC12A /* Settings.plist */; };
+		685F4BCB1F6C1C32004E5E9B /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7F1D061F1200238EB5 /* KeychainWrapper.m */; };
+		685F4BCC1F6C1C33004E5E9B /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA7F1D061F1200238EB5 /* KeychainWrapper.m */; };
+		686CBB5E1F82690400397E93 /* AuroraSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 686CBB5B1F82690400397E93 /* AuroraSettings.m */; };
+		686CBB5F1F82690400397E93 /* AuroraSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 686CBB5B1F82690400397E93 /* AuroraSettings.m */; };
+		686CBB621F8269AE00397E93 /* AuroraSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 686CBB5B1F82690400397E93 /* AuroraSettings.m */; };
+		68C8A0451F5EB87500C33A74 /* SignInStepTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */; };
+		68C8A0481F5F088400C33A74 /* SocialLoginWebPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */; };
 		712197619884A9C5097F1D53 /* libPods-Application-Extensions-Save shortcut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */; };
+		87C164BC0C7AEEA74C61A980 /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A0173E1D910D9B022118E9 /* libPods-aurorafilesTests.a */; };
+		9503EC351F1E742700F2CD9B /* SessionProviderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9503EC341F1E742600F2CD9B /* SessionProviderTest.m */; };
+		95449DA51F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95449DA41F0BF066002DBAD3 /* UserLoggedOutViewController.m */; };
+		95449DA61F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95449DA41F0BF066002DBAD3 /* UserLoggedOutViewController.m */; };
+		95449DA71F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95449DA41F0BF066002DBAD3 /* UserLoggedOutViewController.m */; };
 		AC54FCD1997FE3CE99744A22 /* libPods-Application-Extensions-aurorafilesaction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */; };
 		B34C7FD09F401F1A6BABEEF3 /* libPods-Application-aurorafiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */; };
-		BB6A53D584BF19F604CC6ABA /* libPods-aurorafilesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */; };
 		DA37112D1D21EFFA0067B124 /* DownloadsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA37112C1D21EFFA0067B124 /* DownloadsTableViewController.m */; };
 		DAC1CA391D061D7500238EB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA381D061D7500238EB5 /* main.m */; };
 		DAC1CA3C1D061D7500238EB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC1CA3B1D061D7500238EB5 /* AppDelegate.m */; };
@@ -72,6 +87,11 @@
 		DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CAD31D06216400238EB5 /* MainInterface.storyboard */; };
 		DAC1CAD91D06216500238EB5 /* aurorafilesaction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DAC1CACE1D06216400238EB5 /* aurorafilesaction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAC1CA751D061EF800238EB5 /* Images.xcassets */; };
+		E5782081DBE2972432E19E1E /* ExtensionParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E578226B9B307A5C53EDD616 /* ExtensionParentViewController.m */; };
+		E57825740995DF29DA1C2E67 /* WormholeProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E578245BAF4FD28036737493 /* WormholeProvider.m */; };
+		E5782AE8534227C18C710573 /* WormholeProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E578245BAF4FD28036737493 /* WormholeProvider.m */; };
+		E5782AF2C41BA48C219B95FC /* ExtensionParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E578226B9B307A5C53EDD616 /* ExtensionParentViewController.m */; };
+		E5782B3E3D36CC3EFDC9F47B /* WormholeProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E578245BAF4FD28036737493 /* WormholeProvider.m */; };
 		FF15736B1ECC897000972F33 /* UIApplication+openURL.m in Sources */ = {isa = PBXBuildFile; fileRef = FF15736A1ECC897000972F33 /* UIApplication+openURL.m */; };
 		FF2773DC1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
 		FF2773DD1DF191000061C210 /* DataBaseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2773DB1DF191000061C210 /* DataBaseProvider.m */; };
@@ -315,12 +335,24 @@
 		5C7B5CE58A81E38D9DC174E3 /* MRDataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDataBaseProvider.h; sourceTree = "<group>"; };
 		5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErrorProvider.m; sourceTree = "<group>"; };
 		60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application-Extensions-aurorafilesaction.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6804D4781F7BDB7C003BC12A /* Settings.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
+		686CBB5A1F82690400397E93 /* AuroraSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuroraSettings.h; sourceTree = "<group>"; };
+		686CBB5B1F82690400397E93 /* AuroraSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuroraSettings.m; sourceTree = "<group>"; };
+		68C8A0431F5EB87500C33A74 /* SignInStepTwoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInStepTwoViewController.h; sourceTree = "<group>"; };
+		68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInStepTwoViewController.m; sourceTree = "<group>"; };
+		68C8A0461F5F088300C33A74 /* SocialLoginWebPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocialLoginWebPopupViewController.h; sourceTree = "<group>"; };
+		68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocialLoginWebPopupViewController.m; sourceTree = "<group>"; };
+		68C8A2021F60529500C33A74 /* SignControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignControllerDelegate.h; sourceTree = "<group>"; };
 		6AD1261A834FCA3EE032095E /* Pods-aurorafilesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9503EC341F1E742600F2CD9B /* SessionProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionProviderTest.m; sourceTree = "<group>"; };
+		95449DA31F0BF066002DBAD3 /* UserLoggedOutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserLoggedOutViewController.h; path = aurorafilesaction/UserLoggedOutViewController.h; sourceTree = "<group>"; };
+		95449DA41F0BF066002DBAD3 /* UserLoggedOutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserLoggedOutViewController.m; path = aurorafilesaction/UserLoggedOutViewController.m; sourceTree = "<group>"; };
 		AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-aurorafiles.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles.release.xcconfig"; sourceTree = "<group>"; };
 		B19E38E5DEE3D20DDA6C932A /* Pods-aurorafilesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesTests/Pods-aurorafilesTests.release.xcconfig"; sourceTree = "<group>"; };
+		B3D42CFA34AB3C58515AD3BA /* libPods-UI-tests-aurorafilesUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UI-tests-aurorafilesUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.release.xcconfig"; sourceTree = "<group>"; };
+		C5A0173E1D910D9B022118E9 /* libPods-aurorafilesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-aurorafilesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C91918B3233CA24FA894C5BA /* Pods-aurorafilesUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aurorafilesUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D51C8575601CAA279C31E583 /* Pods-Application-Extensions-Save shortcut.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-Save shortcut.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut.release.xcconfig"; sourceTree = "<group>"; };
 		DA3711291D21D5C00067B124 /* aurorafiles 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "aurorafiles 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -379,6 +411,12 @@
 		DAC1CADE1D062BEB00238EB5 /* aurorafiles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafiles.entitlements; sourceTree = "<group>"; };
 		DAC1CADF1D062BF400238EB5 /* aurorafilesaction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = aurorafilesaction.entitlements; sourceTree = "<group>"; };
 		DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; path = "Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction.release.xcconfig"; sourceTree = "<group>"; };
+		E57820364159A509975AD810 /* WormholeProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WormholeProvider.h; sourceTree = "<group>"; };
+		E578226B9B307A5C53EDD616 /* ExtensionParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionParentViewController.m; sourceTree = "<group>"; };
+		E578245BAF4FD28036737493 /* WormholeProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WormholeProvider.m; sourceTree = "<group>"; };
+		E5782DD7205407BA44418DCB /* ExtensionParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionParentViewController.h; sourceTree = "<group>"; };
+		E59EDA15F92AA5B990E63177 /* Pods-UI-tests-aurorafilesUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UI-tests-aurorafilesUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UI-tests-aurorafilesUITests/Pods-UI-tests-aurorafilesUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB26AA02E1BBF599D53D04DC /* Pods-UI-tests-aurorafilesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UI-tests-aurorafilesUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UI-tests-aurorafilesUITests/Pods-UI-tests-aurorafilesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		FF1573691ECC897000972F33 /* UIApplication+openURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURL.h"; sourceTree = "<group>"; };
 		FF15736A1ECC897000972F33 /* UIApplication+openURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURL.m"; sourceTree = "<group>"; };
 		FF2773DA1DF191000061C210 /* DataBaseProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseProvider.h; sourceTree = "<group>"; };
@@ -526,7 +564,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB6A53D584BF19F604CC6ABA /* libPods-aurorafilesTests.a in Frameworks */,
+				87C164BC0C7AEEA74C61A980 /* libPods-aurorafilesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +573,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49ABA2C3FA8A00409D3453C9 /* libPods-aurorafilesUITests.a in Frameworks */,
+				3CA109C258D0D15F3CE8170C /* libPods-UI-tests-aurorafilesUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,15 +617,10 @@
 				DB891F2688B9DBD297EE4F64 /* Pods-Application-Extensions-aurorafilesaction.release.xcconfig */,
 				5053964D2882F7B3722B5321 /* Pods-Application-aurorafiles.debug.xcconfig */,
 				AB625BDEEB014CDA1D39E085 /* Pods-Application-aurorafiles.release.xcconfig */,
+				E59EDA15F92AA5B990E63177 /* Pods-UI-tests-aurorafilesUITests.debug.xcconfig */,
+				FB26AA02E1BBF599D53D04DC /* Pods-UI-tests-aurorafilesUITests.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		5C7B5461A64DB1CF8116F302 /* CustomAlert */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CustomAlert;
 			sourceTree = "<group>";
 		};
 		5C7B56E700ED2B15EBE5B058 /* Folder */ = {
@@ -600,6 +634,35 @@
 			path = Folder;
 			sourceTree = "<group>";
 		};
+		68CBD5831F7EAF9E00EBC289 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				686CBB5A1F82690400397E93 /* AuroraSettings.h */,
+				686CBB5B1F82690400397E93 /* AuroraSettings.m */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		95449DA21F0BEAAC002DBAD3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DAC1CACF1D06216400238EB5 /* aurorafilesaction */,
+				FFA4BFDC1E55AD1F008F4522 /* Save shortcut */,
+				E5782C8B1A115EA7EC3E7419 /* Controllers */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		95449DA81F0CED36002DBAD3 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DAC1CA531D061D7500238EB5 /* aurorafilesTests */,
+				DAC1CA5E1D061D7500238EB5 /* aurorafilesUITests */,
+				FF4C76431DA7F21800AA5576 /* snapshotTest */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
 		9D3ABB9A4596045D52E649D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -608,8 +671,9 @@
 				3C654E2BB8D271E19D007A6C /* libPods-Application-Extensions-Save shortcut.a */,
 				60E8DBEAED4B8399D5765AE6 /* libPods-Application-Extensions-aurorafilesaction.a */,
 				15D5E325F9E2C37A4B9E83AC /* libPods-Application-aurorafiles.a */,
-				953F1C3130EFDDBB01B84110 /* libPods-aurorafilesTests.a */,
 				7C2C62F40E8E9F6D58C61718 /* libPods-aurorafilesUITests.a */,
+				B3D42CFA34AB3C58515AD3BA /* libPods-UI-tests-aurorafilesUITests.a */,
+				C5A0173E1D910D9B022118E9 /* libPods-aurorafilesTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -627,11 +691,8 @@
 			isa = PBXGroup;
 			children = (
 				DAC1CA361D061D7500238EB5 /* aurorafiles */,
-				DAC1CA531D061D7500238EB5 /* aurorafilesTests */,
-				DAC1CA5E1D061D7500238EB5 /* aurorafilesUITests */,
-				DAC1CACF1D06216400238EB5 /* aurorafilesaction */,
-				FF4C76431DA7F21800AA5576 /* snapshotTest */,
-				FFA4BFDC1E55AD1F008F4522 /* Save shortcut */,
+				95449DA21F0BEAAC002DBAD3 /* Extensions */,
+				95449DA81F0CED36002DBAD3 /* Tests */,
 				DAC1CA351D061D7500238EB5 /* Products */,
 				08C21F2A8F35CF1838537085 /* Pods */,
 				9D3ABB9A4596045D52E649D4 /* Frameworks */,
@@ -680,6 +741,7 @@
 				DAC1CA381D061D7500238EB5 /* main.m */,
 				FF8A21E31D53F1F7006EBE36 /* Constants.h */,
 				FF88DDBD1ECDF3C800D8DA00 /* AuroraPrefixHeader.pch */,
+				6804D4781F7BDB7C003BC12A /* Settings.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -688,6 +750,7 @@
 			isa = PBXGroup;
 			children = (
 				DAC1CA541D061D7500238EB5 /* aurorafilesTests.m */,
+				9503EC341F1E742600F2CD9B /* SessionProviderTest.m */,
 				DAC1CA561D061D7500238EB5 /* Info.plist */,
 			);
 			path = aurorafilesTests;
@@ -783,12 +846,11 @@
 			children = (
 				DA37112A1D21EFD20067B124 /* Downloads */,
 				DAC1CA8B1D061F1200238EB5 /* Files */,
-				DAC1CA9F1D061F1200238EB5 /* SignInViewController */,
+				DAC1CA9F1D061F1200238EB5 /* Sign In */,
 				DAC1CAA21D061F1200238EB5 /* TableController */,
 				FF6A1D0E1DAD026F005CBA76 /* RootController */,
 				5C7B5C3E3F49396DDBA5A22E /* SplashScreenController.m */,
 				5C7B585E359719D9DF9927ED /* SplashScreenController.h */,
-				5C7B5461A64DB1CF8116F302 /* CustomAlert */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -834,12 +896,18 @@
 			path = ViewImage;
 			sourceTree = "<group>";
 		};
-		DAC1CA9F1D061F1200238EB5 /* SignInViewController */ = {
+		DAC1CA9F1D061F1200238EB5 /* Sign In */ = {
 			isa = PBXGroup;
 			children = (
+				68C8A2021F60529500C33A74 /* SignControllerDelegate.h */,
 				DAC1CAA01D061F1200238EB5 /* SignInViewController.h */,
 				DAC1CAA11D061F1200238EB5 /* SignInViewController.m */,
+				68C8A0431F5EB87500C33A74 /* SignInStepTwoViewController.h */,
+				68C8A0441F5EB87500C33A74 /* SignInStepTwoViewController.m */,
+				68C8A0461F5F088300C33A74 /* SocialLoginWebPopupViewController.h */,
+				68C8A0471F5F088300C33A74 /* SocialLoginWebPopupViewController.m */,
 			);
+			name = "Sign In";
 			path = SignInViewController;
 			sourceTree = "<group>";
 		};
@@ -857,6 +925,7 @@
 			children = (
 				5C7B56E700ED2B15EBE5B058 /* Folder */,
 				5C7B560B4DD7A24F9B1C66C0 /* ItemInterface.h */,
+				68CBD5831F7EAF9E00EBC289 /* Settings */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -897,6 +966,17 @@
 				DAC1CAD61D06216400238EB5 /* Info.plist */,
 			);
 			path = aurorafilesaction;
+			sourceTree = "<group>";
+		};
+		E5782C8B1A115EA7EC3E7419 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				95449DA31F0BF066002DBAD3 /* UserLoggedOutViewController.h */,
+				95449DA41F0BF066002DBAD3 /* UserLoggedOutViewController.m */,
+				E5782DD7205407BA44418DCB /* ExtensionParentViewController.h */,
+				E578226B9B307A5C53EDD616 /* ExtensionParentViewController.m */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 		FF4255F31D7EDBC9009B2E56 /* Model */ = {
@@ -1146,6 +1226,8 @@
 				5C7B5771E9510E46FAE8B8A1 /* UploadDownloadProvider.m */,
 				5C7B5C96FAE12EB8F9777E5B /* ErrorProvider.h */,
 				5C7B5ED306FBBC2116ADD8A9 /* ErrorProvider.m */,
+				E57820364159A509975AD810 /* WormholeProvider.h */,
+				E578245BAF4FD28036737493 /* WormholeProvider.m */,
 			);
 			name = Providers;
 			sourceTree = "<group>";
@@ -1498,6 +1580,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 						};
 					};
 					DAC1CA4F1D061D7500238EB5 = {
@@ -1514,6 +1599,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 						};
@@ -1535,6 +1623,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 						};
@@ -1579,6 +1670,7 @@
 				DAC1CAB81D061F1200238EB5 /* FilesTableViewCell.xib in Resources */,
 				DAC1CA421D061D7500238EB5 /* Main.storyboard in Resources */,
 				FFCF0C7B1E83B603005F87DE /* Main.strings in Resources */,
+				6804D4791F7BDB7C003BC12A /* Settings.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1602,6 +1694,7 @@
 			files = (
 				DAC1CAE01D06396A00238EB5 /* Images.xcassets in Resources */,
 				FF9053711D9BFCAA00A09A44 /* FilesTableViewCell.xib in Resources */,
+				6804D47A1F7BDB7C003BC12A /* Settings.plist in Resources */,
 				DAC1CAD51D06216400238EB5 /* MainInterface.storyboard in Resources */,
 				FFFFA5E01D9A5395006BA9FB /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0C911E83B758005F87DE /* MainInterface.strings in Resources */,
@@ -1624,6 +1717,7 @@
 			files = (
 				FFA4C01F1E55F131008F4522 /* EXPreviewFileGalleryCollectionViewCell.xib in Resources */,
 				FFA4C0211E5616ED008F4522 /* Images.xcassets in Resources */,
+				6804D47B1F7BDB7C003BC12A /* Settings.plist in Resources */,
 				FFA4C0201E55F149008F4522 /* FilesTableViewCell.xib in Resources */,
 				FFA4C01E1E55F131008F4522 /* EXFileGalleryCollectionViewCell.xib in Resources */,
 				FFCF0CA51E83B827005F87DE /* MainInterface.strings in Resources */,
@@ -1642,13 +1736,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Application-aurorafiles-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		0BF260FA801834BBEA4A76CF /* [CP] Copy Pods Resources */ = {
@@ -1672,9 +1769,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Application-aurorafiles/Pods-Application-aurorafiles-frameworks.sh",
+				"${PODS_ROOT}/Reveal-SDK/RevealServer-10/iOS/RevealServer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RevealServer.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1687,13 +1787,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Application-Extensions-Save shortcut-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3847961D9D6C54609DC3D4E6 /* [CP] Copy Pods Resources */ = {
@@ -1702,9 +1805,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-aurorafilesaction/Pods-Application-Extensions-aurorafilesaction-resources.sh",
+				$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1717,9 +1823,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Application-Extensions-Save shortcut/Pods-Application-Extensions-Save shortcut-resources.sh",
+				$PODS_CONFIGURATION_BUILD_DIR/LinkPreviewKit/LinkPreviewKit.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1747,13 +1856,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UI-tests-aurorafilesUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B12480D8E612A6EF10571F49 /* [CP] Check Pods Manifest.lock */ = {
@@ -1762,13 +1874,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-aurorafilesTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B1F23D19B033330F034A2C6E /* [CP] Copy Pods Resources */ = {
@@ -1783,7 +1898,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UI-tests-aurorafilesUITests/Pods-UI-tests-aurorafilesUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BE7285ABA104F6E56ED291A9 /* [CP] Embed Pods Frameworks */ = {
@@ -1807,13 +1922,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Application-Extensions-aurorafilesaction-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DAC1CAE11D063E1F00238EB5 /* ShellScript */ = {
@@ -1854,7 +1972,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-aurorafilesUITests/Pods-aurorafilesUITests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UI-tests-aurorafilesUITests/Pods-UI-tests-aurorafilesUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FF978EF91E794131004B6F2E /* ShellScript */ = {
@@ -1881,6 +1999,7 @@
 				FF71D4921DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF3202601DACF2F7008F3B6A /* ANavigationController.m in Sources */,
 				FF71D48C1DA33162008690D5 /* MLNetworkLogFactory.m in Sources */,
+				95449DA51F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */,
 				DAC1CA451D061D7500238EB5 /* aurorafiles.xcdatamodeld in Sources */,
 				DAC1CAB71D061F1200238EB5 /* FilesTableViewCell.m in Sources */,
 				FF8A21E21D53ECAD006EBE36 /* ConnectionProvider.m in Sources */,
@@ -1890,6 +2009,7 @@
 				FF7F443E1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
 				FF6360051E3A7918002ABF7C /* CheckConnectionOperation.m in Sources */,
 				DAC1CABF1D061F1200238EB5 /* SignInViewController.m in Sources */,
+				686CBB5E1F82690400397E93 /* AuroraSettings.m in Sources */,
 				FF3F12351E019232004B8ED1 /* UICollectionViewFlowLayout+NoFade.m in Sources */,
 				FF15736B1ECC897000972F33 /* UIApplication+openURL.m in Sources */,
 				FF71D4901DA33162008690D5 /* MLNetworkLogger.m in Sources */,
@@ -1903,6 +2023,7 @@
 				FF6A94BE1DB666FC00543269 /* standardAuth.m in Sources */,
 				FF71D48E1DA33162008690D5 /* MLHTTPTrafficDescriptionProvider.m in Sources */,
 				FFAD03F71DECA387000C4AFF /* FileOperationsProvider.m in Sources */,
+				68C8A0481F5F088400C33A74 /* SocialLoginWebPopupViewController.m in Sources */,
 				DAC1CAB61D061F1200238EB5 /* UITextFieldCustomEdges.m in Sources */,
 				FF6A94C21DB66B4900543269 /* NSURLRequest+requestGenerator.m in Sources */,
 				FF42B1E61DB77F88005A2B0C /* files.m in Sources */,
@@ -1935,8 +2056,10 @@
 				5C7B54051D762A596BE7596F /* MRDataBaseProvider.m in Sources */,
 				5C7B590D357B217B3A36DC23 /* SplashScreenController.m in Sources */,
 				5C7B577F37B4D458EE4323E0 /* NSStringPunycodeAdditions.m in Sources */,
+				68C8A0451F5EB87500C33A74 /* SignInStepTwoViewController.m in Sources */,
 				5C7B51DBA8DC19304B44DC1F /* UploadDownloadProvider.m in Sources */,
 				5C7B50C2E7F87B7E350CA090 /* ErrorProvider.m in Sources */,
+				E5782B3E3D36CC3EFDC9F47B /* WormholeProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1945,6 +2068,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAC1CA551D061D7500238EB5 /* aurorafilesTests.m in Sources */,
+				9503EC351F1E742700F2CD9B /* SessionProviderTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1979,6 +2103,7 @@
 				FF2773DD1DF191000061C210 /* DataBaseProvider.m in Sources */,
 				FF9053041D9ADA4400A09A44 /* UIImage+ImageCompress.m in Sources */,
 				FF71D4D91DA3C851008690D5 /* AFNetworkActivityLogger.m in Sources */,
+				95449DA61F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */,
 				FF6360021E3A6238002ABF7C /* ApiOperation.m in Sources */,
 				FFFFA5E91D9A8655006BA9FB /* EXPreviewFileGalleryCollectionViewController.m in Sources */,
 				FF7F443F1DA1936E00B12E35 /* NSString+URLEncode.m in Sources */,
@@ -1990,6 +2115,7 @@
 				FF6A94C71DB67D8700543269 /* core.m in Sources */,
 				FF9053751D9C02EE00A09A44 /* StorageManager.m in Sources */,
 				FFB959311DAE96E8008031B3 /* MBProgressHUD.m in Sources */,
+				685F4BCB1F6C1C32004E5E9B /* KeychainWrapper.m in Sources */,
 				FF71D4931DA33162008690D5 /* MLLoggingProtocol.m in Sources */,
 				FF90536F1D9BF4EC00A09A44 /* UploadFoldersTableViewController.m in Sources */,
 				FF6A94BF1DB666FC00543269 /* standardAuth.m in Sources */,
@@ -2012,9 +2138,12 @@
 				FFDA0B071E2D1B2D00EB0E61 /* STZPullToRefresh.m in Sources */,
 				5C7B566F313ABF0491BCF160 /* MRDataBaseProvider.m in Sources */,
 				5C7B545528CD2C95C1BE43D9 /* SplashScreenController.m in Sources */,
+				686CBB5F1F82690400397E93 /* AuroraSettings.m in Sources */,
 				5C7B539F2ECB0F37D65688D2 /* NSStringPunycodeAdditions.m in Sources */,
 				5C7B5D8955888484D4137245 /* UploadDownloadProvider.m in Sources */,
 				5C7B57585443BF4F823302B5 /* ErrorProvider.m in Sources */,
+				E57825740995DF29DA1C2E67 /* WormholeProvider.m in Sources */,
+				E5782AF2C41BA48C219B95FC /* ExtensionParentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2031,6 +2160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95449DA71F0BF066002DBAD3 /* UserLoggedOutViewController.m in Sources */,
 				FFA4BFF81E55E5FB008F4522 /* ApiOperation.m in Sources */,
 				FFA4C0011E55E618008F4522 /* files.m in Sources */,
 				FFA4BFEA1E55DB79008F4522 /* ActionViewController.m in Sources */,
@@ -2049,6 +2179,7 @@
 				FFA4C00D1E55E9D8008F4522 /* MRDataBaseProvider.m in Sources */,
 				FFA4BFF91E55E5FB008F4522 /* CheckConnectionOperation.m in Sources */,
 				FFA4BFF31E55E4FE008F4522 /* UIImage+ImageCompress.m in Sources */,
+				685F4BCC1F6C1C33004E5E9B /* KeychainWrapper.m in Sources */,
 				FFA4C00E1E55E9FD008F4522 /* Folder+CoreDataProperties.m in Sources */,
 				FFA4C0121E55EA6F008F4522 /* MLNetworkLoggingAdapter.m in Sources */,
 				FFA4C0191E55EAA2008F4522 /* STZPullToRefresh.m in Sources */,
@@ -2082,9 +2213,12 @@
 				FFA4BFEB1E55DB7F008F4522 /* UploadedFile.m in Sources */,
 				FFA4C0131E55EA72008F4522 /* MLHostnameRequestFilter.m in Sources */,
 				FFA4BFFB1E55E601008F4522 /* P7Manager.m in Sources */,
+				686CBB621F8269AE00397E93 /* AuroraSettings.m in Sources */,
 				5C7B5E289241437E78E72539 /* NSStringPunycodeAdditions.m in Sources */,
 				5C7B51E81408055218D5B2E7 /* UploadDownloadProvider.m in Sources */,
 				5C7B5D4756EE69A4F2177FC1 /* ErrorProvider.m in Sources */,
+				E5782AE8534227C18C710573 /* WormholeProvider.m in Sources */,
+				E5782081DBE2972432E19E1E /* ExtensionParentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2370,7 +2504,7 @@
 		};
 		DAC1CA6B1D061D7500238EB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C91918B3233CA24FA894C5BA /* Pods-aurorafilesUITests.debug.xcconfig */;
+			baseConfigurationReference = E59EDA15F92AA5B990E63177 /* Pods-UI-tests-aurorafilesUITests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = aurorafilesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2382,7 +2516,7 @@
 		};
 		DAC1CA6C1D061D7500238EB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C47D8E374DB7A72138B7779D /* Pods-aurorafilesUITests.release.xcconfig */;
+			baseConfigurationReference = FB26AA02E1BBF599D53D04DC /* Pods-UI-tests-aurorafilesUITests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = aurorafilesUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

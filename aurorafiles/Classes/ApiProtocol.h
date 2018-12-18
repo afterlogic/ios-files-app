@@ -16,9 +16,14 @@
 #pragma mark - User Operations
 - (void)checkAuthorizeWithCompletion:(void (^)(BOOL authorised, BOOL offline, BOOL isP8, NSError *error))handler;
 - (void)authorizeEmail:(NSString *)email withPassword:(NSString *)password completion:(void (^)(BOOL success,NSError* error))handler;
+- (void)userData:(void(^)(BOOL authorised, NSError *error))handler;
 - (void)logoutWithCompletion:(void (^)(BOOL succsess, NSError *error))handler;
 
+#pragma mark - Auth Operations
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler;
+
 #pragma mark - Files Operations
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void(^)(NSArray *items, NSError *error))completionHandler;
 - (void)getFilesFromHostForFolder:(NSString *)folderPath withType:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))completionHandler;
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))completionHandler;
 - (void)renameFileFromName:(NSString *)name toName:(NSString *)newName type:(NSString *)type atPath:(NSString *)path isLink:(BOOL)isLink completion:(void (^)(BOOL success, NSError *error))completionHandler;
@@ -34,6 +39,8 @@
 - (void)checkConnection:(void (^)(BOOL success, NSError *error, NSString *version, id<ApiProtocol> currentManager))completionHandler;
 - (void)stopFileThumb:(NSString *)folderName;
 - (void)cancelAllOperations;
+
+- (NSString *)managerName;
 
 @end
 

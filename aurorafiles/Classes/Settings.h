@@ -7,8 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KeychainWrapper.h"
+
+static NSString * const auroraSettingsKey = @"auroraSettings";
 
 @interface Settings : NSObject
+
++ (NSUserDefaults*)sharedDefaults;
 
 + (NSString*)domain;
 + (void)setDomain:(NSString *)domain;
@@ -22,8 +27,8 @@
 + (void)setAuthToken:(NSString*)authToken;
 + (NSString*)authToken;
 
-+ (NSNumber*)currentAccount;
-+ (void)setCurrentAccount:(NSNumber*)currentAccount;
++ (NSString*)currentAccount;
++ (void)setCurrentAccount:(NSString*)currentAccount;
 
 + (void)setLogin:(NSString*)login;
 + (NSString*)login;
@@ -35,7 +40,7 @@
 + (NSString *)isFirstRun;
 
 + (void)setLastLoginServerVersion:(NSString *)version;
-+ (NSString *)version;
++ (NSString *)lastLoginServerVersion;
 
 + (void)saveLastUsedFolder:(NSDictionary *)folder;
 + (NSDictionary *)getLastUsedFolder;
@@ -43,5 +48,8 @@
 + (void)setIsLogedIn:(BOOL)isLogedIn;
 + (BOOL)getIsLogedIn;
 
++ (void)saveSettings;
+
 + (void)clearSettings;
+
 @end

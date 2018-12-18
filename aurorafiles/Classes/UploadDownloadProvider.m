@@ -41,7 +41,7 @@
 #pragma mark - Public methods
 - (void)startDownloadTaskForFile:(Folder *)file {
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.afterlogic.files"];
-    if([[Settings version] isEqualToString:@"P8"]){
+    if([[Settings lastLoginServerVersion] isEqualToString:@"P8"]){
         [sessionConfiguration setHTTPAdditionalHeaders:@{@"Authorization":[NSString stringWithFormat:@"Bearer %@",[Settings authToken]]}];
     }
     NSURLSession * session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
@@ -77,7 +77,7 @@
 }
 
 - (void)uploadFile:(NSData *)fileData mimeType:(NSString *)mimeType toFolderPath:(NSString *)uploadPath withName:(NSString *)fileName isCorporate:(BOOL)corporate uploadProgressBlock:(UploadProgressBlock)uploadProgressBlock completion:(void (^)(BOOL result, NSError *error))handler {
-    if ([[Settings version]isEqualToString:@"P8"]) {
+    if ([[Settings lastLoginServerVersion]isEqualToString:@"P8"]) {
         [[ApiP8 filesModule] uploadFile:fileData
                                    mime:mimeType
                            toFolderPath:uploadPath
@@ -138,11 +138,25 @@
              NSString *htmlString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
              NSString *findedTitle = [self scanString:htmlString startTag:@"<title>" endTag:@"</title>"];
              NSString *tmpShortcutName = findedTitle.length > 0 ? findedTitle : pageLink;
-             NSString *shortcutName = tmpShortcutName;
+             
+//             NSString *shortcutName = tmpShortcutName;
+             NSString *shortcutName;
+             
              if(![tmpShortcutName isEqualToString:pageLink]){
                  NSArray *nameParts = [tmpShortcutName componentsSeparatedByString:@"&"];
                  shortcutName =  [[nameParts componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet].invertedSet];
              }
+             
+             NSURL *tmpShortcutUrl = [NSURL URLWithString:tmpShortcutName];
+             if([tmpShortcutUrl scheme]){
+                 NSString *urlScheme = [NSString stringWithFormat:@"%@://",[tmpShortcutUrl scheme]];
+                 tmpShortcutName = [[tmpShortcutUrl absoluteString] stringByReplacingOccurrencesOfString:urlScheme withString:@""];
+             }
+             
+             if (shortcutName == nil  ){
+                 shortcutName = tmpShortcutName;
+             }
+             
              NSURL *resourceUrl = task.originalRequest.URL;
              NSString *stringToWrite = [@[@"[InternetShortcut]",[NSString stringWithFormat:@"URL=%@", resourceUrl]] componentsJoinedByString:@"\n"];
              NSString *shortcutFileName = [NSString stringWithFormat:@"%@.%@",shortcutName,@"url"];

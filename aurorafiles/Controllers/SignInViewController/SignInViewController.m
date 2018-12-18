@@ -7,6 +7,7 @@
 //
 
 #import "SignInViewController.h"
+#import "SignInStepTwoViewController.h"
 #import "Settings.h"
 #import "SessionProvider.h"
 #import "KeychainWrapper.h"
@@ -14,6 +15,7 @@
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "NSString+Validators.h"
 #import "StorageManager.h"
+#import "WormholeProvider.h"
 
 //#import "StorageProvider.h"
 @interface SignInViewController () <UIAlertViewDelegate>
@@ -21,7 +23,9 @@
 	UITextField *activeField;
     UITapGestureRecognizer *tapRecognizer;
     BOOL alertViewIsShow;
+    BOOL secondStepHaveWebAuth;
 }
+@property (strong, nonatomic) __block SessionProvider *sessionProvider;
 @end
 
 @implementation SignInViewController
@@ -35,30 +39,35 @@
     [self.scrollView addGestureRecognizer:tapRecognizer];
 
     self.domainField.text = [[[NSURL URLWithString:[Settings domain]] resourceSpecifier]stringByReplacingOccurrencesOfString:@"//" withString:@""];
-    self.emailField.text = [Settings login];
+//    self.emailField.text = [Settings login];
     UIColor *borderColor = [UIColor colorWithWhite:243/255.0f alpha:1.0f];
     
     self.domainField.layer.borderWidth = 0.5f;
     self.domainField.layer.borderColor = borderColor.CGColor;
     
-    self.emailField.layer.borderWidth = 0.5f;
-    self.emailField.layer.borderColor = borderColor.CGColor;
+//    self.emailField.layer.borderWidth = 0.5f;
+//    self.emailField.layer.borderColor = borderColor.CGColor;
     
-    self.passwordField.layer.borderWidth = 0.5f;
-    self.passwordField.layer.borderColor = borderColor.CGColor;
+//    self.passwordField.layer.borderWidth = 0.5f;
+//    self.passwordField.layer.borderColor = borderColor.CGColor;
     
 	self.domainField.delegate = self;
-	self.emailField.delegate = self;
-	self.passwordField.delegate = self;
+//	self.emailField.delegate = self;
+//	self.passwordField.delegate = self;
 	self.contentHeight.constant = CGRectGetHeight(self.view.bounds);
     
     alertViewIsShow = NO;
+    secondStepHaveWebAuth = NO;
+    
+    [[WormholeProvider instance]sendNotification:AUWormholeNotificationUserSignOut object:nil];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.sessionProvider = [SessionProvider sharedManager];
+    [self.navigationController setNavigationBarHidden:YES];
     [self clear];
 
 }
@@ -71,18 +80,22 @@
 {
 	if ([textField isEqual:self.domainField])
 	{
-		[self.emailField becomeFirstResponder];
+//        [self.passwordField resignFirstResponder];
+        [self auth:self.signInButton];
+        activeField = nil;
 	}
-	if ([textField isEqual:self.emailField])
-	{
-		[self.passwordField becomeFirstResponder];
-	}
-	if ([textField isEqual:self.passwordField])
-	{
-		[self.passwordField resignFirstResponder];
-		[self auth:self.signInButton];
-		activeField = nil;
-	}
+    
+    
+//	if ([textField isEqual:self.emailField])
+//	{
+//		[self.passwordField becomeFirstResponder];
+//	}
+//	if ([textField isEqual:self.passwordField])
+//	{
+//		[self.passwordField resignFirstResponder];
+//		[self auth:self.signInButton];
+//		activeField = nil;
+//	}
 	return YES;
 }
 
@@ -97,24 +110,70 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     });
-    if (self.emailField.text.length == 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!alertViewIsShow) {
-                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
-                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-                    alertViewIsShow = NO;
-                }];
-                alertViewIsShow = YES;
-            }
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
-            return;
-        });
+    
+//    if (self.emailField.text.length == 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!alertViewIsShow) {
+//                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+//                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                    alertViewIsShow = NO;
+//                }];
+//                alertViewIsShow = YES;
+//            }
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//            return;
+//        });
+//    }
+    
+//    if (self.domainField.text.length == 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if(!alertViewIsShow){
+//                
+//                NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
+//                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                    alertViewIsShow = NO;
+//                }];
+//                alertViewIsShow = YES;
+//            }
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        });
+//        return;
+//    }
+    
+//    if (![self checkEmail]) {
+//        return;
+//    }
+    
+    if (![self checkDomain]) {
+        return;
     }
     
+    [Settings setDomain:self.domainField.text];
+    
+    [self connectToHost];
+}
+
+//- (BOOL)checkEmail{
+//    if (self.emailField.text.length == 0) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!alertViewIsShow) {
+//                NSError *error = [NSError errorWithDomain:@"" code:4061 userInfo:nil];
+//                [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+//                    alertViewIsShow = NO;
+//                }];
+//                alertViewIsShow = YES;
+//            }
+//            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        });
+//        return NO;
+//    }
+//    return YES;
+//}
+
+- (BOOL)checkDomain{
     if (self.domainField.text.length == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if(!alertViewIsShow){
-                
                 NSError *error = [NSError errorWithDomain:@"" code:4062 userInfo:nil];
                 [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
                     alertViewIsShow = NO;
@@ -123,46 +182,46 @@
             }
             [MBProgressHUD hideHUDForView:self.view animated:YES];
         });
-        return;
+        return NO;
     }
-    
-	[Settings setDomain:self.domainField.text];
-    
-    [[SessionProvider sharedManager]checkSSLConnection:^(NSString *domain) {
+    return YES;
+}
+
+- (void)connectToHost{
+    __weak typeof (self) weakSelf = self;
+    [self.sessionProvider checkSSLConnection:^(NSString *domain) {
+        typeof(self)strongSelf = weakSelf;
+        
         if (domain && domain.length) {
-        [[SessionProvider sharedManager]loginEmail:self.emailField.text withPassword:self.passwordField.text completion:^(BOOL success, NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if (error){
-                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
-                        alertViewIsShow = NO;
-                        [self clear];
-                    }];
-                    alertViewIsShow = YES;
-                }else{
-                    [Settings setLogin:self.emailField.text];
-                    [Settings setPassword:self.passwordField.text];
-                    [Settings setIsLogedIn:YES];
-                    [self performSegueWithIdentifier:@"succeedLogin" sender:self];
-                }
+                [MBProgressHUD hideHUDForView:strongSelf.view animated:YES];
+            
+                [strongSelf.sessionProvider checkWebAuthExistance:^(BOOL haveWebAuth, NSError *error) {
+                    if (error){
+                        secondStepHaveWebAuth = NO;
+                        [strongSelf performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
+                    }
+                    else{
+                        secondStepHaveWebAuth = haveWebAuth;
+                        [strongSelf performSegueWithIdentifier:@"hostHasBeenAllowed" sender:self];
+                    }
+                }];
             });
-        }];
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!alertViewIsShow) {
-                    NSError *error = [NSError errorWithDomain:@"" code:401 userInfo:nil];
-                    [[ErrorProvider instance] generatePopWithError:error controller:self customCancelAction:^(UIAlertAction *action) {
+                    NSError *error = [[ErrorProvider instance]generateError:@"4001"];
+                    [[ErrorProvider instance] generatePopWithError:error controller:strongSelf customCancelAction:^(UIAlertAction *action) {
                         alertViewIsShow = NO;
                     }];
-                    [self clear];
+                    [strongSelf clear];
                     alertViewIsShow = YES;
                 }
-                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD hideHUDForView:strongSelf.view animated:YES];
             });
         }
     }];
 }
-
 //-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
 //    if (buttonIndex == [alertView cancelButtonIndex]) {
 //        alertViewIsShow = NO;
@@ -180,16 +239,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWasShown:(NSNotification*)aNotification
@@ -230,10 +279,36 @@
  
 }
 
+#pragma mark - Utilities
+
 -(void)clear{
     [Settings clearSettings];
     [[StorageManager sharedManager]clear];
-    [[SessionProvider sharedManager]clear];
+    [self.sessionProvider clear];
+    [self removeAllCookies];
 }
+
+-(void)removeAllCookies{
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [cookieJar cookies];
+    for (cookie in cookies) {
+        [cookieJar deleteCookie:cookie];
+    }
+}
+
+
+#pragma mark - Navigation
+ 
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([segue.identifier isEqualToString:@"hostHasBeenAllowed"]){
+        SignInStepTwoViewController *secondAuthStepVC = segue.destinationViewController;
+        secondAuthStepVC.haveWebAuth = secondStepHaveWebAuth;
+    }
+// Get the new view controller using [segue destinationViewController].
+// Pass the selected object to the new view controller.
+}
+
 
 @end

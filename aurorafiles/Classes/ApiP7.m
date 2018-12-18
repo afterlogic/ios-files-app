@@ -70,6 +70,7 @@ static NSString *createFolder       = @"FilesFolderCreate";
 static NSString *renameFolder       = @"FilesRename";
 static NSString *folderInfo         = @"FileInfo";
 static NSString *publicLink         = @"FilesCreatePublicLink";
+static NSString *logOutAction       = @"SystemLogout";
 
 -(id)init{
     self=[super init];
@@ -161,7 +162,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
 
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request  success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        dispatch_async(dispatch_get_main_queue(), ^(){
+//        dispatch_async(dispatch_get_main_queue(), ^(){
         NSError *error;
         NSData *data = [NSData new];
         if ([responseObject isKindOfClass:[NSData class]]) {
@@ -198,14 +199,101 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 return;
             }
             handler(json,error);
-        });
+//        });
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-         dispatch_async(dispatch_get_main_queue(), ^(){
+//         dispatch_async(dispatch_get_main_queue(), ^(){
             DDLogError(@"HTTP Request failed: %@", error);
             handler(nil,error);
-         });
+//         });
     }];
 
+    [manager.operationQueue addOperation:operation];
+}
+
+
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL haveWebAuth, NSError * error)) handler
+{
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":appDataAction}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request  success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            BOOL haveWebAuth = NO;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (json && [json isKindOfClass:[NSDictionary class]])
+            {
+                if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+                {
+                    haveWebAuth = [[json valueForKeyPath:@"Result.App.AllowExternalClientCustomAuthentication"]boolValue];
+                    if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                        NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+//                        error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                        error = [[ErrorProvider instance] generateError:errorCode.stringValue];
+                    }
+                }
+                else
+                {
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+                }
+            }
+//            if(error){
+//                handler(nil,error);
+//                return;
+//            }
+            handler(haveWebAuth,error);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            handler(NO,error);
+        });
+    }];
+    
+    [manager.operationQueue addOperation:operation];
+}
+
+
+
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSDictionary *data, NSError *))completionHandler{
+    NSURLRequest * request = [self requestWithDictionary:@{@"Action":filesAction,@"Pattern":searchPattern,@"Type": type}];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            NSError *error;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if (![json isKindOfClass:[NSDictionary class]])
+            {
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
+            }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+            }
+            if (error)
+            {
+                DDLogError(@"%@",[error localizedDescription]);
+                completionHandler(nil,error);
+                return ;
+            }
+            
+            completionHandler(json,error);
+        });
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            completionHandler(nil, error);
+        });
+    }autoRetryOf:retryCountForFolderUpdate retryInterval:retryInterval];
+    
     [manager.operationQueue addOperation:operation];
 }
 
@@ -247,8 +335,6 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     }autoRetryOf:retryCountForFolderUpdate retryInterval:retryInterval];
     
     [manager.operationQueue addOperation:operation];
-
-
 }
 
 - (void)signInWithEmail:(NSString *)email andPassword:(NSString *)password  loginType:(NSString *) type completion:(void (^)(NSDictionary *data, NSError *error))handler
@@ -279,10 +365,10 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 if ([[json valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
                 {
                     NSString *token = [json valueForKeyPath:@"Result.AuthToken"];
-                    NSNumber * accountID = [json objectForKey:@"AccountID"];
+                    NSNumber *accountID = [json objectForKey:@"AccountID"];
                     if (accountID)
                     {
-                        [Settings setCurrentAccount:accountID];
+                        [Settings setCurrentAccount:accountID.stringValue];
                     }
                     if (token.length)
                     {
@@ -300,7 +386,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
                 }
                 if ([(NSDictionary *)json objectForKey:errorFieldName]){
                     NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
-                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                    error = [[ErrorProvider instance]generateError:errorCode.stringValue];
                 }
             }
             handler(json,error);
@@ -312,6 +398,41 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
         });
     }autoRetryOf:retryCount retryInterval:retryInterval];
     
+    [manager.operationQueue addOperation:operation];
+}
+
+- (void)signOut:(void(^)(BOOL success, NSError *error))handler{
+    NSDictionary *params = [NSDictionary new];
+    params = @{@"Action":logOutAction};
+    NSURLRequest * request = [self requestWithDictionary:params];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *error;
+            NSNumber *result;
+            NSData *data = [NSData new];
+            if ([responseObject isKindOfClass:[NSData class]]) {
+                data = responseObject;
+            }
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            if ([json isKindOfClass:[NSDictionary class]])
+            {
+                result = [NSNumber numberWithBool:[json valueForKey:@"Result"]];
+                if ([(NSDictionary *)json objectForKey:errorFieldName]){
+                    NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
+                    error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];
+                }
+            }
+            BOOL success = result.boolValue;
+            handler(success,error);
+
+        });
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^(){
+            DDLogError(@"HTTP Request failed: %@", error);
+            handler(NO,error);
+        });
+    } autoRetryOf:retryCount retryInterval:retryInterval];
     [manager.operationQueue addOperation:operation];
 }
 
@@ -728,6 +849,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
     [newDict setObject:[NSNumber numberWithBool:isFolder].stringValue forKey:@"IsFolder"];
     NSURLRequest * request = [self requestWithDictionary:newDict];
     
+   __block NSString * linkHostName = @"localhostshare";
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -744,6 +866,7 @@ static NSString *publicLink         = @"FilesCreatePublicLink";
             {
                 if ([[json objectForKey:@"Result"] isKindOfClass:[NSString class]]) {
                     result = [json objectForKey:@"Result"];
+                    result = [result stringByReplacingOccurrencesOfString:linkHostName withString:[Settings domain]];
                 }else if ([(NSDictionary *)json objectForKey:errorFieldName]){
                     NSNumber * errorCode = [(NSDictionary *)json objectForKey:errorFieldName];
                     error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:errorCode.integerValue userInfo:@{}];

@@ -38,6 +38,9 @@
 //static const int minimalStringLengthURL = 5;
 //static const int minimalStringLengthFiles = 1;
 
+static const int minSearchStringLength = 2;
+static const CGFloat searchDelay = 1.2f;
+
 @interface UPDFilesViewController () <UITableViewDataSource, UITableViewDelegate,SignControllerDelegate,
         STZPullToRefreshDelegate,NSFetchedResultsControllerDelegate,UISearchBarDelegate,UINavigationControllerDelegate,
         FilesTableViewCellDelegate,
@@ -48,14 +51,17 @@
     UILabel *noDataLabel;
     UIAlertController * alertController;
     UIAlertAction * defaultAction;
+    NSTimer *userSearchRequestTimer;
+    NSString *searchQuery;
 }
 
-@property (strong, nonatomic) NSURLSession * session;
-@property (strong, nonatomic) NSString * type;
-@property (strong, nonatomic) STZPullToRefresh * lineRefreshController;
+@property (strong, nonatomic) NSURLSession *session;
+@property (strong, nonatomic) NSString *type;
+@property (strong, nonatomic) STZPullToRefresh *lineRefreshController;
 @property (strong, nonatomic) STZPullToRefreshView *refreshView;
 @property (strong, nonatomic) NSManagedObjectContext * defaultMOC;
-@property (strong, nonatomic) NSFetchedResultsController * fetchedResultsController;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSArray* folderSubFolders;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) UITextField * folderName;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -67,6 +73,7 @@
 @property (strong, nonatomic) SessionProvider *sessionProvider;
 @property (strong, nonatomic) StorageManager *storageManager;
 @property (strong, nonatomic) UploadDownloadProvider *uploadDownloadManager;
+@property (nonatomic, assign) BOOL searchState;
 @end
 
 @implementation UPDFilesViewController
@@ -79,6 +86,7 @@
     [super awakeFromNib];
     self.isCorporate = NO;
     self.isP8 = NO;
+    self.searchState = NO;
 }
 
 - (void)viewDidLoad
@@ -90,7 +98,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
     self.uploadDownloadManager = [UploadDownloadProvider providerWithDefaultMOC:self.defaultMOC
                                                                  storageManager:self.storageManager
                                                        fetchedResultsController:self.fetchedResultsController];
@@ -113,28 +121,37 @@
 
     }
     
-//    if(!self.isRootFolder){
+    if(!self.searchState){
         [self updateView];
-//    }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 
-    if (![Settings version] || ![Settings domain]){
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
+    NSLog(@"logged version - %@",[Settings lastLoginServerVersion]);
+    NSLog(@"logged domain - %@",[Settings domain]);
+    if (![Settings lastLoginServerVersion] || ![Settings domain]){
+//        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//        signIn.delegate = self;
+//        [self presentViewController:signIn animated:YES completion:nil];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
         return;
     }
 
-    if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
-        SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-        signIn.delegate = self;
-        [self presentViewController:signIn animated:YES completion:nil];
-        return;
+    if ([[Settings lastLoginServerVersion] isEqualToString:@"P7"]){
+        if (![Settings token] && ![Settings password] && ![Settings currentAccount]) {
+//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
+//            signIn.delegate = self;
+//            [self presentViewController:signIn animated:YES completion:nil];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
+            return;
+        }
     }
+
 
     [self.sessionProvider checkUserAuthorization:^(BOOL authorised, BOOL offline, BOOL isP8, NSError *error) {
         if(error){
@@ -179,7 +196,6 @@
     self.pickerController.delegate = self;
     self.pickerController.mediaType = (CRMediaPickerControllerMediaTypeImage);
     self.pickerController.sourceType = CRMediaPickerControllerSourceTypePhotoLibrary;
-    
     
     self.toolbar.hidden = NO;
     
@@ -242,6 +258,10 @@
         self.title = _folder.name;
     }
 }
+
+//- (Folder *)folder{
+//    return _folder;
+//}
 
 - (void)tableViewPullToRefresh:(UIRefreshControl*)sender
 {
@@ -309,11 +329,44 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    [self updateSearchResultsWithQuery:searchText];
+    if (searchText.length > minSearchStringLength) {
+        [userSearchRequestTimer invalidate];
+        userSearchRequestTimer = nil;
+        searchQuery = searchText;
+        userSearchRequestTimer = [NSTimer scheduledTimerWithTimeInterval:searchDelay target:self selector:@selector(runSearch) userInfo:nil repeats:NO];
+    }else{
+        [userSearchRequestTimer invalidate];
+        userSearchRequestTimer = nil;
+        self.searchState = NO;
+        [self updateSearchResultsWithQuery:nil];
+    }
+}
+
+-(void)runSearch{
+    __block UIActivityIndicatorView *searchBarActivityView = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    CGFloat searchBarX = CGRectGetWidth(self.searchBar.frame) - CGRectGetWidth(searchBarActivityView.frame) - 40;
+    CGFloat searchBarY = CGRectGetHeight(self.searchBar.frame) - CGRectGetHeight(searchBarActivityView.frame) - 12.5;
+    [searchBarActivityView setFrame:CGRectMake(searchBarX, searchBarY, CGRectGetWidth(searchBarActivityView.frame), CGRectGetHeight(searchBarActivityView.frame))];
+    
+    [self.searchBar addSubview:searchBarActivityView];
+    [searchBarActivityView startAnimating];
+    [self.storageManager searchFilesUsingPattern:searchQuery type:self.type handler:^(NSInteger itemsCount, NSError *error) {
+        if (error) {
+            self.searchState = NO;
+            [[ErrorProvider instance]generatePopWithError:error controller:self];
+            [searchBarActivityView stopAnimating];
+            return;
+        }
+        self.searchState = YES;
+        [searchBarActivityView stopAnimating];
+        [searchBarActivityView removeFromSuperview];
+        [self updateSearchResultsWithQuery:searchQuery];
+    }];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    self.searchState = NO;
     [self updateSearchResultsWithQuery:nil];
 }
 
@@ -324,6 +377,7 @@
 
 - (void)updateSearchResultsWithQuery:(NSString*)text
 {
+    
     NSArray * existItems = self.fetchedResultsController.fetchedObjects;
     NSMutableArray * indexPathsToDelete = [[NSMutableArray alloc] init];
     
@@ -331,17 +385,23 @@
     {
         [indexPathsToDelete addObject:[self.fetchedResultsController indexPathForObject:obj]];
     }
+    NSSortDescriptor *isFolder = [[NSSortDescriptor alloc] initWithKey:@"isFolder" ascending:NO];
+    NSSortDescriptor *title = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     NSPredicate * predicate;
     if (text && text.length)
     {
-         predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"",text, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND wasDeleted = NO",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     else
     {
-        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     
-    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    NSManagedObjectContext *moc = self.defaultMOC;
+    NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
+//    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
+    _fetchedResultsController.delegate = self;
     [self.fetchedResultsController performFetch:nil];
     NSArray * newItems = self.fetchedResultsController.fetchedObjects;
     if (newItems.count == 0){
@@ -356,17 +416,20 @@
         [indexPathsToInsert addObject:[self.fetchedResultsController indexPathForObject:obj]];
     }
     
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+//    [self.tableView beginUpdates];
+//    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView insertRowsAtIndexPaths:indexPathsToInsert withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView endUpdates];
+    [self.tableView reloadData];
+    
 }
 
 #pragma mark TableView
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
+    Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Folder* object = [self.folderSubFolders objectAtIndex:indexPath.row];
     
     [self.sessionProvider cancelAllOperations];
     
@@ -395,7 +458,7 @@
         }
         else
         {
-                [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
+            [self performSegueWithIdentifier:@"OpenFileSegue" sender:self];
         }
         
     }
@@ -410,14 +473,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[section];
-    if ([info numberOfObjects]==0) {
+    if (info.numberOfObjects == 0){
+//    if (self.folderSubFolders.count == 0) {
         self.tableView.backgroundView = noDataLabel;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.tableView.backgroundView = nil;
     }
-    return [info numberOfObjects];
+//    return self.folderSubFolders.count;
+    return info.numberOfObjects;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -432,6 +497,7 @@
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+//    NSArray * objects = self.folderSubFolders;
     NSArray * objects = [self.fetchedResultsController fetchedObjects];
     Folder * object = [objects objectAtIndex:indexPath.row];
     FilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[FilesTableViewCell cellId] forIndexPath:indexPath];
@@ -466,10 +532,10 @@
             return;
         }
         if (succsess) {
-//            SignInViewController * signIn = [self.storyboard instantiateViewControllerWithIdentifier:@"SignInViewController"];
-//            signIn.delegate = self;
-            [self.navigationController popToRootViewControllerAnimated:YES];
-//            [self presentViewController:signIn animated:YES completion:^(){}];
+//            NSArray *navigationControllerStack = [self.navigationController viewControllers];
+//            DDLogDebug(@"navController views stack -> %@",navigationControllerStack);
+//            [self.navigationController popToRootViewControllerAnimated:YES];
+
             [[NSNotificationCenter defaultCenter]postNotificationName:NNotificationUserSignOut object:nil];
         }
     }];
@@ -494,7 +560,6 @@
             if (completionHandler)
             {
                 [self fetchData];
-//                id <NSFetchedResultsSectionInfo> info = self.fetchedResultsController.sections[0];
                 if (itemsCount ==0) {
                     noDataLabel.text = NSLocalizedString(@"Folder is empty", @"files view empty title");
                 }
@@ -539,6 +604,7 @@
 
 -(void)tableViewCellDownload:(UITableViewCell *)cell{
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+//    Folder * folder = [self.folderSubFolders objectAtIndex:[self.tableView indexPathForCell:cell].row];
     if (folder.isDownloaded.boolValue)
     {
         return;
@@ -590,6 +656,7 @@
 - (void)tableViewCellMoreAction:(UITableViewCell *)cell
 {
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForCell:cell]];
+//    Folder * folder = [self.folderSubFolders objectAtIndex:[self.tableView indexPathForCell:cell].row];
     self.folderToOperate = folder;
     alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Choose option", @"more action popup title text")
                                                                     message:nil
@@ -611,6 +678,20 @@
 
 #pragma mark NSFetchedResultsController
 
+- (NSArray *)folderSubFolders{
+    
+    if(self.searchState){
+        return _folderSubFolders;
+    }
+    
+    if(!_folderSubFolders){
+        _folderSubFolders = [[NSArray alloc]init];
+    }
+    [self.fetchedResultsController performFetch:nil];
+    _folderSubFolders = [self.fetchedResultsController fetchedObjects];
+    return _folderSubFolders;
+}
+
 - (NSFetchedResultsController *)fetchedResultsController{
     
     if (_fetchedResultsController) {
@@ -619,10 +700,18 @@
     
     NSSortDescriptor *isFolder = [[NSSortDescriptor alloc] initWithKey:@"isFolder" ascending:NO];
     NSSortDescriptor *title = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    NSPredicate *predicate;
+    if(self.searchState){
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),searchQuery, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+    }else{
+        predicate = [NSPredicate predicateWithFormat:@"type = %@ AND parentPath = %@ AND wasDeleted = NO AND isP8 = %@",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"), self.folder.fullpath ? self.folder.fullpath : @"", [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+    }
+    
+    
+    
     NSManagedObjectContext *moc = self.defaultMOC;
     NSFetchRequest *req = [Folder getFetchRequestInContext:moc descriptors:@[isFolder, title] predicate:predicate];
-    
+    [req setReturnsObjectsAsFaults:NO];
     _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:req managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
     
@@ -631,6 +720,7 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
+    DDLogDebug(@"Something did chage");
     [self.tableView reloadData];
 }
 
@@ -674,7 +764,13 @@
                                                               
                                                           }];
     
-    self.folderToOperate = _folder;
+    if ([self.folder isFault]){
+        DDLogDebug(@"folder is fault");
+    }else{
+        self.folderToOperate = self.folder;
+    }
+    
+    
     if (![self.folder isZippedFile] && ![self.folder isZipArchive]){
         [alertController addAction:[self createFolderAction]];
         [alertController addAction:[self createShortcutAction]];
@@ -932,6 +1028,7 @@
                                                              alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Name", @"rename popup title text")
                                                                                                                                     message:nil
                                                                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                                                             
                                                              [alertController addTextFieldWithConfigurationHandler:^(UITextField * textField){
                                                                  textField.placeholder = NSLocalizedString(@"Folder Name", @"rename popup textField placeholder text");
                                                                  textField.text = _folderToOperate.name;
@@ -1104,6 +1201,7 @@
     NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:cell];
     [self.fetchedResultsController performFetch:nil];
     Folder * folder = [self.fetchedResultsController objectAtIndexPath:cellIndexPath];
+//    Folder * folder = [self.folderSubFolders objectAtIndex:cellIndexPath.row];
     switch (index) {
         case 0:{
             DDLogDebug(@"Rename button pressed");
@@ -1117,7 +1215,7 @@
                 [textField setDelegate:self];
             }];
             
-            void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
+           void (^__block actionBlock)(UIAlertAction *action) = ^(UIAlertAction * action){
                 if (!folder)
                 {
                     return ;
@@ -1134,18 +1232,26 @@
                         [[ErrorProvider instance]generatePopWithError:error
                                                            controller:self
                                                    customCancelAction:^(UIAlertAction *cancelAction) {
-                                                       [self.fetchedResultsController performFetch:nil];
+                                                       if(self.searchState){
+                                                           [self runSearch];
+                                                       }else{
+                                                           [self.fetchedResultsController performFetch:nil];
+                                                       }
+                                                       
                                                    }
                                                           retryAction:actionBlock];
                         return;
                     }
                     if(updatedFile && !updatedFile.isFault){
-                        [self updateFiles:^(){
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                
-                                [self.tableView reloadData];
-                            });
-                        }];
+                        if(self.searchState){
+                            [self runSearch];
+                        }else{
+                            [self updateFiles:^(){
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [self.tableView reloadData];
+                                });
+                            }];
+                        }
                     }
                 }];
             };
@@ -1177,7 +1283,11 @@
                     [self updateFiles:^(){
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [MBProgressHUD hideHUDForView:self.view animated:YES];
-                            [self.tableView reloadData];
+                            if (self.searchState){
+                                [self runSearch];
+                            }else{
+                                [self.tableView reloadData];
+                            }
                         });
                     }];
                 }else{
@@ -1202,6 +1312,7 @@
 
 -(void)removeFileFromDevice:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Folder * object = [self.folderSubFolders objectAtIndex:indexPath.row];
     NSString * path = [object localPath];
     
     NSFileManager * manager = [NSFileManager defaultManager];
@@ -1222,6 +1333,7 @@
 
 -(void)removeFileByIndexPath:(NSIndexPath *)indexPath{
     Folder * object = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    Folder * object = [self.folderSubFolders objectAtIndex:indexPath.row];
     object.wasDeleted = @YES;
     [self removeItem:object];
 }
@@ -1265,7 +1377,7 @@
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
         FileDetailViewController * vc = [segue destinationViewController];
         NSString *viewLink = nil;
-        if ([[Settings version]isEqualToString:@"P8"]) {
+        if ([[Settings lastLoginServerVersion]isEqualToString:@"P8"]) {
             viewLink = [NSString stringWithFormat:@"%@%@/%@",[Settings domainScheme],[Settings domain], [object viewUrl]];
             vc.isP8 = YES;
         }else{
@@ -1286,7 +1398,12 @@
         
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.type, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        if (self.searchState){
+            fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"type = %@ AND name CONTAINS[cd] %@ AND isP8 = %@ AND wasDeleted = NO AND contentType IN (%@)",self.folder ? self.folder.type : (self.isCorporate ? @"corporate": @"personal"),searchQuery, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]],[Folder imageContentTypes]];
+        }else{
+            fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND isFolder == NO AND contentType IN (%@) AND type == %@ AND isP8 = %@",self.folder.fullpath ? self.folder.fullpath : @"",[Folder imageContentTypes],self.type, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
+        }
+        
         NSError * error = [NSError new];
         NSArray *items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
         
@@ -1298,6 +1415,12 @@
     if([segue.identifier isEqualToString:@"ShowDownloadsSegue"]){
         DownloadsTableViewController *vc = [segue destinationViewController];
         vc.loadType = loadTypeView;
+    }
+    
+    if ([segue.identifier isEqualToString:@""]){
+        UINavigationController *nc = [segue destinationViewController];
+        SignInViewController *vc = [nc viewControllers].firstObject;
+        vc.delegate = self;
     }
 }
 @end

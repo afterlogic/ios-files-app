@@ -10,9 +10,10 @@
 #import "UploadFoldersTableViewController.h"
 #import <BugfenderSDK/BugfenderSDK.h>
 #import "StorageManager.h"
-#import "Folder.h"
+#import "WormholeProvider.h"
 #import "ApiP7.h"
 #import "ApiP8.h"
+#import "UserLoggedOutViewController.h"
 
 @interface TabBarWrapperViewController ()<UITabBarControllerDelegate, FolderDelegate>{
     NSMutableArray *folders;
@@ -33,52 +34,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self prepareController];
+}
+
+- (void)prepareController{
     self.tabBarController.delegate = self;
     self.views = [NSMutableArray new];
     folders = [NSMutableArray new];
     [[ApiP7 sharedInstance]cancelAllOperations];
     [ApiP8 cancelAllOperations];
     [self.tabBarController.viewControllers makeObjectsPerformSelector:@selector(view)];
-//    [[StorageManager sharedManager]getLastUsedFolderWithHandler:^(Folder *result) {
-//        if (result) {
-//            self.savedFolder = result;
-//            [self generateViewForFolder:self.savedFolder];
-//            self.currentFolderController = (UploadFoldersTableViewController *)[self.tabBarController.viewControllers objectAtIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
-//            self.selectedFolderPath = self.savedFolder.fullpath;
-//            self.currentFolderController.isCorporate = [self.savedFolder.type isEqual:@"corporate"];
-//            self.currentFolderController.controllersStack = self.views;
-//            if (self.savedFolder) {
-//                [self.tabBarController setSelectedIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
-//            }
-
-//        }else{
+    
     self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
     self.currentFolderController.delegate = self;
     self.selectedFolderPath = @"";
     self.selectedRootPath = self.currentFolderController.type;
-    
-//        }
-//    }];
-
-//    if (self.savedFolder) {
-//        [self generateViewForFolder:self.savedFolder];
-//    }
-//    [self.tabBarController.viewControllers makeObjectsPerformSelector:@selector(view)];
-//    if (self.savedFolder) {
-//        self.currentFolderController = (UploadFoldersTableViewController *)[self.tabBarController.viewControllers objectAtIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
-//        self.selectedFolderPath = self.savedFolder.fullpath;
-//        self.currentFolderController.isCorporate = [self.savedFolder.type isEqual:@"corporate"];
-//        self.currentFolderController.controllersStack = self.views;
-//        if (self.savedFolder) {
-//            [self.tabBarController setSelectedIndex:[self.savedFolder.type isEqual:@"personal"] ? 0 :1];
-//        }
-//    }else{
-//        self.currentFolderController = (UploadFoldersTableViewController *)self.tabBarController.viewControllers.firstObject;
-//        self.currentFolderController.delegate = self;
-//        self.selectedFolderPath = @"";
-//        self.selectedRootPath = self.currentFolderController.type;
-//    }
-
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -97,6 +67,12 @@
     self.currentFolderController.editButton = self.editRightButton;
     
     [self currentFolder:self.currentFolderController.folder root:self.currentFolderController.type];
+    [self setupObservers];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    DDLogDebug(@"%s will disappear",__PRETTY_FUNCTION__);
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -182,30 +158,28 @@
         [self.views addObject:vc];
 }
 
-//-(void)generatePathsFromEndPointFoldertoRoot:(Folder *)endpointFolder {
-//    if (endpointFolder) {
-//        if (![folders containsObject:endpointFolder] ) {
-//            [folders insertObject:endpointFolder atIndex:0];
-//        }
-//        NSArray *parts = [endpointFolder.parentPath componentsSeparatedByString:@"/"];
-//        if (endpointFolder.parentPath) {
-//            NSString *name =  [parts lastObject];
-//            NSString *fullPath = endpointFolder.parentPath;
-//            NSString *type = endpointFolder.type;
-//            if (name.length) {
-//                [self getFolderWithName:name fullPath:fullPath type:type];
-//            }
-//        }else{
-//            DDLogDebug(@"same log %@",folders);
-//            [self generateViewsStack:folders];
-//        }
-//    }
-//}
+-(void)setupObservers{
+    [[WormholeProvider instance]catchNotification:AUWormholeNotificationUserSignOut handler:^(id  _Nullable messageObject) {
+        [self showLoggedOutModelView];
+    }];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(voidFunc) name:@"dismissModalView" object:nil];
+}
 
-//-(void)getFolderWithName:(NSString *)name fullPath:(NSString *)path type:(NSString *)type{
-//    Folder *endpointFolder = [[StorageManager sharedManager]getFolderWithName:name type:type fullPath:path];
-//    [self generateViewsStack:@[endpointFolder]];
-//}
+- (void)showLoggedOutModelView{
+//    UIStoryboard *board = [UIStoryboard storyboardWithName:@"MainInterface" bundle:nil];
+//    UIViewController *vc = [board instantiateViewControllerWithIdentifier:@"UserLoggedOutViewController"];
+//    vc.view.hidden = NO;
+//    
+//    if (![NSStringFromClass([self.presentedViewController class]) isEqualToString:NSStringFromClass([UserLoggedOutViewController class])]){
+//        [self presentViewController:vc animated:nil completion:nil];
+//    }
+    [self.extensionContext completeRequestReturningItems:self.extensionContext.inputItems completionHandler:nil];
+}
+
+-(void)voidFunc{
+    DDLogDebug(@"void func from TabBarWrapperViewController");
+}
 
 #pragma mark - Navigation
 // In a storyboard-based application, you will often want to do a little preparation before navigation

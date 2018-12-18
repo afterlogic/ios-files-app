@@ -110,11 +110,11 @@
     NSPredicate * predicate;
     if (text && text.length)
     {
-        predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ AND isP8 = %@ AND isDownloaded = YES",text, [NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ AND isP8 = %@ AND isDownloaded = YES",text, [NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     else
     {
-        predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+        predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     }
     
     self.fetchedResultsController.fetchRequest.predicate = predicate;
@@ -241,7 +241,7 @@
     NSSortDescriptor *title = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [fetchRequest setSortDescriptors:@[isFolder, title]];
     
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]]];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@",[NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]]];
     
     NSFetchedResultsController *theFetchedResultsController =
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
@@ -326,7 +326,7 @@
         Folder * object = [self.fetchedResultsController objectAtIndexPath:self.tableView.indexPathForSelectedRow];
         NSFetchRequest * fetchImageFilesItemsRequest = [NSFetchRequest fetchRequestWithEntityName:@"Folder"];
         fetchImageFilesItemsRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@ AND isFolder == NO AND contentType IN (%@)",[NSNumber numberWithBool:[[Settings version] isEqualToString:@"P8"]],[Folder imageContentTypes]];
+        fetchImageFilesItemsRequest.predicate = [NSPredicate predicateWithFormat:@"isDownloaded = YES AND isP8 = %@ AND isFolder == NO AND contentType IN (%@)",[NSNumber numberWithBool:[[Settings lastLoginServerVersion] isEqualToString:@"P8"]],[Folder imageContentTypes]];
         NSError * error = [NSError new];
         NSArray *items = [[[[StorageManager sharedManager] DBProvider]defaultMOC] executeFetchRequest:fetchImageFilesItemsRequest error:&error];
         

@@ -134,10 +134,43 @@
         }
     }];
 }
+
+- (void)userData:(void (^)(BOOL isAuthorized, NSError *error))handler{
+    [self.apiManager checkIsAccountAuthorisedWithCompletion:^(NSDictionary *data, NSError *error) {
+        if (error){
+            handler(NO, error);
+            return;
+        }else if ([[data valueForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+        {
+            if (data[@"Result"][@"offlineMod"]) {
+                handler (NO,error);
+            }
+            handler (YES,error);
+        }
+        else
+        {
+            if([[data valueForKey:@"ErrorCode"] isKindOfClass:[NSNumber class]]){
+                NSNumber *errorCode = data[@"ErrorCode"];
+                NSError *error = [[ErrorProvider instance]generateError:errorCode.stringValue];
+                if (error) {
+                    handler(NO, error);
+                }
+            }
+            else
+            {
+                handler(NO,error);
+            }
+        }
+        return ;
+    }];
+}
+
 -(void)logoutWithCompletion:(void (^)(BOOL, NSError *))handler{
-    handler(YES, nil);
+    [self.apiManager signOut:handler];
 }
 #pragma mark - Files Operations
+
+
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self.apiManager createFolderWithName:name isCorporate:corporate andPath:path ? path : @"" completion:^(NSDictionary* data, NSError* error){
         if ([[data objectForKey:@"Result"]boolValue]) {
@@ -211,6 +244,25 @@
     }];
 }
 
+- (void)findFilesWithPattern:(NSString *)searchPattern type:(NSString *)type completion:(void (^)(NSArray *items, NSError *error))completionHandler{
+    [self.apiManager findFilesWithPattern:searchPattern type:type completion:^(NSDictionary* data, NSError *error) {
+        if(error){
+            completionHandler(@[],error);
+            return;
+        }
+        NSArray * items;
+        if (data && [data isKindOfClass:[NSDictionary class]] && [[data objectForKey:@"Result"] isKindOfClass:[NSDictionary class]])
+        {
+            items = [[[data objectForKey:@"Result"] objectForKey:@"Items"] isKindOfClass:[NSArray class]] ? [[data objectForKey:@"Result"] objectForKey:@"Items"] : @[];
+        }
+        else
+        {
+            items = @[];
+        }
+        completionHandler(items,nil);
+    }];
+}
+
 - (void)deleteFile:(Folder *)folder isCorporate:(BOOL)corporate completion:(void (^)(BOOL success, NSError *error))complitionHandler{
     [self.apiManager deleteFile:folder isCorporate:corporate completion:complitionHandler];
 }
@@ -243,12 +295,20 @@
     }];
 }
 
+- (void)getWebAuthExistanceCompletionHandler:(void (^)(BOOL, NSError *))handler{
+    [self.apiManager getWebAuthExistanceCompletionHandler:handler];
+}
+
 -(void)cancelAllOperations{
     [self.apiManager cancelAllOperations];
 }
 
 -(void)stopFileThumb:(NSString *)folderName{
     
+}
+
+- (NSString *)managerName{
+    return @"P7 manager";
 }
 
 @end

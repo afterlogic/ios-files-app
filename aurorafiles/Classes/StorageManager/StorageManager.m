@@ -38,7 +38,6 @@
 }
 
 
-
 + (instancetype)sharedManager
 {
     static StorageManager *sharedInstance = nil;
@@ -229,13 +228,12 @@
 }
 
 - (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount, NSError *error))handler{
-
     if (folder.isFault) {
         handler(0,nil);
         return;
     }
 
-    NSString * folderPath = folder ? folder.fullpath : @"";
+    __block NSString * folderPath = folder ? folder.fullpath : @"";
         [[SessionProvider sharedManager] checkUserAuthorization:^(BOOL authorised, BOOL offline,BOOL isP8, NSError *error){
             if(error){
                 handler(0,error);
@@ -244,7 +242,7 @@
             if (authorised) {
                 [self.fileOperationsProvider getFilesFromHostForFolder:folderPath withType:type completion:^(NSArray *items, NSError *error) {
                     if (items) {
-                        [self saveItemsIntoDB:items forFolder:folder WithType:type isP8:isP8];
+                        [self saveItemsIntoDB:items forFolderFullPath:folderPath WithType:type isP8:isP8];
                     }
                     dispatch_async(dispatch_get_main_queue(), ^(){
                         if (handler) {
@@ -258,40 +256,79 @@
         }];
 }
 
-- (void)saveItemsIntoDB:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type isP8:(BOOL)isP8{
-//    [self removeDuplicatesForItems:items];
-    __block NSArray *blockItems = items.copy;
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0),^{
-    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
-        [self prepareItemsForSave:blockItems forFolder:folder WithType:type usingContext:context isP8:isP8];
+- (void)searchFilesUsingPattern:(NSString *)pattern type:(NSString *) type handler:(void(^)(NSInteger itemsCount, NSError *error ))complitionHandler{
+    [self.fileOperationsProvider findFilesUsingPattern:pattern withType:type completion:^(NSArray *items, NSError *error) {
+        if(error){
+            complitionHandler(0, error);
+        }else{
+            __block NSMutableArray *searchItems = [NSMutableArray new];
+            for (NSDictionary *itemRef in items ) {
+                [self saveSearchItemsIntoDB:@[itemRef] forFolderFullPath:[Folder generateParentPath:itemRef[@"FullPath"]] WithType:type isP8:[[Settings lastLoginServerVersion] isEqualToString:@"P8"] completion:^{
+                    
+                }];
+            }
+            complitionHandler(items.count, nil);
+            
+//            [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+//                for (NSDictionary *itemRef in items ) {
+//                        Folder *searchFolder = [Folder createSearchFolderFromRepresentation:itemRef type:[[Settings lastLoginServerVersion] isEqualToString:@"P8"] InContext:self.DBProvider.defaultMOC];
+//                        [searchItems addObject:searchFolder];
+//                }
+//            } completionBlock:^{
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    complitionHandler(items.count, nil);
+//                });
+//            }];
+        }
     }];
-//    });
-
 }
 
-- (void)prepareItemsForSave:(NSArray *)items forFolder:(Folder *)folder WithType:(NSString*)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
-//    if (!context) {
-//        context = [self.DBProvider operationsMOC];
-//    }
-//    NSOrderedSet *orderedSet = [NSOrderedSet orderedSetWithArray:items];
-//    items = [orderedSet array];
-//    NSMutableArray * existItems = [NSMutableArray new];
-    NSString * folderPath = folder ? folder.fullpath : @"";
+
+
+- (void)saveItemsIntoDB:(NSArray *)items forFolderFullPath:(NSString *)folderFullPath WithType:(NSString *)type isP8:(BOOL)isP8{
+    __block NSArray *blockItems = items.copy;
+    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+        [self prepareItemsForSave:blockItems forFolderFullPath:folderFullPath WithType:type usingContext:context isP8:isP8];
+    }];
+}
+
+- (void)saveSearchItemsIntoDB:(NSArray *)items forFolderFullPath:(NSString *)folderFullPath WithType:(NSString*)type isP8:(BOOL)isP8 completion:(void(^)())handler{
+    __block NSArray *blockItems = items.copy;
+    [self.DBProvider saveWithBlock:^(NSManagedObjectContext *context) {
+        [self prepareSearchItemsForSave:blockItems forFolderFullPath:folderFullPath WithType:type usingContext:context isP8:isP8];
+    } completionBlock:handler];
+}
+
+- (void)prepareSearchItemsForSave:(NSArray *)items forFolderFullPath:(NSString *)folderFullPath WithType:(NSString *)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
     if (items.count)
     {
         NSMutableArray * existIds = [NSMutableArray new];
         for (NSDictionary * itemRef in items)
         {
-            Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderPath InContext:context];
+            Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderFullPath InContext:context];
             [existIds addObject:childFolder.prKey];
-//            if ([childFolder.thumb boolValue] && ![childFolder.isFolder boolValue] && ![childFolder.isLink boolValue]) {
-//                [existItems addObject:childFolder];
-//            }
+        }
+
+    }
+    else{
+
+    }
+
+}
+
+- (void)prepareItemsForSave:(NSArray *)items forFolderFullPath:(NSString *)folderFullPath WithType:(NSString *)type usingContext:(NSManagedObjectContext *)context isP8:(BOOL) isP8{
+//    NSString * folderPath = folderFullPath ? folderFullPath.fullpath : @"";
+    if (items.count)
+    {
+        NSMutableArray * existIds = [NSMutableArray new];
+        for (NSDictionary * itemRef in items)
+        {
+            Folder * childFolder = [Folder createFolderFromRepresentation:itemRef type:isP8 parrentPath:folderFullPath InContext:context];
+            [existIds addObject:childFolder.prKey];
         }
         
         NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        NSString *currentFolderFullPath = folder ? folder.fullpath : @"";
-//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@" NOT (name IN %@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
+        NSString *currentFolderFullPath = folderFullPath;
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@" NOT (prKey IN %@) AND parentPath = %@ AND type=%@",existIds,currentFolderFullPath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
 
@@ -306,12 +343,11 @@
             {
                 fold.wasDeleted = @YES;
             }
-            
         }
     }
     else{
         NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"identifier" ascending:YES]];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND type=%@",folder.fullpath,type];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"parentPath = %@ AND type=%@",folderFullPath,type];
         NSArray * oldFolders = [Folder fetchFoldersInContext:context descriptors:descriptors predicate:predicate];
 
         for (Folder* fold in oldFolders)
@@ -325,7 +361,6 @@
             {
                 fold.wasDeleted = @YES;
             }
-
         }
     }
 }
@@ -367,16 +402,6 @@
             complition(nil,nil);
         }
     }];
-}
-
-- (NSString *)generateParentPath:(NSString *)itemFullpath{
-    NSMutableArray *pathParts = [itemFullpath componentsSeparatedByString:@"/"].mutableCopy;
-    DDLogDebug(@"%@",pathParts);
-    [pathParts removeObject:[pathParts lastObject]];
-    if (pathParts.count == 1) {
-        return [pathParts lastObject];
-    }
-    return [pathParts componentsJoinedByString:@"/"];
 }
 
 

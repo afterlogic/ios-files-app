@@ -77,6 +77,10 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     [self getFilesForFolder:folderName withType:type searchPattern:@"" completion:handler];
 }
 
+
+- (void)searchFilesInSection:(NSString *)type pattern:(NSString *)searchPattern completion:(void (^)(NSArray *, NSError *))handler{
+    [self getFilesForFolder:@"" withType:type searchPattern:searchPattern completion:handler];
+}
 - (void)searchFilesInFolder:(NSString *)folderName withType:(NSString *)type fileName:(NSString *)fileName completion:(void (^)(NSArray *items, NSError *error))handler{
     [self getFilesForFolder:folderName withType:type searchPattern:fileName completion:handler];
 }
@@ -600,15 +604,13 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     
     
     NSString *storageType = [NSString stringWithString:corporate ? @"corporate" : @"personal"];
-    NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"/%@",path] : @""];
-//    NSURL * url = [NSURL URLWithString:[Settings domain]];
-    NSString * scheme = [Settings domainScheme];
+    NSString *pathTmp = [NSString stringWithFormat:@"%@",path.length ? [NSString stringWithFormat:@"%@",path] : @""];
+    NSString *scheme = [Settings domainScheme];
     NSString *Link = [NSString stringWithFormat:@"%@%@/?/upload/files/%@%@/%@",scheme ? scheme : @"https://",[Settings domain],storageType,[pathTmp urlEncodeUsingEncoding:NSUTF8StringEncoding],[name urlEncodeUsingEncoding:NSUTF8StringEncoding]];
     NSURL *testUrl = [[NSURL alloc]initWithString:Link];
     
     
     NSDictionary *headers = @{
-//                              @"auth-token": [Settings authToken],
                                @"cache-control": @"no-cache",
                                @"Authorization": [NSString stringWithFormat:@"Bearer %@",[Settings authToken]]};
     
@@ -635,14 +637,13 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
             if (data)
             {
                 result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                handlResult = [result isEqualToString:@"true"];
+                handlResult = [result containsString:@"true"];
                 DDLogError(@"%@",result);
             }
             
             if (!handlResult)
             {
                 error = [[NSError alloc] initWithDomain:@"com.afterlogic" code:1 userInfo:@{}];
-                
             }
             if (error)
             {
@@ -787,7 +788,8 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
     }].mutableCopy;
     
     [request setValue:[NSString stringWithFormat:@"Bearer %@",[Settings authToken]] forHTTPHeaderField:@"Authorization"];
-
+//    __block NSString * linkHostName = @"localhostshare";
+    
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     AFHTTPRequestOperation *operation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -809,6 +811,7 @@ static NSString *methodGetPublicLink = @"CreatePublicLink";
                 {
                     if ([[json valueForKey:@"Module"] isKindOfClass:[NSString class]] && [[json valueForKey:@"Module"] isEqualToString:moduleName] && [[json valueForKey:@"Method"] isEqualToString:methodGetPublicLink]) {
                         result = [json valueForKey:@"Result"];
+                        result = [NSString stringWithFormat:@"%@/%@", [Settings domain],result];
                     }
                 }
                 else

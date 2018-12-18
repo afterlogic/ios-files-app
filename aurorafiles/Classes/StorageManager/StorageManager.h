@@ -27,6 +27,7 @@
 - (void)createFolderWithName:(NSString *)name isCorporate:(BOOL)corporate andPath:(NSString *)path completion:(void (^)(BOOL success, NSError *error))complitionHandler;
 - (void)checkItemExistanceonServerByName:(NSString *)name path:(NSString *)path type:(NSString *)type completion:(void (^)(BOOL exist, NSError *error))complitionHandler;
 - (void)updateFilesWithType:(NSString *)type forFolder:(Folder *)folder withCompletion:(void (^)(NSInteger *itemsCount, NSError *error))handler;
+- (void)searchFilesUsingPattern:(NSString *)pattern type:(NSString *) type handler:(void(^)(NSInteger itemsCount, NSError *error ))complitionHandler;
 - (void)stopGettingFileThumb:(NSString *)file;
 
 - (void)saveLastUsedFolder:(NSDictionary *)folderSimpleRef;
